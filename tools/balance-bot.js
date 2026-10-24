@@ -72,7 +72,13 @@ const RUNS = +process.argv[2] || 8, UNL = process.argv[3] || '', BAL = JSON.pars
       function breakTurn() {
         while (P.state.offers.length) pickOffer();
         unlockNext();
-        if (!saving()) P.state.run.shop.map((it, i) => [i, P.cardPrice(it.id)]).sort((x, y) => x[1] - y[1]).forEach(([i]) => { if (P.buyCard(i)) pickOffer(); });
+        // one card per showcase: buy the cheapest, then refresh while a refresh plus a common card still fits in the wallet
+        for (let k = 0; k < 4 && !saving(); k++) {
+          const i = P.state.run.shop.map((it, i) => [i, P.cardPrice(it.id)]).sort((x, y) => x[1] - y[1]).map(x => x[0]).find(i => P.buyCard(i));
+          if (i == null) break;
+          pickOffer();
+          if (P.state.money < P.shopRollCost() + P.cardPrice('e_helmet') || !P.rollNewShop()) break;
+        }
         if (!saving()) buySkills();
         optimize(3);
         P.startShift();
