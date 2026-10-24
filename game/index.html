@@ -341,12 +341,18 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     u_piggy: { name: 'Копилка', type: 'global', tag: 'Улучшения', rar: 3, eff: {}, desc: 'В каждом перерыве приносит 10% монет, заработанных за смену.' },
     s_gold: { name: 'Золотой станок', type: 'mupg', tag: 'Улучшения', rar: 3, eff: {}, desc: 'Любой станок: цена ×1,1 за каждую карту «Станки» в колоде.' },
     u_union: { name: 'Профсоюз', type: 'global', tag: 'Сотрудники', rar: 3, eff: {}, desc: 'Все сотрудники: сила +5% за каждого сотрудника на заводе.' },
+    // crate cards pay a share of the quota, so each comes once per run: copies would outgrow the quotas
+    u_postman: { name: 'Почтальон', type: 'global', tag: 'Улучшения', rar: 0, once: true, eff: {}, desc: 'Посылки приходят вдвое чаще.' },
+    u_courier: { name: 'Курьер', type: 'global', tag: 'Улучшения', rar: 1, once: true, eff: {}, desc: 'Если посылку не открыть, курьер откроет её сам за половину монет.' },
+    u_customs: { name: 'Таможня', type: 'global', tag: 'Улучшения', rar: 2, once: true, eff: {}, desc: 'Монеты в посылках ×3.', minus: 'Посылка лежит только 8 с.' },
+    u_sub: { name: 'Подписка', type: 'global', tag: 'Улучшения', rar: 3, once: true, eff: {}, desc: 'Каждая открытая посылка: +3% ко всему доходу до конца забега.' },
     // mastery cards never drop as usual cards: every masteryEvery-th level offers 1 of 3 of them, each once per run
     x_speed: { name: 'Мастер скорости', type: 'global', tag: 'Мастерство', rar: 3, mastery: true, eff: { speed: 1.5 }, desc: 'Все сотрудники: скорость ×1,5.' },
     x_power: { name: 'Мастер силы', type: 'global', tag: 'Мастерство', rar: 3, mastery: true, eff: { power: 1.5 }, desc: 'Все сотрудники: сила ×1,5.' },
     x_luck: { name: 'Мастер удачи', type: 'global', tag: 'Мастерство', rar: 3, mastery: true, eff: {}, desc: 'Все сотрудники: удача +20%.' },
     x_skill: { name: 'Мастер скиллов', type: 'global', tag: 'Мастерство', rar: 3, mastery: true, eff: {}, desc: 'Все скиллы действуют в 1,5 раза дольше.' },
-    x_wholesale: { name: 'Оптовик', type: 'global', tag: 'Мастерство', rar: 3, mastery: true, eff: {}, desc: 'С каждой витрины можно купить 2 карты.' }
+    x_wholesale: { name: 'Оптовик', type: 'global', tag: 'Мастерство', rar: 3, mastery: true, eff: {}, desc: 'С каждой витрины можно купить 2 карты.' },
+    x_logistics: { name: 'Мастер логистики', type: 'global', tag: 'Мастерство', rar: 3, mastery: true, eff: {}, desc: 'Золотые посылки приходят в 3 раза чаще.' }
   };
   const TYPE_LABEL = { machine: 'Станок', worker: 'Сотрудник', global: 'Для всех', equip: 'Экипировка', mupg: 'На станок' };
   const RAR = ['обычная', 'редкая', 'эпическая', 'легендарная'];
@@ -457,7 +463,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     x_speed: 'mSpeed', x_power: 'mPower', x_luck: 'mLuck', x_skill: 'mSkill', x_wholesale: 'mWholesale'
   };
   const ICONS = {};
-  for (const id in CARD_ICON) ICONS[id] = makeIcon(ICON_DRAW[CARD_ICON[id]]);
+  for (const id in CARDS) ICONS[id] = makeIcon(ICON_DRAW[CARD_ICON[id]] || (r => { r(2, 2, 12, 12, K); r(3, 3, 10, 10, '#f2c14e'); }));
 
   /* ================= state ================= */
   const KEY = 'pixel-factory-save-v1';
@@ -554,8 +560,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   const cur = () => state.cur;
 
   // run balance in one place so the balance bot can tune it: tempo speeds up every machine,
-  // xp/shop/quota grow geometrically, every levelEvery-th level gives a card, crates come every crate..2×crate seconds
-  const BAL = { tempo: 2, xp0: 15, xpK: 2.2, levelEvery: 3, shopQ: 0.3, shopRoll: 1, rarPrice: [0.6, 1, 1.6, 2.4], masteryEvery: 9, crate: 40, crateSec: 20, quotaT: 90, quota0: 300, quotaK: 1.9, quotaA: 1.2 };
+  // xp/shop/quota grow geometrically, every levelEvery-th level gives a card, crates come every crate..2×crate seconds;
+  // a crate holds a share of the quota: plain crateQ, gold crateGoldQ (chance crateGold), or a card pick (chance crateCard)
+  const BAL = { tempo: 2, xp0: 15, xpK: 2.2, levelEvery: 3, shopQ: 0.3, shopRoll: 1, rarPrice: [0.6, 1, 1.6, 2.4], masteryEvery: 9, crate: 40, crateQ: [0.02, 0.06], crateGoldQ: [0.08, 0.12], crateGold: 0.1, crateCard: 0.05, quotaT: 90, quota0: 230, quotaK: 1.9, quotaA: 1.2 };
   const need = l => Math.round(BAL.xp0 * Math.pow(BAL.xpK, l - 1));
   // the showcase is priced off the quota just passed, so a runaway income cannot make cards free
   const shopBase = () => quotaTarget(Math.max(1, state.run.q - 1)) * BAL.shopQ;
@@ -598,6 +605,13 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   const curQuota = () => quotaTarget(state.run.q) * Math.pow(1.25, (state.run.credit || {})[state.run.q] || 0);
   const quotaTime = () => BAL.quotaT + (hasUnlock('time') ? 15 : 0);
   const newCrate = () => BAL.crate * (1 + Math.random());
+  const cardN = id => state.cards.filter(x => x === id).length;
+  // how fast the crate timer runs: Postman doubles it, a working Rabbit detective adds 25%
+  const crateFreq = () => Math.pow(2, cardN('u_postman')) * (workerPlace('rabbit') && !onStrike('rabbit') ? 1.25 : 1);
+  function rollCrate() {
+    const r = Math.random(), gold = BAL.crateGold * (state.cards.includes('x_logistics') ? 3 : 1);
+    return { f: Math.random(), born: t, life: state.cards.includes('u_customs') ? 8 : 20, kind: r < BAL.crateCard ? 'card' : r < BAL.crateCard + gold ? 'gold' : 'plain' };
+  }
 
   // every third quota is an inspection with a nasty rule for its whole period
   const RULES = {
@@ -679,6 +693,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     g.luck = state.cards.includes('x_luck') ? 0.2 : 0;
     g.noLuck = state.cards.includes('u_hack');
     if (state.cards.includes('e_coffee') && !rule('sanepid') && !rule('blackout') && anySlot(s => s.machine === 'belt') && state.workers.tramp.unlocked) { g.combos.push('night'); g.income *= 1.5; }
+    // Post day: Postman, Courier and Subscription double the coins in crates; Subscription grows with every opened crate
+    if (['u_postman', 'u_courier', 'u_sub'].every(id => state.cards.includes(id))) g.combos.push('post');
+    g.income *= 1 + (state.run.subs || 0);
     g.sawWorking = slotsOf(0).some(s => s.machine === 'saw' && s.worker);
     g.kilnWorking = slotsOf(1).some(s => s.machine === 'kiln' && s.worker);
     g.tumblerWorking = slotsOf(2).some(s => s.machine === 'tumbler' && s.worker);
@@ -790,6 +807,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (cl >= 0 && !state.locs[cl].unlocked) return false;
     if (cd.type === 'machine') return canPlaceMachine(cd.machine);
     if (cd.type === 'worker') return !state.workers[cd.worker].unlocked;
+    if (cd.once && state.cards.includes(id)) return false;
     if (cd.type === 'mupg') return anySlot((s, l) => s.machine && s.machine !== 'belt' && (cl < 0 || cl === l));
     return true;
   }
@@ -871,6 +889,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     else if (got('night')) toast('Комбо «Ночная смена»: доход ×1,5!');
     else if (got('green')) toast('Комбо «Зелёная сила»: сила ×1,5!');
     else if (got('family')) toast('Комбо «Семейный подряд»: +20% силы!');
+    else if (got('post')) toast('Комбо «Почтовый день»: посылки ×2!');
   }
   function unlockLoc(l) {
     const L = state.locs[l], cost = LOCS[l].cost;
@@ -922,8 +941,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       state.xp -= need(state.level); state.level++;
       if (state.level % BAL.levelEvery === 0) { toast(`Уровень ${state.level}! Карта ждёт тебя в перерыве`); queueOffer(state.level % BAL.masteryEvery === 0 ? 'mastery' : 'level'); } else toast(`Уровень ${state.level}! Карта через ${BAL.levelEvery - state.level % BAL.levelEvery}`);
     }
-    if (!crate) { if (!rule('audit')) { state.crateIn -= dt; if (state.crateIn <= 0) { crate = { f: Math.random(), life: 20, born: t }; toast('С конвейера съехала посылка! Нажми на неё'); } } }
-    else { crate.life -= dt; if (crate.life <= 0) { crate = null; state.crateIn = newCrate(); } }
+    if (!crate) { if (!rule('audit')) { state.crateIn -= dt * crateFreq(); if (state.crateIn <= 0) { crate = rollCrate(); toast(crate.kind === 'gold' ? 'Золотая посылка! Нажми на неё' : crate.kind === 'card' ? 'Посылка с картой! Нажми на неё' : 'С конвейера съехала посылка! Нажми на неё'); } } }
+    else { crate.life -= dt; if (crate.life <= 0) { if (state.cards.includes('u_courier')) toast(crateText(openCrate(true), 'Курьер открыл посылку')); else { crate = null; state.crateIn = newCrate(); } } }
     floats.forEach(f => { f.life -= dt * 0.8; });
     floats = floats.filter(f => f.life > 0);
     const run = state.run;
@@ -933,8 +952,19 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (run.qT >= quotaTime()) { if (run.qEarned >= curQuota()) passQuota(); else bankrupt(); }
     achTimer += dt; if (achTimer > 1) { achTimer = 0; checkAch(false); }
   }
-  // a crate holds coins: crateSec seconds of the current income, but never less than a tenth of the quota
-  function openCrate() { crate = null; state.crateIn = newCrate(); const gain = Math.max(incomeNow * BAL.crateSec, quotaTarget(state.run.q) / 10); state.money += gain; state.earned += gain; state.run.qEarned += gain; return gain; }
+  // a crate holds a share of the current quota, not of the income: skills made the income swing too much.
+  // Courier opens a forgotten crate for half the coins; every opened crate feeds Subscription
+  const rnd = ([a, b]) => a + Math.random() * (b - a);
+  function openCrate(courier) {
+    const kind = crate.kind, run = state.run;
+    crate = null; state.crateIn = newCrate();
+    run.subs = (run.subs || 0) + 0.03 * cardN('u_sub');
+    if (kind === 'card') { queueOffer('crate'); return { card: true }; }
+    const gain = curQuota() * rnd(kind === 'gold' ? BAL.crateGoldQ : BAL.crateQ) * Math.pow(3, cardN('u_customs')) * (globals().combos.includes('post') ? 2 : 1) * (courier ? 0.5 : 1);
+    state.money += gain; state.earned += gain; run.qEarned += gain;
+    return { gain, gold: kind === 'gold' };
+  }
+  const crateText = (r, who = 'В посылке') => r.card ? `${who}: внутри карта, выбор в перерыве!` : `${who}: ${fmt(r.gain)} монет${r.gold ? ', золотая!' : '!'}`;
   function passQuota() {
     const run = state.run, wasRule = run.rule;
     if (wasRule) run.passed.push(wasRule.id);
@@ -1274,7 +1304,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       else T('+' + fmt(st.income) + '/с', x + SW - 4, y + 11, 6, '#7ee081', 'right');
     });
     if (l === 3 && state.locs[3].unlocked) { T('ГОРН', colX(1) + SW / 2, rowY(1) + SH - 6, 6, '#fff1b0', 'center'); T('+20% СКОР.', colX(1) + SW / 2, rowY(1) + 1, 5, '#ffd76a', 'center'); }
-    if (crate) T('ПОСЫЛКА', crateX() + 7, FL - 26, 6, '#fff1b0', 'center');
+    if (crate) T(crate.kind === 'gold' ? 'ЗОЛОТАЯ' : crate.kind === 'card' ? 'С КАРТОЙ' : 'ПОСЫЛКА', crateX() + 7, FL - 26, 6, crate.kind === 'card' ? '#d9b8ff' : '#fff1b0', 'center');
     T('РАЗДЕВАЛКА', 6, FL + 4, 6, '#c9d3e0');
     T('ОБЩАЯ НА ВЕСЬ ЗАВОД', PTX(0) - 5, FL + 4, 5, '#8d97a8', 'right', false);
     for (let p = 0; p < lockerPages(); p++) T(String(p + 1), PTX(p) + PTW / 2, PTY() + 3, 6, p === lockerPage ? K : '#e6ebf2', 'center', false);
@@ -1323,7 +1353,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   cv.addEventListener('click', e => {
     const h = hit(...toLogical(e));
     if (!h) { if (!mode) { selSlot = null; selWorker = null; renderSheet(); } return; }
-    if (h.crate) { if (!guest) toast(`В посылке ${fmt(openCrate())} монет!`); return; }
+    if (h.crate) { if (!guest) toast(crateText(openCrate())); return; }
     if (h.page != null) { lockerPage = h.page; return; }
     if (h.locker != null) return tapLocker(h.locker);
     if (h.slot != null) return tapSlot(h.slot);
@@ -1459,7 +1489,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   }
   function idleHTML() {
     const g = globals();
-    const combos = g.combos.map(k => ({ night: '<span class="chip" style="--rc:var(--r3)">Ночная смена ×1,5</span>', maids: `<span class="chip" style="--rc:var(--r3)">Дуэт горничных: цех ${g.maidsLoc + 1} ×2</span>`, green: '<span class="chip" style="--rc:var(--r2)">Зелёная сила ×1,5</span>', family: `<span class="chip" style="--rc:var(--r3)">Семейный подряд${g.familyLoc >= 0 ? `: цех ${g.familyLoc + 1} ×2` : ''}</span>` })[k]).join('');
+    const combos = g.combos.map(k => ({ night: '<span class="chip" style="--rc:var(--r3)">Ночная смена ×1,5</span>', maids: `<span class="chip" style="--rc:var(--r3)">Дуэт горничных: цех ${g.maidsLoc + 1} ×2</span>`, green: '<span class="chip" style="--rc:var(--r2)">Зелёная сила ×1,5</span>', family: `<span class="chip" style="--rc:var(--r3)">Семейный подряд${g.familyLoc >= 0 ? `: цех ${g.familyLoc + 1} ×2` : ''}</span>`, post: '<span class="chip" style="--rc:var(--r3)">Почтовый день: посылки ×2</span>' })[k]).join('') + (state.run.subs ? `<span class="chip" style="--rc:var(--r3)">Подписка: +${pct(state.run.subs)} дохода</span>` : '');
     if (guest) return `<h2>Завод: ${esc(guest.n)}</h2><p class="muted">Это снимок чужого завода: можно нажимать на станки и сотрудников и смотреть, как всё устроено.</p><h3>Рекорды</h3>${recordsHTML(guest.r, guest.a.length, meta.records)}`;
     return `<h2>Цех ${state.cur + 1} · ${LOCS[state.cur].name}</h2><p class="muted">Нажми на шкафчик, а потом на станок, чтобы поставить туда сотрудника. Каждый сотрудник один на весь завод. Соседние станки усиливают друг друга, соседи по шкафчику дружат.</p>${combos ? `<h3>Активные комбо</h3><div class="row">${combos}</div>` : ''}<p class="muted">Досок: <b id="live-planks">0</b> · кирпичей: <b id="live-bricks">0</b> · гвоздей: <b id="live-nails">0</b> · стекла: <b id="live-glass">0</b></p>`;
   }
@@ -1491,7 +1521,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const sets = Object.keys(TAGS).map(tg => { const n = g.tc[tg] || 0, p = Math.floor(n / 2); return `<dt class="${p ? 'on' : ''}">${tg}: ${n}</dt><dd>${TAGS[tg]}. Комплектов: ${p}</dd>`; }).join('');
     const night = g.combos.includes('night');
     const owned = Object.keys(counts).map(id => chip(id).replace('</span>', counts[id] > 1 ? ` ×${counts[id]}</span>` : '</span>')).join('') || '<span class="muted">Пока нет карт</span>';
-    return `<h2>Колода</h2><h3>Комплекты по тегам</h3><dl class="sets">${sets}</dl><h3>Комбо</h3><dl class="sets"><dt class="${night ? 'on' : ''}">Ночная смена</dt><dd>Крепкий кофе + Конвейер + Бродяга: доход ×1,5</dd><dt class="${g.sawWorking && anySlot(s => s.machine === 'kiln') ? 'on' : ''}">Растопка</dt><dd>Пилорама работает в цеху 1: печи в цеху 2 +25% скорости</dd><dt class="${g.kilnWorking && anySlot(s => s.machine === 'wire') ? 'on' : ''}">Закалка</dt><dd>Печь работает в цеху 2: проволока в цеху 3 +20% к цене</dd><dt class="${g.maidsLoc >= 0 ? 'on' : ''}">Дуэт горничных</dt><dd>V1 и V2 на соседних станках: доход их цеха ×2</dd><dt class="${g.green ? 'on' : ''}">Зелёная сила</dt><dd>Пришелец и Хаба на соседних станках: сила обоих ×1,5</dd><dt class="${g.combos.includes('family') ? 'on' : ''}">Семейный подряд</dt><dd>Хаба, Кастомка и Батя: соседям по станку из этой тройки +20% силы, все трое в одном цеху: доход цеха ×2</dd><dt class="${g.tumblerWorking && anySlot(s => s.machine === 'vitrage') ? 'on' : ''}">Рамы на гвоздях</dt><dd>Барабан работает в цеху 3: витражи в цеху 4 +20% к цене</dd></dl><h3>Твои карты</h3><div class="row">${owned}</div><div class="row"><button class="btn" type="button" data-act="back">Назад</button></div>`;
+    return `<h2>Колода</h2><h3>Комплекты по тегам</h3><dl class="sets">${sets}</dl><h3>Комбо</h3><dl class="sets"><dt class="${night ? 'on' : ''}">Ночная смена</dt><dd>Крепкий кофе + Конвейер + Бродяга: доход ×1,5</dd><dt class="${g.sawWorking && anySlot(s => s.machine === 'kiln') ? 'on' : ''}">Растопка</dt><dd>Пилорама работает в цеху 1: печи в цеху 2 +25% скорости</dd><dt class="${g.kilnWorking && anySlot(s => s.machine === 'wire') ? 'on' : ''}">Закалка</dt><dd>Печь работает в цеху 2: проволока в цеху 3 +20% к цене</dd><dt class="${g.maidsLoc >= 0 ? 'on' : ''}">Дуэт горничных</dt><dd>V1 и V2 на соседних станках: доход их цеха ×2</dd><dt class="${g.green ? 'on' : ''}">Зелёная сила</dt><dd>Пришелец и Хаба на соседних станках: сила обоих ×1,5</dd><dt class="${g.combos.includes('family') ? 'on' : ''}">Семейный подряд</dt><dd>Хаба, Кастомка и Батя: соседям по станку из этой тройки +20% силы, все трое в одном цеху: доход цеха ×2</dd><dt class="${g.tumblerWorking && anySlot(s => s.machine === 'vitrage') ? 'on' : ''}">Рамы на гвоздях</dt><dd>Барабан работает в цеху 3: витражи в цеху 4 +20% к цене</dd><dt class="${g.combos.includes('post') ? 'on' : ''}">Почтовый день</dt><dd>Почтальон + Курьер + Подписка: монеты в посылках ×2</dd></dl><h3>Твои карты</h3><div class="row">${owned}</div><div class="row"><button class="btn" type="button" data-act="back">Назад</button></div>`;
   }
   const mmss = sec => `${Math.floor(sec / 60)}:${String(Math.floor(sec % 60)).padStart(2, '0')}`;
   // two columns when comparing with a friend: theirs first, ours second
