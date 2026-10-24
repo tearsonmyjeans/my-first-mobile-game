@@ -206,20 +206,21 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
     [[0, 0], [1, 0], [2, 0], [2, 1], [2, 2], [1, 2], [0, 2], [0, 1]]
   ];
   const gridSize = l => LAYOUTS[l].reduce(([c, r], [x, y]) => [Math.max(c, x + 1), Math.max(r, y + 1)], [0, 0]);
+  // max: how many machines of a type the factory may own; once all are placed, their card stops dropping
   const MACH = {
-    saw: { loc: 0, name: 'Пилорама', short: 'ПИЛОРАМА', rate: 1, value: 1, desc: 'Распиливает брёвна на доски.' },
-    bench: { loc: 0, name: 'Верстак', short: 'ВЕРСТАК', rate: 0.6, value: 2.2, desc: 'Строгает доски, поэтому они дороже.' },
-    dryer: { loc: 0, name: 'Сушилка', short: 'СУШИЛКА', rate: 0.35, value: 4, desc: 'Работает медленно, зато сухая доска стоит дорого.' },
-    sander: { loc: 0, name: 'Шлифовальный станок', short: 'ШЛИФОВКА', rate: 0.5, value: 3, desc: 'Полирует доски до блеска.' },
-    mixer: { loc: 1, name: 'Глиномешалка', short: 'МЕШАЛКА', rate: 0.8, value: 3, desc: 'Месит глину и лепит сырые кирпичи.' },
-    press: { loc: 1, name: 'Пресс', short: 'ПРЕСС', rate: 0.5, value: 6, desc: 'Прессует ровные крепкие кирпичи.' },
-    kiln: { loc: 1, name: 'Печь для обжига', short: 'ПЕЧЬ', rate: 0.3, value: 12, desc: 'Обжигает кирпичи. Медленно, но очень дорого.' },
-    wire: { loc: 2, name: 'Волочильный стан', short: 'ВОЛОЧЕНИЕ', rate: 0.7, value: 8, desc: 'Тянет стальную проволоку для гвоздей.' },
-    nailer: { loc: 2, name: 'Гвоздильный автомат', short: 'ГВОЗДИЛКА', rate: 1.5, value: 5, desc: 'Рубит проволоку и штампует шляпки. Очень быстрый.' },
-    tumbler: { loc: 2, name: 'Галтовочный барабан', short: 'ГАЛТОВКА', rate: 0.4, value: 25, desc: 'Полирует гвозди до блеска. Медленно, но очень дорого.' },
-    melt: { loc: 3, name: 'Стекловарка', short: 'ВАРКА', rate: 0.9, value: 30, desc: 'Варит песок в жидкое стекло.' },
-    blower: { loc: 3, name: 'Стеклодувка', short: 'ВЫДУВКА', rate: 0.5, value: 70, desc: 'Выдувает бутылки и вазы.' },
-    vitrage: { loc: 3, name: 'Витражный стол', short: 'ВИТРАЖ', rate: 0.25, value: 180, desc: 'Собирает цветные витражи. Медленно, но очень дорого.' },
+    saw: { loc: 0, name: 'Пилорама', short: 'ПИЛОРАМА', rate: 1, value: 1, max: 2, desc: 'Распиливает брёвна на доски.' },
+    bench: { loc: 0, name: 'Верстак', short: 'ВЕРСТАК', rate: 0.6, value: 2.2, max: 1, desc: 'Строгает доски, поэтому они дороже.' },
+    dryer: { loc: 0, name: 'Сушилка', short: 'СУШИЛКА', rate: 0.35, value: 4, max: 1, desc: 'Работает медленно, зато сухая доска стоит дорого.' },
+    sander: { loc: 0, name: 'Шлифовальный станок', short: 'ШЛИФОВКА', rate: 0.5, value: 3, max: 1, desc: 'Полирует доски до блеска.' },
+    mixer: { loc: 1, name: 'Глиномешалка', short: 'МЕШАЛКА', rate: 0.8, value: 3, max: 2, desc: 'Месит глину и лепит сырые кирпичи.' },
+    press: { loc: 1, name: 'Пресс', short: 'ПРЕСС', rate: 0.5, value: 6, max: 2, desc: 'Прессует ровные крепкие кирпичи.' },
+    kiln: { loc: 1, name: 'Печь для обжига', short: 'ПЕЧЬ', rate: 0.3, value: 12, max: 1, desc: 'Обжигает кирпичи. Медленно, но очень дорого.' },
+    wire: { loc: 2, name: 'Волочильный стан', short: 'ВОЛОЧЕНИЕ', rate: 0.7, value: 8, max: 2, desc: 'Тянет стальную проволоку для гвоздей.' },
+    nailer: { loc: 2, name: 'Гвоздильный автомат', short: 'ГВОЗДИЛКА', rate: 1.5, value: 5, max: 3, desc: 'Рубит проволоку и штампует шляпки. Очень быстрый.' },
+    tumbler: { loc: 2, name: 'Галтовочный барабан', short: 'ГАЛТОВКА', rate: 0.4, value: 25, max: 2, desc: 'Полирует гвозди до блеска. Медленно, но очень дорого.' },
+    melt: { loc: 3, name: 'Стекловарка', short: 'ВАРКА', rate: 0.9, value: 30, max: 3, desc: 'Варит песок в жидкое стекло.' },
+    blower: { loc: 3, name: 'Стеклодувка', short: 'ВЫДУВКА', rate: 0.5, value: 70, max: 3, desc: 'Выдувает бутылки и вазы.' },
+    vitrage: { loc: 3, name: 'Витражный стол', short: 'ВИТРАЖ', rate: 0.25, value: 180, max: 2, desc: 'Собирает цветные витражи. Медленно, но очень дорого.' },
     belt: { loc: -1, name: 'Конвейер', short: 'КОНВЕЙЕР', rate: 0, value: 0, desc: 'Сам ничего не делает. Связан со всем рядом и ускоряет каждый станок на 30%. Сотрудник ему не нужен.' }
   };
   const WORKERS = {
@@ -452,6 +453,7 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
   function save() { try { state.savedAt = Date.now(); localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { } }
   let state = load() || fresh();
 
+  let lockerPage = 0;
   let mode = null, selSlot = null, selWorker = null, view = 'main', offersHidden = false, confirmReset = false;
   let crate = null, floats = [], incomeNow = 0, t = 0;
   const slotsOf = l => state.locs[l].slots;
@@ -587,8 +589,10 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
   }
 
   /* ================= cards ================= */
+  const machineCount = machine => state.locs.reduce((n, L) => n + L.slots.filter(s => s.machine === machine).length, 0);
   function canPlaceMachine(machine) {
     const ml = MACH[machine].loc;
+    if (MACH[machine].max && machineCount(machine) >= MACH[machine].max) return false;
     return state.locs.some((L, l) => L.unlocked && (ml < 0 || ml === l) && L.slots.some(s => !s.machine) && !(machine === 'belt' && L.slots.some(s => s.machine === 'belt')));
   }
   function eligible(id) {
@@ -619,6 +623,7 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
   function choose(id) {
     const offer = state.offers.shift();
     const cd = CARDS[id], cl = cardLoc(id);
+    if (cd.type === 'machine' && !canPlaceMachine(cd.machine)) { state.offers.unshift(offer); toast(MACH[cd.machine].max && machineCount(cd.machine) >= MACH[cd.machine].max ? `Все станки «${MACH[cd.machine].name}» уже стоят` : 'Для этого станка нет свободного места'); return; }
     if (cd.type === 'machine') { mode = { kind: 'place', card: id, offer }; if (cl >= 0) state.cur = cl; }
     else if (cd.type === 'equip') mode = { kind: 'equip', card: id, offer };
     else if (cd.type === 'mupg') { mode = { kind: 'upgrade', card: id, offer }; if (cl >= 0) state.cur = cl; }
@@ -629,7 +634,7 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
   function finish(id, target) {
     const cd = CARDS[id], before = globals().combos;
     state.cards.push(id);
-    if (cd.type === 'worker') { state.workers[cd.worker].unlocked = true; toast(`${WORKERS[cd.worker].name} ${WORKERS[cd.worker].she ? 'пришла' : 'пришёл'} на завод!`); }
+    if (cd.type === 'worker') { state.workers[cd.worker].unlocked = true; lockerPage = Math.floor(state.lockers.indexOf(cd.worker) / NL); toast(`${WORKERS[cd.worker].name} ${WORKERS[cd.worker].she ? 'пришла' : 'пришёл'} на завод!`); }
     if (cd.type === 'machine') slotsOf(target.l)[target.i].machine = cd.machine;
     if (cd.type === 'equip') state.workers[target].equip.push(id);
     if (cd.type === 'mupg') slotsOf(target.l)[target.i].upg.push(id);
@@ -716,9 +721,13 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
   let OX = 6;
   const colX = c => OX + c * 78, rowY = r => 36 + r * 78;
   const SX = i => colX(LAYOUTS[state.cur][i][0]), SY = i => rowY(LAYOUTS[state.cur][i][1]);
-  // lockers: two rows of LROW, each row 60 px tall so a resting worker fits under its locker
+  // lockers: pages of NL, each page two rows of LROW, each row 60 px tall so a resting worker fits under its locker
   const NL = 16, LROW = 8, LW = 26, LH = 44;
-  const LX = i => Math.round((W - (LROW * 29 - 3)) / 2) + (i % LROW) * 29, LYi = i => LY + Math.floor(i / LROW) * 60;
+  const LX = i => Math.round((W - (LROW * 29 - 3)) / 2) + (i % LROW) * 29, LYi = i => LY + Math.floor(i % NL / LROW) * 60;
+  // there is always a page with free lockers ahead, so new workers have somewhere to go
+  const lockerPages = () => Math.max(2, Math.ceil((state.lockers.length + 1) / NL));
+  const onPage = i => Math.floor(i / NL) === lockerPage;
+  const PTW = 16, PTX = p => W - 6 - (lockerPages() - p) * (PTW + 2), PTY = () => FL + 3;
   const crateX = () => Math.round(20 + crate.f * (W - 50));
   function layout() {
     const [cols, rows] = gridSize(state.cur);
@@ -951,7 +960,12 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
     }
     // locker room (shared by all workshops)
     R(0, FL, W, H - FL, '#4b5568'); R(0, FL, W, 1, K); R(0, H - 14, W, 14, '#3e4757');
-    for (let i = 0; i < NL; i++) {
+    for (let p = 0; p < lockerPages(); p++) {
+      const x = PTX(p), y = PTY(), on = p === lockerPage;
+      R(x, y, PTW, 12, K); R(x + 1, y + 1, PTW - 2, 10, on ? '#f2c14e' : '#6a7488');
+      if (mode && mode.kind === 'equip' && !on) border(x, y, PTW, 12, `rgba(126,224,129,${pulse})`);
+    }
+    for (let i = lockerPage * NL; i < (lockerPage + 1) * NL; i++) {
       const x = LX(i), y = LYi(i), id = state.lockers[i];
       const open = i < state.lockers.length, w = id ? state.workers[id] : null;
       R(x, y, LW, LH, K); R(x + 1, y + 1, LW - 2, LH - 2, open ? '#6fa3b5' : '#4a5a66'); R(x + 1, y + 1, LW - 2, 1, open ? '#94c3d3' : '#5d6f7c');
@@ -973,7 +987,7 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
     }
     for (let i = 0; i < state.lockers.length - 1; i++) {
       const a = state.lockers[i], b = state.lockers[i + 1];
-      if ((i + 1) % LROW === 0 || !(a && b && state.workers[a].unlocked && state.workers[b].unlocked)) continue;
+      if ((i + 1) % LROW === 0 || !onPage(i) || !(a && b && state.workers[a].unlocked && state.workers[b].unlocked)) continue;
       const hx = LX(i) + LW - 1, hy = LYi(i) + 8 - (Math.floor(t * 2) % 2);
       const HEART = [[1, 0, 2], [4, 0, 2], [0, 1, 7], [0, 2, 7], [1, 3, 5], [2, 4, 3], [3, 5, 1]];
       for (const [dx, dy, w] of HEART) R(hx + dx - 1, hy + dy - 1, w + 2, 1, K);
@@ -1004,8 +1018,10 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
     if (l === 3 && state.locs[3].unlocked) { T('ГОРН', colX(1) + SW / 2, rowY(1) + SH - 6, 6, '#fff1b0', 'center'); T('+20% СКОР.', colX(1) + SW / 2, rowY(1) + 1, 5, '#ffd76a', 'center'); }
     if (crate) T('ПОСЫЛКА', crateX() + 7, FL - 26, 6, '#fff1b0', 'center');
     T('РАЗДЕВАЛКА', 6, FL + 4, 6, '#c9d3e0');
-    T('ОБЩАЯ НА ВЕСЬ ЗАВОД', W - 6, FL + 4, 5, '#8d97a8', 'right', false);
+    T('ОБЩАЯ НА ВЕСЬ ЗАВОД', PTX(0) - 5, FL + 4, 5, '#8d97a8', 'right', false);
+    for (let p = 0; p < lockerPages(); p++) T(String(p + 1), PTX(p) + PTW / 2, PTY() + 3, 6, p === lockerPage ? K : '#e6ebf2', 'center', false);
     state.lockers.forEach((id, i) => {
+      if (!onPage(i)) return;
       if (id && !state.workers[id].unlocked) { T('?', LX(i) + LW / 2, LYi(i) + 6, 12, '#6b6178', 'center', false); return; }
       const wp = id && workerPlace(id);
       if (wp) T('Ц' + (wp.l + 1), LX(i) + 9.5, LYi(i) + 35, 5, K, 'center', false);
@@ -1041,13 +1057,15 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
   function hit(x, y) {
     if (crate && x >= crateX() - 4 && x <= crateX() + 18 && y >= FL - 30 && y <= FL) return { crate: true };
     for (let i = 0; i < slotsOf(state.cur).length; i++) if (x >= SX(i) && x < SX(i) + SW && y >= SY(i) && y < SY(i) + SH) return { slot: i };
-    for (let i = 0; i < NL; i++) if (x >= LX(i) - 1 && x < LX(i) + LW + 2 && y >= LYi(i) - 4 && y < LYi(i) + 58) return { locker: i };
+    for (let p = 0; p < lockerPages(); p++) if (x >= PTX(p) - 1 && x < PTX(p) + PTW + 1 && y >= PTY() - 3 && y < PTY() + 15) return { page: p };
+    for (let i = lockerPage * NL; i < (lockerPage + 1) * NL; i++) if (x >= LX(i) - 1 && x < LX(i) + LW + 2 && y >= LYi(i) - 4 && y < LYi(i) + 58) return { locker: i };
     return null;
   }
   cv.addEventListener('click', e => {
     const h = hit(...toLogical(e));
     if (!h) { if (!mode) { selSlot = null; selWorker = null; renderSheet(); } return; }
     if (h.crate) { crate = null; state.crateIn = 45 + Math.random() * 45; queueOffer('crate'); toast('Посылка открыта!'); return; }
+    if (h.page != null) { lockerPage = h.page; return; }
     if (h.locker != null) return tapLocker(h.locker);
     if (h.slot != null) return tapSlot(h.slot);
   });
@@ -1122,7 +1140,8 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
   function cardHTML(id) {
     const cd = CARDS[id], cl = cardLoc(id);
     const kind = cd.type === 'machine' || cd.type === 'equip' ? cd.tag : `${TYPE_LABEL[cd.type]} · ${cd.tag}`;
-    const where = cl >= 0 ? `<br>${LOCS[cl].name}` : '';
+    const M = cd.type === 'machine' && MACH[cd.machine];
+    const where = (cl >= 0 ? `<br>${LOCS[cl].name}` : '') + (M && M.max ? `<br>есть ${machineCount(cd.machine)} из ${M.max}` : '');
     return `<button type="button" class="card r${cd.rar}" data-act="pick" data-id="${id}"><span class="band">${esc(cd.name)}</span><span class="top"><img class="ic" src="${ICONS[id]}" alt=""><span class="ct">${kind}${where}</span></span><span class="cd">${esc(cd.desc)}</span><span class="rar">${RAR[cd.rar]}</span></button>`;
   }
   const SRC = { level: 'Новый уровень', crate: 'Посылка', shop: 'Магазин' };
