@@ -4,7 +4,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&family=Tiny5&display=swap">
 <style>
-/* Layout: one phone-width column: HUD, pixel factory canvas, bottom sheet with context actions and card picks */
+/* Layout: one phone-width column: HUD, workshop tabs, pixel factory canvas, bottom sheet with context actions and card picks */
 :root{
   --bg:#1b1624;
   --panel:#262033;
@@ -14,7 +14,6 @@
   --line:#463d5a;
   --gold:#f2c14e;
   --green:#7ee081;
-  --red:#ff8a7a;
   --paper:#f3e9d2;
   --paper-ink:#2b2135;
   --r0:#8a93a0;--r1:#4f8fd6;--r2:#9b6bd6;--r3:#e0a32e;
@@ -36,6 +35,12 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
 .xpbar{height:8px;background:#110d17;border:2px solid var(--line);border-radius:3px;overflow:hidden}
 .xpbar i{display:block;height:100%;width:0;background:var(--green)}
 #xptext{font:400 11px var(--pixel);color:var(--muted);white-space:nowrap}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.tab{font:400 14px/1.1 var(--pixel);color:var(--ink);background:var(--panel);border:2px solid var(--line);border-radius:8px;padding:8px 6px;cursor:pointer}
+.tab[aria-pressed="true"]{background:var(--gold);border-color:#a8781a;color:var(--paper-ink)}
+.tab.locked{color:var(--muted);border-style:dashed}
+.tab.locked.ready{color:var(--gold);border-color:var(--gold)}
+.tab:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 .stage{position:relative}
 #game{display:block;width:100%;max-width:100%;aspect-ratio:240/210;height:auto;image-rendering:pixelated;border-radius:10px;touch-action:manipulation;cursor:pointer}
 #toast{position:absolute;left:50%;top:8px;transform:translateX(-50%);background:rgba(27,22,36,.92);border:2px solid var(--gold);color:var(--ink);font:400 14px/1.2 var(--pixel);padding:8px 12px;border-radius:6px;max-width:86%;text-align:center;pointer-events:none;transition:opacity .25s}
@@ -59,7 +64,9 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
 .card{display:flex;flex-direction:column;gap:6px;text-align:left;background:var(--paper);color:var(--paper-ink);border:3px solid var(--rc);border-bottom-width:6px;border-radius:8px;padding:0 0 8px;cursor:pointer;min-width:0;font:inherit}
 .card:active{transform:translateY(2px)}
 .card .band{background:var(--rc);color:#fff;font:400 13px/1.1 var(--pixel);padding:6px 6px 5px;text-wrap:balance}
-.card .ct{font:400 10px/1 var(--pixel);color:var(--rc);padding:0 7px;letter-spacing:.04em;text-transform:uppercase;filter:brightness(.8)}
+.card .top{display:flex;flex-direction:column;align-items:flex-start;gap:5px;padding:0 7px;min-width:0}
+.card .ic{width:36px;height:36px;image-rendering:pixelated;flex:none;background:#e6d9bc;border-radius:4px;padding:2px}
+.card .ct{overflow-wrap:anywhere;font:400 10px/1.15 var(--pixel);color:var(--rc);letter-spacing:.04em;text-transform:uppercase;filter:brightness(.8)}
 .card .cd{font-size:12.5px;line-height:1.3;padding:0 7px}
 .card .rar{font:400 10px/1 var(--pixel);color:#7a7088;padding:0 7px;margin-top:auto}
 .r0{--rc:var(--r0)}.r1{--rc:var(--r1)}.r2{--rc:var(--r2)}.r3{--rc:var(--r3)}
@@ -69,7 +76,8 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
 .stat b{font:400 16px var(--pixel);font-variant-numeric:tabular-nums}
 .notes{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:4px;font-size:14px}
 .notes li::before{content:"+ ";color:var(--green);font-family:var(--pixel)}
-.chip{font:400 12px/1 var(--pixel);background:var(--panel2);border:2px solid var(--rc,var(--line));border-radius:6px;padding:5px 7px}
+.chip{display:inline-flex;align-items:center;gap:5px;font:400 12px/1 var(--pixel);background:var(--panel2);border:2px solid var(--rc,var(--line));border-radius:6px;padding:4px 7px 4px 4px}
+.chip img{width:18px;height:18px;image-rendering:pixelated}
 .prompt{border:2px dashed var(--green);border-radius:8px;padding:12px;font:400 16px/1.3 var(--pixel);color:var(--green)}
 .sets{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:14px;margin:0}
 .sets dt{font:400 14px var(--pixel)}
@@ -83,8 +91,12 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
     <div class="money"><span class="coin" aria-hidden="true"></span><b id="money">0</b><span id="rate">+0/с</span></div>
     <div class="lvl"><span id="lvl" aria-label="Уровень">1</span><div class="xp"><div class="xpbar"><i id="xpbar"></i></div><span id="xptext"></span></div></div>
   </header>
+  <nav class="tabs" aria-label="Цеха">
+    <button class="tab" id="tab0" type="button" data-loc="0">Цех 1 · Доски</button>
+    <button class="tab" id="tab1" type="button" data-loc="1">Цех 2 · Кирпичи</button>
+  </nav>
   <div class="stage">
-    <canvas id="game" role="img" aria-label="Цех досок: три места под станки и раздевалка с сотрудниками"></canvas>
+    <canvas id="game" role="img" aria-label="Цех завода: три места под станки и раздевалка с сотрудниками"></canvas>
     <div id="toast" hidden></div>
   </div>
   <section class="sheet" aria-live="polite">
@@ -131,15 +143,22 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
   const PORTRAIT_Y = { crow: 1, mrp: 3, tramp: 2 };
 
   /* ================= data ================= */
+  const LOCS = [
+    { name: 'Доски', sign: 'ЦЕХ 1 · ДОСКИ', cost: 0, wall: '#b0654c', mortar: '#94523d', floor: '#a39b8f', grid: '#978f83', plate: '#938b7f', item: '#e3b47c' },
+    { name: 'Кирпичи', sign: 'ЦЕХ 2 · КИРПИЧИ', cost: 300, wall: '#7d7f88', mortar: '#6a6c75', floor: '#9c877a', grid: '#8f7a6d', plate: '#8d7c70', item: '#c4553a' }
+  ];
   const MACH = {
-    saw: { name: 'Пилорама', short: 'ПИЛОРАМА', rate: 1, value: 1, desc: 'Распиливает брёвна на доски.' },
-    bench: { name: 'Верстак', short: 'ВЕРСТАК', rate: 0.6, value: 2.2, desc: 'Строгает доски, поэтому они дороже.' },
-    dryer: { name: 'Сушилка', short: 'СУШИЛКА', rate: 0.35, value: 4, desc: 'Работает медленно, зато сухая доска стоит дорого.' },
-    belt: { name: 'Конвейер', short: 'КОНВЕЙЕР', rate: 0, value: 0, desc: 'Сам ничего не делает. Связан со всем рядом и ускоряет каждый станок на 30%. Сотрудник ему не нужен.' },
-    sander: { name: 'Шлифовальный станок', short: 'ШЛИФОВКА', rate: 0.5, value: 3, desc: 'Полирует доски до блеска.' }
+    saw: { loc: 0, name: 'Пилорама', short: 'ПИЛОРАМА', rate: 1, value: 1, desc: 'Распиливает брёвна на доски.' },
+    bench: { loc: 0, name: 'Верстак', short: 'ВЕРСТАК', rate: 0.6, value: 2.2, desc: 'Строгает доски, поэтому они дороже.' },
+    dryer: { loc: 0, name: 'Сушилка', short: 'СУШИЛКА', rate: 0.35, value: 4, desc: 'Работает медленно, зато сухая доска стоит дорого.' },
+    sander: { loc: 0, name: 'Шлифовальный станок', short: 'ШЛИФОВКА', rate: 0.5, value: 3, desc: 'Полирует доски до блеска.' },
+    mixer: { loc: 1, name: 'Глиномешалка', short: 'МЕШАЛКА', rate: 0.8, value: 3, desc: 'Месит глину и лепит сырые кирпичи.' },
+    press: { loc: 1, name: 'Пресс', short: 'ПРЕСС', rate: 0.5, value: 6, desc: 'Прессует ровные крепкие кирпичи.' },
+    kiln: { loc: 1, name: 'Печь для обжига', short: 'ПЕЧЬ', rate: 0.3, value: 12, desc: 'Обжигает кирпичи. Медленно, но очень дорого.' },
+    belt: { loc: -1, name: 'Конвейер', short: 'КОНВЕЙЕР', rate: 0, value: 0, desc: 'Сам ничего не делает. Связан со всем рядом и ускоряет каждый станок на 30%. Сотрудник ему не нужен.' }
   };
   const WORKERS = {
-    crow: { name: 'Ворона', role: 'Оператор станков', power: 1.0, speed: 1.2, luck: 0.05, perk: 'Меткий распил: каждая 7-я доска выходит двойной.' },
+    crow: { name: 'Ворона', role: 'Оператор станков', power: 1.0, speed: 1.2, luck: 0.05, perk: 'Меткий распил: каждая 7-я штука выходит двойной.' },
     mrp: { name: 'Мистер Жопосранчик', role: 'Помощник', power: 0.8, speed: 1.0, luck: 0.15, perk: 'Ооо-ви-и!: соседи по шкафчику получают от него +10% силы вместо +5%. Без кофе работает вполсилы.' },
     tramp: { name: 'Бродяга', role: 'Тёртый калач', power: 1.4, speed: 0.9, luck: 0.08, perk: 'Синяки не болят: +20% силы, если на соседнем станке кто-то работает.' }
   };
@@ -148,28 +167,36 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
     m_saw: { name: 'Пилорама', type: 'machine', machine: 'saw', tag: 'Станки', rar: 0, desc: 'Ещё одна пилорама. Соседям +15% скорости. Две пилорамы: +25% скорости обеим.' },
     m_dryer: { name: 'Сушилка', type: 'machine', machine: 'dryer', tag: 'Станки', rar: 1, desc: 'Доска стоит 4, но медленно. Соседям +20% к цене.' },
     m_sander: { name: 'Шлифовальный станок', type: 'machine', machine: 'sander', tag: 'Станки', rar: 1, desc: 'Доска стоит 3. Рядом с верстаком: +40% к цене.' },
-    m_belt: { name: 'Конвейер', type: 'machine', machine: 'belt', tag: 'Станки', rar: 2, desc: 'Связан со всем рядом: каждому станку +30% скорости.' },
+    m_mixer: { name: 'Глиномешалка', type: 'machine', machine: 'mixer', tag: 'Станки', rar: 0, desc: 'Кирпич стоит 3. Рядом с прессом: +30% скорости пресса.' },
+    m_press: { name: 'Пресс', type: 'machine', machine: 'press', tag: 'Станки', rar: 1, desc: 'Кирпич стоит 6. Рядом с печью: +25% к цене обожжённых.' },
+    m_kiln: { name: 'Печь для обжига', type: 'machine', machine: 'kiln', tag: 'Станки', rar: 1, desc: 'Кирпич стоит 12. Если в цеху досок работает пилорама: +25% скорости.' },
+    m_belt: { name: 'Конвейер', type: 'machine', machine: 'belt', tag: 'Станки', rar: 2, desc: 'Один на цех. Связан со всем рядом: каждому станку +30% скорости.' },
     w_tramp: { name: 'Новый сотрудник', type: 'worker', worker: 'tramp', tag: 'Сотрудники', rar: 2, desc: 'Приходит Бродяга. Очень сильный, любит работать в команде.' },
     u_power: { name: 'Тренажёр в подсобке', type: 'global', tag: 'Сотрудники', rar: 0, eff: { power: 0.10 }, desc: 'Все сотрудники: +10% силы.' },
     u_speed: { name: 'Перекур отменён', type: 'global', tag: 'Сотрудники', rar: 0, eff: { speed: 0.10 }, desc: 'Все сотрудники: +10% скорости.' },
-    u_price: { name: 'Реклама на радио', type: 'global', tag: 'Улучшения', rar: 1, eff: { price: 0.15 }, desc: 'Все доски: +15% к цене.' },
+    u_price: { name: 'Реклама на радио', type: 'global', tag: 'Улучшения', rar: 1, eff: { price: 0.15 }, desc: 'Всё, что делает завод: +15% к цене.' },
+    u_bricks: { name: 'Стройка по соседству', type: 'global', tag: 'Улучшения', rar: 1, loc: 1, eff: { brickPrice: 0.25 }, desc: 'Кирпичи: +25% к цене.' },
     e_coffee: { name: 'Крепкий кофе', type: 'equip', tag: 'Экипировка', rar: 1, eff: { speed: 0.15 }, desc: '+15% скорости. Мистер Жопосранчик с кофе работает в полную силу.' },
     e_helmet: { name: 'Каска', type: 'equip', tag: 'Экипировка', rar: 0, eff: { power: 0.10 }, desc: '+10% силы.' },
     e_gloves: { name: 'Перчатки', type: 'equip', tag: 'Экипировка', rar: 0, eff: { power: 0.05, speed: 0.08 }, desc: '+5% силы и +8% скорости.' },
-    e_horseshoe: { name: 'Подкова на удачу', type: 'equip', tag: 'Экипировка', rar: 1, eff: { luck: 0.08 }, desc: '+8% шанс сделать двойную доску.' },
+    e_mask: { name: 'Респиратор', type: 'equip', tag: 'Экипировка', rar: 0, eff: { power: 0.08, speed: 0.08 }, desc: '+8% силы и +8% скорости. В пыльном цеху без него никак.' },
+    e_horseshoe: { name: 'Подкова на удачу', type: 'equip', tag: 'Экипировка', rar: 1, eff: { luck: 0.08 }, desc: '+8% шанс сделать двойную штуку.' },
     e_chainsaw: { name: 'Бензопила', type: 'equip', tag: 'Экипировка', rar: 2, eff: { speed: 0.35 }, desc: '+35% скорости.' },
-    s_blade: { name: 'Острое полотно', type: 'mupg', tag: 'Улучшения', rar: 0, eff: { rate: 0.25 }, desc: 'Станок работает на 25% быстрее.' },
-    s_varnish: { name: 'Лак', type: 'mupg', tag: 'Улучшения', rar: 0, eff: { value: 0.20 }, desc: 'Доски с этого станка +20% к цене.' },
-    s_grease: { name: 'Смазка', type: 'mupg', tag: 'Улучшения', rar: 1, eff: { rate: 0.15, value: 0.10 }, desc: 'Станок: +15% скорости и +10% к цене.' }
+    s_blade: { name: 'Острое полотно', type: 'mupg', loc: 0, tag: 'Улучшения', rar: 0, eff: { rate: 0.25 }, desc: 'Станок в цеху досок: +25% скорости.' },
+    s_varnish: { name: 'Лак', type: 'mupg', loc: 0, tag: 'Улучшения', rar: 0, eff: { value: 0.20 }, desc: 'Доски с этого станка: +20% к цене.' },
+    s_glaze: { name: 'Глазурь', type: 'mupg', loc: 1, tag: 'Улучшения', rar: 0, eff: { value: 0.25 }, desc: 'Кирпичи с этого станка: +25% к цене.' },
+    s_grease: { name: 'Смазка', type: 'mupg', tag: 'Улучшения', rar: 1, eff: { rate: 0.15, value: 0.10 }, desc: 'Любой станок: +15% скорости и +10% к цене.' }
   };
   const TYPE_LABEL = { machine: 'Станок', worker: 'Сотрудник', global: 'Для всех', equip: 'Экипировка', mupg: 'На станок' };
   const RAR = ['обычная', 'редкая', 'эпическая', 'легендарная'];
+  const RAR_COL = ['#8a93a0', '#4f8fd6', '#9b6bd6', '#e0a32e'];
   const TAGS = {
     'Сотрудники': 'каждая пара: +5% силы всем',
     'Экипировка': 'каждая пара: +5% скорости всем',
-    'Станки': 'каждая пара: +5% к цене досок',
+    'Станки': 'каждая пара: +5% к цене',
     'Улучшения': 'каждая пара: +3% ко всему доходу'
   };
+  const cardLoc = id => { const cd = CARDS[id]; return cd.type === 'machine' ? MACH[cd.machine].loc : (cd.loc ?? -1); };
 
   function effect(src, dst) {
     if (src === 'belt') return { rate: 0.30, value: 0, text: 'Конвейер: +30% скорости' };
@@ -178,24 +205,82 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
     if (src === 'bench' && dst === 'saw') return { rate: 0, value: 0.25, text: 'Верстак строгает: +25% к цене' };
     if (src === 'bench' && dst === 'sander') return { rate: 0, value: 0.40, text: 'Верстак и шлифовка: +40% к цене' };
     if (src === 'sander' && dst === 'bench') return { rate: 0, value: 0.20, text: 'Шлифовка рядом: +20% к цене' };
+    if (src === 'mixer' && dst === 'press') return { rate: 0.30, value: 0, text: 'Свежая глина: +30% скорости' };
+    if (src === 'press' && dst === 'kiln') return { rate: 0, value: 0.25, text: 'Ровные кирпичи: +25% к цене' };
+    if (src === 'kiln' && dst === 'mixer') return { rate: 0.15, value: 0, text: 'Тёплая глина: +15% скорости' };
     return { rate: 0, value: 0.03, text: `${MACH[src].name} рядом: +3% к цене` };
   }
 
+  /* ================= card icons ================= */
+  function makeIcon(draw) {
+    const cv = document.createElement('canvas'); cv.width = 16; cv.height = 16;
+    const x = cv.getContext('2d');
+    const r = (a, b, w, h, col) => { x.fillStyle = col; x.fillRect(a, b, w, h); };
+    const dsk = (cx, cy, rad, col) => { for (let dy = -rad; dy <= rad; dy++) { const w = Math.round(Math.sqrt(rad * rad - dy * dy)); r(cx - w, cy + dy, w * 2 + 1, 1, col); } };
+    draw(r, dsk, x);
+    return cv.toDataURL();
+  }
+  const K = PAL.k;
+  const ICON_DRAW = {
+    bench: r => { r(5, 0, 1, 5, '#8a5a32'); r(3, 0, 5, 2, '#7d8794'); r(1, 6, 14, 4, K); r(2, 7, 12, 2, '#c98a4a'); r(2, 7, 12, 1, '#e5a86a'); r(2, 10, 3, 6, K); r(3, 10, 1, 5, '#a06a36'); r(11, 10, 3, 6, K); r(12, 10, 1, 5, '#a06a36'); r(9, 4, 5, 2, K); r(10, 4, 3, 1, '#e3b47c'); },
+    saw: (r, d) => { d(8, 8, 7, K); d(8, 8, 6, '#d6dbe0'); for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4; r(8 + Math.round(Math.cos(a) * 5), 8 + Math.round(Math.sin(a) * 5), 1, 1, '#7d8794'); } r(7, 7, 3, 3, '#5a6270'); r(10, 4, 2, 1, '#ffffff'); },
+    dryer: r => { r(2, 1, 12, 15, K); r(3, 2, 10, 13, '#7d8a96'); r(4, 4, 8, 7, '#3a2f3a'); r(5, 5, 6, 1, '#d9a066'); r(5, 7, 6, 1, '#d9a066'); r(4, 10, 8, 1, '#f28c3a'); r(6, 12, 4, 2, K); },
+    sander: r => { r(3, 1, 10, 5, K); r(4, 2, 8, 3, '#cdb88c'); r(6, 2, 1, 3, '#a8946a'); r(9, 2, 1, 3, '#a8946a'); r(2, 5, 12, 11, K); r(3, 6, 10, 9, '#5fa08c'); r(4, 8, 2, 2, '#e0533a'); r(7, 8, 2, 2, '#7ee081'); r(10, 8, 2, 5, '#3f7466'); },
+    mixer: r => { r(2, 1, 12, 10, K); r(3, 2, 10, 8, '#d9a066'); r(5, 2, 1, 8, '#b98a4a'); r(9, 2, 1, 8, '#b98a4a'); r(4, 3, 5, 3, K); r(5, 4, 3, 1, '#b5653f'); r(1, 11, 14, 2, K); r(2, 13, 2, 3, K); r(12, 13, 2, 3, K); },
+    press: r => { r(1, 0, 14, 16, K); r(2, 1, 2, 14, '#9aa3ad'); r(12, 1, 2, 14, '#9aa3ad'); r(4, 1, 8, 2, '#e0a32e'); r(7, 3, 2, 3, '#5a6270'); r(4, 6, 8, 2, '#7d8794'); r(4, 11, 8, 4, '#2b2135'); r(5, 12, 6, 2, '#c4553a'); },
+    kiln: r => { r(10, 0, 4, 5, K); r(11, 1, 2, 4, '#8a5a4a'); r(1, 4, 14, 12, K); r(2, 5, 12, 10, '#b5654c'); r(2, 8, 12, 1, '#94523d'); r(4, 9, 8, 7, K); r(5, 10, 6, 6, '#d9622a'); r(6, 12, 4, 4, '#f28c3a'); r(7, 13, 2, 2, '#f2c94c'); },
+    belt: r => { r(4, 3, 7, 4, K); r(5, 4, 5, 2, '#e3b47c'); r(0, 7, 16, 6, K); r(1, 8, 14, 4, '#4b4f5a'); for (let i = 2; i < 15; i += 4) r(i, 9, 1, 2, '#6b7180'); r(2, 13, 2, 3, K); r(12, 13, 2, 3, K); },
+    tramp: (r, d, x) => { x.drawImage(SPR.tramp, 2, 1, 16, 16, 0, 0, 16, 16); },
+    power: r => { r(0, 4, 4, 8, K); r(1, 5, 2, 6, '#5a6270'); r(12, 4, 4, 8, K); r(13, 5, 2, 6, '#5a6270'); r(4, 7, 8, 2, K); r(4, 7, 8, 1, '#c9d0d6'); },
+    speed: (r, d) => { r(6, 0, 4, 2, K); r(7, 2, 2, 1, K); d(8, 9, 6, K); d(8, 9, 5, '#f4efe6'); r(8, 5, 1, 5, K); r(8, 9, 3, 1, K); r(12, 3, 2, 2, K); },
+    price: r => { r(3, 0, 1, 1, K); r(4, 1, 1, 1, K); r(5, 2, 1, 1, K); r(6, 3, 1, 2, K); r(1, 5, 14, 10, K); r(2, 6, 12, 8, '#d9535a'); for (let yy = 7; yy < 13; yy += 2) for (let xx = 3; xx < 9; xx += 2) r(xx, yy, 1, 1, '#7a2a2e'); r(10, 7, 3, 3, '#f2c14e'); r(10, 11, 3, 1, '#f4efe6'); },
+    bricks: r => { r(4, 4, 8, 5, K); r(5, 5, 6, 3, '#d96a4a'); r(0, 9, 8, 6, K); r(1, 10, 6, 4, '#c4553a'); r(8, 9, 8, 6, K); r(9, 10, 6, 4, '#c4553a'); r(1, 10, 6, 1, '#d96a4a'); r(9, 10, 6, 1, '#d96a4a'); },
+    coffee: r => { r(5, 0, 1, 3, '#b8b0c4'); r(8, 1, 1, 2, '#b8b0c4'); r(2, 4, 10, 11, K); r(3, 5, 8, 9, '#e8e4da'); r(3, 5, 8, 2, '#6b4226'); r(12, 6, 3, 6, K); r(12, 7, 1, 4, '#e8e4da'); },
+    helmet: r => { r(4, 3, 8, 1, K); r(3, 4, 10, 7, K); r(4, 4, 8, 6, '#f2c14e'); r(5, 5, 2, 1, '#fff1b0'); r(7, 3, 2, 7, K); r(7, 4, 2, 6, '#e0a32e'); r(1, 10, 14, 3, K); r(2, 11, 12, 1, '#e0a32e'); },
+    gloves: r => { r(3, 2, 9, 12, K); r(4, 3, 7, 10, '#e0a32e'); r(6, 3, 1, 4, '#b8801f'); r(8, 3, 1, 4, '#b8801f'); r(11, 6, 4, 5, K); r(12, 7, 2, 3, '#e0a32e'); r(3, 12, 9, 4, K); r(4, 13, 7, 2, '#8a5a32'); },
+    mask: r => { r(0, 5, 3, 1, K); r(13, 5, 3, 1, K); r(3, 3, 10, 9, K); r(4, 4, 8, 7, '#e8e4da'); r(1, 8, 4, 6, K); r(2, 9, 2, 4, '#5a6270'); r(11, 8, 4, 6, K); r(12, 9, 2, 4, '#5a6270'); r(6, 6, 4, 1, '#b8b0c4'); },
+    horseshoe: r => { r(2, 1, 4, 12, K); r(10, 1, 4, 12, K); r(2, 11, 12, 4, K); r(3, 2, 2, 10, '#c9d0d6'); r(11, 2, 2, 10, '#c9d0d6'); r(3, 12, 10, 2, '#c9d0d6'); r(3, 4, 1, 1, K); r(12, 4, 1, 1, K); r(3, 8, 1, 1, K); r(12, 8, 1, 1, K); r(5, 0, 1, 1, '#fff1b0'); },
+    chainsaw: r => { r(3, 3, 4, 2, K); r(0, 5, 8, 8, K); r(1, 6, 6, 6, '#e0533a'); r(2, 7, 2, 2, '#f5a08a'); r(8, 7, 8, 4, K); r(9, 8, 6, 2, '#c9d0d6'); for (let i = 9; i < 16; i += 2) r(i, 11, 1, 1, K); },
+    blade: r => { r(1, 6, 14, 5, K); r(2, 7, 12, 3, '#d6dbe0'); for (let i = 1; i < 15; i += 2) r(i, 11, 1, 2, K); r(12, 1, 1, 4, '#fff1b0'); r(10, 2, 5, 1, '#fff1b0'); },
+    varnish: r => { r(3, 2, 10, 2, '#9aa3ad'); r(3, 4, 10, 12, K); r(4, 5, 8, 10, '#c98a4a'); r(4, 8, 8, 4, '#f3e9d2'); r(6, 9, 4, 2, '#b8423b'); r(9, 0, 2, 2, '#c98a4a'); },
+    glaze: r => { r(10, 0, 2, 7, '#8a5a32'); r(9, 6, 4, 2, '#4f8fd6'); r(2, 6, 10, 10, K); r(3, 7, 8, 8, '#9aa3ad'); r(3, 7, 8, 2, '#4f8fd6'); r(4, 11, 6, 1, '#c9d0d6'); },
+    grease: r => { r(4, 3, 5, 1, K); r(4, 3, 1, 4, K); r(8, 3, 1, 4, K); r(1, 7, 10, 9, K); r(2, 8, 8, 7, '#5a6270'); r(3, 9, 2, 2, '#9aa3ad'); r(10, 5, 5, 2, K); r(14, 3, 2, 3, K); r(14, 8, 1, 2, '#f2c14e'); }
+  };
+  const CARD_ICON = {
+    m_bench: 'bench', m_saw: 'saw', m_dryer: 'dryer', m_sander: 'sander', m_mixer: 'mixer', m_press: 'press', m_kiln: 'kiln', m_belt: 'belt',
+    w_tramp: 'tramp', u_power: 'power', u_speed: 'speed', u_price: 'price', u_bricks: 'bricks',
+    e_coffee: 'coffee', e_helmet: 'helmet', e_gloves: 'gloves', e_mask: 'mask', e_horseshoe: 'horseshoe', e_chainsaw: 'chainsaw',
+    s_blade: 'blade', s_varnish: 'varnish', s_glaze: 'glaze', s_grease: 'grease'
+  };
+  const ICONS = {};
+  for (const id in CARD_ICON) ICONS[id] = makeIcon(ICON_DRAW[CARD_ICON[id]]);
+
   /* ================= state ================= */
   const KEY = 'pixel-factory-save-v1';
+  const emptySlots = () => [0, 1, 2].map(() => ({ machine: null, worker: null, upg: [], acc: 0 }));
   const fresh = () => ({
-    v: 1, money: 0, xp: 0, level: 1, planks: 0, earned: 0,
-    slots: [{ machine: null, worker: null, upg: [], acc: 0 }, { machine: 'saw', worker: 'crow', upg: [], acc: 0 }, { machine: null, worker: null, upg: [], acc: 0 }],
+    v: 2, money: 0, xp: 0, level: 1, planks: 0, bricks: 0, earned: 0, cur: 0,
+    locs: [
+      { unlocked: true, slots: [{ machine: null, worker: null, upg: [], acc: 0 }, { machine: 'saw', worker: 'crow', upg: [], acc: 0 }, { machine: null, worker: null, upg: [], acc: 0 }] },
+      { unlocked: false, slots: emptySlots() }
+    ],
     workers: { crow: { unlocked: true, equip: [] }, mrp: { unlocked: true, equip: [] }, tramp: { unlocked: false, equip: [] } },
     lockers: ['crow', 'mrp', 'tramp'],
     cards: [], offers: [], shopBuys: 0, crowCount: 0, firstOffer: false, crateIn: 35, savedAt: Date.now()
   });
-  function load() { try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && s.v === 1) return s; } catch (e) { } return null; }
+  function migrate(s) {
+    if (!s) return null;
+    if (s.v === 1) { s.locs = [{ unlocked: true, slots: s.slots }, { unlocked: false, slots: emptySlots() }]; delete s.slots; s.cur = 0; s.bricks = 0; s.v = 2; }
+    return s.v === 2 ? s : null;
+  }
+  function load() { try { return migrate(JSON.parse(localStorage.getItem(KEY))); } catch (e) { return null; } }
   function save() { try { state.savedAt = Date.now(); localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { } }
   let state = load() || fresh();
 
   let mode = null, selSlot = null, selWorker = null, view = 'main', offersHidden = false, confirmReset = false;
   let crate = null, floats = [], incomeNow = 0, t = 0;
+  const slotsOf = l => state.locs[l].slots;
+  const cur = () => state.cur;
 
   const need = l => Math.round(15 * Math.pow(1.6, l - 1));
   const shopCost = () => Math.round(40 * Math.pow(2.2, state.shopBuys));
@@ -211,21 +296,23 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
   const pct = v => Math.round(v * 100) + '%';
 
   /* ================= rules ================= */
-  function linked(i) {
-    const set = new Set();
+  function linked(l, i) {
+    const sl = slotsOf(l), set = new Set();
     if (i > 0) set.add(i - 1);
-    if (i < state.slots.length - 1) set.add(i + 1);
-    state.slots.forEach((s, j) => { if (j !== i && (s.machine === 'belt' || state.slots[i].machine === 'belt')) set.add(j); });
+    if (i < sl.length - 1) set.add(i + 1);
+    sl.forEach((s, j) => { if (j !== i && (s.machine === 'belt' || sl[i].machine === 'belt')) set.add(j); });
     return [...set].sort();
   }
+  const anySlot = pred => state.locs.some((L, l) => L.unlocked && L.slots.some((s, i) => pred(s, l, i)));
   function globals() {
     const tc = {};
     state.cards.forEach(id => { const tg = CARDS[id].tag; tc[tg] = (tc[tg] || 0) + 1; });
     const pr = tg => Math.floor((tc[tg] || 0) / 2);
-    const g = { power: pr('Сотрудники') * 0.05, speed: pr('Экипировка') * 0.05, price: pr('Станки') * 0.05, income: 1 + pr('Улучшения') * 0.03, tc, combos: [] };
-    state.cards.forEach(id => { const c = CARDS[id]; if (c.type === 'global') for (const k in c.eff) g[k] += c.eff[k]; });
-    if (state.cards.includes('e_coffee') && state.slots.some(s => s.machine === 'belt') && state.workers.tramp.unlocked) { g.combos.push('night'); g.income *= 1.5; }
-    if (state.slots.filter(s => s.machine === 'saw').length >= 2) g.combos.push('saws');
+    const g = { power: pr('Сотрудники') * 0.05, speed: pr('Экипировка') * 0.05, price: pr('Станки') * 0.05, brickPrice: 0, income: 1 + pr('Улучшения') * 0.03, tc, combos: [] };
+    state.cards.forEach(id => { const cd = CARDS[id]; if (cd.type === 'global') for (const k in cd.eff) g[k] += cd.eff[k]; });
+    if (state.cards.includes('e_coffee') && anySlot(s => s.machine === 'belt') && state.workers.tramp.unlocked) { g.combos.push('night'); g.income *= 1.5; }
+    if (slotsOf(0).filter(s => s.machine === 'saw').length >= 2) g.combos.push('saws');
+    g.sawWorking = slotsOf(0).some(s => s.machine === 'saw' && s.worker);
     return g;
   }
   function friends(id) {
@@ -245,35 +332,49 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
     if (id === 'mrp' && !hasCoffee) speed *= 0.5;
     return { power: base.power * (1 + g.power + p + fb), speed, luck: Math.min(0.9, base.luck + l), fb, fr, hasCoffee };
   }
-  const workerSlot = id => state.slots.findIndex(s => s.worker === id);
-  function slotStats(i, g) {
-    const s = state.slots[i];
+  function workerPlace(id) {
+    for (let l = 0; l < state.locs.length; l++) { const i = slotsOf(l).findIndex(s => s.worker === id); if (i >= 0) return { l, i }; }
+    return null;
+  }
+  function slotStats(l, i, g) {
+    const sl = slotsOf(l), s = sl[i];
     if (!s.machine) return null;
     const M = MACH[s.machine];
     let rb = 0, vb = 0;
     const notes = [];
-    linked(i).forEach(j => { const m2 = state.slots[j].machine; if (!m2 || s.machine === 'belt') return; const e = effect(m2, s.machine); rb += e.rate; vb += e.value; notes.push(e.text); });
+    linked(l, i).forEach(j => { const m2 = sl[j].machine; if (!m2 || s.machine === 'belt') return; const e = effect(m2, s.machine); rb += e.rate; vb += e.value; notes.push(e.text); });
     s.upg.forEach(u => { const ef = CARDS[u].eff; rb += ef.rate || 0; vb += ef.value || 0; notes.push(`${CARDS[u].name}: ${CARDS[u].desc.toLowerCase()}`); });
     if (s.machine === 'saw' && g.combos.includes('saws')) { rb += 0.25; notes.push('Две пилорамы: +25% скорости'); }
+    if (s.machine === 'kiln' && g.sawWorking) { rb += 0.25; notes.push('Обрезки досок из цеха 1 на растопку: +25% скорости'); }
     if (!s.worker || M.rate === 0) return { rate: 0, value: 0, income: 0, notes, ws: null, M };
     const ws = workerStats(s.worker, g);
     let power = ws.power;
-    if (s.worker === 'tramp' && [i - 1, i + 1].some(j => state.slots[j] && state.slots[j].worker)) { power *= 1.2; notes.push('Бродяга в команде: +20% силы'); }
+    if (s.worker === 'tramp' && [i - 1, i + 1].some(j => sl[j] && sl[j].worker)) { power *= 1.2; notes.push('Бродяга в команде: +20% силы'); }
     if (ws.fb > 0) notes.push(`Друзья по шкафчику: +${pct(ws.fb)} силы`);
     if (s.worker === 'mrp' && !ws.hasCoffee) notes.push('Мистер Жопосранчик без кофе: скорость вдвое ниже');
     const rate = M.rate * ws.speed * (1 + rb);
-    const value = M.value * power * (1 + vb) * (1 + g.price);
+    const value = M.value * power * (1 + vb) * (1 + g.price + (l === 1 ? g.brickPrice : 0));
     const crowM = s.worker === 'crow' ? 1 + 1 / 7 : 1;
     return { rate, value, income: rate * value * (1 + ws.luck) * crowM * g.income, notes, ws, M };
   }
-  function totalIncome() { const g = globals(); return state.slots.reduce((a, s, i) => { const st = slotStats(i, g); return a + (st ? st.income : 0); }, 0); }
+  function totalIncome() {
+    const g = globals();
+    let sum = 0;
+    state.locs.forEach((L, l) => { if (L.unlocked) L.slots.forEach((s, i) => { const st = slotStats(l, i, g); if (st) sum += st.income; }); });
+    return sum;
+  }
 
   /* ================= cards ================= */
+  function canPlaceMachine(machine) {
+    const ml = MACH[machine].loc;
+    return state.locs.some((L, l) => L.unlocked && (ml < 0 || ml === l) && L.slots.some(s => !s.machine) && !(machine === 'belt' && L.slots.some(s => s.machine === 'belt')));
+  }
   function eligible(id) {
-    const c = CARDS[id];
-    if (c.type === 'machine') return state.slots.some(s => !s.machine) && !(c.machine === 'belt' && state.slots.some(s => s.machine === 'belt'));
-    if (c.type === 'worker') return !state.workers[c.worker].unlocked;
-    if (c.type === 'mupg') return state.slots.some(s => s.machine && s.machine !== 'belt');
+    const cd = CARDS[id], cl = cardLoc(id);
+    if (cl >= 0 && !state.locs[cl].unlocked) return false;
+    if (cd.type === 'machine') return canPlaceMachine(cd.machine);
+    if (cd.type === 'worker') return !state.workers[cd.worker].unlocked;
+    if (cd.type === 'mupg') return anySlot((s, l) => s.machine && s.machine !== 'belt' && (cl < 0 || cl === l));
     return true;
   }
   const WEIGHT = [10, 5, 2, 1];
@@ -281,7 +382,7 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
     const pool = Object.keys(CARDS).filter(eligible), pick = [];
     while (pick.length < 3 && pick.length < pool.length) {
       const cand = pool.filter(id => !pick.includes(id));
-      let tot = cand.reduce((a, id) => a + WEIGHT[CARDS[id].rar], 0), r = Math.random() * tot, chosen = cand[cand.length - 1];
+      let r = Math.random() * cand.reduce((a, id) => a + WEIGHT[CARDS[id].rar], 0), chosen = cand[cand.length - 1];
       for (const id of cand) { r -= WEIGHT[CARDS[id].rar]; if (r <= 0) { chosen = id; break; } }
       pick.push(chosen);
     }
@@ -295,46 +396,60 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
   }
   function choose(id) {
     const offer = state.offers.shift();
-    const c = CARDS[id];
-    if (c.type === 'machine') mode = { kind: 'place', card: id, offer };
-    else if (c.type === 'equip') mode = { kind: 'equip', card: id, offer };
-    else if (c.type === 'mupg') mode = { kind: 'upgrade', card: id, offer };
+    const cd = CARDS[id], cl = cardLoc(id);
+    if (cd.type === 'machine') { mode = { kind: 'place', card: id, offer }; if (cl >= 0) state.cur = cl; }
+    else if (cd.type === 'equip') mode = { kind: 'equip', card: id, offer };
+    else if (cd.type === 'mupg') { mode = { kind: 'upgrade', card: id, offer }; if (cl >= 0) state.cur = cl; }
     else finish(id);
     selSlot = null; selWorker = null;
-    renderSheet();
+    renderSheet(); renderTabs();
   }
   function finish(id, target) {
-    const c = CARDS[id], before = globals().combos;
+    const cd = CARDS[id], before = globals().combos;
     state.cards.push(id);
-    if (c.type === 'worker') { state.workers[c.worker].unlocked = true; toast(`${WORKERS[c.worker].name} пришёл на завод!`); }
-    if (c.type === 'machine') state.slots[target].machine = c.machine;
-    if (c.type === 'equip') state.workers[target].equip.push(id);
-    if (c.type === 'mupg') state.slots[target].upg.push(id);
+    if (cd.type === 'worker') { state.workers[cd.worker].unlocked = true; toast(`${WORKERS[cd.worker].name} пришёл на завод!`); }
+    if (cd.type === 'machine') slotsOf(target.l)[target.i].machine = cd.machine;
+    if (cd.type === 'equip') state.workers[target].equip.push(id);
+    if (cd.type === 'mupg') slotsOf(target.l)[target.i].upg.push(id);
     mode = null;
     const after = globals().combos;
     if (after.includes('night') && !before.includes('night')) toast('Комбо «Ночная смена»: доход ×1,5!');
     else if (after.includes('saws') && !before.includes('saws')) toast('Комбо «Две пилорамы»: +25% скорости!');
     save(); renderSheet();
   }
+  function unlockLoc(l) {
+    const L = state.locs[l], cost = LOCS[l].cost;
+    if (L.unlocked) return;
+    if (state.money < cost) { toast(`Чтобы открыть цех, нужно ${fmt(cost)} монет`); return; }
+    state.money -= cost; L.unlocked = true;
+    L.slots[1].machine = 'mixer';
+    state.cur = l; selSlot = null; selWorker = null;
+    toast('Цех кирпичей открыт! Поставь к глиномешалке сотрудника');
+    save(); renderSheet(); renderTabs();
+  }
 
   /* ================= simulation ================= */
   function tick(dt) {
     const g = globals();
     let total = 0;
-    state.slots.forEach((s, i) => {
-      const st = slotStats(i, g);
-      if (!st || st.rate <= 0) return;
-      total += st.income;
-      s.acc = (s.acc || 0) + st.rate * dt;
-      const n = Math.floor(s.acc);
-      if (n <= 0) return;
-      s.acc -= n;
-      let count = n;
-      if (n < 20) { for (let k = 0; k < n; k++) if (Math.random() < st.ws.luck) count++; } else count += Math.round(n * st.ws.luck);
-      if (s.worker === 'crow') { const b = state.crowCount; state.crowCount += n; count += Math.floor(state.crowCount / 7) - Math.floor(b / 7); }
-      const gain = count * st.value * g.income;
-      state.money += gain; state.xp += gain; state.earned += gain; state.planks += count;
-      if (floats.length < 20) floats.push({ slot: i, txt: '+' + fmt(gain), life: 1, dbl: count > n });
+    state.locs.forEach((L, l) => {
+      if (!L.unlocked) return;
+      L.slots.forEach((s, i) => {
+        const st = slotStats(l, i, g);
+        if (!st || st.rate <= 0) return;
+        total += st.income;
+        s.acc = (s.acc || 0) + st.rate * dt;
+        const n = Math.floor(s.acc);
+        if (n <= 0) return;
+        s.acc -= n;
+        let count = n;
+        if (n < 20) { for (let k = 0; k < n; k++) if (Math.random() < st.ws.luck) count++; } else count += Math.round(n * st.ws.luck);
+        if (s.worker === 'crow') { const b = state.crowCount; state.crowCount += n; count += Math.floor(state.crowCount / 7) - Math.floor(b / 7); }
+        const gain = count * st.value * g.income;
+        state.money += gain; state.xp += gain; state.earned += gain;
+        if (l === 0) state.planks += count; else state.bricks += count;
+        if (l === state.cur && floats.length < 20) floats.push({ slot: i, txt: '+' + fmt(gain), life: 1, dbl: count > n });
+      });
     });
     incomeNow = total;
     while (state.xp >= need(state.level)) { state.xp -= need(state.level); state.level++; toast(`Уровень ${state.level}! Выбери карту`); queueOffer('level'); }
@@ -357,7 +472,6 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
   const low = document.createElement('canvas'); low.width = W; low.height = H;
   const gx = low.getContext('2d');
   const R = (x, y, w, h, col) => { gx.fillStyle = col; gx.fillRect(Math.round(x), Math.round(y), w, h); };
-  const K = PAL.k;
   let S = 2;
   const SX = i => 6 + i * 78, SY = 36, SW = 72, SH = 74;
   const LX = i => 21 + i * 42, LY = 150, LW = 30, LH = 44;
@@ -402,7 +516,8 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
       for (let i = -6; i < 30; i += 6) { const xx = x + 1 + i + off; if (xx >= x + 1 && xx < x + 30) R(xx, y + 16, 2, 5, '#5f6573'); }
       R(x - 1, y + 15, 3, 7, '#9aa3ad'); R(x + 30, y + 15, 3, 7, '#9aa3ad');
       R(x + 3, y + 24, 3, 6, K); R(x + 26, y + 24, 3, 6, K);
-      for (let i = 0; i < 2; i++) { const px = x + ((t * 10 + i * 16) % 32); if (px < x + 23) { R(px, y + 11, 9, 4, K); R(px + 1, y + 12, 7, 2, '#e3b47c'); } }
+      const item = LOCS[state.cur].item;
+      for (let i = 0; i < 2; i++) { const px = x + ((t * 10 + i * 16) % 32); if (px < x + 23) { R(px, y + 11, 9, 4, K); R(px + 1, y + 12, 7, 2, item); } }
       R(x + 10, y + 1, 12, 8, K); R(x + 11, y + 2, 10, 6, '#f2b53a');
       R(x + 13, y + 4, 5, 2, K); R(x + 17, y + 3, 1, 4, K); R(x + 18, y + 4, 1, 2, K);
     } else if (type === 'sander') {
@@ -413,45 +528,76 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
       R(x + 8, y + 13, 10, 7, K); R(x + 9, y + 14, 3, 2, '#e0533a'); R(x + 13, y + 14, 3, 2, '#7ee081'); R(x + 9, y + 17, 7, 1, '#9aa3ad');
       for (let j = 0; j < 3; j++) R(x + 20, y + 13 + j * 3, 5, 1, '#3f7466');
       R(x + 5, y + 29, 4, 2, K); R(x + 23, y + 29, 4, 2, K);
+    } else if (type === 'mixer') {
+      R(x + 4, y + 22, 24, 4, K); R(x + 5, y + 23, 22, 2, '#5a6270');
+      R(x + 6, y + 26, 3, 5, K); R(x + 23, y + 26, 3, 5, K);
+      R(x + 3, y + 4, 26, 18, K); R(x + 4, y + 5, 24, 16, '#d9a066'); R(x + 4, y + 5, 24, 2, '#ecc48f');
+      const off = Math.floor(t * 8) % 6;
+      for (let i = 0; i < 24; i += 6) R(x + 4 + ((i + off) % 24), y + 7, 2, 14, '#b98a4a');
+      R(x + 8, y + 8, 11, 6, K); R(x + 9, y + 9, 9, 4, '#b5653f'); R(x + 10, y + 9, 3, 1, '#cf7a52');
+      R(x + 27, y + 11, 5, 8, K); R(x + 28, y + 12, 3, 6, '#e0a32e');
+      if (Math.floor(t * 3) % 2) R(x + 12, y + 6, 2, 2, '#cf7a52');
+    } else if (type === 'press') {
+      R(x + 3, y + 1, 4, 29, K); R(x + 4, y + 2, 2, 27, '#9aa3ad'); R(x + 25, y + 1, 4, 29, K); R(x + 26, y + 2, 2, 27, '#9aa3ad');
+      R(x + 3, y + 1, 26, 5, K); R(x + 4, y + 2, 24, 3, '#e0a32e');
+      const ph = (Math.sin(t * 4) + 1) / 2, py = Math.round(6 + ph * 8);
+      R(x + 14, y + 6, 4, py - 5, '#5a6270'); R(x + 9, y + py, 14, 4, K); R(x + 10, y + py + 1, 12, 2, '#7d8794');
+      R(x + 3, y + 24, 26, 6, K); R(x + 4, y + 25, 24, 4, '#5a6270');
+      R(x + 10, y + 19, 12, 5, K); R(x + 11, y + 20, 10, 3, '#c4553a'); R(x + 11, y + 20, 10, 1, '#d96a4a');
+    } else if (type === 'kiln') {
+      for (let i = 0; i < 3; i++) { const ph = (t * 0.6 + i / 3) % 1; R(x + 23 + Math.round(Math.sin(t * 2 + i) * 2), y - 2 - ph * 8, 2, 2, `rgba(210,210,220,${((1 - ph) * 0.7).toFixed(2)})`); }
+      R(x + 21, y, 6, 10, K); R(x + 22, y + 1, 4, 9, '#8a5a4a');
+      R(x + 5, y + 6, 22, 3, K); R(x + 6, y + 7, 20, 2, '#b5654c');
+      R(x + 2, y + 8, 28, 22, K); R(x + 3, y + 9, 26, 20, '#b5654c');
+      for (let yy = 12; yy < 29; yy += 4) { R(x + 3, y + yy, 26, 1, '#94523d'); for (let xx = ((yy / 4) % 2) * 3 + 3; xx < 29; xx += 6) R(x + xx, y + yy - 3, 1, 3, '#94523d'); }
+      R(x + 9, y + 16, 14, 14, K); R(x + 10, y + 17, 12, 13, '#2b1a1a');
+      const fl = Math.floor(t * 8) % 3;
+      R(x + 11, y + 23 - fl, 10, 6 + fl, '#d9622a'); R(x + 13, y + 24 - fl, 6, 5 + fl, '#f28c3a'); R(x + 15, y + 26, 2, 3, '#f2c94c');
     }
   }
+  function pile(x, y, n, col) { for (let k = 0; k < n; k++) { R(x, y - k * 3, 12, 4, K); R(x + 1, y - k * 3 + 1, 10, 2, col); } }
   const sprOf = id => id === 'mrp' && state.workers.mrp.equip.includes('e_coffee') ? SPR.mrpCoffee : SPR[id];
   const border = (x, y, w, h, col) => { R(x - 2, y - 2, w + 4, 2, col); R(x - 2, y + h, w + 4, 2, col); R(x - 2, y, 2, h, col); R(x + w, y, 2, h, col); };
 
   function drawWorld() {
+    const l = state.cur, LT = LOCS[l], L = state.locs[l], sl = L.slots;
     const pulse = (0.55 + 0.45 * Math.sin(t * 6)).toFixed(2);
     // wall
-    R(0, 0, W, 29, '#b0654c');
-    for (let yy = 0; yy < 29; yy += 6) { R(0, yy, W, 1, '#94523d'); for (let xx = ((yy / 6) % 2) * 6; xx < W; xx += 12) R(xx, yy, 1, 6, '#94523d'); }
-    for (const wx of [14, 186]) { R(wx, 4, 40, 17, K); R(wx + 1, 5, 38, 15, '#bfe3ef'); R(wx + 4, 7, 6, 1, '#eaf7fb'); R(wx + 20, 5, 1, 15, K); R(wx + 1, 12, 38, 1, K); }
-    R(76, 5, 88, 15, K); R(77, 6, 86, 13, '#c98a4a'); R(77, 6, 86, 1, '#e5a86a');
+    R(0, 0, W, 29, LT.wall);
+    if (l === 0) { for (let yy = 0; yy < 29; yy += 6) { R(0, yy, W, 1, LT.mortar); for (let xx = ((yy / 6) % 2) * 6; xx < W; xx += 12) R(xx, yy, 1, 6, LT.mortar); } }
+    else { for (let xx = 0; xx < W; xx += 30) R(xx, 0, 1, 29, LT.mortar); R(0, 14, W, 1, LT.mortar); R(0, 22, W, 3, '#5f6168'); R(0, 22, W, 1, '#9a9ca5'); for (let xx = 8; xx < W; xx += 40) R(xx, 21, 4, 5, '#4a4c53'); }
+    for (const wx of [14, 186]) { R(wx, 4, 40, 17, K); R(wx + 1, 5, 38, 15, l === 0 ? '#bfe3ef' : '#d9cbb8'); R(wx + 4, 7, 6, 1, '#f4f0e6'); R(wx + 20, 5, 1, 15, K); R(wx + 1, 12, 38, 1, K); }
+    R(76, 5, 88, 15, K); R(77, 6, 86, 13, l === 0 ? '#c98a4a' : '#5f6168'); R(77, 6, 86, 1, l === 0 ? '#e5a86a' : '#8a8c95');
     R(0, 28, W, 3, '#5a3f36');
     // floor
-    R(0, 31, W, 95, '#a39b8f');
-    for (let yy = 31; yy < 126; yy += 20) R(0, yy, W, 1, '#978f83');
-    for (let xx = 0; xx < W; xx += 20) R(xx, 31, 1, 95, '#978f83');
+    R(0, 31, W, 95, LT.floor);
+    for (let yy = 31; yy < 126; yy += 20) R(0, yy, W, 1, LT.grid);
+    for (let xx = 0; xx < W; xx += 20) R(xx, 31, 1, 95, LT.grid);
     // slots
-    const g = globals();
-    const linkedSel = selSlot != null ? linked(selSlot) : [];
-    state.slots.forEach((s, i) => {
+    const linkedSel = selSlot != null ? linked(l, selSlot) : [];
+    sl.forEach((s, i) => {
       const x = SX(i), y = SY;
-      R(x, y, SW, SH, '#857d72'); R(x + 1, y + 1, SW - 2, SH - 2, '#938b7f');
+      R(x, y, SW, SH, '#857d72'); R(x + 1, y + 1, SW - 2, SH - 2, LT.plate);
       for (const [ax, ay, dx, dy] of [[x + 2, y + 2, 1, 1], [x + SW - 3, y + 2, -1, 1], [x + 2, y + SH - 3, 1, -1], [x + SW - 3, y + SH - 3, -1, -1]]) {
         R(dx > 0 ? ax : ax - 5, ay, 6, 1, '#e9c046'); R(ax, dy > 0 ? ay : ay - 5, 1, 6, '#e9c046');
       }
       if (!s.machine) { R(x + SW / 2 - 1, y + SH / 2 - 7, 2, 14, '#b2a99c'); R(x + SW / 2 - 7, y + SH / 2 - 1, 14, 2, '#b2a99c'); }
       else {
         machine(s.machine, x + 36, y + 18);
-        s.upg.forEach((u, k) => { R(x + 4 + k * 5, y + 4, 4, 6, K); R(x + 5 + k * 5, y + 5, 2, 4, ['#8a93a0', '#4f8fd6', '#9b6bd6', '#e0a32e'][CARDS[u].rar]); });
+        if (s.worker && s.machine !== 'belt') pile(x + 52, y + 63, 1 + Math.floor((t * 0.3 + i) % 3), LT.item);
+        s.upg.forEach((u, k) => { R(x + 4 + k * 5, y + 4, 4, 6, K); R(x + 5 + k * 5, y + 5, 2, 4, RAR_COL[CARDS[u].rar]); });
       }
       if (s.worker) { const bob = Math.floor(t * 2 + i) % 2; gx.drawImage(sprOf(s.worker), x + 6, y + 40 - bob); }
     });
     // highlights
-    state.slots.forEach((s, i) => {
+    sl.forEach((s, i) => {
       const x = SX(i), y = SY;
       let col = null;
       if (mode) {
-        if ((mode.kind === 'place' && !s.machine) || (mode.kind === 'upgrade' && s.machine && s.machine !== 'belt') || (mode.kind === 'equip' && s.worker) || (mode.kind === 'move' && i !== mode.from)) col = `rgba(126,224,129,${pulse})`;
+        const cl = mode.card ? cardLoc(mode.card) : -1;
+        const locOk = cl < 0 || cl === l;
+        const beltBlock = mode.card && CARDS[mode.card].machine === 'belt' && sl.some(z => z.machine === 'belt');
+        if ((mode.kind === 'place' && !s.machine && locOk && !beltBlock) || (mode.kind === 'upgrade' && s.machine && s.machine !== 'belt' && locOk) || (mode.kind === 'equip' && s.worker) || (mode.kind === 'move' && i !== mode.from)) col = `rgba(126,224,129,${pulse})`;
         if (mode.kind === 'move' && i === mode.from) col = '#ffd54a';
       } else if (selWorker) { if (s.machine && s.machine !== 'belt') col = `rgba(126,224,129,${pulse})`; }
       else if (selSlot === i) col = `rgba(255,213,74,${pulse})`;
@@ -473,7 +619,7 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
       R(x, y, 14, 11, K); R(x + 1, y + 1, 12, 9, '#c98a4a'); R(x + 1, y + 1, 12, 1, '#e5a86a'); R(x + 6, y + 1, 2, 9, '#e9c046'); R(x + 1, y + 5, 12, 1, '#a06a36');
       if (Math.floor(t * 3) % 2) { R(x + 13, y - 4, 1, 3, '#fff1b0'); R(x + 12, y - 3, 3, 1, '#fff1b0'); }
     }
-    // locker room
+    // locker room (shared by all workshops)
     R(0, 126, W, 84, '#4b5568'); R(0, 126, W, 1, K); R(0, 196, W, 14, '#3e4757');
     for (let i = 0; i < 5; i++) {
       const x = LX(i), y = LY, id = state.lockers[i];
@@ -483,8 +629,12 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
       R(x + 24, y + 24, 2, 8, '#d6dbe0');
       if (!open) { R(x + 11, y + 10, 8, 7, '#8a5a12'); R(x + 12, y + 11, 6, 5, '#f2c14e'); R(x + 12, y + 7, 6, 1, '#9aa3ad'); R(x + 12, y + 7, 1, 3, '#9aa3ad'); R(x + 17, y + 7, 1, 3, '#9aa3ad'); continue; }
       R(x + 4, y + 4, 22, 16, w && w.unlocked ? '#f3e9d2' : '#cfc6b6');
-      if (w && w.unlocked) { gx.drawImage(SPR[id], 0, PORTRAIT_Y[id], 20, 14, x + 5, y + 5, 20, 14); R(x + 14, y + 3, 2, 2, '#e0533a'); }
-      if (w && w.unlocked && workerSlot(id) < 0) { const bob = Math.floor(t * 1.2 + i) % 2; gx.drawImage(sprOf(id), x + 4, 175 - bob); }
+      if (w && w.unlocked) {
+        gx.drawImage(SPR[id], 0, PORTRAIT_Y[id], 20, 14, x + 5, y + 5, 20, 14); R(x + 14, y + 3, 2, 2, '#e0533a');
+        const wp = workerPlace(id);
+        if (wp) { R(x + 3, y + 34, 13, 7, K); R(x + 4, y + 35, 11, 5, wp.l === 0 ? '#e3b47c' : '#d96a4a'); }
+        else { const bob = Math.floor(t * 1.2 + i) % 2; gx.drawImage(sprOf(id), x + 4, 175 - bob); }
+      }
       let col = null;
       if (selWorker === id) col = `rgba(255,213,74,${pulse})`;
       else if (mode && mode.kind === 'equip' && w && w.unlocked) col = `rgba(126,224,129,${pulse})`;
@@ -508,25 +658,36 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
   }
   function drawText() {
     c.setTransform(S, 0, 0, S, 0, 0);
-    T('ЦЕХ 1 · ДОСКИ', W / 2, 8.5, 8, '#fff6e0', 'center');
+    const l = state.cur;
+    T(LOCS[l].sign, W / 2, 8.5, 8, '#fff6e0', 'center');
     const g = globals();
-    state.slots.forEach((s, i) => {
+    slotsOf(l).forEach((s, i) => {
       const x = SX(i), y = SY;
       if (!s.machine) { T('ПУСТО', x + SW / 2, y + SH / 2 + 10, 6, '#ece6da', 'center'); return; }
       T(MACH[s.machine].short, x + SW - 4, y + 4, 6, '#ffffff', 'right');
-      const st = slotStats(i, g);
-      if (s.machine === 'belt') T('+30% ВСЕМ', x + SW - 4, y + SH - 11, 6, '#7ee081', 'right');
-      else if (!s.worker) T('НЕТ РАБОТНИКА', x + SW - 4, y + SH - 11, 6, '#ffb3a6', 'right');
-      else T('+' + fmt(st.income) + '/с', x + SW - 4, y + SH - 11, 6, '#7ee081', 'right');
+      const st = slotStats(l, i, g);
+      if (s.machine === 'belt') T('+30% ВСЕМ', x + SW - 4, y + 11, 6, '#7ee081', 'right');
+      else if (!s.worker) T('НЕТ РАБОТНИКА', x + SW - 4, y + 11, 6, '#ffb3a6', 'right');
+      else T('+' + fmt(st.income) + '/с', x + SW - 4, y + 11, 6, '#7ee081', 'right');
     });
     if (crate) T('ПОСЫЛКА', crate.x + 7, 100, 6, '#fff1b0', 'center');
     T('РАЗДЕВАЛКА', 6, 130, 6, '#c9d3e0');
-    state.lockers.forEach((id, i) => { if (id && !state.workers[id].unlocked) T('?', LX(i) + LW / 2, LY + 6, 12, '#6b6178', 'center', false); });
+    T('ОБЩАЯ НА ВЕСЬ ЗАВОД', W - 6, 130, 5, '#8d97a8', 'right', false);
+    state.lockers.forEach((id, i) => {
+      if (id && !state.workers[id].unlocked) { T('?', LX(i) + LW / 2, LY + 6, 12, '#6b6178', 'center', false); return; }
+      const wp = id && workerPlace(id);
+      if (wp) T('Ц' + (wp.l + 1), LX(i) + 9.5, LY + 35, 5, K, 'center', false);
+    });
     floats.forEach(f => {
       c.globalAlpha = Math.max(0, Math.min(1, f.life * 1.6));
       T(f.txt + (f.dbl ? ' x2' : ''), SX(f.slot) + 50, SY + 46 - (1 - f.life) * 22, 7, f.dbl ? '#7ee081' : '#f2c14e', 'center');
       c.globalAlpha = 1;
     });
+    if (!state.locs[l].unlocked) {
+      c.fillStyle = 'rgba(20,14,30,.72)'; c.fillRect(0, 31, W, 95);
+      T('ЦЕХ ЗАКРЫТ', W / 2, 62, 10, '#ffffff', 'center');
+      T(`Открыть за ${fmt(LOCS[l].cost)} монет`, W / 2, 78, 7, '#f2c14e', 'center');
+    }
   }
   function fit() {
     const dpr = Math.min(window.devicePixelRatio || 1, 3);
@@ -572,13 +733,19 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
     selWorker = selWorker === id ? null : id; selSlot = null; renderSheet();
   }
   function tapSlot(i) {
-    const s = state.slots[i];
+    const l = state.cur, sl = slotsOf(l), s = sl[i];
+    if (!state.locs[l].unlocked) { unlockLoc(l); return; }
     if (mode) {
-      if (mode.kind === 'place' && !s.machine) finish(mode.card, i);
-      else if (mode.kind === 'upgrade' && s.machine && s.machine !== 'belt') finish(mode.card, i);
+      const cl = mode.card ? cardLoc(mode.card) : -1;
+      if ((mode.kind === 'place' || mode.kind === 'upgrade') && cl >= 0 && cl !== l) { toast(`Эта карта для цеха «${LOCS[cl].name}»`); return; }
+      if (mode.kind === 'place' && !s.machine) {
+        if (CARDS[mode.card].machine === 'belt' && sl.some(z => z.machine === 'belt')) { toast('В этом цеху уже есть конвейер'); return; }
+        finish(mode.card, { l, i });
+      }
+      else if (mode.kind === 'upgrade' && s.machine && s.machine !== 'belt') finish(mode.card, { l, i });
       else if (mode.kind === 'equip' && s.worker) finish(mode.card, s.worker);
       else if (mode.kind === 'move') {
-        if (i !== mode.from) { [state.slots[mode.from], state.slots[i]] = [state.slots[i], state.slots[mode.from]]; toast('Станок переставлен'); save(); }
+        if (i !== mode.from) { [sl[mode.from], sl[i]] = [sl[i], sl[mode.from]]; toast('Станок переставлен'); save(); }
         mode = null; selSlot = i; renderSheet();
       }
       return;
@@ -586,20 +753,43 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
     if (selWorker) {
       if (!s.machine) { toast('Сначала поставь сюда станок'); return; }
       if (s.machine === 'belt') { toast('Конвейеру сотрудник не нужен'); return; }
-      const prev = workerSlot(selWorker), other = s.worker;
+      const prev = workerPlace(selWorker), other = s.worker;
       s.worker = selWorker;
-      if (prev >= 0 && prev !== i) state.slots[prev].worker = other;
+      if (prev && !(prev.l === l && prev.i === i)) slotsOf(prev.l)[prev.i].worker = other;
+      if (prev && prev.l !== l) toast(`${WORKERS[selWorker].name}: теперь в цеху ${l + 1}`);
       selWorker = null; selSlot = i; save(); renderSheet(); return;
     }
     selSlot = selSlot === i ? null : i; renderSheet();
   }
 
+  /* ================= tabs ================= */
+  const tabs = [document.getElementById('tab0'), document.getElementById('tab1')];
+  tabs.forEach((b, l) => b.addEventListener('click', () => {
+    if (!state.locs[l].unlocked && state.cur === l) { unlockLoc(l); return; }
+    if (mode && mode.kind === 'move') mode = null;
+    state.cur = l; selSlot = null; renderSheet(); renderTabs();
+  }));
+  function renderTabs() {
+    tabs.forEach((b, l) => {
+      const L = state.locs[l];
+      b.setAttribute('aria-pressed', String(state.cur === l));
+      b.classList.toggle('locked', !L.unlocked);
+      b.classList.toggle('ready', !L.unlocked && state.money >= LOCS[l].cost);
+      const label = `Цех ${l + 1} · ${LOCS[l].name}`;
+      const txt = L.unlocked ? label : `${label} · ${fmt(LOCS[l].cost)}`;
+      if (b.textContent !== txt) b.textContent = txt;
+    });
+  }
+
   /* ================= sheet ================= */
   const body = document.getElementById('sheetBody');
   const esc = s => String(s).replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[ch]);
+  const chip = id => `<span class="chip" style="--rc:${RAR_COL[CARDS[id].rar]}"><img src="${ICONS[id]}" alt="">${esc(CARDS[id].name)}</span>`;
   function cardHTML(id) {
-    const cd = CARDS[id];
-    return `<button type="button" class="card r${cd.rar}" data-act="pick" data-id="${id}"><span class="band">${esc(cd.name)}</span><span class="ct">${cd.type === 'machine' || cd.type === 'equip' ? cd.tag : `${TYPE_LABEL[cd.type]} · ${cd.tag}`}</span><span class="cd">${esc(cd.desc)}</span><span class="rar">${RAR[cd.rar]}</span></button>`;
+    const cd = CARDS[id], cl = cardLoc(id);
+    const kind = cd.type === 'machine' || cd.type === 'equip' ? cd.tag : `${TYPE_LABEL[cd.type]} · ${cd.tag}`;
+    const where = cl >= 0 ? `<br>${LOCS[cl].name}` : '';
+    return `<button type="button" class="card r${cd.rar}" data-act="pick" data-id="${id}"><span class="band">${esc(cd.name)}</span><span class="top"><img class="ic" src="${ICONS[id]}" alt=""><span class="ct">${kind}${where}</span></span><span class="cd">${esc(cd.desc)}</span><span class="rar">${RAR[cd.rar]}</span></button>`;
   }
   const SRC = { level: 'Новый уровень', crate: 'Посылка', shop: 'Магазин' };
   function renderSheet() {
@@ -608,11 +798,13 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
     else if (view === 'menu') h = menuHTML();
     else if (mode) {
       const txt = { place: 'Нажми на пустое место, куда поставить станок', equip: 'Нажми на сотрудника или его шкафчик', upgrade: 'Нажми на станок, который улучшить', move: 'Нажми на место, куда переставить станок' }[mode.kind];
-      h = `${mode.card ? `<h3>Карта: ${esc(CARDS[mode.card].name)}</h3>` : ''}<div class="prompt">${txt}</div><div class="row"><button class="btn" type="button" data-act="cancel">Отмена</button></div>`;
+      const extra = mode.card && CARDS[mode.card].machine === 'belt' ? '<p class="muted">Конвейер можно поставить в любой открытый цех, переключай цеха вкладками.</p>' : '';
+      h = `${mode.card ? `<div class="row">${chip(mode.card)}</div>` : ''}<div class="prompt">${txt}</div>${extra}<div class="row"><button class="btn" type="button" data-act="cancel">Отмена</button></div>`;
     } else if (state.offers.length && !offersHidden) {
       const o = state.offers[0];
       h = `<div class="row" style="justify-content:space-between"><h2>${SRC[o.src] || 'Карта'}: выбери одну</h2>${state.offers.length > 1 ? `<span class="muted">ещё ${state.offers.length - 1}</span>` : ''}</div><div class="cards">${o.ids.map(cardHTML).join('')}</div><div class="row"><button class="btn" type="button" data-act="later">Позже</button></div>`;
-    } else if (selSlot != null) h = slotHTML(selSlot);
+    } else if (!state.locs[state.cur].unlocked) h = lockedHTML(state.cur);
+    else if (selSlot != null) h = slotHTML(selSlot);
     else if (selWorker) h = workerHTML(selWorker);
     else h = idleHTML();
     body.innerHTML = h;
@@ -621,44 +813,49 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
     bc.textContent = `Карты: ${state.offers.length}`;
     updateLive();
   }
+  function lockedHTML(l) {
+    return `<h2>Цех ${l + 1} · ${LOCS[l].name}</h2><p class="muted">Новая ветка завода. Здесь месят глину, прессуют и обжигают кирпичи. Кирпичи стоят дороже досок, а печь работает быстрее, если в цеху досок трудится пилорама.</p><p class="muted">Сотрудники общие на весь завод: каждый может работать только в одном цеху.</p><div class="row"><button class="btn primary" type="button" data-act="unlock" ${state.money < LOCS[l].cost ? 'disabled' : ''}>Открыть за ${fmt(LOCS[l].cost)}</button></div>`;
+  }
   function idleHTML() {
     const g = globals();
-    const combos = g.combos.map(k => k === 'night' ? '<span class="chip r3" style="--rc:var(--r3)">Ночная смена ×1,5</span>' : '<span class="chip r2" style="--rc:var(--r2)">Две пилорамы</span>').join('');
-    return `<h2>Цех досок</h2><p class="muted">Нажми на шкафчик, а потом на станок, чтобы поставить туда сотрудника. Соседние станки усиливают друг друга, соседи по шкафчику дружат.</p>${combos ? `<h3>Активные комбо</h3><div class="row">${combos}</div>` : ''}<p class="muted">Досок сделано: <b id="live-planks">0</b></p>`;
+    const combos = g.combos.map(k => k === 'night' ? '<span class="chip" style="--rc:var(--r3)">Ночная смена ×1,5</span>' : '<span class="chip" style="--rc:var(--r2)">Две пилорамы</span>').join('');
+    return `<h2>Цех ${state.cur + 1} · ${LOCS[state.cur].name}</h2><p class="muted">Нажми на шкафчик, а потом на станок, чтобы поставить туда сотрудника. Каждый сотрудник один на весь завод. Соседние станки усиливают друг друга, соседи по шкафчику дружат.</p>${combos ? `<h3>Активные комбо</h3><div class="row">${combos}</div>` : ''}<p class="muted">Досок: <b id="live-planks">0</b> · кирпичей: <b id="live-bricks">0</b></p>`;
   }
   function slotHTML(i) {
-    const s = state.slots[i];
+    const l = state.cur, s = slotsOf(l)[i];
     if (!s.machine) return `<h2>Свободное место ${i + 1}</h2><p class="muted">Сюда можно поставить станок из карты. Он сразу свяжется с соседями.</p>`;
-    const M = MACH[s.machine], st = slotStats(i, globals());
+    const M = MACH[s.machine], st = slotStats(l, i, globals());
     const worker = s.worker ? `<p>Работает: <b>${WORKERS[s.worker].name}</b></p>` : (s.machine === 'belt' ? '' : '<p class="muted">Нет сотрудника. Нажми на шкафчик, а потом на этот станок.</p>');
-    const stats = s.machine === 'belt' ? '' : `<div class="stats"><div class="stat"><small>Доски в сек.</small><b id="live-rate">0</b></div><div class="stat"><small>Цена доски</small><b id="live-value">0</b></div><div class="stat"><small>Доход в сек.</small><b id="live-income">0</b></div></div>`;
+    const unit = l === 0 ? 'Доски' : 'Кирпичи', unit1 = l === 0 ? 'Цена доски' : 'Цена кирпича';
+    const stats = s.machine === 'belt' ? '' : `<div class="stats"><div class="stat"><small>${unit} в сек.</small><b id="live-rate">0</b></div><div class="stat"><small>${unit1}</small><b id="live-value">0</b></div><div class="stat"><small>Доход в сек.</small><b id="live-income">0</b></div></div>`;
     const notes = st.notes.length ? `<h3>Бонусы</h3><ul class="notes">${st.notes.map(n => `<li>${esc(n)}</li>`).join('')}</ul>` : '<h3>Бонусы</h3><p class="muted">Пока нет. Поставь станки рядом или найди карты.</p>';
-    return `<h2>${M.name}</h2><p class="muted">${M.desc}</p>${worker}${stats}${notes}<div class="row"><button class="btn" type="button" data-act="move">Переставить</button>${s.worker ? '<button class="btn" type="button" data-act="unassign">Снять сотрудника</button>' : ''}</div>`;
+    const upg = s.upg.length ? `<h3>Карты станка</h3><div class="row">${s.upg.map(chip).join('')}</div>` : '';
+    return `<h2>${M.name}</h2><p class="muted">${M.desc}</p>${worker}${stats}${notes}${upg}<div class="row"><button class="btn" type="button" data-act="move">Переставить</button>${s.worker ? '<button class="btn" type="button" data-act="unassign">Снять сотрудника</button>' : ''}</div>`;
   }
   function workerHTML(id) {
     const Wd = WORKERS[id], st = state.workers[id], ws = workerStats(id, globals());
-    const eq = st.equip.length ? st.equip.map(e => `<span class="chip" style="--rc:var(--r${CARDS[e].rar})">${esc(CARDS[e].name)}</span>`).join('') : '<span class="muted">Пусто</span>';
-    const where = workerSlot(id);
+    const eq = st.equip.length ? st.equip.map(chip).join('') : '<span class="muted">Пусто</span>';
+    const wp = workerPlace(id);
     const fr = ws.fr.length ? ws.fr.map(f => WORKERS[f].name).join(', ') + ` (+${pct(ws.fb)} силы)` : 'нет';
-    return `<h2>${Wd.name}</h2><p class="muted">${Wd.role} · ${where >= 0 ? 'работает: ' + MACH[state.slots[where].machine].name : 'отдыхает в раздевалке'}</p><div class="stats"><div class="stat"><small>Сила</small><b id="live-power">0</b></div><div class="stat"><small>Скорость</small><b id="live-speed">0</b></div><div class="stat"><small>Удача</small><b id="live-luck">0</b></div></div><p>${esc(Wd.perk)}</p><h3>В шкафчике</h3><div class="row">${eq}</div><p class="muted">Друзья по шкафчику: ${fr}</p><p class="muted">Нажми на станок, чтобы поставить туда. Нажми на другой шкафчик, чтобы поменяться местами.</p>${where >= 0 ? '<div class="row"><button class="btn" type="button" data-act="rest">В раздевалку</button></div>' : ''}`;
+    return `<h2>${Wd.name}</h2><p class="muted">${Wd.role} · ${wp ? `работает: цех ${wp.l + 1}, ${MACH[slotsOf(wp.l)[wp.i].machine].name}` : 'отдыхает в раздевалке'}</p><div class="stats"><div class="stat"><small>Сила</small><b id="live-power">0</b></div><div class="stat"><small>Скорость</small><b id="live-speed">0</b></div><div class="stat"><small>Удача</small><b id="live-luck">0</b></div></div><p>${esc(Wd.perk)}</p><h3>В шкафчике</h3><div class="row">${eq}</div><p class="muted">Друзья по шкафчику: ${fr}</p><p class="muted">Нажми на станок в любом цеху, чтобы перевести туда. Нажми на другой шкафчик, чтобы поменяться местами.</p>${wp ? '<div class="row"><button class="btn" type="button" data-act="rest">В раздевалку</button></div>' : ''}`;
   }
   function deckHTML() {
     const g = globals(), counts = {};
     state.cards.forEach(id => counts[id] = (counts[id] || 0) + 1);
     const sets = Object.keys(TAGS).map(tg => { const n = g.tc[tg] || 0, p = Math.floor(n / 2); return `<dt class="${p ? 'on' : ''}">${tg}: ${n}</dt><dd>${TAGS[tg]}. Комплектов: ${p}</dd>`; }).join('');
     const night = g.combos.includes('night'), saws = g.combos.includes('saws');
-    const owned = Object.keys(counts).map(id => `<span class="chip" style="--rc:var(--r${CARDS[id].rar})">${esc(CARDS[id].name)}${counts[id] > 1 ? ' ×' + counts[id] : ''}</span>`).join('') || '<span class="muted">Пока нет карт</span>';
-    return `<h2>Колода</h2><h3>Комплекты по тегам</h3><dl class="sets">${sets}</dl><h3>Комбо</h3><dl class="sets"><dt class="${night ? 'on' : ''}">Ночная смена</dt><dd>Крепкий кофе + Конвейер + Бродяга: доход ×1,5</dd><dt class="${saws ? 'on' : ''}">Две пилорамы</dt><dd>Две пилорамы в цеху: +25% скорости обеим</dd></dl><h3>Твои карты</h3><div class="row">${owned}</div><div class="row"><button class="btn" type="button" data-act="back">Назад</button></div>`;
+    const owned = Object.keys(counts).map(id => chip(id).replace('</span>', counts[id] > 1 ? ` ×${counts[id]}</span>` : '</span>')).join('') || '<span class="muted">Пока нет карт</span>';
+    return `<h2>Колода</h2><h3>Комплекты по тегам</h3><dl class="sets">${sets}</dl><h3>Комбо</h3><dl class="sets"><dt class="${night ? 'on' : ''}">Ночная смена</dt><dd>Крепкий кофе + Конвейер + Бродяга: доход ×1,5</dd><dt class="${saws ? 'on' : ''}">Две пилорамы</dt><dd>Две пилорамы в цеху досок: +25% скорости обеим</dd><dt class="${g.sawWorking && anySlot(s => s.machine === 'kiln') ? 'on' : ''}">Растопка</dt><dd>Пилорама работает в цеху 1: печи в цеху 2 +25% скорости</dd></dl><h3>Твои карты</h3><div class="row">${owned}</div><div class="row"><button class="btn" type="button" data-act="back">Назад</button></div>`;
   }
   function menuHTML() {
-    return `<h2>Меню</h2><p class="muted">Прогресс сохраняется в этом браузере. Пока игра закрыта, завод зарабатывает половину дохода (до 4 часов).</p><p class="muted">Уровень ${state.level} · всего заработано ${fmt(state.earned)} · досок ${fmt(state.planks)}</p>${confirmReset ? '<p>Точно стереть весь прогресс?</p><div class="row"><button class="btn danger" type="button" data-act="reset-yes">Да, начать заново</button><button class="btn" type="button" data-act="reset-no">Отмена</button></div>' : '<div class="row"><button class="btn" type="button" data-act="back">Назад</button><button class="btn danger" type="button" data-act="reset">Начать заново</button></div>'}`;
+    return `<h2>Меню</h2><p class="muted">Прогресс сохраняется в этом браузере. Пока игра закрыта, завод зарабатывает половину дохода (до 4 часов).</p><p class="muted">Уровень ${state.level} · всего заработано ${fmt(state.earned)} · досок ${fmt(state.planks)} · кирпичей ${fmt(state.bricks)}</p>${confirmReset ? '<p>Точно стереть весь прогресс?</p><div class="row"><button class="btn danger" type="button" data-act="reset-yes">Да, начать заново</button><button class="btn" type="button" data-act="reset-no">Отмена</button></div>' : '<div class="row"><button class="btn" type="button" data-act="back">Назад</button><button class="btn danger" type="button" data-act="reset">Начать заново</button></div>'}`;
   }
   function updateLive() {
     const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
     const g = globals();
-    if (selSlot != null) { const st = slotStats(selSlot, g); if (st) { set('live-rate', fmt(st.rate)); set('live-value', fmt(st.value)); set('live-income', fmt(st.income)); } }
+    if (selSlot != null && state.locs[state.cur].unlocked) { const st = slotStats(state.cur, selSlot, g); if (st) { set('live-rate', fmt(st.rate)); set('live-value', fmt(st.value)); set('live-income', fmt(st.income)); } }
     if (selWorker) { const ws = workerStats(selWorker, g); set('live-power', fmt(ws.power)); set('live-speed', fmt(ws.speed)); set('live-luck', pct(ws.luck)); }
-    set('live-planks', fmt(state.planks));
+    set('live-planks', fmt(state.planks)); set('live-bricks', fmt(state.bricks));
   }
   document.querySelector('.sheet').addEventListener('click', e => {
     const b = e.target.closest('[data-act]');
@@ -669,14 +866,15 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
     else if (act === 'showOffers') { offersHidden = false; view = 'main'; selSlot = null; selWorker = null; renderSheet(); }
     else if (act === 'cancel') { if (mode.offer) state.offers.unshift(mode.offer); mode = null; renderSheet(); }
     else if (act === 'move') { mode = { kind: 'move', from: selSlot }; renderSheet(); }
-    else if (act === 'unassign') { state.slots[selSlot].worker = null; save(); renderSheet(); }
-    else if (act === 'rest') { const i = workerSlot(selWorker); if (i >= 0) state.slots[i].worker = null; save(); renderSheet(); }
+    else if (act === 'unassign') { slotsOf(state.cur)[selSlot].worker = null; save(); renderSheet(); }
+    else if (act === 'rest') { const wp = workerPlace(selWorker); if (wp) slotsOf(wp.l)[wp.i].worker = null; save(); renderSheet(); }
+    else if (act === 'unlock') unlockLoc(state.cur);
     else if (act === 'deck') { view = view === 'deck' ? 'main' : 'deck'; renderSheet(); }
     else if (act === 'menu') { view = view === 'menu' ? 'main' : 'menu'; confirmReset = false; renderSheet(); }
     else if (act === 'back') { view = 'main'; renderSheet(); }
     else if (act === 'reset') { confirmReset = true; renderSheet(); }
     else if (act === 'reset-no') { confirmReset = false; renderSheet(); }
-    else if (act === 'reset-yes') { state = fresh(); mode = null; selSlot = null; selWorker = null; view = 'main'; confirmReset = false; crate = null; floats = []; save(); renderSheet(); toast('Новый завод!'); }
+    else if (act === 'reset-yes') { state = fresh(); mode = null; selSlot = null; selWorker = null; view = 'main'; confirmReset = false; crate = null; floats = []; save(); renderSheet(); renderTabs(); toast('Новый завод!'); }
     else if (act === 'shop') {
       const cost = shopCost();
       if (state.money < cost) { toast(`Нужно ${fmt(cost)} монет`); return; }
@@ -699,10 +897,13 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
     const cost = shopCost();
     $shop.textContent = `Магазин · ${fmt(cost)}`;
     $shop.disabled = state.money < cost;
+    renderTabs();
+    const ub = body.querySelector('[data-act="unlock"]');
+    if (ub) ub.disabled = state.money < LOCS[state.cur].cost;
   }
 
   offlineGain();
-  fit(); renderSheet(); render(); hud();
+  fit(); renderSheet(); renderTabs(); render(); hud();
   window.addEventListener('resize', () => { fit(); render(); });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(render);
   document.addEventListener('visibilitychange', () => { if (document.hidden) save(); else { offlineGain(); last = performance.now(); } });
