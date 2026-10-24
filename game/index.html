@@ -338,8 +338,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     u_hack: { name: 'Халтура', type: 'global', tag: 'Улучшения', rar: 2, eff: { price: 1.6 }, desc: 'Всё, что делает завод: цена ×1,6.', minus: 'Удачи нет: двойных штук не будет.' },
     // legendary engines grow with the run
     u_radio: { name: 'Сарафанное радио', type: 'global', tag: 'Улучшения', rar: 3, eff: {}, desc: 'Цена всего ×1,1 за каждую квоту, пройденную после этой карты.' },
-    u_piggy: { name: 'Копилка', type: 'global', tag: 'Улучшения', rar: 3, eff: {}, desc: 'В каждом перерыве приносит 25% монет, заработанных за смену.' },
-    s_gold: { name: 'Золотой станок', type: 'mupg', tag: 'Улучшения', rar: 3, eff: {}, desc: 'Любой станок: цена ×1,15 за каждую карту «Станки» в колоде.' },
+    u_piggy: { name: 'Копилка', type: 'global', tag: 'Улучшения', rar: 3, eff: {}, desc: 'В каждом перерыве приносит 10% монет, заработанных за смену.' },
+    s_gold: { name: 'Золотой станок', type: 'mupg', tag: 'Улучшения', rar: 3, eff: {}, desc: 'Любой станок: цена ×1,1 за каждую карту «Станки» в колоде.' },
     u_union: { name: 'Профсоюз', type: 'global', tag: 'Сотрудники', rar: 3, eff: {}, desc: 'Все сотрудники: сила +5% за каждого сотрудника на заводе.' },
     // mastery cards never drop as usual cards: every masteryEvery-th level offers 1 of 3 of them, each once per run
     x_speed: { name: 'Мастер скорости', type: 'global', tag: 'Мастерство', rar: 3, mastery: true, eff: { speed: 1.5 }, desc: 'Все сотрудники: скорость ×1,5.' },
@@ -723,7 +723,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const notes = [];
     linked(l, i).forEach(j => { const m2 = sl[j].machine; if (!m2 || s.machine === 'belt') return; const e = effect(m2, s.machine); rb += e.rate; vb += e.value; notes.push(e.text); });
     let rX = 1, vX = 1;
-    s.upg.forEach(u => { const ef = CARDS[u].eff; rX *= ef.rate || 1; vX *= ef.value || 1; if (u === 's_gold') vX *= Math.pow(1.15, g.tc['Станки'] || 0); notes.push(`${CARDS[u].name}: ${CARDS[u].desc.toLowerCase()}`); });
+    s.upg.forEach(u => { const ef = CARDS[u].eff; rX *= ef.rate || 1; vX *= ef.value || 1; if (u === 's_gold') vX *= Math.pow(1.1, g.tc['Станки'] || 0); notes.push(`${CARDS[u].name}: ${CARDS[u].desc.toLowerCase()}`); });
     if (s.machine === 'wire' && g.kilnWorking) { vb += 0.2; notes.push('Печь из цеха 2 закаляет проволоку: +20% к цене'); }
     if (s.machine === 'kiln' && g.sawWorking) { rb += 0.25; notes.push('Обрезки досок из цеха 1 на растопку: +25% скорости'); }
     if (s.machine === 'vitrage' && g.tumblerWorking) { vb += 0.2; notes.push('Блестящие гвозди из цеха 3 для рам: +20% к цене'); }
@@ -933,7 +933,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (wasRule) run.passed.push(wasRule.id);
     run.rep += wasRule ? 2 : 1;
     const piggy = state.cards.filter(id => id === 'u_piggy').length;
-    if (piggy) { state.money += run.qEarned * 0.25 * piggy; toast(`Копилка: +${fmt(run.qEarned * 0.25 * piggy)} монет`); }
+    if (piggy) { state.money += run.qEarned * 0.1 * piggy; toast(`Копилка: +${fmt(run.qEarned * 0.1 * piggy)} монет`); }
     run.q++; run.qT = 0; run.qEarned = 0; run.rule = null;
     run.brk = true; run.shopClosed = !!(wasRule && wasRule.id === 'audit'); run.shop = run.shopClosed ? [] : rollShop(); run.shopLocked = false; run.shopRolls = 0;
     if (run.q % 3 === 0) {
