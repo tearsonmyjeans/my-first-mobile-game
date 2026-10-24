@@ -1,15 +1,15 @@
 // Balance bot: plays whole runs headless through the game's #bot hook and prints pacing stats.
-// node tools/balance-bot.js [runs] [unlocks,comma,separated] [BAL overrides as JSON] [workshop costs JSON] [seconds per card]
+// node tools/balance-bot.js [runs] [unlocks,comma,separated] [BAL overrides as JSON] [workshop costs JSON]
 // RATES=1 also prints income at every minute.
 const { chromium } = require('playwright');
-const RUNS = +process.argv[2] || 8, UNL = process.argv[3] || '', BAL = JSON.parse(process.argv[4] || '{}'), COSTS = JSON.parse(process.argv[5] || 'null'), THINK = +process.argv[6] || 0;
+const RUNS = +process.argv[2] || 8, UNL = process.argv[3] || '', BAL = JSON.parse(process.argv[4] || '{}'), COSTS = JSON.parse(process.argv[5] || 'null');
 (async () => {
   const b = await chromium.launch(), p = await b.newPage();
   p.on('pageerror', e => console.log('ERR', e.message));
   await p.goto('file://' + require('path').resolve(__dirname, '../game/index.html') + '#bot');
   const res = [];
   for (let r = 0; r < RUNS; r++) {
-    res.push(await p.evaluate(([unl, bal, costs, think]) => {
+    res.push(await p.evaluate(([unl, bal, costs]) => {
       const P = window.PF;
       Object.assign(P.BAL, bal); if (costs) costs.forEach((c, l) => { P.LOCS[l].cost = c; });
       P.meta.unlocks = unl ? unl.split(',') : [];
@@ -63,26 +63,35 @@ const RUNS = +process.argv[2] || 8, UNL = process.argv[3] || '', BAL = JSON.pars
       }
       const log = { opened: [0, null, null, null], quotaAt: [], cards: 0, level: 0 };
       let sinceOpt = 0;
+      const nextLoc = () => [1, 2, 3].find(l => !P.state.locs[l].unlocked);
+      // save up for the next workshop when it is less than a minute of income away
+      const saving = () => { const n = nextLoc(); return n && (P.LOCS[n].cost - P.state.money) < inc() * 60; };
+      function unlockNext() { const n = nextLoc(); if (n && P.state.money >= P.LOCS[n].cost) { P.unlockLoc(n); log.opened[n] = Math.round(P.state.run.t); optimize(3); } }
+      function buySkills() { const s2 = P.state; for (const w in P.SKILLS) { const ws = s2.workers[w]; if (ws.unlocked && !ws.skill && P.workerPlace(w) && s2.money >= P.SKILLS[w].cost * 2) { s2.money -= P.SKILLS[w].cost; ws.skill = true; ws.skT = 0; s2.run.skills++; } } }
+      // the break: time stands still, so the bot does all its shopping and thinking here
+      function breakTurn() {
+        while (P.state.offers.length) pickOffer();
+        unlockNext();
+        if (!saving()) P.state.run.shop.map((it, i) => [i, P.cardPrice(it.id)]).sort((x, y) => x[1] - y[1]).forEach(([i]) => { if (P.buyCard(i)) pickOffer(); });
+        if (!saving()) buySkills();
+        optimize(3);
+        P.startShift();
+      }
       for (let step = 0; step < 4 * 3600 && !P.state.run.over; step++) {
+        if (P.state.run.brk) { breakTurn(); continue; }
         P.tick(0.25);
         const st = P.state;
         if (step % 4) continue;
         if (step % 240 === 0) (log.rateAt = log.rateAt || []).push(Math.round(inc()));
         if (st.run.q - 1 > log.quotaAt.length) log.quotaAt.push(Math.round(st.run.t));
         if (P.crate) P.openCrate();
-        if (st.offers.length && !st.run.over) { log.wait = (log.wait || 0) + 1; if (log.wait >= think) { log.wait = 0; pickOffer(); } }
-        const s2 = P.state;
-        const next = [1, 2, 3].find(l => !s2.locs[l].unlocked);
-        if (next && s2.money >= P.LOCS[next].cost) { P.unlockLoc(next); log.opened[next] = Math.round(s2.run.t); optimize(3); continue; }
-        // save up for the next workshop when it is less than a minute of income away
-        const saving = next && (P.LOCS[next].cost - s2.money) < inc() * 60;
-        if (!saving && P.buyShop()) continue;
-        if (!saving) for (const w in P.SKILLS) { const ws = s2.workers[w]; if (ws.unlocked && !ws.skill && P.workerPlace(w) && s2.money >= P.SKILLS[w].cost * 2) { s2.money -= P.SKILLS[w].cost; ws.skill = true; ws.skT = 0; s2.run.skills++; } }
+        unlockNext();
+        if (!saving()) buySkills();
         if (++sinceOpt >= 10) { sinceOpt = 0; optimize(2); }
       }
       const st = P.state;
       return { passed: st.run.q - 1, end: Math.round(st.run.t), opened: log.opened, quotaAt: log.quotaAt, cards: st.cards.length, level: st.level, earned: st.earned, rate: st.run.bestRate, rateAt: log.rateAt };
-    }, [UNL, BAL, COSTS, THINK]));
+    }, [UNL, BAL, COSTS]));
     const x = res[res.length - 1];
     console.log(`run ${r + 1}: квот ${x.passed}, конец ${Math.floor(x.end / 60)}:${String(x.end % 60).padStart(2, '0')}, цеха ${x.opened.map(v => v == null ? '—' : Math.round(v / 6) / 10).join('/')} мин, карт ${x.cards}, ур ${x.level}, доход ${Math.round(x.rate)}/с, квоты на ${x.quotaAt.map(v => Math.round(v / 6) / 10).join(' ')}`);
     if (process.env.RATES) console.log('  доход по минутам:', x.rateAt.join(' '));
