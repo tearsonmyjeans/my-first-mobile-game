@@ -206,17 +206,17 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
     [[0, 0], [1, 0], [2, 0], [2, 1], [2, 2], [1, 2], [0, 2], [0, 1]]
   ];
   const gridSize = l => LAYOUTS[l].reduce(([c, r], [x, y]) => [Math.max(c, x + 1), Math.max(r, y + 1)], [0, 0]);
-  // max: how many machines of a type the factory may own; once all are placed, their card stops dropping
+  // max: how many machines of a type the factory may own; the maxes of a workshop add up to its slot count.
+  // Once all are placed, the card stops dropping
   const MACH = {
-    saw: { loc: 0, name: 'Пилорама', short: 'ПИЛОРАМА', rate: 1, value: 1, max: 2, desc: 'Распиливает брёвна на доски.' },
+    saw: { loc: 0, name: 'Пилорама', short: 'ПИЛОРАМА', rate: 1, value: 1, max: 1, desc: 'Распиливает брёвна на доски.' },
     bench: { loc: 0, name: 'Верстак', short: 'ВЕРСТАК', rate: 0.6, value: 2.2, max: 1, desc: 'Строгает доски, поэтому они дороже.' },
     dryer: { loc: 0, name: 'Сушилка', short: 'СУШИЛКА', rate: 0.35, value: 4, max: 1, desc: 'Работает медленно, зато сухая доска стоит дорого.' },
-    sander: { loc: 0, name: 'Шлифовальный станок', short: 'ШЛИФОВКА', rate: 0.5, value: 3, max: 1, desc: 'Полирует доски до блеска.' },
     mixer: { loc: 1, name: 'Глиномешалка', short: 'МЕШАЛКА', rate: 0.8, value: 3, max: 2, desc: 'Месит глину и лепит сырые кирпичи.' },
-    press: { loc: 1, name: 'Пресс', short: 'ПРЕСС', rate: 0.5, value: 6, max: 2, desc: 'Прессует ровные крепкие кирпичи.' },
+    press: { loc: 1, name: 'Пресс', short: 'ПРЕСС', rate: 0.5, value: 6, max: 1, desc: 'Прессует ровные крепкие кирпичи.' },
     kiln: { loc: 1, name: 'Печь для обжига', short: 'ПЕЧЬ', rate: 0.3, value: 12, max: 1, desc: 'Обжигает кирпичи. Медленно, но очень дорого.' },
     wire: { loc: 2, name: 'Волочильный стан', short: 'ВОЛОЧЕНИЕ', rate: 0.7, value: 8, max: 2, desc: 'Тянет стальную проволоку для гвоздей.' },
-    nailer: { loc: 2, name: 'Гвоздильный автомат', short: 'ГВОЗДИЛКА', rate: 1.5, value: 5, max: 3, desc: 'Рубит проволоку и штампует шляпки. Очень быстрый.' },
+    nailer: { loc: 2, name: 'Гвоздильный автомат', short: 'ГВОЗДИЛКА', rate: 1.5, value: 5, max: 2, desc: 'Рубит проволоку и штампует шляпки. Очень быстрый.' },
     tumbler: { loc: 2, name: 'Галтовочный барабан', short: 'ГАЛТОВКА', rate: 0.4, value: 25, max: 2, desc: 'Полирует гвозди до блеска. Медленно, но очень дорого.' },
     melt: { loc: 3, name: 'Стекловарка', short: 'ВАРКА', rate: 0.9, value: 30, max: 3, desc: 'Варит песок в жидкое стекло.' },
     blower: { loc: 3, name: 'Стеклодувка', short: 'ВЫДУВКА', rate: 0.5, value: 70, max: 3, desc: 'Выдувает бутылки и вазы.' },
@@ -264,9 +264,7 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
   };
   const CARDS = {
     m_bench: { name: 'Верстак', type: 'machine', machine: 'bench', tag: 'Станки', rar: 0, desc: 'Доска стоит 2,2. Рядом с пилорамой: +25% к цене её досок.' },
-    m_saw: { name: 'Пилорама', type: 'machine', machine: 'saw', tag: 'Станки', rar: 0, desc: 'Ещё одна пилорама. Соседям +15% скорости. Две пилорамы: +25% скорости обеим.' },
     m_dryer: { name: 'Сушилка', type: 'machine', machine: 'dryer', tag: 'Станки', rar: 1, desc: 'Доска стоит 4, но медленно. Соседям +20% к цене.' },
-    m_sander: { name: 'Шлифовальный станок', type: 'machine', machine: 'sander', tag: 'Станки', rar: 1, desc: 'Доска стоит 3. Рядом с верстаком: +40% к цене.' },
     m_mixer: { name: 'Глиномешалка', type: 'machine', machine: 'mixer', tag: 'Станки', rar: 0, desc: 'Кирпич стоит 3. Рядом с прессом: +30% скорости пресса.' },
     m_press: { name: 'Пресс', type: 'machine', machine: 'press', tag: 'Станки', rar: 1, desc: 'Кирпич стоит 6. Рядом с печью: +25% к цене обожжённых.' },
     m_kiln: { name: 'Печь для обжига', type: 'machine', machine: 'kiln', tag: 'Станки', rar: 1, desc: 'Кирпич стоит 12. Если в цеху досок работает пилорама: +25% скорости.' },
@@ -325,8 +323,6 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
     if (src === 'dryer') return { rate: 0, value: 0.20, text: 'Сушилка рядом: +20% к цене' };
     if (src === 'saw' && dst !== 'saw') return { rate: 0.15, value: 0, text: 'Пилорама рядом: +15% скорости' };
     if (src === 'bench' && dst === 'saw') return { rate: 0, value: 0.25, text: 'Верстак строгает: +25% к цене' };
-    if (src === 'bench' && dst === 'sander') return { rate: 0, value: 0.40, text: 'Верстак и шлифовка: +40% к цене' };
-    if (src === 'sander' && dst === 'bench') return { rate: 0, value: 0.20, text: 'Шлифовка рядом: +20% к цене' };
     if (src === 'mixer' && dst === 'press') return { rate: 0.30, value: 0, text: 'Свежая глина: +30% скорости' };
     if (src === 'press' && dst === 'kiln') return { rate: 0, value: 0.25, text: 'Ровные кирпичи: +25% к цене' };
     if (src === 'kiln' && dst === 'mixer') return { rate: 0.15, value: 0, text: 'Тёплая глина: +15% скорости' };
@@ -353,7 +349,6 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
     bench: r => { r(5, 0, 1, 5, '#8a5a32'); r(3, 0, 5, 2, '#7d8794'); r(1, 6, 14, 4, K); r(2, 7, 12, 2, '#c98a4a'); r(2, 7, 12, 1, '#e5a86a'); r(2, 10, 3, 6, K); r(3, 10, 1, 5, '#a06a36'); r(11, 10, 3, 6, K); r(12, 10, 1, 5, '#a06a36'); r(9, 4, 5, 2, K); r(10, 4, 3, 1, '#e3b47c'); },
     saw: (r, d) => { d(8, 8, 7, K); d(8, 8, 6, '#d6dbe0'); for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4; r(8 + Math.round(Math.cos(a) * 5), 8 + Math.round(Math.sin(a) * 5), 1, 1, '#7d8794'); } r(7, 7, 3, 3, '#5a6270'); r(10, 4, 2, 1, '#ffffff'); },
     dryer: r => { r(2, 1, 12, 15, K); r(3, 2, 10, 13, '#7d8a96'); r(4, 4, 8, 7, '#3a2f3a'); r(5, 5, 6, 1, '#d9a066'); r(5, 7, 6, 1, '#d9a066'); r(4, 10, 8, 1, '#f28c3a'); r(6, 12, 4, 2, K); },
-    sander: r => { r(3, 1, 10, 5, K); r(4, 2, 8, 3, '#cdb88c'); r(6, 2, 1, 3, '#a8946a'); r(9, 2, 1, 3, '#a8946a'); r(2, 5, 12, 11, K); r(3, 6, 10, 9, '#5fa08c'); r(4, 8, 2, 2, '#e0533a'); r(7, 8, 2, 2, '#7ee081'); r(10, 8, 2, 5, '#3f7466'); },
     mixer: r => { r(2, 1, 12, 10, K); r(3, 2, 10, 8, '#d9a066'); r(5, 2, 1, 8, '#b98a4a'); r(9, 2, 1, 8, '#b98a4a'); r(4, 3, 5, 3, K); r(5, 4, 3, 1, '#b5653f'); r(1, 11, 14, 2, K); r(2, 13, 2, 3, K); r(12, 13, 2, 3, K); },
     press: r => { r(1, 0, 14, 16, K); r(2, 1, 2, 14, '#9aa3ad'); r(12, 1, 2, 14, '#9aa3ad'); r(4, 1, 8, 2, '#e0a32e'); r(7, 3, 2, 3, '#5a6270'); r(4, 6, 8, 2, '#7d8794'); r(4, 11, 8, 4, '#2b2135'); r(5, 12, 6, 2, '#c4553a'); },
     kiln: r => { r(10, 0, 4, 5, K); r(11, 1, 2, 4, '#8a5a4a'); r(1, 4, 14, 12, K); r(2, 5, 12, 10, '#b5654c'); r(2, 8, 12, 1, '#94523d'); r(4, 9, 8, 7, K); r(5, 10, 6, 6, '#d9622a'); r(6, 12, 4, 4, '#f28c3a'); r(7, 13, 2, 2, '#f2c94c'); },
@@ -397,7 +392,7 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
     grease: r => { r(4, 3, 5, 1, K); r(4, 3, 1, 4, K); r(8, 3, 1, 4, K); r(1, 7, 10, 9, K); r(2, 8, 8, 7, '#5a6270'); r(3, 9, 2, 2, '#9aa3ad'); r(10, 5, 5, 2, K); r(14, 3, 2, 3, K); r(14, 8, 1, 2, '#f2c14e'); }
   };
   const CARD_ICON = {
-    m_bench: 'bench', m_saw: 'saw', m_dryer: 'dryer', m_sander: 'sander', m_mixer: 'mixer', m_press: 'press', m_kiln: 'kiln', m_belt: 'belt',
+    m_bench: 'bench', m_dryer: 'dryer', m_mixer: 'mixer', m_press: 'press', m_kiln: 'kiln', m_belt: 'belt',
     w_tramp: 'tramp', w_dog: 'dog', w_toad: 'toad', w_pink: 'pink', w_v1: 'v1', w_v2: 'v2', m_wire: 'wire', m_nailer: 'nailer', m_tumbler: 'tumbler', s_zinc: 'zinc', u_nails: 'nails', u_power: 'power', u_speed: 'speed', u_price: 'price', u_bricks: 'bricks',
     e_coffee: 'coffee', e_helmet: 'helmet', e_gloves: 'gloves', e_mask: 'mask', e_horseshoe: 'horseshoe', e_chainsaw: 'chainsaw',
     s_blade: 'blade', s_varnish: 'varnish', s_glaze: 'glaze', s_grease: 'grease',
@@ -410,7 +405,7 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
   const KEY = 'pixel-factory-save-v1';
   const emptySlots = n => Array.from({ length: n }, () => ({ machine: null, worker: null, upg: [], acc: 0 }));
   const fresh = () => ({
-    v: 7, money: 0, xp: 0, level: 1, planks: 0, bricks: 0, nails: 0, glass: 0, earned: 0, cur: 0,
+    v: 8, money: 0, xp: 0, level: 1, planks: 0, bricks: 0, nails: 0, glass: 0, earned: 0, cur: 0,
     locs: [
       { unlocked: true, slots: [{ machine: null, worker: null, upg: [], acc: 0 }, { machine: 'saw', worker: 'crow', upg: [], acc: 0 }, { machine: null, worker: null, upg: [], acc: 0 }] },
       { unlocked: false, slots: emptySlots(4) },
@@ -447,7 +442,19 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
       for (const id of ['silver', 'mrsha', 'kast', 'batya']) { s.workers[id] = { unlocked: false, equip: [] }; s.lockers.push(id); }
       s.silverCount = 0; s.v = 7;
     }
-    return s.v === 7 ? s : null;
+    if (s.v === 7) {
+      // build 8 dropped the sander and set per-type limits: machines over a limit leave their slot
+      const seen = {};
+      s.locs.forEach(L => L.slots.forEach((z, i) => {
+        const M = MACH[z.machine];
+        if (!z.machine || (M && (!M.max || (seen[z.machine] = (seen[z.machine] || 0) + 1) <= M.max))) return;
+        L.slots[i] = { machine: null, worker: null, upg: [], acc: 0 };
+      }));
+      s.cards = s.cards.filter(id => CARDS[id]);
+      s.offers = s.offers.map(o => ({ ...o, ids: o.ids.filter(id => CARDS[id]) })).filter(o => o.ids.length);
+      s.v = 8;
+    }
+    return s.v === 8 ? s : null;
   }
   function load() { try { return migrate(JSON.parse(localStorage.getItem(KEY))); } catch (e) { return null; } }
   function save() { try { state.savedAt = Date.now(); localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { } }
@@ -491,7 +498,6 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
     const g = { power: pr('Сотрудники') * 0.05, speed: pr('Экипировка') * 0.05, price: pr('Станки') * 0.05, brickPrice: 0, nailPrice: 0, glassPrice: 0, income: 1 + pr('Улучшения') * 0.03, tc, combos: [] };
     state.cards.forEach(id => { const cd = CARDS[id]; if (cd.type === 'global') for (const k in cd.eff) g[k] += cd.eff[k]; });
     if (state.cards.includes('e_coffee') && anySlot(s => s.machine === 'belt') && state.workers.tramp.unlocked) { g.combos.push('night'); g.income *= 1.5; }
-    if (slotsOf(0).filter(s => s.machine === 'saw').length >= 2) g.combos.push('saws');
     g.sawWorking = slotsOf(0).some(s => s.machine === 'saw' && s.worker);
     g.kilnWorking = slotsOf(1).some(s => s.machine === 'kiln' && s.worker);
     g.tumblerWorking = slotsOf(2).some(s => s.machine === 'tumbler' && s.worker);
@@ -541,7 +547,6 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
     const notes = [];
     linked(l, i).forEach(j => { const m2 = sl[j].machine; if (!m2 || s.machine === 'belt') return; const e = effect(m2, s.machine); rb += e.rate; vb += e.value; notes.push(e.text); });
     s.upg.forEach(u => { const ef = CARDS[u].eff; rb += ef.rate || 0; vb += ef.value || 0; notes.push(`${CARDS[u].name}: ${CARDS[u].desc.toLowerCase()}`); });
-    if (s.machine === 'saw' && g.combos.includes('saws')) { rb += 0.25; notes.push('Две пилорамы: +25% скорости'); }
     if (s.machine === 'wire' && g.kilnWorking) { vb += 0.2; notes.push('Печь из цеха 2 закаляет проволоку: +20% к цене'); }
     if (s.machine === 'kiln' && g.sawWorking) { rb += 0.25; notes.push('Обрезки досок из цеха 1 на растопку: +25% скорости'); }
     if (s.machine === 'vitrage' && g.tumblerWorking) { vb += 0.2; notes.push('Блестящие гвозди из цеха 3 для рам: +20% к цене'); }
@@ -647,7 +652,6 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
     if (got('maids')) toast('Комбо «Дуэт горничных»: доход цеха ×2!');
     else if (got('night')) toast('Комбо «Ночная смена»: доход ×1,5!');
     else if (got('green')) toast('Комбо «Зелёная сила»: сила ×1,5!');
-    else if (got('saws')) toast('Комбо «Две пилорамы»: +25% скорости!');
     else if (got('family')) toast('Комбо «Семейный подряд»: +20% силы!');
   }
   function unlockLoc(l) {
@@ -782,14 +786,6 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
       for (let i = 0; i < 2; i++) { const px = x + ((t * 10 + i * 16) % 32); if (px < x + 23) { R(px, y + 11, 9, 4, K); R(px + 1, y + 12, 7, 2, item); } }
       R(x + 10, y + 1, 12, 8, K); R(x + 11, y + 2, 10, 6, '#f2b53a');
       R(x + 13, y + 4, 5, 2, K); R(x + 17, y + 3, 1, 4, K); R(x + 18, y + 4, 1, 2, K);
-    } else if (type === 'sander') {
-      R(x + 4, y + 8, 24, 22, K); R(x + 5, y + 9, 22, 20, '#5fa08c'); R(x + 5, y + 9, 22, 1, '#86c2ad');
-      R(x + 6, y + 3, 20, 7, K); R(x + 7, y + 4, 18, 5, '#cdb88c');
-      const off = Math.floor(t * 12) % 4;
-      for (let i = 0; i < 18; i += 4) R(x + 7 + ((i + off) % 18), y + 4, 1, 5, '#a8946a');
-      R(x + 8, y + 13, 10, 7, K); R(x + 9, y + 14, 3, 2, '#e0533a'); R(x + 13, y + 14, 3, 2, '#7ee081'); R(x + 9, y + 17, 7, 1, '#9aa3ad');
-      for (let j = 0; j < 3; j++) R(x + 20, y + 13 + j * 3, 5, 1, '#3f7466');
-      R(x + 5, y + 29, 4, 2, K); R(x + 23, y + 29, 4, 2, K);
     } else if (type === 'mixer') {
       R(x + 4, y + 22, 24, 4, K); R(x + 5, y + 23, 22, 2, '#5a6270');
       R(x + 6, y + 26, 3, 5, K); R(x + 23, y + 26, 3, 5, K);
@@ -1171,7 +1167,7 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
   }
   function idleHTML() {
     const g = globals();
-    const combos = g.combos.map(k => ({ night: '<span class="chip" style="--rc:var(--r3)">Ночная смена ×1,5</span>', saws: '<span class="chip" style="--rc:var(--r2)">Две пилорамы</span>', maids: `<span class="chip" style="--rc:var(--r3)">Дуэт горничных: цех ${g.maidsLoc + 1} ×2</span>`, green: '<span class="chip" style="--rc:var(--r2)">Зелёная сила ×1,5</span>', family: `<span class="chip" style="--rc:var(--r3)">Семейный подряд${g.familyLoc >= 0 ? `: цех ${g.familyLoc + 1} ×2` : ''}</span>` })[k]).join('');
+    const combos = g.combos.map(k => ({ night: '<span class="chip" style="--rc:var(--r3)">Ночная смена ×1,5</span>', maids: `<span class="chip" style="--rc:var(--r3)">Дуэт горничных: цех ${g.maidsLoc + 1} ×2</span>`, green: '<span class="chip" style="--rc:var(--r2)">Зелёная сила ×1,5</span>', family: `<span class="chip" style="--rc:var(--r3)">Семейный подряд${g.familyLoc >= 0 ? `: цех ${g.familyLoc + 1} ×2` : ''}</span>` })[k]).join('');
     return `<h2>Цех ${state.cur + 1} · ${LOCS[state.cur].name}</h2><p class="muted">Нажми на шкафчик, а потом на станок, чтобы поставить туда сотрудника. Каждый сотрудник один на весь завод. Соседние станки усиливают друг друга, соседи по шкафчику дружат.</p>${combos ? `<h3>Активные комбо</h3><div class="row">${combos}</div>` : ''}<p class="muted">Досок: <b id="live-planks">0</b> · кирпичей: <b id="live-bricks">0</b> · гвоздей: <b id="live-nails">0</b> · стекла: <b id="live-glass">0</b></p>`;
   }
   function slotHTML(i) {
@@ -1200,9 +1196,9 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
     const g = globals(), counts = {};
     state.cards.forEach(id => counts[id] = (counts[id] || 0) + 1);
     const sets = Object.keys(TAGS).map(tg => { const n = g.tc[tg] || 0, p = Math.floor(n / 2); return `<dt class="${p ? 'on' : ''}">${tg}: ${n}</dt><dd>${TAGS[tg]}. Комплектов: ${p}</dd>`; }).join('');
-    const night = g.combos.includes('night'), saws = g.combos.includes('saws');
+    const night = g.combos.includes('night');
     const owned = Object.keys(counts).map(id => chip(id).replace('</span>', counts[id] > 1 ? ` ×${counts[id]}</span>` : '</span>')).join('') || '<span class="muted">Пока нет карт</span>';
-    return `<h2>Колода</h2><h3>Комплекты по тегам</h3><dl class="sets">${sets}</dl><h3>Комбо</h3><dl class="sets"><dt class="${night ? 'on' : ''}">Ночная смена</dt><dd>Крепкий кофе + Конвейер + Бродяга: доход ×1,5</dd><dt class="${saws ? 'on' : ''}">Две пилорамы</dt><dd>Две пилорамы в цеху досок: +25% скорости обеим</dd><dt class="${g.sawWorking && anySlot(s => s.machine === 'kiln') ? 'on' : ''}">Растопка</dt><dd>Пилорама работает в цеху 1: печи в цеху 2 +25% скорости</dd><dt class="${g.kilnWorking && anySlot(s => s.machine === 'wire') ? 'on' : ''}">Закалка</dt><dd>Печь работает в цеху 2: проволока в цеху 3 +20% к цене</dd><dt class="${g.maidsLoc >= 0 ? 'on' : ''}">Дуэт горничных</dt><dd>V1 и V2 на соседних станках: доход их цеха ×2</dd><dt class="${g.green ? 'on' : ''}">Зелёная сила</dt><dd>Пришелец и Хаба на соседних станках: сила обоих ×1,5</dd><dt class="${g.combos.includes('family') ? 'on' : ''}">Семейный подряд</dt><dd>Хаба, Кастомка и Батя: соседям по станку из этой тройки +20% силы, все трое в одном цеху: доход цеха ×2</dd><dt class="${g.tumblerWorking && anySlot(s => s.machine === 'vitrage') ? 'on' : ''}">Рамы на гвоздях</dt><dd>Барабан работает в цеху 3: витражи в цеху 4 +20% к цене</dd></dl><h3>Твои карты</h3><div class="row">${owned}</div><div class="row"><button class="btn" type="button" data-act="back">Назад</button></div>`;
+    return `<h2>Колода</h2><h3>Комплекты по тегам</h3><dl class="sets">${sets}</dl><h3>Комбо</h3><dl class="sets"><dt class="${night ? 'on' : ''}">Ночная смена</dt><dd>Крепкий кофе + Конвейер + Бродяга: доход ×1,5</dd><dt class="${g.sawWorking && anySlot(s => s.machine === 'kiln') ? 'on' : ''}">Растопка</dt><dd>Пилорама работает в цеху 1: печи в цеху 2 +25% скорости</dd><dt class="${g.kilnWorking && anySlot(s => s.machine === 'wire') ? 'on' : ''}">Закалка</dt><dd>Печь работает в цеху 2: проволока в цеху 3 +20% к цене</dd><dt class="${g.maidsLoc >= 0 ? 'on' : ''}">Дуэт горничных</dt><dd>V1 и V2 на соседних станках: доход их цеха ×2</dd><dt class="${g.green ? 'on' : ''}">Зелёная сила</dt><dd>Пришелец и Хаба на соседних станках: сила обоих ×1,5</dd><dt class="${g.combos.includes('family') ? 'on' : ''}">Семейный подряд</dt><dd>Хаба, Кастомка и Батя: соседям по станку из этой тройки +20% силы, все трое в одном цеху: доход цеха ×2</dd><dt class="${g.tumblerWorking && anySlot(s => s.machine === 'vitrage') ? 'on' : ''}">Рамы на гвоздях</dt><dd>Барабан работает в цеху 3: витражи в цеху 4 +20% к цене</dd></dl><h3>Твои карты</h3><div class="row">${owned}</div><div class="row"><button class="btn" type="button" data-act="back">Назад</button></div>`;
   }
   function menuHTML() {
     return `<h2>Меню</h2><p class="muted">Прогресс сохраняется в этом браузере. Пока игра закрыта, завод зарабатывает половину дохода (до 4 часов).</p><p class="muted">Уровень ${state.level} · всего заработано ${fmt(state.earned)} · досок ${fmt(state.planks)} · кирпичей ${fmt(state.bricks)} · гвоздей ${fmt(state.nails || 0)} · стекла ${fmt(state.glass || 0)}</p>${confirmReset ? '<p>Точно стереть весь прогресс?</p><div class="row"><button class="btn danger" type="button" data-act="reset-yes">Да, начать заново</button><button class="btn" type="button" data-act="reset-no">Отмена</button></div>' : '<div class="row"><button class="btn" type="button" data-act="back">Назад</button><button class="btn danger" type="button" data-act="reset">Начать заново</button></div>'}`;
