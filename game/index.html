@@ -203,15 +203,15 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   const LOCS = [
     { name: 'Доски', sign: 'ЦЕХ 1 · ДОСКИ', cost: 0, wall: '#b0654c', mortar: '#94523d', floor: '#a39b8f', grid: '#978f83', plate: '#938b7f', item: '#e3b47c',
       glass: '#bfe3ef', board: '#c98a4a', boardHi: '#e5a86a', goods: 'planks', unit: 'Доски', unit1: 'Цена доски' },
-    { name: 'Кирпичи', sign: 'ЦЕХ 2 · КИРПИЧИ', cost: 1500, wall: '#7d7f88', mortar: '#6a6c75', floor: '#9c877a', grid: '#8f7a6d', plate: '#8d7c70', item: '#c4553a',
+    { name: 'Кирпичи', sign: 'ЦЕХ 2 · КИРПИЧИ', cost: 2000, wall: '#7d7f88', mortar: '#6a6c75', floor: '#9c877a', grid: '#8f7a6d', plate: '#8d7c70', item: '#c4553a',
       glass: '#d9cbb8', board: '#5f6168', boardHi: '#8a8c95', goods: 'bricks', unit: 'Кирпичи', unit1: 'Цена кирпича', start: 'mixer',
       desc: 'Новая ветка завода. Здесь месят глину, прессуют и обжигают кирпичи. Кирпичи стоят дороже досок, а печь работает быстрее, если в цеху досок трудится пилорама.',
       opened: 'Цех кирпичей открыт! Поставь к глиномешалке сотрудника' },
-    { name: 'Гвозди', sign: 'ЦЕХ 3 · ГВОЗДИ', cost: 40000, wall: '#55606b', mortar: '#46505a', floor: '#8b9096', grid: '#7f858c', plate: '#7a8086', item: '#c9d0d6',
+    { name: 'Гвозди', sign: 'ЦЕХ 3 · ГВОЗДИ', cost: 300000, wall: '#55606b', mortar: '#46505a', floor: '#8b9096', grid: '#7f858c', plate: '#7a8086', item: '#c9d0d6',
       glass: '#a9c4d6', board: '#3e6a8a', boardHi: '#5f8fb0', goods: 'nails', unit: 'Гвозди', unit1: 'Цена гвоздя', start: 'nailer',
       desc: 'Третья ветка завода. Тянут проволоку, рубят гвозди и полируют их в барабане. Мест шесть: четыре внизу и два сверху. Если в цеху кирпичей горит печь, проволока выходит закалённой и дороже.',
       opened: 'Цех гвоздей открыт! Поставь к гвоздильному автомату сотрудника' },
-    { name: 'Стекло', sign: 'ЦЕХ 4 · СТЕКЛО', cost: 250000, wall: '#2e2440', mortar: '#1d1629', floor: '#3a3150', grid: '#463c60', item: '#9fe6ef',
+    { name: 'Стекло', sign: 'ЦЕХ 4 · СТЕКЛО', cost: 20000000, wall: '#2e2440', mortar: '#1d1629', floor: '#3a3150', grid: '#463c60', item: '#9fe6ef',
       board: '#6a3f8a', boardHi: '#9a6ac2', goods: 'glass', unit: 'Стекло', unit1: 'Цена стекла', start: 'melt', hot: [1, 3, 5, 7],
       plates: ['#b34f78', '#c7723a', '#b89a2a', '#4f9550', '#3a87a0', '#4f63bf', '#7f52b8', '#a8479a'],
       desc: 'Четвёртая ветка завода. Восемь мест стоят кольцом вокруг горна. Места посередине сторон касаются горна и работают на 20% быстрее. Если в цеху гвоздей крутится барабан, витражи выходят дороже.',
@@ -298,21 +298,21 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     m_wire: { name: 'Волочильный стан', type: 'machine', machine: 'wire', tag: 'Станки', rar: 0, desc: 'Гвоздь стоит 8. Рядом с гвоздильным автоматом: +30% его скорости.' },
     m_nailer: { name: 'Гвоздильный автомат', type: 'machine', machine: 'nailer', tag: 'Станки', rar: 0, desc: 'Гвоздь стоит 5, но очень быстро. Рядом с барабаном: +25% к цене.' },
     m_tumbler: { name: 'Галтовочный барабан', type: 'machine', machine: 'tumbler', tag: 'Станки', rar: 1, desc: 'Гвоздь стоит 25. Медленный, зато блестит.' },
-    s_zinc: { name: 'Оцинковка', type: 'mupg', loc: 2, tag: 'Улучшения', rar: 0, eff: { value: 0.25 }, desc: 'Гвозди с этого станка: +25% к цене.' },
-    u_nails: { name: 'Ремонт по всей стране', type: 'global', tag: 'Улучшения', rar: 1, loc: 2, eff: { nailPrice: 0.25 }, desc: 'Гвозди: +25% к цене.' },
-    u_power: { name: 'Тренажёр в подсобке', type: 'global', tag: 'Сотрудники', rar: 0, eff: { power: 0.10 }, desc: 'Все сотрудники: +10% силы.' },
-    u_speed: { name: 'Перекур отменён', type: 'global', tag: 'Сотрудники', rar: 0, eff: { speed: 0.10 }, desc: 'Все сотрудники: +10% скорости.' },
-    u_price: { name: 'Реклама на радио', type: 'global', tag: 'Улучшения', rar: 1, eff: { price: 0.15 }, desc: 'Всё, что делает завод: +15% к цене.' },
-    u_bricks: { name: 'Стройка по соседству', type: 'global', tag: 'Улучшения', rar: 1, loc: 1, eff: { brickPrice: 0.25 }, desc: 'Кирпичи: +25% к цене.' },
-    e_coffee: { name: 'Крепкий кофе', type: 'equip', tag: 'Экипировка', rar: 1, eff: { speed: 0.15 }, desc: '+15% скорости. Мистер Жопосранчик с кофе работает в полную силу.' },
-    e_helmet: { name: 'Каска', type: 'equip', tag: 'Экипировка', rar: 0, eff: { power: 0.10 }, desc: '+10% силы.' },
-    e_gloves: { name: 'Перчатки', type: 'equip', tag: 'Экипировка', rar: 0, eff: { power: 0.05, speed: 0.08 }, desc: '+5% силы и +8% скорости.' },
-    e_mask: { name: 'Респиратор', type: 'equip', tag: 'Экипировка', rar: 0, eff: { power: 0.08, speed: 0.08 }, desc: '+8% силы и +8% скорости. В пыльном цеху без него никак.' },
-    e_horseshoe: { name: 'Подкова на удачу', type: 'equip', tag: 'Экипировка', rar: 1, eff: { luck: 0.08 }, desc: '+8% шанс сделать двойную штуку.' },
-    e_chainsaw: { name: 'Бензопила', type: 'equip', tag: 'Экипировка', rar: 2, eff: { speed: 0.35 }, desc: '+35% скорости.' },
-    s_blade: { name: 'Острое полотно', type: 'mupg', loc: 0, tag: 'Улучшения', rar: 0, eff: { rate: 0.25 }, desc: 'Станок в цеху досок: +25% скорости.' },
-    s_varnish: { name: 'Лак', type: 'mupg', loc: 0, tag: 'Улучшения', rar: 0, eff: { value: 0.20 }, desc: 'Доски с этого станка: +20% к цене.' },
-    s_glaze: { name: 'Глазурь', type: 'mupg', loc: 1, tag: 'Улучшения', rar: 0, eff: { value: 0.25 }, desc: 'Кирпичи с этого станка: +25% к цене.' },
+    s_zinc: { name: 'Оцинковка', type: 'mupg', loc: 2, tag: 'Улучшения', rar: 0, eff: { value: 1.5 }, desc: 'Гвозди с этого станка: цена ×1,5.' },
+    u_nails: { name: 'Ремонт по всей стране', type: 'global', tag: 'Улучшения', rar: 1, loc: 2, eff: { nailPrice: 1.6 }, desc: 'Гвозди: цена ×1,6.' },
+    u_power: { name: 'Тренажёр в подсобке', type: 'global', tag: 'Сотрудники', rar: 0, eff: { power: 1.3 }, desc: 'Все сотрудники: сила ×1,3.' },
+    u_speed: { name: 'Перекур отменён', type: 'global', tag: 'Сотрудники', rar: 0, eff: { speed: 1.3 }, desc: 'Все сотрудники: скорость ×1,3.' },
+    u_price: { name: 'Реклама на радио', type: 'global', tag: 'Улучшения', rar: 1, eff: { price: 1.3 }, desc: 'Всё, что делает завод: цена ×1,3.' },
+    u_bricks: { name: 'Стройка по соседству', type: 'global', tag: 'Улучшения', rar: 1, loc: 1, eff: { brickPrice: 1.6 }, desc: 'Кирпичи: цена ×1,6.' },
+    e_coffee: { name: 'Крепкий кофе', type: 'equip', tag: 'Экипировка', rar: 1, eff: { speed: 1.3 }, desc: 'Скорость ×1,3. Мистер Жопосранчик с кофе работает в полную силу.' },
+    e_helmet: { name: 'Каска', type: 'equip', tag: 'Экипировка', rar: 0, eff: { power: 1.4 }, desc: 'Сила ×1,4.' },
+    e_gloves: { name: 'Перчатки', type: 'equip', tag: 'Экипировка', rar: 0, eff: { power: 1.25, speed: 1.25 }, desc: 'Сила и скорость ×1,25.' },
+    e_mask: { name: 'Респиратор', type: 'equip', tag: 'Экипировка', rar: 0, eff: { power: 1.08, speed: 1.08 }, desc: 'Сила и скорость ×1,08. В пыльном цеху без него никак.' },
+    e_horseshoe: { name: 'Подкова на удачу', type: 'equip', tag: 'Экипировка', rar: 1, eff: { luck: 0.30 }, desc: '+30% шанс сделать двойную штуку.' },
+    e_chainsaw: { name: 'Бензопила', type: 'equip', tag: 'Экипировка', rar: 2, eff: { speed: 1.35 }, desc: 'Скорость ×1,35.' },
+    s_blade: { name: 'Острое полотно', type: 'mupg', loc: 0, tag: 'Улучшения', rar: 0, eff: { rate: 1.5 }, desc: 'Станок в цеху досок: скорость ×1,5.' },
+    s_varnish: { name: 'Лак', type: 'mupg', loc: 0, tag: 'Улучшения', rar: 0, eff: { value: 1.5 }, desc: 'Доски с этого станка: цена ×1,5.' },
+    s_glaze: { name: 'Глазурь', type: 'mupg', loc: 1, tag: 'Улучшения', rar: 0, eff: { value: 1.5 }, desc: 'Кирпичи с этого станка: цена ×1,5.' },
     m_melt: { name: 'Стекловарка', type: 'machine', machine: 'melt', tag: 'Станки', rar: 0, desc: 'Стекло стоит 30. Рядом со стеклодувкой: +30% её скорости.' },
     m_blower: { name: 'Стеклодувка', type: 'machine', machine: 'blower', tag: 'Станки', rar: 1, desc: 'Стекло стоит 70. Рядом с витражом: +25% к его цене.' },
     m_vitrage: { name: 'Витражный стол', type: 'machine', machine: 'vitrage', tag: 'Станки', rar: 1, desc: 'Стекло стоит 180. Медленно, зато красиво.' },
@@ -323,9 +323,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     w_mrsha: { name: 'Новый сотрудник', type: 'worker', worker: 'mrsha', tag: 'Сотрудники', rar: 2, loc: 3, desc: 'Приходит Мисис Ха. Сильнее с каждым работающим соседом.' },
     w_kast: { name: 'Новый сотрудник', type: 'worker', worker: 'kast', tag: 'Сотрудники', rar: 2, loc: 3, desc: 'Приходит Кастомка. Соседям +10% удачи, дружит с Хабой и Батей.' },
     w_batya: { name: 'Новый сотрудник', type: 'worker', worker: 'batya', tag: 'Сотрудники', rar: 2, loc: 3, desc: 'Приходит Батя. Очень сильный и везучий, но медленный.' },
-    s_tint: { name: 'Цветное стекло', type: 'mupg', loc: 3, tag: 'Улучшения', rar: 0, eff: { value: 0.25 }, desc: 'Стекло с этого станка: +25% к цене.' },
-    u_glass: { name: 'Витрины в городе', type: 'global', tag: 'Улучшения', rar: 1, loc: 3, eff: { glassPrice: 0.25 }, desc: 'Стекло: +25% к цене.' },
-    s_grease: { name: 'Смазка', type: 'mupg', tag: 'Улучшения', rar: 1, eff: { rate: 0.15, value: 0.10 }, desc: 'Любой станок: +15% скорости и +10% к цене.' }
+    s_tint: { name: 'Цветное стекло', type: 'mupg', loc: 3, tag: 'Улучшения', rar: 0, eff: { value: 1.5 }, desc: 'Стекло с этого станка: цена ×1,5.' },
+    u_glass: { name: 'Витрины в городе', type: 'global', tag: 'Улучшения', rar: 1, loc: 3, eff: { glassPrice: 1.6 }, desc: 'Стекло: цена ×1,6.' },
+    s_grease: { name: 'Смазка', type: 'mupg', tag: 'Улучшения', rar: 1, eff: { rate: 1.4, value: 1.2 }, desc: 'Любой станок: скорость ×1,4 и цена ×1,2.' }
   };
   const TYPE_LABEL = { machine: 'Станок', worker: 'Сотрудник', global: 'Для всех', equip: 'Экипировка', mupg: 'На станок' };
   const RAR = ['обычная', 'редкая', 'эпическая', 'легендарная'];
@@ -515,13 +515,22 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   const cur = () => state.cur;
 
   // run balance in one place so the balance bot can tune it: tempo speeds up every machine,
-  // xp/shop/quota grow geometrically, crates come every crate..2×crate seconds
-  const BAL = { tempo: 2, xp0: 15, xpK: 2.2, shop0: 40, shopK: 2.2, crate: 40, quotaT: 180, quota0: 300, quotaK: 1.8 };
+  // xp/shop/quota grow geometrically, every levelEvery-th level gives a card, crates come every crate..2×crate seconds
+  const BAL = { tempo: 2, xp0: 15, xpK: 2.2, levelEvery: 3, shopQ: 1, shopK: 1.6, shopMax: 3, crate: 40, crateSec: 20, quotaT: 90, quota0: 300, quotaK: 1.9, quotaA: 1.1 };
   const need = l => Math.round(BAL.xp0 * Math.pow(BAL.xpK, l - 1));
-  const shopCost = () => Math.round(BAL.shop0 * Math.pow(BAL.shopK, state.shopBuys));
+  // the shop is priced off the current quota, so a runaway income cannot make cards free; each buy within a quota costs shopK times more
+  const shopCost = () => Math.round(quotaTarget(state.run.q) * BAL.shopQ * Math.pow(BAL.shopK, state.run.qBuys || 0));
+  const shopLeft = () => BAL.shopMax - (state.run.qBuys || 0);
+  function buyShop() {
+    const cost = shopCost();
+    if (state.money < cost || rule('audit') || shopLeft() <= 0) return false;
+    state.money -= cost; state.shopBuys++; state.run.qBuys = (state.run.qBuys || 0) + 1; queueOffer('shop');
+    return true;
+  }
   const rerollCost = () => Math.round(shopCost() / (hasUnlock('reroll') ? 4 : 2));
-  const quotaTarget = q => Math.round(BAL.quota0 * Math.pow(BAL.quotaK, q - 1));
-  const quotaTime = () => BAL.quotaT + (hasUnlock('time') ? 30 : 0);
+  // quotas speed up: quota q grows quotaK × quotaA^(q−2) times over the previous one, so a stack of multipliers still hits a wall
+  const quotaTarget = q => Math.round(BAL.quota0 * Math.pow(BAL.quotaK, q - 1) * Math.pow(BAL.quotaA, (q - 1) * (q - 2) / 2));
+  const quotaTime = () => BAL.quotaT + (hasUnlock('time') ? 15 : 0);
   const newCrate = () => BAL.crate * (1 + Math.random());
 
   // every third quota is an inspection with a nasty rule for its whole period
@@ -540,7 +549,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     { id: 'dog', name: 'Старый друг', desc: 'Пёс Бро на заводе с первой минуты', cost: 6 },
     { id: 'reroll', name: 'Свой человек в магазине', desc: 'Переброс карт вдвое дешевле', cost: 8 },
     { id: 'tramp', name: 'Бывалый', desc: 'Бродяга на заводе с первой минуты', cost: 10 },
-    { id: 'time', name: 'Отсрочка', desc: 'На каждую квоту +30 с', cost: 12 },
+    { id: 'time', name: 'Отсрочка', desc: 'Каждая смена на 15 с длиннее', cost: 12 },
     { id: 'pick4', name: 'Широкий выбор', desc: 'Выбор 1 из 4 карт', cost: 20 }
   ];
   const passedQ = () => state.run.q - 1;
@@ -550,8 +559,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     { id: 'q6', name: 'Полгода на плаву', desc: 'Пройти 6 квот за забег', rep: 3, test: () => passedQ() >= 6 },
     { id: 'q9', name: 'Крепкий бизнес', desc: 'Пройти 9 квот за забег', rep: 5, test: () => passedQ() >= 9 },
     { id: 'q12', name: 'Монополия', desc: 'Пройти 12 квот за забег', rep: 8, test: () => passedQ() >= 12 },
-    { id: 'bricks2', name: 'Кирпичный рывок', desc: 'Открыть цех кирпичей до 2-й минуты', rep: 2, test: () => state.run.opened[1] != null && state.run.opened[1] < 120 },
-    { id: 'glass10', name: 'Стеклянный блиц', desc: 'Открыть цех стекла до 10-й минуты', rep: 6, test: () => state.run.opened[3] != null && state.run.opened[3] < 600 },
+    { id: 'bricks2', name: 'Кирпичный рывок', desc: 'Открыть цех кирпичей до 3-й минуты', rep: 2, test: () => state.run.opened[1] != null && state.run.opened[1] < 180 },
+    { id: 'glass10', name: 'Стеклянный блиц', desc: 'Открыть цех стекла до 11-й минуты', rep: 6, test: () => state.run.opened[3] != null && state.run.opened[3] < 660 },
     { id: 'maids', name: 'Горничные в деле', desc: 'Собрать комбо «Дуэт горничных»', rep: 3, test: (end, g) => g.combos.includes('maids') },
     { id: 'green', name: 'Сила с нами', desc: 'Собрать комбо «Зелёная сила»', rep: 3, test: (end, g) => g.combos.includes('green') },
     { id: 'night', name: 'Без сна', desc: 'Собрать комбо «Ночная смена»', rep: 3, test: (end, g) => g.combos.includes('night') },
@@ -592,8 +601,10 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const tc = {};
     state.cards.forEach(id => { const tg = CARDS[id].tag; tc[tg] = (tc[tg] || 0) + 1; });
     const pr = tg => Math.floor((tc[tg] || 0) / 2);
-    const g = { power: pr('Сотрудники') * 0.05, speed: pr('Экипировка') * 0.05, price: pr('Станки') * 0.05, brickPrice: 0, nailPrice: 0, glassPrice: 0, income: 1 + pr('Улучшения') * 0.03, tc, combos: [] };
-    state.cards.forEach(id => { const cd = CARDS[id]; if (cd.type === 'global') for (const k in cd.eff) g[k] += cd.eff[k]; });
+    // tag sets add up, card effects are multipliers (powerX and so on) so every card stays as strong as its number
+    const g = { power: pr('Сотрудники') * 0.05, speed: pr('Экипировка') * 0.05, price: pr('Станки') * 0.05, powerX: 1, speedX: 1, priceX: 1, locX: [1, 1, 1, 1], income: 1 + pr('Улучшения') * 0.03, tc, combos: [] };
+    const LOC_KEY = { brickPrice: 1, nailPrice: 2, glassPrice: 3 };
+    state.cards.forEach(id => { const cd = CARDS[id]; if (cd.type === 'global') for (const k in cd.eff) { if (k in LOC_KEY) g.locX[LOC_KEY[k]] *= cd.eff[k]; else g[k + 'X'] *= cd.eff[k]; } });
     if (state.cards.includes('e_coffee') && !rule('sanepid') && !rule('blackout') && anySlot(s => s.machine === 'belt') && state.workers.tramp.unlocked) { g.combos.push('night'); g.income *= 1.5; }
     g.sawWorking = slotsOf(0).some(s => s.machine === 'saw' && s.worker);
     g.kilnWorking = slotsOf(1).some(s => s.machine === 'kiln' && s.worker);
@@ -623,15 +634,15 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   }
   function workerStats(id, g) {
     const base = WORKERS[id], st = state.workers[id];
-    let p = 0, s = 0, l = 0;
+    let p = 1, s = 1, l = 0;
     const banned = e => e === 'e_coffee' && rule('sanepid');
-    st.equip.forEach(e => { if (banned(e)) return; const ef = CARDS[e].eff; p += ef.power || 0; s += ef.speed || 0; l += ef.luck || 0; });
+    st.equip.forEach(e => { if (banned(e)) return; const ef = CARDS[e].eff; p *= ef.power || 1; s *= ef.speed || 1; l += ef.luck || 0; });
     const fr = friends(id);
     let fb = 0; fr.forEach(f => { fb += f === 'mrp' ? 0.10 : 0.05; });
     const hasCoffee = st.equip.includes('e_coffee') && !rule('sanepid');
-    let speed = base.speed * (1 + g.speed + s);
+    let speed = base.speed * (1 + g.speed) * g.speedX * s;
     if (id === 'mrp' && !hasCoffee) speed *= 0.5;
-    return { power: base.power * (1 + g.power + p + fb), speed, luck: Math.min(0.9, base.luck + l), fb, fr, hasCoffee };
+    return { power: base.power * (1 + g.power + fb) * g.powerX * p, speed, luck: Math.min(0.9, base.luck + l), fb, fr, hasCoffee };
   }
   function workerPlace(id) {
     for (let l = 0; l < state.locs.length; l++) { const i = slotsOf(l).findIndex(s => s.worker === id); if (i >= 0) return { l, i }; }
@@ -644,7 +655,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     let rb = 0, vb = 0;
     const notes = [];
     linked(l, i).forEach(j => { const m2 = sl[j].machine; if (!m2 || s.machine === 'belt') return; const e = effect(m2, s.machine); rb += e.rate; vb += e.value; notes.push(e.text); });
-    s.upg.forEach(u => { const ef = CARDS[u].eff; rb += ef.rate || 0; vb += ef.value || 0; notes.push(`${CARDS[u].name}: ${CARDS[u].desc.toLowerCase()}`); });
+    let rX = 1, vX = 1;
+    s.upg.forEach(u => { const ef = CARDS[u].eff; rX *= ef.rate || 1; vX *= ef.value || 1; notes.push(`${CARDS[u].name}: ${CARDS[u].desc.toLowerCase()}`); });
     if (s.machine === 'wire' && g.kilnWorking) { vb += 0.2; notes.push('Печь из цеха 2 закаляет проволоку: +20% к цене'); }
     if (s.machine === 'kiln' && g.sawWorking) { rb += 0.25; notes.push('Обрезки досок из цеха 1 на растопку: +25% скорости'); }
     if (s.machine === 'vitrage' && g.tumblerWorking) { vb += 0.2; notes.push('Блестящие гвозди из цеха 3 для рам: +20% к цене'); }
@@ -675,8 +687,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const luck = s.worker === 'jeanne' && skillOn('jeanne') ? 1 : Math.min(0.9, ws.luck + (kastNear ? 0.1 : 0)), extra = s.worker === 'jeanne' ? 2 : 1;
     if (luck === 1) notes.push(`Скилл «${sk.name}»: каждая штука ×3`);
     power *= skM.power;
-    const rate = M.rate * BAL.tempo * ws.speed * speedM * skM.speed * (1 + rb);
-    const value = M.value * power * skM.value * (1 + vb) * (1 + g.price + [0, g.brickPrice, g.nailPrice, g.glassPrice][l]);
+    const rate = M.rate * BAL.tempo * ws.speed * speedM * skM.speed * (1 + rb) * rX;
+    const value = M.value * power * skM.value * (1 + vb) * vX * (1 + g.price) * g.priceX * g.locX[l];
     const crowM = s.worker === 'crow' ? 1 + 1 / 7 : s.worker === 'silver' ? 1 + 2 / 10 : 1;
     const duo = g.maidsLoc === l ? 2 : 1;
     if (duo > 1) notes.push('Дуэт горничных: доход цеха ×2');
@@ -799,7 +811,10 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       });
     });
     incomeNow = total;
-    while (state.xp >= need(state.level)) { state.xp -= need(state.level); state.level++; toast(`Уровень ${state.level}! Выбери карту`); queueOffer('level'); }
+    while (state.xp >= need(state.level)) {
+      state.xp -= need(state.level); state.level++;
+      if (state.level % BAL.levelEvery === 0) { toast(`Уровень ${state.level}! Выбери карту`); queueOffer('level'); } else toast(`Уровень ${state.level}! Карта через ${BAL.levelEvery - state.level % BAL.levelEvery}`);
+    }
     if (!crate) { if (!rule('audit')) { state.crateIn -= dt; if (state.crateIn <= 0) { crate = { f: Math.random(), life: 20, born: t }; toast('С конвейера съехала посылка! Нажми на неё'); } } }
     else { crate.life -= dt; if (crate.life <= 0) { crate = null; state.crateIn = newCrate(); } }
     floats.forEach(f => { f.life -= dt * 0.8; });
@@ -807,16 +822,17 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const run = state.run;
     run.t += dt; run.qT += dt;
     if (incomeNow > run.bestRate) run.bestRate = incomeNow;
-    if (run.qEarned >= quotaTarget(run.q)) passQuota();
-    else if (run.qT >= quotaTime()) bankrupt();
+    // a shift always lasts quotaTime(): the quota is checked only when it ends
+    if (run.qT >= quotaTime()) { if (run.qEarned >= quotaTarget(run.q)) passQuota(); else bankrupt(); }
     achTimer += dt; if (achTimer > 1) { achTimer = 0; checkAch(false); }
   }
-  function openCrate() { crate = null; state.crateIn = newCrate(); queueOffer('crate'); }
+  // a crate holds coins: crateSec seconds of the current income, but never less than a tenth of the quota
+  function openCrate() { crate = null; state.crateIn = newCrate(); const gain = Math.max(incomeNow * BAL.crateSec, quotaTarget(state.run.q) / 10); state.money += gain; state.earned += gain; state.run.qEarned += gain; return gain; }
   function passQuota() {
     const run = state.run, wasRule = run.rule;
     if (wasRule) run.passed.push(wasRule.id);
     run.rep += wasRule ? 2 : 1;
-    run.q++; run.qT = 0; run.qEarned = 0; run.rule = null;
+    run.q++; run.qT = 0; run.qEarned = 0; run.qBuys = 0; run.rule = null;
     if (run.q % 3 === 0) {
       const ids = Object.keys(RULES).filter(id => RULES[id].ok()), id = ids[Math.floor(Math.random() * ids.length)];
       run.rule = { id };
@@ -1197,7 +1213,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   cv.addEventListener('click', e => {
     const h = hit(...toLogical(e));
     if (!h) { if (!mode) { selSlot = null; selWorker = null; renderSheet(); } return; }
-    if (h.crate) { if (!guest) { openCrate(); toast('Посылка открыта!'); } return; }
+    if (h.crate) { if (!guest) toast(`В посылке ${fmt(openCrate())} монет!`); return; }
     if (h.page != null) { lockerPage = h.page; return; }
     if (h.locker != null) return tapLocker(h.locker);
     if (h.slot != null) return tapSlot(h.slot);
@@ -1449,7 +1465,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     else if (act === 'quit') { confirmQuit = true; renderSheet(); }
     else if (act === 'quit-no') { confirmQuit = false; renderSheet(); }
     else if (act === 'quit-yes') { confirmQuit = false; bankrupt(); }
-    else if (act === 'newrun') { state = newRun(); mode = null; selSlot = null; selWorker = null; view = 'main'; crate = null; floats = []; save(); renderSheet(); renderTabs(); toast('Новый забег! Первая квота через 3 минуты'); }
+    else if (act === 'newrun') { state = newRun(); mode = null; selSlot = null; selWorker = null; view = 'main'; crate = null; floats = []; save(); renderSheet(); renderTabs(); toast('Новый забег! Первая смена — 90 секунд'); }
     else if (act === 'buy') {
       const u = UNLOCKS.find(x => x.id === b.dataset.id);
       if (!u || hasUnlock(u.id) || meta.rep < u.cost) return;
@@ -1475,9 +1491,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     else if (act === 'leave') { leave(); toast('Ты снова дома'); }
     else if (act === 'shop') {
       if (rule('audit')) { toast('Ревизия: магазин закрыт'); return; }
-      const cost = shopCost();
-      if (state.money < cost) { toast(`Нужно ${fmt(cost)} монет`); return; }
-      state.money -= cost; state.shopBuys++; view = 'main'; queueOffer('shop'); save();
+      if (!buyShop()) { toast(shopLeft() <= 0 ? 'Витрина пуста до следующей смены' : `Нужно ${fmt(shopCost())} монет`); return; }
+      view = 'main'; save();
     }
   });
 
@@ -1495,8 +1510,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     $xpbar.style.width = Math.min(100, state.xp / nd * 100) + '%';
     $xptext.textContent = `до ур. ${state.level + 1}: ${fmt(Math.max(0, nd - state.xp))}`;
     const cost = shopCost();
-    $shop.textContent = rule('audit') ? 'Магазин закрыт' : `Магазин · ${fmt(cost)}`;
-    $shop.disabled = state.money < cost || rule('audit') || !!guest || state.run.over;
+    $shop.textContent = rule('audit') ? 'Магазин закрыт' : shopLeft() <= 0 ? 'Витрина пуста' : `Магазин · ${fmt(cost)}`;
+    $shop.disabled = state.money < cost || rule('audit') || shopLeft() <= 0 || !!guest || state.run.over;
     const run = state.run, target = quotaTarget(run.q);
     $quota.classList.toggle('insp', !!run.rule);
     $qname.textContent = run.over ? `Банкротство на квоте ${run.q}` : run.rule ? `Квота ${run.q} · проверка «${RULES[run.rule.id].name}»` : `Квота ${run.q}`;
@@ -1529,7 +1544,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     saveTimer += dt; if (saveTimer > 5) { saveTimer = 0; save(); }
     if (toastTimer > 0) { toastTimer -= dt; if (toastTimer <= 0) $toast.hidden = true; }
   }
-  if (BOT) window.PF = { BAL, get state() { return state; }, set state(v) { state = v; }, meta, tick, totalIncome, globals, eligible, finish, unlockLoc, openCrate, shopCost, rerollCost, rollOffer, quotaTarget, quotaTime, newRun, workerPlace, slotStats, onStrike, rule, get crate() { return crate; }, CARDS, MACH, LOCS, SKILLS, LAYOUTS, WORKERS };
+  if (BOT) window.PF = { BAL, get state() { return state; }, set state(v) { state = v; }, meta, tick, totalIncome, globals, eligible, finish, unlockLoc, openCrate, shopCost, buyShop, rerollCost, rollOffer, quotaTarget, quotaTime, newRun, workerPlace, slotStats, onStrike, rule, get crate() { return crate; }, CARDS, MACH, LOCS, SKILLS, LAYOUTS, WORKERS };
   else requestAnimationFrame(loop);
 })();
 </script>

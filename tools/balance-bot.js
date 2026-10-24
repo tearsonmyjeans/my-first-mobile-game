@@ -76,7 +76,7 @@ const RUNS = +process.argv[2] || 8, UNL = process.argv[3] || '', BAL = JSON.pars
         if (next && s2.money >= P.LOCS[next].cost) { P.unlockLoc(next); log.opened[next] = Math.round(s2.run.t); optimize(3); continue; }
         // save up for the next workshop when it is less than a minute of income away
         const saving = next && (P.LOCS[next].cost - s2.money) < inc() * 60;
-        if (!saving && !P.rule('audit') && s2.money >= P.shopCost()) { s2.money -= P.shopCost(); s2.shopBuys++; P.state.offers.push({ src: 'shop', ids: P.rollOffer() }); continue; }
+        if (!saving && P.buyShop()) continue;
         if (!saving) for (const w in P.SKILLS) { const ws = s2.workers[w]; if (ws.unlocked && !ws.skill && P.workerPlace(w) && s2.money >= P.SKILLS[w].cost * 2) { s2.money -= P.SKILLS[w].cost; ws.skill = true; ws.skT = 0; s2.run.skills++; } }
         if (++sinceOpt >= 10) { sinceOpt = 0; optimize(2); }
       }
