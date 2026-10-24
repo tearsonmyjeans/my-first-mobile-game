@@ -268,24 +268,24 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   const FAMILY = ['jedi', 'kast', 'batya'];
   const SKIN_KINDS = { power: 'сила', speed: 'скорость', value: 'цена' };
   // skills are bought once with coins and then fire on their own while the worker stands at a machine:
-  // active for dur seconds at the start of every cd-second cycle
+  // active for dur seconds at the start of every cd-second cycle. Their price comes from skillCost()
   const SKILLS = {
-    crow: { name: 'Шквал распила', kind: 'income', mult: 2, dur: 8, cd: 45, cost: 150, desc: 'Каждые 45 с на 8 с всё, что она делает, выходит двойным.' },
-    mrp: { name: 'Турбо-Ооо-ви-и!', kind: 'speed', mult: 3, dur: 10, cd: 60, cost: 200, desc: 'Раз в минуту на 10 с работает на 300% скорости.' },
-    tramp: { name: 'Второе дыхание', kind: 'power', mult: 2.5, dur: 15, cd: 90, cost: 300, desc: 'Каждые 90 с на 15 с сила ×2,5.' },
-    dog: { name: 'Кулачок всем', kind: 'team', mult: 2, dur: 10, cd: 60, cost: 600, desc: 'Раз в минуту на 10 с все сотрудники его цеха работают вдвое быстрее.' },
-    toad: { name: 'Паническая атака', kind: 'speed', mult: 4, dur: 6, cd: 40, cost: 600, desc: 'Каждые 40 с трясётся так, что 6 с работает на 400% скорости.' },
-    pink: { name: 'Подарочная упаковка', kind: 'value', mult: 3, dur: 12, cd: 75, cost: 600, desc: 'Каждые 75 с на 12 с товар с её станка стоит ×3.' },
-    v1: { name: 'Рывок', kind: 'speed', mult: 3, dur: 5, cd: 40, cost: 4000, desc: 'Каждые 40 с на 5 с работает на 300% скорости.' },
-    v2: { name: 'Удар кулаком', kind: 'value', mult: 4, dur: 8, cd: 60, cost: 4000, desc: 'Раз в минуту на 8 с товар с её станка стоит ×4.' },
-    jeanne: { name: 'К чёрту всё!', kind: 'luck', dur: 8, cd: 50, cost: 15000, desc: 'Каждые 50 с на 8 с закуривает всю пачку: каждая штука выходит двойной, а с джекпотом тройной.' },
-    alien: { name: 'Хрустальный шар', kind: 'teamValue', mult: 2, dur: 10, cd: 70, cost: 25000, desc: 'Раз в 70 с на 10 с весь его цех продаёт товар ×2.' },
-    jedi: { name: 'Буря мечей', kind: 'speed', mult: 4, dur: 8, cd: 50, cost: 20000, desc: 'Каждые 50 с на 8 с работает на 400% скорости.' },
-    silver: { name: 'Обращение', kind: 'power', mult: 3, dur: 10, cd: 60, cost: 30000, desc: 'Раз в минуту на 10 с превращается в волчицу: сила ×3.' },
-    mrsha: { name: 'Красный зонт', kind: 'value', mult: 3, dur: 10, cd: 60, cost: 20000, desc: 'Раз в минуту на 10 с товар с её станка стоит ×3.' },
+    crow: { name: 'Шквал распила', kind: 'income', mult: 2, dur: 8, cd: 45, desc: 'Каждые 45 с на 8 с всё, что она делает, выходит двойным.' },
+    mrp: { name: 'Турбо-Ооо-ви-и!', kind: 'speed', mult: 3, dur: 10, cd: 60, desc: 'Раз в минуту на 10 с работает на 300% скорости.' },
+    tramp: { name: 'Второе дыхание', kind: 'power', mult: 2.5, dur: 15, cd: 90, desc: 'Каждые 90 с на 15 с сила ×2,5.' },
+    dog: { name: 'Кулачок всем', kind: 'team', mult: 2, dur: 10, cd: 60, desc: 'Раз в минуту на 10 с все сотрудники его цеха работают вдвое быстрее.' },
+    toad: { name: 'Паническая атака', kind: 'speed', mult: 4, dur: 6, cd: 40, desc: 'Каждые 40 с трясётся так, что 6 с работает на 400% скорости.' },
+    pink: { name: 'Подарочная упаковка', kind: 'value', mult: 3, dur: 12, cd: 75, desc: 'Каждые 75 с на 12 с товар с её станка стоит ×3.' },
+    v1: { name: 'Рывок', kind: 'speed', mult: 3, dur: 5, cd: 40, desc: 'Каждые 40 с на 5 с работает на 300% скорости.' },
+    v2: { name: 'Удар кулаком', kind: 'value', mult: 4, dur: 8, cd: 60, desc: 'Раз в минуту на 8 с товар с её станка стоит ×4.' },
+    jeanne: { name: 'К чёрту всё!', kind: 'luck', dur: 8, cd: 50, desc: 'Каждые 50 с на 8 с закуривает всю пачку: каждая штука выходит двойной, а с джекпотом тройной.' },
+    alien: { name: 'Хрустальный шар', kind: 'teamValue', mult: 2, dur: 10, cd: 70, desc: 'Раз в 70 с на 10 с весь его цех продаёт товар ×2.' },
+    jedi: { name: 'Буря мечей', kind: 'speed', mult: 4, dur: 8, cd: 50, desc: 'Каждые 50 с на 8 с работает на 400% скорости.' },
+    silver: { name: 'Обращение', kind: 'power', mult: 3, dur: 10, cd: 60, desc: 'Раз в минуту на 10 с превращается в волчицу: сила ×3.' },
+    mrsha: { name: 'Красный зонт', kind: 'value', mult: 3, dur: 10, cd: 60, desc: 'Раз в минуту на 10 с товар с её станка стоит ×3.' },
     // Kastomka's kind is rolled at the start of every cycle: power, speed or value
-    kast: { name: 'Рандомный скин', kind: 'random', mult: 3, dur: 10, cd: 60, cost: 20000, desc: 'Раз в минуту на 10 с надевает случайный скин: сила, скорость или цена ×3.' },
-    batya: { name: 'Сто грамм', kind: 'power', mult: 4, dur: 8, cd: 50, cost: 15000, desc: 'Каждые 50 с на 8 с принимает сто грамм: сила ×4.' }
+    kast: { name: 'Рандомный скин', kind: 'random', mult: 3, dur: 10, cd: 60, desc: 'Раз в минуту на 10 с надевает случайный скин: сила, скорость или цена ×3.' },
+    batya: { name: 'Сто грамм', kind: 'power', mult: 4, dur: 8, cd: 50, desc: 'Каждые 50 с на 8 с принимает сто грамм: сила ×4.' }
   };
   const CARDS = {
     m_bench: { name: 'Верстак', type: 'machine', machine: 'bench', tag: 'Станки', rar: 0, desc: 'Доска стоит 2,2. Рядом с пилорамой: +25% к цене её досок.' },
@@ -332,7 +332,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     u_glass: { name: 'Витрины в городе', type: 'global', tag: 'Улучшения', rar: 1, loc: 3, eff: { glassPrice: 1.6 }, desc: 'Стекло: цена ×1,6.' },
     s_grease: { name: 'Смазка', type: 'mupg', tag: 'Улучшения', rar: 1, eff: { rate: 1.4, value: 1.2 }, desc: 'Любой станок: скорость ×1,4 и цена ×1,2.' },
     // cards with a minus: the minus line is shown in red on the card
-    u_overtime: { name: 'Сверхурочка', type: 'global', tag: 'Сотрудники', rar: 2, eff: { speed: 1.8, power: 0.8 }, desc: 'Все сотрудники: скорость ×1,8.', minus: 'Сила всех ×0,8.' },
+    u_overtime: { name: 'Сверхурочка', type: 'global', tag: 'Сотрудники', rar: 3, eff: { speed: 1.8, power: 0.8 }, desc: 'Все сотрудники: скорость ×1,8.', minus: 'Сила всех ×0,8.' },
     u_credit: { name: 'Кредит', type: 'global', tag: 'Улучшения', rar: 1, eff: {}, desc: 'Сразу монеты в размере прошлой квоты.', minus: 'Квота следующей смены ×1,25.' },
     e_loner: { name: 'Одиночка', type: 'equip', tag: 'Экипировка', rar: 2, eff: {}, desc: 'Сила ×2,2, если на соседних станках никто не работает.', minus: 'С работающими соседями сила ×0,6.' },
     u_hack: { name: 'Халтура', type: 'global', tag: 'Улучшения', rar: 2, eff: { price: 1.6 }, desc: 'Всё, что делает завод: цена ×1,6.', minus: 'Удачи нет: двойных штук не будет.' },
@@ -561,6 +561,13 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   const shopBase = () => quotaTarget(Math.max(1, state.run.q - 1)) * BAL.shopQ;
   const cardPrice = id => Math.round(shopBase() * BAL.rarPrice[CARDS[id].rar]);
   const rerollCost = () => Math.round(shopBase() / (hasUnlock('reroll') ? 4 : 2));
+  // a skill costs the last quota × the worker's rarity × 1,5 for every skill already opened this run; Crow's skill is 150 if it is the first
+  const SKILL_RAR = [0.8, 0.8, 1.2, 2];
+  function skillCost(id) {
+    const n = state.run.skills || 0, cd = CARDS['w_' + id];
+    if (id === 'crow' && !n) return 150;
+    return Math.round(quotaTarget(Math.max(1, state.run.q - 1)) * (cd ? SKILL_RAR[cd.rar] : 0.5) * Math.pow(1.5, n));
+  }
   const rollShop = () => rollOffer().slice(0, 3).map(id => ({ id, bought: false }));
   // one purchase per showcase: after it the showcase locks until it is refreshed, and every refresh in a break costs twice the last
   const shopRollCost = () => Math.round(shopBase() * BAL.shopRoll / (hasUnlock('reroll') ? 2 : 1) * Math.pow(2, state.run.shopRolls || 0));
@@ -1469,7 +1476,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   }
   function skillHTML(id) {
     const sk = SKILLS[id], has = state.workers[id].skill;
-    return `<h3>Скилл</h3><p><b>${sk.name}</b>: ${esc(sk.desc)}</p>${has ? '<p class="on" id="live-skill"></p>' : `<div class="row"><button class="btn primary" type="button" data-act="skill" ${state.money < sk.cost ? 'disabled' : ''}>Открыть за ${fmt(sk.cost)}</button></div>`}`;
+    return `<h3>Скилл</h3><p><b>${sk.name}</b>: ${esc(sk.desc)}</p>${has ? '<p class="on" id="live-skill"></p>' : `<div class="row"><button class="btn primary" type="button" data-act="skill" ${state.money < skillCost(id) ? 'disabled' : ''}>Открыть за ${fmt(skillCost(id))}</button></div>`}`;
   }
   function workerHTML(id) {
     const Wd = WORKERS[id], st = state.workers[id], ws = workerStats(id, globals());
@@ -1593,8 +1600,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     else if (act === 'unassign') { slotsOf(state.cur)[selSlot].worker = null; save(); renderSheet(); }
     else if (act === 'skill') {
       const sk = SKILLS[selWorker], w = state.workers[selWorker];
-      if (w.skill || state.money < sk.cost) return;
-      state.money -= sk.cost; w.skill = true; w.skT = 0; state.run.skills++; rollSkin(selWorker);
+      const cost = skillCost(selWorker);
+      if (w.skill || state.money < cost) return;
+      state.money -= cost; w.skill = true; w.skT = 0; state.run.skills++; rollSkin(selWorker);
       toast(`Скилл «${sk.name}» открыт!`); save(); renderSheet();
     }
     else if (act === 'rest') { const wp = workerPlace(selWorker); if (wp) slotsOf(wp.l)[wp.i].worker = null; save(); renderSheet(); }
@@ -1661,7 +1669,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const ub = body.querySelector('[data-act="unlock"]');
     if (ub) ub.disabled = state.money < LOCS[state.cur].cost;
     const sb = body.querySelector('[data-act="skill"]');
-    if (sb && selWorker) sb.disabled = state.money < SKILLS[selWorker].cost;
+    if (sb && selWorker) sb.disabled = state.money < skillCost(selWorker);
   }
 
   fit(); renderSheet(); renderTabs(); render(); hud();
@@ -1683,7 +1691,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     saveTimer += dt; if (saveTimer > 5) { saveTimer = 0; save(); }
     if (toastTimer > 0) { toastTimer -= dt; if (toastTimer <= 0) $toast.hidden = true; }
   }
-  if (BOT) window.PF = { BAL, get state() { return state; }, set state(v) { state = v; }, meta, tick, totalIncome, globals, eligible, finish, unlockLoc, openCrate, cardPrice, buyCard, startShift, curQuota, rerollCost, rollNewShop, shopRollCost, rollOffer, quotaTarget, quotaTime, newRun, workerPlace, slotStats, onStrike, rule, get crate() { return crate; }, CARDS, MACH, LOCS, SKILLS, LAYOUTS, WORKERS };
+  if (BOT) window.PF = { BAL, get state() { return state; }, set state(v) { state = v; }, meta, tick, totalIncome, globals, eligible, finish, unlockLoc, openCrate, cardPrice, skillCost, buyCard, startShift, curQuota, rerollCost, rollNewShop, shopRollCost, rollOffer, quotaTarget, quotaTime, newRun, workerPlace, slotStats, onStrike, rule, get crate() { return crate; }, CARDS, MACH, LOCS, SKILLS, LAYOUTS, WORKERS };
   else requestAnimationFrame(loop);
 })();
 </script>

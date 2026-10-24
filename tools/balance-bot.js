@@ -67,7 +67,7 @@ const RUNS = +process.argv[2] || 8, UNL = process.argv[3] || '', BAL = JSON.pars
       // save up for the next workshop when it is less than a minute of income away
       const saving = () => { const n = nextLoc(); return n && (P.LOCS[n].cost - P.state.money) < inc() * 60; };
       function unlockNext() { const n = nextLoc(); if (n && P.state.money >= P.LOCS[n].cost) { P.unlockLoc(n); log.opened[n] = Math.round(P.state.run.t); optimize(3); } }
-      function buySkills() { const s2 = P.state; for (const w in P.SKILLS) { const ws = s2.workers[w]; if (ws.unlocked && !ws.skill && P.workerPlace(w) && s2.money >= P.SKILLS[w].cost * 2) { s2.money -= P.SKILLS[w].cost; ws.skill = true; ws.skT = 0; s2.run.skills++; } } }
+      function buySkills() { const s2 = P.state; for (const w in P.SKILLS) { const ws = s2.workers[w]; if (ws.unlocked && !ws.skill && P.workerPlace(w) && s2.money >= P.skillCost(w) * 2) { s2.money -= P.skillCost(w); ws.skill = true; ws.skT = 0; s2.run.skills++; } } }
       // the break: time stands still, so the bot does all its shopping and thinking here
       function breakTurn() {
         while (P.state.offers.length) pickOffer();
