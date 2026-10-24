@@ -42,7 +42,7 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
 .tab.locked.ready{color:var(--gold);border-color:var(--gold)}
 .tab:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 .stage{position:relative}
-#game{display:block;width:100%;max-width:100%;aspect-ratio:240/210;height:auto;image-rendering:pixelated;border-radius:10px;touch-action:manipulation;cursor:pointer}
+#game{display:block;width:100%;max-width:100%;aspect-ratio:240/270;height:auto;image-rendering:pixelated;border-radius:10px;touch-action:manipulation;cursor:pointer}
 #toast{position:absolute;left:50%;top:8px;transform:translateX(-50%);background:rgba(27,22,36,.92);border:2px solid var(--gold);color:var(--ink);font:400 14px/1.2 var(--pixel);padding:8px 12px;border-radius:6px;max-width:86%;text-align:center;pointer-events:none;transition:opacity .25s}
 #toast[hidden]{display:block!important;opacity:0}
 .sheet{background:var(--panel);border:2px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:12px;flex:1}
@@ -201,6 +201,18 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
     pink: { name: 'Зефирка', role: 'Упаковщица', power: 0.9, speed: 1.2, luck: 0.1, perk: 'Бантик: всё, что выходит с её станка, упаковано красиво и стоит на 20% дороже.' },
     v1: { name: 'V1', role: 'Робот-горничная', power: 1.0, speed: 1.5, luck: 0.05, perk: 'Без усталости: самая быстрая на заводе. Рядом с V2 включается «Дуэт горничных»: доход цеха ×2.' },
     v2: { name: 'V2', role: 'Робот-горничная', power: 1.5, speed: 1.0, luck: 0.05, perk: 'Реванш: самая сильная на заводе. Рядом с V1 включается «Дуэт горничных»: доход цеха ×2.' }
+  };
+  // skills are bought once with coins and then fire on their own while the worker stands at a machine:
+  // active for dur seconds at the start of every cd-second cycle
+  const SKILLS = {
+    crow: { name: 'Шквал распила', kind: 'income', mult: 2, dur: 8, cd: 45, cost: 150, desc: 'Каждые 45 с на 8 с всё, что она делает, выходит двойным.' },
+    mrp: { name: 'Турбо-Ооо-ви-и!', kind: 'speed', mult: 3, dur: 10, cd: 60, cost: 200, desc: 'Раз в минуту на 10 с работает на 300% скорости.' },
+    tramp: { name: 'Второе дыхание', kind: 'power', mult: 2.5, dur: 15, cd: 90, cost: 300, desc: 'Каждые 90 с на 15 с сила ×2,5.' },
+    dog: { name: 'Кулачок всем', kind: 'team', mult: 2, dur: 10, cd: 60, cost: 600, desc: 'Раз в минуту на 10 с все сотрудники его цеха работают вдвое быстрее.' },
+    toad: { name: 'Паническая атака', kind: 'speed', mult: 4, dur: 6, cd: 40, cost: 600, desc: 'Каждые 40 с трясётся так, что 6 с работает на 400% скорости.' },
+    pink: { name: 'Подарочная упаковка', kind: 'value', mult: 3, dur: 12, cd: 75, cost: 600, desc: 'Каждые 75 с на 12 с товар с её станка стоит ×3.' },
+    v1: { name: 'Рывок', kind: 'speed', mult: 5, dur: 5, cd: 30, cost: 4000, desc: 'Каждые 30 с на 5 с работает на 500% скорости.' },
+    v2: { name: 'Удар кулаком', kind: 'value', mult: 4, dur: 8, cd: 60, cost: 4000, desc: 'Раз в минуту на 8 с товар с её станка стоит ×4.' }
   };
   const CARDS = {
     m_bench: { name: 'Верстак', type: 'machine', machine: 'bench', tag: 'Станки', rar: 0, desc: 'Доска стоит 2,2. Рядом с пилорамой: +25% к цене её досок.' },
@@ -381,6 +393,8 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
     sl.forEach((s, j) => { if (j !== i && P[j][1] === P[i][1] && (s.machine === 'belt' || sl[i].machine === 'belt')) set.add(j); });
     return [...set].sort();
   }
+  let skillsOff = false; // offline earnings are counted without skills
+  const skillOn = id => { const w = state.workers[id], sk = SKILLS[id]; return !skillsOff && !!(w.skill && (w.skT || 0) < sk.dur && workerPlace(id)); };
   const anySlot = pred => state.locs.some((L, l) => L.unlocked && L.slots.some((s, i) => pred(s, l, i)));
   function globals() {
     const tc = {};
@@ -395,6 +409,8 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
     const p1 = workerPlace('v1'), p2 = workerPlace('v2');
     g.maidsLoc = p1 && p2 && p1.l === p2.l && adjacent(p1.l, p1.i, p2.i) ? p1.l : -1;
     if (g.maidsLoc >= 0) g.combos.push('maids');
+    g.team = [];
+    if (skillOn('dog')) g.team[workerPlace('dog').l] = SKILLS.dog.mult;
     return g;
   }
   function friends(id) {
@@ -441,12 +457,16 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
     if (s.worker !== 'dog' && near.some(j => sl[j].worker === 'dog')) { power *= 1.1; notes.push('Пёс Бро даёт кулачок: +10% силы'); }
     if (ws.fb > 0) notes.push(`Друзья по шкафчику: +${pct(ws.fb)} силы`);
     if (s.worker === 'mrp' && !ws.hasCoffee) notes.push('Мистер Жопосранчик без кофе: скорость вдвое ниже');
-    const rate = M.rate * ws.speed * speedM * (1 + rb);
-    const value = M.value * power * (1 + vb) * (1 + g.price + (l === 1 ? g.brickPrice : l === 2 ? g.nailPrice : 0));
+    const sk = SKILLS[s.worker], skM = { speed: g.team[l] || 1, power: 1, value: 1, income: 1 };
+    if (g.team[l]) notes.push(`Пёс Бро, «${SKILLS.dog.name}»: скорость ×${fmt(SKILLS.dog.mult)}`);
+    if (sk.kind !== 'team' && skillOn(s.worker)) { skM[sk.kind] *= sk.mult; notes.push(`Скилл «${sk.name}»: ×${fmt(sk.mult)}`); }
+    power *= skM.power;
+    const rate = M.rate * ws.speed * speedM * skM.speed * (1 + rb);
+    const value = M.value * power * skM.value * (1 + vb) * (1 + g.price + (l === 1 ? g.brickPrice : l === 2 ? g.nailPrice : 0));
     const crowM = s.worker === 'crow' ? 1 + 1 / 7 : 1;
     const duo = g.maidsLoc === l ? 2 : 1;
     if (duo > 1) notes.push('Дуэт горничных: доход цеха ×2');
-    return { rate, value, income: rate * value * (1 + ws.luck) * crowM * duo * g.income, notes, ws, M };
+    return { rate, value, income: rate * value * (1 + ws.luck) * crowM * duo * skM.income * g.income, notes, ws, M };
   }
   function totalIncome() {
     const g = globals();
@@ -525,6 +545,12 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
 
   /* ================= simulation ================= */
   function tick(dt) {
+    for (const id in SKILLS) {
+      const w = state.workers[id], wp = w.skill && workerPlace(id);
+      if (!wp) continue;
+      w.skT = (w.skT || 0) + dt;
+      if (w.skT >= SKILLS[id].cd) { w.skT -= SKILLS[id].cd; if (wp.l === state.cur) floats.push({ slot: wp.i, txt: SKILLS[id].name.toUpperCase() + '!', life: 1.4, skill: true }); }
+    }
     const g = globals();
     let total = 0;
     state.locs.forEach((L, l) => {
@@ -540,6 +566,7 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
         let count = n;
         if (n < 20) { for (let k = 0; k < n; k++) if (Math.random() < st.ws.luck) count++; } else count += Math.round(n * st.ws.luck);
         if (s.worker === 'crow') { const b = state.crowCount; state.crowCount += n; count += Math.floor(state.crowCount / 7) - Math.floor(b / 7); }
+        if (s.worker === 'crow' && skillOn('crow')) count *= SKILLS.crow.mult;
         const gain = count * st.value * g.income;
         state.money += gain; state.xp += gain; state.earned += gain;
         state[LOCS[l].goods] += count;
@@ -556,7 +583,9 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
   function offlineGain() {
     const sec = Math.min((Date.now() - (state.savedAt || Date.now())) / 1000, 4 * 3600);
     if (sec < 30) return;
+    skillsOff = true;
     const gain = totalIncome() * sec * 0.5;
+    skillsOff = false;
     if (gain <= 0) return;
     state.money += gain; state.xp += gain; state.earned += gain;
     toast(`Пока тебя не было, завод заработал ${fmt(gain)}`);
@@ -579,7 +608,7 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
   function layout() {
     const [cols, rows] = gridSize(state.cur);
     const w = Math.max(240, cols * 78 + 6), fl = rowY(rows) + 12; // fl: floor ends, locker room begins
-    if (w === W && fl === FL && low.height === H) return;
+    if (w === W && fl === FL && cv.style.aspectRatio) return;
     W = w; FL = fl; LY = FL + 22; H = LY + 122; OX = Math.round((W - (cols * 78 - 6)) / 2);
     low.width = W; low.height = H; cv.style.aspectRatio = `${W} / ${H}`;
     fit();
@@ -714,7 +743,15 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
         if (s.worker && s.machine !== 'belt') pile(x + 52, y + 63, 1 + Math.floor((t * 0.3 + i) % 3), LT.item);
         s.upg.forEach((u, k) => { R(x + 4 + k * 5, y + 4, 4, 6, K); R(x + 5 + k * 5, y + 5, 2, 4, RAR_COL[CARDS[u].rar]); });
       }
-      if (s.worker) { const bob = Math.floor(t * 2 + i) % 2; gx.drawImage(sprOf(s.worker), x + 6, y + 40 - bob); }
+      if (s.worker) {
+        const bob = Math.floor(t * 2 + i) % 2, on = skillOn(s.worker), w = state.workers[s.worker];
+        if (on) for (let k = 0; k < 6; k++) { const a = t * 4 + k * Math.PI / 3; R(x + 17 + Math.round(Math.cos(a) * 13), y + 56 + Math.round(Math.sin(a) * 15), 2, 2, k % 2 ? '#ffd54a' : '#fff1b0'); }
+        gx.drawImage(sprOf(s.worker), x + 6, y + 40 - bob);
+        if (w.skill) {
+          const sk = SKILLS[s.worker], f = on ? 1 - w.skT / sk.dur : (w.skT - sk.dur) / (sk.cd - sk.dur);
+          R(x + 5, y + 69, 25, 3, K); R(x + 6, y + 70, Math.round(23 * f), 1, on ? '#ffd54a' : '#6fa3b5');
+        }
+      }
     });
     // highlights
     sl.forEach((s, i) => {
@@ -760,6 +797,7 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
       if (w && w.unlocked) {
         gx.drawImage(SPR[id], PORTRAIT_X[id] || 0, PORTRAIT_Y[id], 20, 14, x + 4, y + 5, 20, 14); R(x + 13, y + 3, 2, 2, '#e0533a');
         const wp = workerPlace(id);
+        if (w.skill && (!skillOn(id) || Math.floor(t * 4) % 2)) { R(x + 19, y + 35, 3, 3, '#ffd54a'); R(x + 18, y + 38, 3, 3, '#ffd54a'); }
         if (wp) { R(x + 3, y + 34, 13, 7, K); R(x + 4, y + 35, 11, 5, LOCS[wp.l].item); }
         else { const bob = Math.floor(t * 1.2 + i) % 2; gx.drawImage(sprOf(id), x + 3, y + 25 - bob); }
       }
@@ -808,7 +846,8 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
     });
     floats.forEach(f => {
       c.globalAlpha = Math.max(0, Math.min(1, f.life * 1.6));
-      T(f.txt + (f.dbl ? ' x2' : ''), SX(f.slot) + 50, SY(f.slot) + 46 - (1 - f.life) * 22, 7, f.dbl ? '#7ee081' : '#f2c14e', 'center');
+      if (f.skill) T(f.txt, SX(f.slot) + SW / 2, SY(f.slot) + 30 - (1.4 - f.life) * 14, 6, '#ffd54a', 'center');
+      else T(f.txt + (f.dbl ? ' x2' : ''), SX(f.slot) + 50, SY(f.slot) + 46 - (1 - f.life) * 22, 7, f.dbl ? '#7ee081' : '#f2c14e', 'center');
       c.globalAlpha = 1;
     });
     if (!state.locs[l].unlocked) {
@@ -962,12 +1001,16 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
     const upg = s.upg.length ? `<h3>Карты станка</h3><div class="row">${s.upg.map(chip).join('')}</div>` : '';
     return `<h2>${M.name}</h2><p class="muted">${M.desc}</p>${worker}${stats}${notes}${upg}<div class="row"><button class="btn" type="button" data-act="move">Переставить</button>${s.worker ? '<button class="btn" type="button" data-act="unassign">Снять сотрудника</button>' : ''}</div>`;
   }
+  function skillHTML(id) {
+    const sk = SKILLS[id], has = state.workers[id].skill;
+    return `<h3>Скилл</h3><p><b>${sk.name}</b>: ${esc(sk.desc)}</p>${has ? '<p class="on" id="live-skill"></p>' : `<div class="row"><button class="btn primary" type="button" data-act="skill" ${state.money < sk.cost ? 'disabled' : ''}>Открыть за ${fmt(sk.cost)}</button></div>`}`;
+  }
   function workerHTML(id) {
     const Wd = WORKERS[id], st = state.workers[id], ws = workerStats(id, globals());
     const eq = st.equip.length ? st.equip.map(chip).join('') : '<span class="muted">Пусто</span>';
     const wp = workerPlace(id);
     const fr = ws.fr.length ? ws.fr.map(f => WORKERS[f].name).join(', ') + ` (+${pct(ws.fb)} силы)` : 'нет';
-    return `<h2>${Wd.name}</h2><p class="muted">${Wd.role} · ${wp ? `работает: цех ${wp.l + 1}, ${MACH[slotsOf(wp.l)[wp.i].machine].name}` : 'отдыхает в раздевалке'}</p><div class="stats"><div class="stat"><small>Сила</small><b id="live-power">0</b></div><div class="stat"><small>Скорость</small><b id="live-speed">0</b></div><div class="stat"><small>Удача</small><b id="live-luck">0</b></div></div><p>${esc(Wd.perk)}</p><h3>В шкафчике</h3><div class="row">${eq}</div><p class="muted">Друзья по шкафчику: ${fr}</p><p class="muted">Нажми на станок в любом цеху, чтобы перевести туда. Нажми на другой шкафчик, чтобы поменяться местами.</p>${wp ? '<div class="row"><button class="btn" type="button" data-act="rest">В раздевалку</button></div>' : ''}`;
+    return `<h2>${Wd.name}</h2><p class="muted">${Wd.role} · ${wp ? `работает: цех ${wp.l + 1}, ${MACH[slotsOf(wp.l)[wp.i].machine].name}` : 'отдыхает в раздевалке'}</p><div class="stats"><div class="stat"><small>Сила</small><b id="live-power">0</b></div><div class="stat"><small>Скорость</small><b id="live-speed">0</b></div><div class="stat"><small>Удача</small><b id="live-luck">0</b></div></div><p>${esc(Wd.perk)}</p>${skillHTML(id)}<h3>В шкафчике</h3><div class="row">${eq}</div><p class="muted">Друзья по шкафчику: ${fr}</p><p class="muted">Нажми на станок в любом цеху, чтобы перевести туда. Нажми на другой шкафчик, чтобы поменяться местами.</p>${wp ? '<div class="row"><button class="btn" type="button" data-act="rest">В раздевалку</button></div>' : ''}`;
   }
   function deckHTML() {
     const g = globals(), counts = {};
@@ -984,6 +1027,10 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
     const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
     const g = globals();
     if (selSlot != null && state.locs[state.cur].unlocked) { const st = slotStats(state.cur, selSlot, g); if (st) { set('live-rate', fmt(st.rate)); set('live-value', fmt(st.value)); set('live-income', fmt(st.income)); } }
+    if (selWorker && state.workers[selWorker].skill) {
+      const w = state.workers[selWorker], sk = SKILLS[selWorker];
+      set('live-skill', !workerPlace(selWorker) ? 'Срабатывает, только когда сотрудник у станка' : skillOn(selWorker) ? `Активен: ещё ${Math.ceil(sk.dur - w.skT)} с` : `Перезарядка: ${Math.ceil(sk.cd - w.skT)} с`);
+    }
     if (selWorker) { const ws = workerStats(selWorker, g); set('live-power', fmt(ws.power)); set('live-speed', fmt(ws.speed)); set('live-luck', pct(ws.luck)); }
     set('live-planks', fmt(state.planks)); set('live-bricks', fmt(state.bricks)); set('live-nails', fmt(state.nails || 0));
   }
@@ -997,6 +1044,12 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
     else if (act === 'cancel') { if (mode.offer) state.offers.unshift(mode.offer); mode = null; renderSheet(); }
     else if (act === 'move') { mode = { kind: 'move', from: selSlot }; renderSheet(); }
     else if (act === 'unassign') { slotsOf(state.cur)[selSlot].worker = null; save(); renderSheet(); }
+    else if (act === 'skill') {
+      const sk = SKILLS[selWorker], w = state.workers[selWorker];
+      if (w.skill || state.money < sk.cost) return;
+      state.money -= sk.cost; w.skill = true; w.skT = 0;
+      toast(`Скилл «${sk.name}» открыт!`); save(); renderSheet();
+    }
     else if (act === 'rest') { const wp = workerPlace(selWorker); if (wp) slotsOf(wp.l)[wp.i].worker = null; save(); renderSheet(); }
     else if (act === 'unlock') unlockLoc(state.cur);
     else if (act === 'deck') { view = view === 'deck' ? 'main' : 'deck'; renderSheet(); }
@@ -1030,6 +1083,8 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
     renderTabs();
     const ub = body.querySelector('[data-act="unlock"]');
     if (ub) ub.disabled = state.money < LOCS[state.cur].cost;
+    const sb = body.querySelector('[data-act="skill"]');
+    if (sb && selWorker) sb.disabled = state.money < SKILLS[selWorker].cost;
   }
 
   offlineGain();
