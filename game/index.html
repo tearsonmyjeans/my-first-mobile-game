@@ -42,7 +42,7 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
 .tab.locked.ready{color:var(--gold);border-color:var(--gold)}
 .tab:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 .stage{position:relative}
-#game{display:block;width:100%;max-width:100%;aspect-ratio:240/288;height:auto;image-rendering:pixelated;border-radius:10px;touch-action:manipulation;cursor:pointer}
+#game{display:block;width:100%;max-width:100%;aspect-ratio:240/210;height:auto;image-rendering:pixelated;border-radius:10px;touch-action:manipulation;cursor:pointer}
 #toast{position:absolute;left:50%;top:8px;transform:translateX(-50%);background:rgba(27,22,36,.92);border:2px solid var(--gold);color:var(--ink);font:400 14px/1.2 var(--pixel);padding:8px 12px;border-radius:6px;max-width:86%;text-align:center;pointer-events:none;transition:opacity .25s}
 #toast[hidden]{display:block!important;opacity:0}
 .sheet{background:var(--panel);border:2px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:12px;flex:1}
@@ -96,7 +96,7 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
     <button class="tab" id="tab1" type="button" data-loc="1">Цех 2 · Кирпичи</button>
   </nav>
   <div class="stage">
-    <canvas id="game" role="img" aria-label="Цех завода: четыре места под станки и раздевалка с сотрудниками"></canvas>
+    <canvas id="game" role="img" aria-label="Цех завода: места под станки и раздевалка с сотрудниками"></canvas>
     <div id="toast" hidden></div>
   </div>
   <section class="sheet" aria-live="polite">
@@ -112,7 +112,9 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
 
 <script>
 (() => {
-  const W = 240, H = 288;
+  const W = 240;
+  // canvas height depends on the workshop: a top-row slot adds one more row of floor
+  let H = 210, FL = 126, LY = 150, TOP = false;
 
   /* ================= art ================= */
   const PAL = {
@@ -121,7 +123,7 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
     g: '#4a4a57', G: '#363641', B: '#5a3a2c',
     y: '#f1e08a', Y: '#d4bf5e', t: '#5b7f8a', T: '#7fa3ad', n: '#2e3f45', R: '#d9535a', e: '#2a2433', u: '#a89a5c', a: '#aab4bd', A: '#7f8a94',
     v: '#7d8a3a', P: '#7a5a8a', f: '#d8c8a0', F: '#b5a47a', r: '#b8423b', x: '#e9e2d0',
-    W: '#f4f1ec', D: '#cfc6bd', I: '#ecd3d0', i: '#d9aeb0', E: '#d9737a', Z: '#f7c948', X: '#d9971f', C: '#8a5a32',
+    W: '#f4f1ec', D: '#cfc6bd', I: '#ecd3d0', i: '#d9aeb0', E: '#d9737a', Z: '#f7c948', X: '#d9971f', C: '#8a5a32', '^': '#b3a99f',
     L: '#8f9e5c', M: '#62703c', J: '#cfc48c', Q: '#e0a040', N: '#2f2a36', V: '#4a4352', U: '#9a8a4a', j: '#7a6c34',
     l: '#f4a9c4', z: '#d97fa6', K: '#5b8fd6'
   };
@@ -129,7 +131,7 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
   const MRP = ['6.8k6.', '6.ktT4tk6.', '6.k6tk6.', '6.k6nk6.', '4.k10tk4.', '4.12k4.', '4.k10yk4.', '4.k2y6Y2yk4.', '4.k10yk4.', '4.k4Y2y4Yk4.', '4.kR2wR2yR2wRk4.', '4.kRwkR2yRkwRk4.', '4.k4R2y4Rk4.', '4.k4yY5yk4.', '4.ky8uyk4.', '4.ky3u2m3uyk4.', '4.ky8uyk4.', '4.k2y6u2yk4.', '3.k3a6y3ak3.', '2.k4a6y4ak2.', '2.k3aA6yA3ak2.', '2.k3aA6yA3ak2.', '2.k5a2A7ak2.', '2.k14Ak2.', '2.k6a2A6ak2.', '2.k6a2A6ak2.', '2.k6a2k6ak2.', '2.16k2.', '6.kyk2.kyk6.', '6.kyk2.kyk6.', '5.k2yk2.k2yk5.', '5.4k2.4k5.'];
   const TRAMP = ['5.k3.k3.k6.', '4.khk.khk.khk5.', '3.k11hk4.', '2.k3h2v8hk3.', '.k2h3v11hk.', '.k5h2v9hk.', '.k16hk.', '.k3h2s3h3s5hk.', '.k3h10s3hk.', '.k3hs2k4s2ks3hk.', '.k3hP2eP2s2e2s3hk.', '.k3h3P2sS4s3hk.', '.k3h7s2xs3hk.', '.k3h3s3ms2xs3hk.', '.k3hk8sk3hk.', '2.k2h3k4s3k2hk2.', '2.k3f2r4b2r3fk2.', '.k4f2r4b2r4fk.', '.k5frb2rbr5fk.', '.kF4frb2rbr4fFk.', '.kF4f2b2r2b4fFk.', '.kF5f4b5fFk.', '.kF6F2q6FFk.', '.ks6f2F6fsk.', '2.k6f2F6fk2.', '2.k6f2F6fk2.', '2.k5fF2kF5fk2.', '2.16k2.', '3.k5g2k5gk3.', '3.k5g2k5gk3.', '2.k6B2k6Bk2.', '2.7k2.7k2.'];
 
-  const DOG = ['.......kkkkkkkk........', '......kWWWWWWWWk.......', '...kkkWWWWWWWWWWkkk....', '..kEEkWWWWWWWWWWkEEk...', '..kEEkWkkWWWWkkWkEEk...', '..kEEkWkkWWWWkkWkEEk...', '..kEDkWWWWWWWWWWkDEk...', '...kDWWWWkkkkWWWWDk....', '...kDWWWWkkkkWWWWDk....', '...kDDWWWWkkWWWWDDk....', '....kDDWWDWWDWWDDk.....', '....kDDDWDDDDWDDCk.....', '...kWDDDDDDDDDDCCk.....', '..kWWWWDDDDDDDWWWWk....', '.kWWWWWWIIIIIIWWWWWk...', '.kWDWWIIIIIIIIIIWWWk...', 'kWDWWIIIIIIIIkkkkkkkk..', 'kWDWIIIIIIIIkZZkZZkZZk.', 'kDDWIIIIIIIIkZZkZZkZZkk', 'kDWIIIIIIIIIkZZkZZkZZkZ', 'kDWIIIIIIIIIkZZkZZkZZkZ', 'kDWIIIIIIIIkZZZZkkkkkXZ', 'kDWIIIIIIIIkZZZZZZZZZXk', 'kDWIIIIIIIIIkXXZZZZZXk.', '.kDIIIIIIIIIIkkkkkkkkk.', '.kDiIIIIIIIIIIIIIIWWk..', '..kDiiIIIIIIIIIIIWDk...', '..kDDiiiIIIIIIIIWDDk...', '...kDDDiiiiiiiiDDDk....', '...kWWDkkkkkkkkDWWk....', '...kWWWk.......kWWWk...', '...kkkkk.......kkkkk...'];
+  const DOG = ['.......................', '....k...kkkkkkkk...k...', '...kWk.kWWWWWWWWk.kWk..', '..kDWWkWWDWWWDWWWkWEEk.', '..kDWWkDDDWWWDDDWWWEEk.', '..kDWWWWWWWWWWWWWWWEEk.', '..kDWWWWwkWWWwkWWWWEEk.', '..kDWWWWkkWWWkkWWWWEEk.', '..kDWWWWWWWkkWWWWWWWWk.', '...kWWWWWWkwkkWWWWWWk..', '....kWWWWWkkkWWWWWWk...', '.....kDDWWWWWWWWDDk....', '.....kDWWDWWDWWDWW.....', '...kkkDWDWDWDWDWDCC....', '..kWWWkD^D^D^D^D^CCC...', '.kWWWWWWWWWWWWWWWWWWk..', '.kWWWWWWWWWWWkkkkkkkk..', '.kkWWWWWWWWWkZXZXZXZXk.', 'kWWWIWWWWWWkZZXZXZXZXXk', 'WWWWIWIIIWIkZZXZXZXZXXk', 'WWWWIIIIIIIkZZZZZZZZZXk', 'kDDDIIIIIIIkXXXXXXXXZXk', 'kIIIIIIIIIIkZZZZZZZXZXk', 'kiiIIIIIIIIkZZZZZZZZZXk', 'kiiIIIIIIIIkZZZZZZZZZXk', 'kEiIIIIIIIIIXXXXXXXXXk.', 'kRiIIIIIIIIIIkkkkkkkk..', '.kEiIIIIIIIIIIIIIIk....', '.kREiIIIIIIIIIIIIIk....', '..kREiiIIIIIIIiiik.....', '...kkEEiiiIIiiikk......', '.....kkEiiiiikk........'];
   const TOAD = ['.......................', '....kkkk.......kkkk....', '...kLQQLk.....kLQQLk...', '...kQkkQLkkkkkLQkkQk...', '...kQkkQLLLLLLLQkkQk...', '...kLQQLLLLLLLLLQQLk...', '..kLLLLLLLLLLLLLLLLLk..', '..kMLLLLLLLLLLLLLLLMk..', '..kMLLLLkkkkkkkLLLLMk..', '..kMMLLLLLLLLLLLLLMMk..', '...kMJJJJJJJJJJJJJMk...', '...kMJJJJJJJJJJJJJMk...', '....kMJJJJJJJJJJJMk....', '....kNkJJJJJJJJJkNk....', '...kNNNkwwwwwwwkNNNk...', '..kNNNNVkwwwwwkVNNNNk..', '..kNNNNNUkwwwkUNNNNNk..', '..kNNVNNUUkwkUUNNVNNk..', '..kNNVNNUjUkUjUNNVNNk..', '..kNNVNNUUUUUUUNNVNNk..', '..kNNVNNUjUpUjUNNVNNk..', '..kLLkNNUUUUUUUNNkLLk..', '.kLLLLkNUUUUUUUNkLLLLk.', '.kLkLkNNNNNNNNNNNkLkLk.', '..kkkNNNNNNNNNNNNNkkk..', '...kNNNNNNNNNNNNNNNk...', '...kNNNNNVkkkVNNNNNk...', '...kNNNNNk...kNNNNNk...', '...kNNNNNk...kNNNNNk...', '...kNNNNk.....kNNNNk...', '...kMLLLLk...kLLLLMk...', '...kkkkkkk...kkkkkkk...'];
   const PINK = ['......kkkkkkkk......', '....kkllllllllkk....', '...kllllllllllllk...', '..kllzlllllllllllk..', '..klllllllllllllzk..', '.kllzlllllllllllllk.', '.kllllllllllllllllk.', '.klllzllzllzllzlllk.', '.kllsllsslsslslsllk.', '.kllssssssssssssllk.', '.kllskkksssskkksllk.', '.kllsKwKssssKwKsllk.', '.kllsKKKssssKKKsllk.', '.kllsccssssssccsllk.', '.kllsssssmmsssssllk.', '.klllkssssssssklllk.', '.klllkksssssskklllk.', '.kllkTTTwwwwTTTkllk.', '.kllTTTTTwwTTTTTllk.', '.klzttTTTTTTTTttzlk.', '.kzlttttqttqttttlzk.', '.kslttttttttttttlsk.', '.ksTttttttttttttTsk.', '.kbBBBBBBqqBBBBBBbk.', '.kttttttttttttttttk.', '..kttttttttttttttk..', '..ktTTttttttttTTtk..', '..ktTTtttkktttTTtk..', '...ktttttkktttttk...', '...ktttttkktttttk...', '..kzzzzzzkkzzzzzzk..', '..kkkkkkk..kkkkkkk..'];
   const rle = rows => rows.map(r => { let o = ''; r.replace(/(\d*)(\D)/g, (m, n, ch) => { o += ch.repeat(n ? +n : 1); return m; }); return o; });
@@ -276,12 +278,12 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
 
   /* ================= state ================= */
   const KEY = 'pixel-factory-save-v1';
-  const emptySlots = () => [0, 1, 2, 3].map(() => ({ machine: null, worker: null, upg: [], acc: 0 }));
+  const emptySlots = n => Array.from({ length: n }, () => ({ machine: null, worker: null, upg: [], acc: 0 }));
   const fresh = () => ({
-    v: 3, money: 0, xp: 0, level: 1, planks: 0, bricks: 0, earned: 0, cur: 0,
+    v: 4, money: 0, xp: 0, level: 1, planks: 0, bricks: 0, earned: 0, cur: 0,
     locs: [
       { unlocked: true, slots: [{ machine: null, worker: null, upg: [], acc: 0 }, { machine: 'saw', worker: 'crow', upg: [], acc: 0 }, { machine: null, worker: null, upg: [], acc: 0 }, { machine: null, worker: null, upg: [], acc: 0 }] },
-      { unlocked: false, slots: emptySlots() }
+      { unlocked: false, slots: emptySlots(4) }
     ],
     workers: { crow: { unlocked: true, equip: [] }, mrp: { unlocked: true, equip: [] }, tramp: { unlocked: false, equip: [] }, dog: { unlocked: false, equip: [] }, toad: { unlocked: false, equip: [] }, pink: { unlocked: false, equip: [] } },
     lockers: ['crow', 'mrp', 'tramp', 'dog', 'toad', 'pink'],
@@ -289,13 +291,19 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
   });
   function migrate(s) {
     if (!s) return null;
-    if (s.v === 1) { s.locs = [{ unlocked: true, slots: s.slots }, { unlocked: false, slots: emptySlots() }]; delete s.slots; s.cur = 0; s.bricks = 0; s.v = 2; }
+    if (s.v === 1) { s.locs = [{ unlocked: true, slots: s.slots }, { unlocked: false, slots: emptySlots(3) }]; delete s.slots; s.cur = 0; s.bricks = 0; s.v = 2; }
     if (s.v === 2) {
-      s.locs.forEach(L => L.slots.push({ machine: null, worker: null, upg: [], acc: 0 }));
+      s.locs[1].slots.push(...emptySlots(1));
       for (const id of ['dog', 'toad', 'pink']) { s.workers[id] = { unlocked: false, equip: [] }; s.lockers.push(id); }
       s.v = 3;
     }
-    return s.v === 3 ? s : null;
+    if (s.v === 3) {
+      // build 3 briefly had a top slot in the planks workshop too: move its machine down if there is room
+      const sl = s.locs[0].slots;
+      if (sl.length > 3) { const top = sl.pop(), free = sl.findIndex(z => !z.machine); if (top.machine && free >= 0) sl[free] = top; }
+      s.v = 4;
+    }
+    return s.v === 4 ? s : null;
   }
   function load() { try { return migrate(JSON.parse(localStorage.getItem(KEY))); } catch (e) { return null; } }
   function save() { try { state.savedAt = Date.now(); localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { } }
@@ -320,12 +328,12 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
   const pct = v => Math.round(v * 100) + '%';
 
   /* ================= rules ================= */
-  // slot i sits at [column, row]: three slots in the bottom row, the fourth above the middle one
+  // slot i sits at [column, row]: three slots in the bottom row, the fourth (bricks workshop only) above the middle one
   const POS = [[0, 1], [1, 1], [2, 1], [1, 0]];
   const adjacent = (i, j) => Math.abs(POS[i][0] - POS[j][0]) + Math.abs(POS[i][1] - POS[j][1]) === 1;
-  const neigh = i => POS.map((_, j) => j).filter(j => adjacent(i, j));
+  const neigh = (i, n) => POS.slice(0, n).map((_, j) => j).filter(j => adjacent(i, j));
   function linked(l, i) {
-    const sl = slotsOf(l), set = new Set(neigh(i));
+    const sl = slotsOf(l), set = new Set(neigh(i, sl.length));
     sl.forEach((s, j) => { if (j !== i && POS[j][1] === POS[i][1] && (s.machine === 'belt' || sl[i].machine === 'belt')) set.add(j); });
     return [...set].sort();
   }
@@ -375,7 +383,7 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
     if (!s.worker || M.rate === 0) return { rate: 0, value: 0, income: 0, notes, ws: null, M };
     const ws = workerStats(s.worker, g);
     let power = ws.power;
-    const near = neigh(i).filter(j => sl[j].worker);
+    const near = neigh(i, sl.length).filter(j => sl[j].worker);
     let speedM = 1;
     if (s.worker === 'tramp' && near.length) { power *= 1.2; notes.push('Бродяга в команде: +20% силы'); }
     if (s.worker === 'toad' && !near.length) { speedM = 1.35; notes.push('Сэр Жаб один и не трусится: +35% скорости'); }
@@ -504,9 +512,16 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
   const gx = low.getContext('2d');
   const R = (x, y, w, h, col) => { gx.fillStyle = col; gx.fillRect(Math.round(x), Math.round(y), w, h); };
   let S = 2;
-  const SX = i => 6 + POS[i][0] * 78, SY = i => 36 + POS[i][1] * 78, SW = 72, SH = 74;
-  const FL = 204; // floor ends, locker room begins
-  const NL = 6, LX = i => 11 + i * 38, LY = FL + 24, LW = 28, LH = 44;
+  const rowY = r => 36 + (r - (TOP ? 0 : 1)) * 78;
+  const SX = i => 6 + POS[i][0] * 78, SY = i => rowY(POS[i][1]), SW = 72, SH = 74;
+  const NL = 6, LX = i => 11 + i * 38, LW = 28, LH = 44;
+  function layout() {
+    const top = slotsOf(state.cur).length > 3;
+    if (top === TOP && low.height === H) return;
+    TOP = top; FL = TOP ? 204 : 126; H = FL + 84; LY = FL + 24; // FL: floor ends, locker room begins
+    low.height = H; cv.style.aspectRatio = `${W} / ${H}`;
+    fit();
+  }
 
   function disc(cx, cy, r, col) { for (let dy = -r; dy <= r; dy++) { const w = Math.round(Math.sqrt(r * r - dy * dy)); R(cx - w, cy + dy, w * 2 + 1, 1, col); } }
   function machine(type, x, y) {
@@ -640,8 +655,8 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
     if (selSlot != null && !mode && !selWorker) {
       linkedSel.forEach(j => {
         const [ca, ra] = POS[selSlot], [cb, rb] = POS[j];
-        if (ra === rb) for (let k = Math.min(ca, cb); k < Math.max(ca, cb); k++) { const gx0 = 6 + k * 78 + SW, gy0 = 36 + ra * 78 + SH / 2; R(gx0, gy0 - 4, 6, 8, K); R(gx0 + 1, gy0 - 3, 4, 6, '#7ee081'); }
-        else { const gx0 = 6 + ca * 78 + SW / 2, gy0 = 36 + Math.min(ra, rb) * 78 + SH; R(gx0 - 5, gy0 - 1, 10, 6, K); R(gx0 - 4, gy0, 8, 4, '#7ee081'); }
+        if (ra === rb) for (let k = Math.min(ca, cb); k < Math.max(ca, cb); k++) { const gx0 = 6 + k * 78 + SW, gy0 = rowY(ra) + SH / 2; R(gx0, gy0 - 4, 6, 8, K); R(gx0 + 1, gy0 - 3, 4, 6, '#7ee081'); }
+        else { const gx0 = 6 + ca * 78 + SW / 2, gy0 = rowY(Math.min(ra, rb)) + SH; R(gx0 - 5, gy0 - 1, 10, 6, K); R(gx0 - 4, gy0, 8, 4, '#7ee081'); }
       });
     }
     // crate
@@ -718,8 +733,8 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
     });
     if (!state.locs[l].unlocked) {
       c.fillStyle = 'rgba(20,14,30,.72)'; c.fillRect(0, 31, W, FL - 31);
-      T('ЦЕХ ЗАКРЫТ', W / 2, 102, 10, '#ffffff', 'center');
-      T(`Открыть за ${fmt(LOCS[l].cost)} монет`, W / 2, 118, 7, '#f2c14e', 'center');
+      T('ЦЕХ ЗАКРЫТ', W / 2, (31 + FL) / 2 - 16, 10, '#ffffff', 'center');
+      T(`Открыть за ${fmt(LOCS[l].cost)} монет`, W / 2, (31 + FL) / 2, 7, '#f2c14e', 'center');
     }
   }
   function fit() {
@@ -728,6 +743,7 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
     cv.width = W * S; cv.height = H * S;
   }
   function render() {
+    layout();
     drawWorld();
     c.setTransform(1, 0, 0, 1, 0, 0);
     c.imageSmoothingEnabled = false;
@@ -739,7 +755,7 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
   function toLogical(e) { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) / r.width * W, (e.clientY - r.top) / r.height * H]; }
   function hit(x, y) {
     if (crate && x >= crate.x - 4 && x <= crate.x + 18 && y >= FL - 30 && y <= FL) return { crate: true };
-    for (let i = 0; i < POS.length; i++) if (x >= SX(i) && x < SX(i) + SW && y >= SY(i) && y < SY(i) + SH) return { slot: i };
+    for (let i = 0; i < slotsOf(state.cur).length; i++) if (x >= SX(i) && x < SX(i) + SW && y >= SY(i) && y < SY(i) + SH) return { slot: i };
     for (let i = 0; i < NL; i++) if (x >= LX(i) - 3 && x < LX(i) + LW + 3 && y >= LY - 4 && y < H) return { locker: i };
     return null;
   }
