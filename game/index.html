@@ -70,6 +70,8 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
 .card .ic{width:36px;height:36px;image-rendering:pixelated;flex:none;background:#e6d9bc;border-radius:4px;padding:2px}
 .card .ct{overflow-wrap:anywhere;font:400 10px/1.15 var(--pixel);color:var(--rc);letter-spacing:.04em;text-transform:uppercase;filter:brightness(.8)}
 .card .cd{font-size:12.5px;line-height:1.3;padding:0 7px}
+.card .minus{color:#c0392b;font-weight:700}
+.card .gain{font:400 12px/1 var(--pixel);color:#2f7a3a;padding:0 7px}
 .card .rar{font:400 10px/1 var(--pixel);color:#7a7088;padding:0 7px;margin-top:auto}
 .r0{--rc:var(--r0)}.r1{--rc:var(--r1)}.r2{--rc:var(--r2)}.r3{--rc:var(--r3)}
 .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
@@ -328,7 +330,23 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     w_batya: { name: 'Новый сотрудник', type: 'worker', worker: 'batya', tag: 'Сотрудники', rar: 2, loc: 3, desc: 'Приходит Батя. Очень сильный и везучий, но медленный.' },
     s_tint: { name: 'Цветное стекло', type: 'mupg', loc: 3, tag: 'Улучшения', rar: 0, eff: { value: 1.5 }, desc: 'Стекло с этого станка: цена ×1,5.' },
     u_glass: { name: 'Витрины в городе', type: 'global', tag: 'Улучшения', rar: 1, loc: 3, eff: { glassPrice: 1.6 }, desc: 'Стекло: цена ×1,6.' },
-    s_grease: { name: 'Смазка', type: 'mupg', tag: 'Улучшения', rar: 1, eff: { rate: 1.4, value: 1.2 }, desc: 'Любой станок: скорость ×1,4 и цена ×1,2.' }
+    s_grease: { name: 'Смазка', type: 'mupg', tag: 'Улучшения', rar: 1, eff: { rate: 1.4, value: 1.2 }, desc: 'Любой станок: скорость ×1,4 и цена ×1,2.' },
+    // cards with a minus: the minus line is shown in red on the card
+    u_overtime: { name: 'Сверхурочка', type: 'global', tag: 'Сотрудники', rar: 2, eff: { speed: 1.8, power: 0.8 }, desc: 'Все сотрудники: скорость ×1,8.', minus: 'Сила всех ×0,8.' },
+    u_credit: { name: 'Кредит', type: 'global', tag: 'Улучшения', rar: 1, eff: {}, desc: 'Сразу монеты в размере прошлой квоты.', minus: 'Квота следующей смены ×1,25.' },
+    e_loner: { name: 'Одиночка', type: 'equip', tag: 'Экипировка', rar: 2, eff: {}, desc: 'Сила ×2,2, если на соседних станках никто не работает.', minus: 'С работающими соседями сила ×0,6.' },
+    u_hack: { name: 'Халтура', type: 'global', tag: 'Улучшения', rar: 2, eff: { price: 1.6 }, desc: 'Всё, что делает завод: цена ×1,6.', minus: 'Удачи нет: двойных штук не будет.' },
+    // legendary engines grow with the run
+    u_radio: { name: 'Сарафанное радио', type: 'global', tag: 'Улучшения', rar: 3, eff: {}, desc: 'Цена всего ×1,1 за каждую квоту, пройденную после этой карты.' },
+    u_piggy: { name: 'Копилка', type: 'global', tag: 'Улучшения', rar: 3, eff: {}, desc: 'В каждом перерыве приносит 25% монет, заработанных за смену.' },
+    s_gold: { name: 'Золотой станок', type: 'mupg', tag: 'Улучшения', rar: 3, eff: {}, desc: 'Любой станок: цена ×1,15 за каждую карту «Станки» в колоде.' },
+    u_union: { name: 'Профсоюз', type: 'global', tag: 'Сотрудники', rar: 3, eff: {}, desc: 'Все сотрудники: сила +5% за каждого сотрудника на заводе.' },
+    // mastery cards never drop as usual cards: every masteryEvery-th level offers 1 of 3 of them, each once per run
+    x_speed: { name: 'Мастер скорости', type: 'global', tag: 'Мастерство', rar: 3, mastery: true, eff: { speed: 1.5 }, desc: 'Все сотрудники: скорость ×1,5.' },
+    x_power: { name: 'Мастер силы', type: 'global', tag: 'Мастерство', rar: 3, mastery: true, eff: { power: 1.5 }, desc: 'Все сотрудники: сила ×1,5.' },
+    x_luck: { name: 'Мастер удачи', type: 'global', tag: 'Мастерство', rar: 3, mastery: true, eff: {}, desc: 'Все сотрудники: удача +20%.' },
+    x_skill: { name: 'Мастер скиллов', type: 'global', tag: 'Мастерство', rar: 3, mastery: true, eff: {}, desc: 'Все скиллы действуют в 1,5 раза дольше.' },
+    x_wholesale: { name: 'Оптовик', type: 'global', tag: 'Мастерство', rar: 3, mastery: true, eff: {}, desc: 'С каждой витрины можно купить 2 карты.' }
   };
   const TYPE_LABEL = { machine: 'Станок', worker: 'Сотрудник', global: 'Для всех', equip: 'Экипировка', mupg: 'На станок' };
   const RAR = ['обычная', 'редкая', 'эпическая', 'легендарная'];
@@ -368,6 +386,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     return cv.toDataURL();
   }
   const K = PAL.k;
+  const badge = d => { d(8, 8, 7, K); d(8, 8, 6, '#e0a32e'); d(8, 8, 5, '#fff1b0'); };
   const ICON_DRAW = {
     bench: r => { r(5, 0, 1, 5, '#8a5a32'); r(3, 0, 5, 2, '#7d8794'); r(1, 6, 14, 4, K); r(2, 7, 12, 2, '#c98a4a'); r(2, 7, 12, 1, '#e5a86a'); r(2, 10, 3, 6, K); r(3, 10, 1, 5, '#a06a36'); r(11, 10, 3, 6, K); r(12, 10, 1, 5, '#a06a36'); r(9, 4, 5, 2, K); r(10, 4, 3, 1, '#e3b47c'); },
     saw: (r, d) => { d(8, 8, 7, K); d(8, 8, 6, '#d6dbe0'); for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4; r(8 + Math.round(Math.cos(a) * 5), 8 + Math.round(Math.sin(a) * 5), 1, 1, '#7d8794'); } r(7, 7, 3, 3, '#5a6270'); r(10, 4, 2, 1, '#ffffff'); },
@@ -412,6 +431,20 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     vitrage: r => { r(1, 1, 14, 14, K); const VC = ['#e0533a', '#f2c14e', '#7ee081', '#4f8fd6', '#9b6bd6', '#ff8fc8']; for (let i = 0; i < 9; i++) r(2 + (i % 3) * 4, 2 + Math.floor(i / 3) * 4, 3, 3, VC[(i * 2 + 1) % 6]); },
     tint: r => { r(3, 1, 3, 14, K); r(4, 2, 1, 12, '#e0533a'); r(7, 1, 3, 14, K); r(8, 2, 1, 12, '#7ee081'); r(11, 1, 3, 14, K); r(12, 2, 1, 12, '#4f8fd6'); },
     glass: r => { r(5, 0, 6, 2, K); r(6, 2, 4, 3, K); r(7, 2, 2, 3, '#bfeef4'); r(3, 5, 10, 11, K); r(4, 6, 8, 9, '#9fe6ef'); r(5, 7, 2, 6, '#e9fff8'); },
+    overtime: (r, d) => { d(7, 9, 6, K); d(7, 9, 5, '#f4efe6'); r(7, 5, 1, 5, K); r(7, 9, 3, 1, K); r(6, 1, 3, 2, K); r(11, 0, 4, 1, '#9b6bd6'); r(13, 1, 1, 1, '#9b6bd6'); r(12, 2, 1, 1, '#9b6bd6'); r(11, 3, 4, 1, '#9b6bd6'); d(12, 12, 3, K); d(12, 12, 2, '#d9535a'); r(12, 10, 1, 3, '#fff1b0'); r(12, 14, 1, 1, '#fff1b0'); },
+    credit: (r, d) => { d(8, 10, 5, K); d(8, 10, 4, '#d9a066'); r(5, 2, 7, 4, K); r(6, 3, 5, 2, '#d9a066'); r(5, 5, 7, 1, '#8a5a32'); r(6, 8, 2, 2, '#b8423b'); r(9, 12, 2, 2, '#b8423b'); r(10, 8, 1, 1, '#b8423b'); r(9, 9, 1, 1, '#b8423b'); r(8, 10, 1, 1, '#b8423b'); r(7, 11, 1, 1, '#b8423b'); r(6, 12, 1, 1, '#b8423b'); r(6, 7, 1, 1, '#ecc48f'); },
+    loner: (r, d) => { for (let i = 0; i < 9; i++) r(7 - Math.floor(i / 2), 3 + i, 2 + Math.floor(i / 2) * 2, 1, 'rgba(242,201,76,.55)'); r(5, 0, 6, 3, K); r(6, 1, 4, 1, '#f2c94c'); d(8, 7, 2, K); r(6, 10, 5, 4, K); r(7, 11, 3, 2, '#5a4a6a'); r(2, 14, 12, 2, K); },
+    hack: (r, d) => { d(7, 8, 6, K); d(7, 8, 5, '#9aa3ad'); d(7, 8, 4, '#c9d0d6'); d(7, 8, 2, K); d(7, 8, 1, '#5a4a6a'); r(9, 12, 7, 3, K); r(10, 13, 5, 1, '#c9d0d6'); r(14, 11, 2, 1, K); r(4, 5, 2, 1, '#ffffff'); },
+    radio: r => { r(1, 6, 4, 5, K); r(2, 7, 2, 3, '#e0a32e'); for (let i = 0; i < 6; i++) { r(5 + i, 5 - Math.floor(i / 2), 1, 7 + Math.floor(i / 2) * 2, K); r(5 + i, 6 - Math.floor(i / 2), 1, 5 + Math.floor(i / 2) * 2, i % 2 ? '#d9535a' : '#e0533a'); } r(3, 11, 2, 4, K); r(13, 3, 1, 2, '#f2c94c'); r(14, 7, 2, 1, '#f2c94c'); r(13, 11, 1, 2, '#f2c94c'); },
+    piggy: (r, d) => { d(8, 9, 6, K); d(8, 9, 5, '#f4a9c4'); r(4, 2, 3, 3, K); r(5, 3, 1, 2, '#d97fa6'); r(6, 6, 6, 1, K); r(7, 6, 4, 1, '#f2c94c'); r(13, 8, 3, 3, K); r(14, 9, 1, 1, '#d97fa6'); r(5, 8, 1, 1, K); r(4, 14, 2, 2, K); r(10, 14, 2, 2, K); r(9, 0, 3, 3, K); r(10, 1, 1, 1, '#f2c94c'); },
+    goldgear: (r, d) => { for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4; r(7 + Math.round(Math.cos(a) * 6), 7 + Math.round(Math.sin(a) * 6), 3, 3, K); } d(8, 8, 5, K); d(8, 8, 4, '#f2c14e'); for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4; r(8 + Math.round(Math.cos(a) * 6), 8 + Math.round(Math.sin(a) * 6), 1, 1, '#e0a32e'); } d(8, 8, 2, K); d(8, 8, 1, '#8a5a12'); r(5, 5, 2, 1, '#fff1b0'); },
+    union: r => { r(2, 0, 2, 16, K); r(4, 1, 11, 8, K); r(5, 2, 9, 6, '#d9535a'); r(5, 2, 9, 1, '#e8968a'); r(8, 3, 3, 3, '#f2c94c'); r(7, 4, 1, 2, '#f2c94c'); r(1, 14, 4, 2, K); },
+    // mastery cards share a gold badge
+    mSpeed: (r, d) => { badge(d); const B = '#3f6fd1'; r(9, 3, 2, 1, B); r(8, 4, 2, 1, B); r(7, 5, 2, 1, B); r(6, 6, 5, 1, B); r(8, 7, 2, 1, B); r(7, 8, 2, 1, B); r(6, 9, 2, 1, B); r(6, 10, 1, 1, B); },
+    mPower: (r, d) => { badge(d); r(3, 5, 3, 6, K); r(10, 5, 3, 6, K); r(4, 6, 1, 4, '#d9535a'); r(11, 6, 1, 4, '#d9535a'); r(6, 7, 4, 2, K); },
+    mLuck: (r, d) => { badge(d); for (const [a, b] of [[5, 4], [9, 4], [5, 8], [9, 8]]) { r(a, b, 3, 3, '#57b04f'); r(a, b, 1, 1, '#8fe07a'); } r(8, 7, 1, 1, '#2f6e3a'); r(9, 11, 1, 2, '#2f6e3a'); },
+    mSkill: (r, d) => { badge(d); r(5, 3, 7, 1, K); r(5, 12, 7, 1, K); r(6, 4, 5, 2, K); r(7, 6, 3, 1, K); r(8, 7, 1, 2, K); r(7, 9, 3, 1, K); r(6, 10, 5, 2, K); r(7, 4, 3, 1, '#f2c94c'); r(7, 11, 3, 1, '#f2c94c'); },
+    mWholesale: (r, d) => { badge(d); r(3, 5, 5, 7, K); r(4, 6, 3, 5, '#f3e9d2'); r(8, 4, 5, 7, K); r(9, 5, 3, 5, '#f3e9d2'); r(10, 6, 1, 3, '#4f8fd6'); r(5, 8, 1, 2, '#9b6bd6'); },
     grease: r => { r(4, 3, 5, 1, K); r(4, 3, 1, 4, K); r(8, 3, 1, 4, K); r(1, 7, 10, 9, K); r(2, 8, 8, 7, '#5a6270'); r(3, 9, 2, 2, '#9aa3ad'); r(10, 5, 5, 2, K); r(14, 3, 2, 3, K); r(14, 8, 1, 2, '#f2c14e'); }
   };
   const CARD_ICON = {
@@ -419,7 +452,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     w_tramp: 'tramp', w_dog: 'dog', w_toad: 'toad', w_pink: 'pink', w_v1: 'v1', w_v2: 'v2', m_wire: 'wire', m_nailer: 'nailer', m_tumbler: 'tumbler', s_zinc: 'zinc', u_nails: 'nails', u_power: 'power', u_speed: 'speed', u_price: 'price', u_bricks: 'bricks',
     e_coffee: 'coffee', e_helmet: 'helmet', e_gloves: 'gloves', e_mask: 'mask', e_horseshoe: 'horseshoe', e_chainsaw: 'chainsaw',
     s_blade: 'blade', s_varnish: 'varnish', s_glaze: 'glaze', s_grease: 'grease',
-    m_melt: 'melt', m_blower: 'blower', m_vitrage: 'vitrage', w_jeanne: 'jeanne', w_alien: 'alien', w_jedi: 'jedi', w_silver: 'silver', w_mrsha: 'mrsha', w_kast: 'kast', w_batya: 'batya', s_tint: 'tint', u_glass: 'glass'
+    m_melt: 'melt', m_blower: 'blower', m_vitrage: 'vitrage', w_jeanne: 'jeanne', w_alien: 'alien', w_jedi: 'jedi', w_silver: 'silver', w_mrsha: 'mrsha', w_kast: 'kast', w_batya: 'batya', s_tint: 'tint', u_glass: 'glass',
+    u_overtime: 'overtime', u_credit: 'credit', e_loner: 'loner', u_hack: 'hack', u_radio: 'radio', u_piggy: 'piggy', s_gold: 'goldgear', u_union: 'union',
+    x_speed: 'mSpeed', x_power: 'mPower', x_luck: 'mLuck', x_skill: 'mSkill', x_wholesale: 'mWholesale'
   };
   const ICONS = {};
   for (const id in CARD_ICON) ICONS[id] = makeIcon(ICON_DRAW[CARD_ICON[id]]);
@@ -520,7 +555,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
 
   // run balance in one place so the balance bot can tune it: tempo speeds up every machine,
   // xp/shop/quota grow geometrically, every levelEvery-th level gives a card, crates come every crate..2×crate seconds
-  const BAL = { tempo: 2, xp0: 15, xpK: 2.2, levelEvery: 3, shopQ: 0.3, shopRoll: 1, rarPrice: [0.6, 1, 1.6, 2.4], crate: 40, crateSec: 20, quotaT: 90, quota0: 300, quotaK: 1.9, quotaA: 1.2 };
+  const BAL = { tempo: 2, xp0: 15, xpK: 2.2, levelEvery: 3, shopQ: 0.3, shopRoll: 1, rarPrice: [0.6, 1, 1.6, 2.4], masteryEvery: 9, crate: 40, crateSec: 20, quotaT: 90, quota0: 300, quotaK: 1.9, quotaA: 1.2 };
   const need = l => Math.round(BAL.xp0 * Math.pow(BAL.xpK, l - 1));
   // the showcase is priced off the quota just passed, so a runaway income cannot make cards free
   const shopBase = () => quotaTarget(Math.max(1, state.run.q - 1)) * BAL.shopQ;
@@ -539,7 +574,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   function buyCard(i) {
     const it = (state.run.shop || [])[i];
     if (!state.run.brk || state.run.shopLocked || !it || it.bought || !eligible(it.id) || state.money < cardPrice(it.id)) return false;
-    state.money -= cardPrice(it.id); it.bought = true; state.shopBuys++; state.run.shopLocked = true;
+    state.money -= cardPrice(it.id); it.bought = true; state.shopBuys++;
+    if (state.run.shop.filter(x => x.bought).length >= (state.cards.includes('x_wholesale') ? 2 : 1)) state.run.shopLocked = true;
     state.offers.unshift({ src: 'shop', ids: [it.id] });
     return true;
   }
@@ -551,6 +587,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   }
   // quotas speed up: quota q grows quotaK × quotaA^(q−2) times over the previous one, so a stack of multipliers still hits a wall
   const quotaTarget = q => Math.round(BAL.quota0 * Math.pow(BAL.quotaK, q - 1) * Math.pow(BAL.quotaA, (q - 1) * (q - 2) / 2));
+  // the quota actually asked this shift: every Credit taken for it makes it ×1,25
+  const curQuota = () => quotaTarget(state.run.q) * Math.pow(1.25, (state.run.credit || {})[state.run.q] || 0);
   const quotaTime = () => BAL.quotaT + (hasUnlock('time') ? 15 : 0);
   const newCrate = () => BAL.crate * (1 + Math.random());
 
@@ -616,7 +654,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (!rule('blackout')) sl.forEach((s, j) => { if (j !== i && P[j][1] === P[i][1] && (s.machine === 'belt' || sl[i].machine === 'belt')) set.add(j); });
     return [...set].sort();
   }
-  const skillOn = id => { const w = state.workers[id], sk = SKILLS[id]; return !!(w.skill && (w.skT || 0) < sk.dur && workerPlace(id)); };
+  const skDur = id => SKILLS[id].dur * (state.cards.includes('x_skill') ? 1.5 : 1);
+  const skillOn = id => { const w = state.workers[id]; return !!(w.skill && (w.skT || 0) < skDur(id) && workerPlace(id)); };
   const anySlot = pred => state.locs.some((L, l) => L.unlocked && L.slots.some((s, i) => pred(s, l, i)));
   function globals() {
     const tc = {};
@@ -626,6 +665,12 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const g = { power: pr('Сотрудники') * 0.05, speed: pr('Экипировка') * 0.05, price: pr('Станки') * 0.05, powerX: 1, speedX: 1, priceX: 1, locX: [1, 1, 1, 1], income: 1 + pr('Улучшения') * 0.03, tc, combos: [] };
     const LOC_KEY = { brickPrice: 1, nailPrice: 2, glassPrice: 3 };
     state.cards.forEach(id => { const cd = CARDS[id]; if (cd.type === 'global') for (const k in cd.eff) { if (k in LOC_KEY) g.locX[LOC_KEY[k]] *= cd.eff[k]; else g[k + 'X'] *= cd.eff[k]; } });
+    // Radio grows with every quota passed after it was taken; Union with every worker on the factory
+    (state.run.radio || []).forEach(q0 => { g.priceX *= Math.pow(1.1, passedQ() - q0); });
+    const crew = Object.keys(state.workers).filter(id => state.workers[id].unlocked).length;
+    state.cards.forEach(id => { if (id === 'u_union') g.powerX *= 1 + 0.05 * crew; });
+    g.luck = state.cards.includes('x_luck') ? 0.2 : 0;
+    g.noLuck = state.cards.includes('u_hack');
     if (state.cards.includes('e_coffee') && !rule('sanepid') && !rule('blackout') && anySlot(s => s.machine === 'belt') && state.workers.tramp.unlocked) { g.combos.push('night'); g.income *= 1.5; }
     g.sawWorking = slotsOf(0).some(s => s.machine === 'saw' && s.worker);
     g.kilnWorking = slotsOf(1).some(s => s.machine === 'kiln' && s.worker);
@@ -664,7 +709,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const hasCoffee = st.equip.includes('e_coffee') && !rule('sanepid');
     let speed = base.speed * (1 + g.speed) * g.speedX * s;
     if (id === 'mrp' && !hasCoffee) speed *= 0.5;
-    return { power: base.power * (1 + g.power + fb) * g.powerX * p, speed, luck: Math.min(0.9, base.luck + l), fb, fr, hasCoffee };
+    return { power: base.power * (1 + g.power + fb) * g.powerX * p, speed, luck: g.noLuck ? 0 : Math.min(0.9, base.luck + l + g.luck), fb, fr, hasCoffee };
   }
   function workerPlace(id) {
     for (let l = 0; l < state.locs.length; l++) { const i = slotsOf(l).findIndex(s => s.worker === id); if (i >= 0) return { l, i }; }
@@ -678,7 +723,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const notes = [];
     linked(l, i).forEach(j => { const m2 = sl[j].machine; if (!m2 || s.machine === 'belt') return; const e = effect(m2, s.machine); rb += e.rate; vb += e.value; notes.push(e.text); });
     let rX = 1, vX = 1;
-    s.upg.forEach(u => { const ef = CARDS[u].eff; rX *= ef.rate || 1; vX *= ef.value || 1; notes.push(`${CARDS[u].name}: ${CARDS[u].desc.toLowerCase()}`); });
+    s.upg.forEach(u => { const ef = CARDS[u].eff; rX *= ef.rate || 1; vX *= ef.value || 1; if (u === 's_gold') vX *= Math.pow(1.15, g.tc['Станки'] || 0); notes.push(`${CARDS[u].name}: ${CARDS[u].desc.toLowerCase()}`); });
     if (s.machine === 'wire' && g.kilnWorking) { vb += 0.2; notes.push('Печь из цеха 2 закаляет проволоку: +20% к цене'); }
     if (s.machine === 'kiln' && g.sawWorking) { rb += 0.25; notes.push('Обрезки досок из цеха 1 на растопку: +25% скорости'); }
     if (s.machine === 'vitrage' && g.tumblerWorking) { vb += 0.2; notes.push('Блестящие гвозди из цеха 3 для рам: +20% к цене'); }
@@ -693,6 +738,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (s.worker === 'pink') { vb += 0.2; notes.push('Зефирка завязывает бантик: +20% к цене'); }
     if (s.worker !== 'dog' && near.some(j => sl[j].worker === 'dog')) { power *= 1.1; notes.push('Пёс Бро даёт кулачок: +10% силы'); }
     if (s.worker !== 'jedi' && near.some(j => sl[j].worker === 'jedi')) { speedM *= 1.15; notes.push('Хаба машет мечами рядом: +15% скорости'); }
+    state.workers[s.worker].equip.forEach(e => { if (e === 'e_loner') { power *= near.length ? 0.6 : 2.2; notes.push(near.length ? 'Одиночка с соседями: сила ×0,6' : 'Одиночка один: сила ×2,2'); } });
     if (s.worker === 'mrsha' && near.length) { power *= 1 + 0.1 * near.length; notes.push(`Укус: +${near.length * 10}% силы`); }
     if (FAMILY.includes(s.worker) && near.some(j => FAMILY.includes(sl[j].worker))) { power *= 1.2; notes.push('Семейный подряд рядом: +20% силы'); }
     const kastNear = s.worker !== 'kast' && near.some(j => sl[j].worker === 'kast');
@@ -706,7 +752,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const kind = sk.kind === 'random' ? state.workers[s.worker].skKind || 'power' : sk.kind;
     if (skM[kind] && skillOn(s.worker)) { skM[kind] *= sk.mult; notes.push(`Скилл «${sk.name}»: ${sk.kind === 'random' ? SKIN_KINDS[kind] + ' ' : ''}×${fmt(sk.mult)}`); }
     // luck is the chance of a double piece; Jeanne's jackpot makes it triple, her skill makes every piece lucky
-    const luck = s.worker === 'jeanne' && skillOn('jeanne') ? 1 : Math.min(0.9, ws.luck + (kastNear ? 0.1 : 0)), extra = s.worker === 'jeanne' ? 2 : 1;
+    const luck = g.noLuck ? 0 : s.worker === 'jeanne' && skillOn('jeanne') ? 1 : Math.min(0.9, ws.luck + (kastNear ? 0.1 : 0)), extra = s.worker === 'jeanne' ? 2 : 1;
     if (luck === 1) notes.push(`Скилл «${sk.name}»: каждая штука ×3`);
     power *= skM.power;
     const rate = M.rate * BAL.tempo * ws.speed * speedM * skM.speed * (1 + rb) * rX;
@@ -742,7 +788,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   }
   const WEIGHT = [10, 5, 2, 1];
   function rollOffer() {
-    const pool = Object.keys(CARDS).filter(eligible), pick = [];
+    const pool = Object.keys(CARDS).filter(id => !CARDS[id].mastery && eligible(id)), pick = [];
     const n = hasUnlock('pick4') ? 4 : 3;
     while (pick.length < n && pick.length < pool.length) {
       const cand = pool.filter(id => !pick.includes(id));
@@ -752,9 +798,11 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     }
     return pick;
   }
+  const rollMastery = () => Object.keys(CARDS).filter(id => CARDS[id].mastery && !state.cards.includes(id)).sort(() => Math.random() - 0.5).slice(0, 3);
   function queueOffer(src) {
+    if (src === 'mastery' && !rollMastery().length) src = 'level';
     if (!state.firstOffer) { state.firstOffer = true; state.offers.push({ src, ids: ['m_bench', 'e_coffee', 'u_power'] }); }
-    else state.offers.push({ src, ids: rollOffer() });
+    else state.offers.push({ src, ids: src === 'mastery' ? rollMastery() : rollOffer() });
     offersHidden = !state.run.brk; // cards that come during a shift wait for the break
     renderSheet();
   }
@@ -776,9 +824,39 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (cd.type === 'machine') slotsOf(target.l)[target.i].machine = cd.machine;
     if (cd.type === 'equip') state.workers[target].equip.push(id);
     if (cd.type === 'mupg') slotsOf(target.l)[target.i].upg.push(id);
+    applyNow(id);
     mode = null;
     comboToast(before);
     save(); renderSheet();
+  }
+  // one-off effects of taking a card
+  function applyNow(id) {
+    const run = state.run;
+    if (id === 'u_radio') (run.radio = run.radio || []).push(passedQ());
+    if (id === 'u_credit') { state.money += quotaTarget(Math.max(1, run.q - 1)); run.credit = run.credit || {}; run.credit[run.q] = (run.credit[run.q] || 0) + 1; }
+  }
+  // "+X/с" on a card: how much income it adds at its best place right now (a new worker is tried at every machine)
+  function bestGain(id) {
+    const cd = CARDS[id], saved = state, base = totalIncome(), tg = [];
+    state.locs.forEach((L, l) => { if (L.unlocked) L.slots.forEach((s, i) => {
+      if (cd.type === 'machine' && !s.machine && (MACH[cd.machine].loc < 0 || MACH[cd.machine].loc === l)) tg.push({ l, i });
+      if ((cd.type === 'worker' || (cd.type === 'mupg' && (cardLoc(id) < 0 || cardLoc(id) === l))) && s.machine && s.machine !== 'belt') tg.push({ l, i });
+    }); });
+    if (cd.type === 'equip') Object.keys(state.workers).forEach(w => { if (state.workers[w].unlocked) tg.push(w); });
+    if (cd.type === 'global') tg.push(null);
+    let best = 0;
+    try {
+      for (const t of tg) {
+        state = JSON.parse(JSON.stringify(saved));
+        state.cards.push(id);
+        if (cd.type === 'worker') { state.workers[cd.worker].unlocked = true; slotsOf(t.l)[t.i].worker = cd.worker; }
+        if (cd.type === 'machine') slotsOf(t.l)[t.i].machine = cd.machine;
+        if (cd.type === 'equip') state.workers[t].equip.push(id);
+        if (cd.type === 'mupg') slotsOf(t.l)[t.i].upg.push(id);
+        best = Math.max(best, totalIncome() - base);
+      }
+    } finally { state = saved; }
+    return best;
   }
   function comboToast(before) {
     const after = globals().combos, got = k => after.includes(k) && !before.includes(k);
@@ -835,7 +913,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     incomeNow = total;
     while (state.xp >= need(state.level)) {
       state.xp -= need(state.level); state.level++;
-      if (state.level % BAL.levelEvery === 0) { toast(`Уровень ${state.level}! Карта ждёт тебя в перерыве`); queueOffer('level'); } else toast(`Уровень ${state.level}! Карта через ${BAL.levelEvery - state.level % BAL.levelEvery}`);
+      if (state.level % BAL.levelEvery === 0) { toast(`Уровень ${state.level}! Карта ждёт тебя в перерыве`); queueOffer(state.level % BAL.masteryEvery === 0 ? 'mastery' : 'level'); } else toast(`Уровень ${state.level}! Карта через ${BAL.levelEvery - state.level % BAL.levelEvery}`);
     }
     if (!crate) { if (!rule('audit')) { state.crateIn -= dt; if (state.crateIn <= 0) { crate = { f: Math.random(), life: 20, born: t }; toast('С конвейера съехала посылка! Нажми на неё'); } } }
     else { crate.life -= dt; if (crate.life <= 0) { crate = null; state.crateIn = newCrate(); } }
@@ -845,7 +923,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     run.t += dt; run.qT += dt;
     if (incomeNow > run.bestRate) run.bestRate = incomeNow;
     // a shift always lasts quotaTime(): the quota is checked only when it ends
-    if (run.qT >= quotaTime()) { if (run.qEarned >= quotaTarget(run.q)) passQuota(); else bankrupt(); }
+    if (run.qT >= quotaTime()) { if (run.qEarned >= curQuota()) passQuota(); else bankrupt(); }
     achTimer += dt; if (achTimer > 1) { achTimer = 0; checkAch(false); }
   }
   // a crate holds coins: crateSec seconds of the current income, but never less than a tenth of the quota
@@ -854,6 +932,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const run = state.run, wasRule = run.rule;
     if (wasRule) run.passed.push(wasRule.id);
     run.rep += wasRule ? 2 : 1;
+    const piggy = state.cards.filter(id => id === 'u_piggy').length;
+    if (piggy) { state.money += run.qEarned * 0.25 * piggy; toast(`Копилка: +${fmt(run.qEarned * 0.25 * piggy)} монет`); }
     run.q++; run.qT = 0; run.qEarned = 0; run.rule = null;
     run.brk = true; run.shopClosed = !!(wasRule && wasRule.id === 'audit'); run.shop = run.shopClosed ? [] : rollShop(); run.shopLocked = false; run.shopRolls = 0;
     if (run.q % 3 === 0) {
@@ -865,7 +945,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
         if (selWorker === w) selWorker = null;
       }
     }
-    toast(wasRule ? 'Проверка пройдена! Перерыв' : 'Квота выполнена! Перерыв');
+    if (!piggy) toast(wasRule ? 'Проверка пройдена! Перерыв' : 'Квота выполнена! Перерыв');
     queueOffer('quota');
     checkAch(false);
   }
@@ -1093,7 +1173,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
         if (on) for (let k = 0; k < 6; k++) { const a = t * 4 + k * Math.PI / 3; R(x + 17 + Math.round(Math.cos(a) * 13), y + 56 + Math.round(Math.sin(a) * 15), 2, 2, k % 2 ? '#ffd54a' : '#fff1b0'); }
         gx.drawImage(sprOf(s.worker), x + 6, y + 40 - bob);
         if (w.skill) {
-          const sk = SKILLS[s.worker], f = on ? 1 - w.skT / sk.dur : (w.skT - sk.dur) / (sk.cd - sk.dur);
+          const sk = SKILLS[s.worker], dur = skDur(s.worker), f = on ? 1 - w.skT / dur : (w.skT - dur) / (sk.cd - dur);
           R(x + 5, y + 69, 25, 3, K); R(x + 6, y + 70, Math.round(23 * f), 1, on ? '#ffd54a' : '#6fa3b5');
         }
       }
@@ -1316,10 +1396,11 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const cd = CARDS[id], cl = cardLoc(id);
     const kind = cd.type === 'machine' || cd.type === 'equip' ? cd.tag : `${TYPE_LABEL[cd.type]} · ${cd.tag}`;
     const M = cd.type === 'machine' && MACH[cd.machine];
+    const gain = (act === 'pick' || act === 'buyCard') && !guest ? bestGain(id) : 0;
     const where = (cl >= 0 ? `<br>${LOCS[cl].name}` : '') + (M && M.max ? `<br>есть ${machineCount(cd.machine)} из ${M.max}` : '');
-    return `<button type="button" class="card r${cd.rar}" data-act="${act}" data-id="${id}"${extra} ${off ? 'disabled' : ''}><span class="band">${esc(cd.name)}</span><span class="top"><img class="ic" src="${ICONS[id]}" alt=""><span class="ct">${kind}${where}</span></span><span class="cd">${esc(cd.desc)}</span><span class="rar">${RAR[cd.rar]}</span>${price != null ? `<span class="price">${price}</span>` : ''}</button>`;
+    return `<button type="button" class="card r${cd.rar}" data-act="${act}" data-id="${id}"${extra} ${off ? 'disabled' : ''}><span class="band">${esc(cd.name)}</span><span class="top"><img class="ic" src="${ICONS[id]}" alt=""><span class="ct">${kind}${where}</span></span><span class="cd">${esc(cd.desc)}</span>${cd.minus ? `<span class="cd minus">${esc(cd.minus)}</span>` : ''}${gain > 0 ? `<span class="gain">+${fmt(gain)}/с</span>` : ''}<span class="rar">${RAR[cd.rar]}</span>${price != null ? `<span class="price">${price}</span>` : ''}</button>`;
   }
-  const SRC = { level: 'Новый уровень', crate: 'Посылка', shop: 'Магазин', quota: 'Квота' };
+  const SRC = { level: 'Новый уровень', mastery: 'Мастерство', crate: 'Посылка', shop: 'Магазин', quota: 'Квота' };
   function renderSheet() {
     let h = '';
     if (view === 'deck') h = deckHTML();
@@ -1352,7 +1433,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const run = state.run, first = run.q === 1;
     const head = first ? '<h2>Перед первой сменой</h2><p class="muted">Время стоит, пока ты не начнёшь смену. Осмотрись и расставь сотрудников.</p>'
       : `<h2>Перерыв после смены ${run.q - 1}</h2><p class="muted">Время стоит. Покупай на витрине, открывай цеха и скиллы, переставляй станки и сотрудников.</p>`;
-    const next = `<p>Смена ${run.q}: квота <b>${fmt(quotaTarget(run.q))}</b> за ${quotaTime()} с.${run.rule ? ` <span class="on" style="color:#ffb3a6!important">Проверка «${RULES[run.rule.id].name}»: ${esc(ruleDesc(run.rule))}</span>` : ''}</p>`;
+    const next = `<p>Смена ${run.q}: квота <b>${fmt(curQuota())}</b>${(run.credit || {})[run.q] ? ' <span style="color:#ffb3a6">(кредит)</span>' : ''} за ${quotaTime()} с.${run.rule ? ` <span class="on" style="color:#ffb3a6!important">Проверка «${RULES[run.rule.id].name}»: ${esc(ruleDesc(run.rule))}</span>` : ''}</p>`;
     let shop = '';
     if (run.shopClosed) shop = '<h3>Витрина</h3><p class="muted">Ревизия: в этом перерыве витрина закрыта.</p>';
     else if (!first) {
@@ -1472,7 +1553,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (selSlot != null && state.locs[state.cur].unlocked) { const st = slotStats(state.cur, selSlot, g); if (st) { set('live-rate', fmt(st.rate)); set('live-value', fmt(st.value)); set('live-income', fmt(st.income)); } }
     if (selWorker && state.workers[selWorker].skill) {
       const w = state.workers[selWorker], sk = SKILLS[selWorker];
-      set('live-skill', !workerPlace(selWorker) ? 'Срабатывает, только когда сотрудник у станка' : skillOn(selWorker) ? `Активен: ещё ${Math.ceil(sk.dur - w.skT)} с` : `Перезарядка: ${Math.ceil(sk.cd - w.skT)} с`);
+      set('live-skill', !workerPlace(selWorker) ? 'Срабатывает, только когда сотрудник у станка' : skillOn(selWorker) ? `Активен: ещё ${Math.ceil(skDur(selWorker) - w.skT)} с` : `Перезарядка: ${Math.ceil(sk.cd - w.skT)} с`);
     }
     if (selWorker) { const ws = workerStats(selWorker, g); set('live-power', fmt(ws.power)); set('live-speed', fmt(ws.speed)); set('live-luck', pct(ws.luck)); }
     set('live-planks', fmt(state.planks)); set('live-bricks', fmt(state.bricks)); set('live-nails', fmt(state.nails || 0)); set('live-glass', fmt(state.glass || 0));
@@ -1498,12 +1579,12 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       if (state.offers.length) { offersHidden = false; view = 'main'; selSlot = null; selWorker = null; renderSheet(); toast('Сначала выбери карты'); return; }
       if (!startShift()) return;
       view = 'main'; selSlot = null; selWorker = null; save(); renderSheet();
-      toast(`Смена ${state.run.q} пошла! Квота ${fmt(quotaTarget(state.run.q))}`);
+      toast(`Смена ${state.run.q} пошла! Квота ${fmt(curQuota())}`);
     }
     else if (act === 'reroll') {
       const rc = rerollCost();
       if (rule('audit') || state.money < rc || !state.offers.length) return;
-      state.money -= rc; state.offers[0].ids = rollOffer(); save(); renderSheet();
+      state.money -= rc; state.offers[0].ids = state.offers[0].src === 'mastery' ? rollMastery() : rollOffer(); save(); renderSheet();
     }
     else if (act === 'later') { offersHidden = true; renderSheet(); }
     else if (act === 'showOffers') { offersHidden = false; view = 'main'; selSlot = null; selWorker = null; renderSheet(); }
@@ -1568,7 +1649,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const nd = need(state.level);
     $xpbar.style.width = Math.min(100, state.xp / nd * 100) + '%';
     $xptext.textContent = `до ур. ${state.level + 1}: ${fmt(Math.max(0, nd - state.xp))}`;
-    const run = state.run, target = quotaTarget(run.q);
+    const run = state.run, target = curQuota();
     $shop.textContent = run.brk ? 'Магазин' : 'Магазин в перерыве';
     $shop.disabled = !run.brk || !!guest || run.over;
     $quota.classList.toggle('insp', !!run.rule);
@@ -1602,7 +1683,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     saveTimer += dt; if (saveTimer > 5) { saveTimer = 0; save(); }
     if (toastTimer > 0) { toastTimer -= dt; if (toastTimer <= 0) $toast.hidden = true; }
   }
-  if (BOT) window.PF = { BAL, get state() { return state; }, set state(v) { state = v; }, meta, tick, totalIncome, globals, eligible, finish, unlockLoc, openCrate, cardPrice, buyCard, startShift, rerollCost, rollNewShop, shopRollCost, rollOffer, quotaTarget, quotaTime, newRun, workerPlace, slotStats, onStrike, rule, get crate() { return crate; }, CARDS, MACH, LOCS, SKILLS, LAYOUTS, WORKERS };
+  if (BOT) window.PF = { BAL, get state() { return state; }, set state(v) { state = v; }, meta, tick, totalIncome, globals, eligible, finish, unlockLoc, openCrate, cardPrice, buyCard, startShift, curQuota, rerollCost, rollNewShop, shopRollCost, rollOffer, quotaTarget, quotaTime, newRun, workerPlace, slotStats, onStrike, rule, get crate() { return crate; }, CARDS, MACH, LOCS, SKILLS, LAYOUTS, WORKERS };
   else requestAnimationFrame(loop);
 })();
 </script>
