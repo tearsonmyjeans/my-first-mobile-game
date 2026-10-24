@@ -149,7 +149,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     l: '#f4a9c4', z: '#d97fa6', K: '#5b8fd6',
     '@': '#3f6fd1', '#': '#2a4a96', '$': '#d64545', '%': '#952b31', '&': '#f2b33a', '*': '#ffd76a', '+': '#5a5662',
     '!': '#f5d66e', '~': '#cf9f3c', '=': '#3b3048', '>': '#ff7a2a', ';': '#8fe07a', ':': '#57b04f', '/': '#2f6e3a', '<': '#ff5040',
-    '[': '#d8f4f2', ']': '#9ccfd0', '(': '#e9fff0', '{': '#a8e86c', '}': '#6cb544', '|': '#b8ff5c'
+    '[': '#d8f4f2', ']': '#9ccfd0', '(': '#e9fff0', '{': '#a8e86c', '}': '#6cb544', '|': '#b8ff5c',
+    '-': '#c8662e', ',': '#34406a', '"': '#222a48'
   };
   const GIRL = ['6.8k6.', '4.2k8h2k4.', '3.k3h3H6hk3.', '2.kh4k4h4khk2.', '2.khk2qk4hk2qkhk2.', '.k2h4k4h4k2hk.', '.k16hk.', '.k16hk.', '.k16hk.', '.k10h3s3hk.', '.k7h6s3hk.', '.k5hwe2swe2s3hk.', '.k4hs2e2s2e2s3hk.', '.k3hsc3sp2scs3hk.', '.k3h3sp2mp3s3hk.', '.k3hk8sk3hk.', '2.k2h3k4s3k2hk2.', '3.k4o4b4ok3.', '2.k5o4b5ok2.', '.kbo2O2o4b2o2Oobk.', '.kb5o4b5obk.', '.ks5o4b5osk.', '.ks5o4b5odk.', '.ks5OO2qO5Osk.', '.kb14gbk.', '2.k14gk2.', '2.kg2G8g2Ggk2.', '2.kg2G3g2k3g2Ggk2.', '3.k5g2k5gk3.', '3.k5g2k5gk3.', '2.k6B2k6Bk2.', '2.7k2.7k2.'];
   const MRP = ['6.8k6.', '6.ktT4tk6.', '6.k6tk6.', '6.k6nk6.', '4.k10tk4.', '4.12k4.', '4.k10yk4.', '4.k2y6Y2yk4.', '4.k10yk4.', '4.k4Y2y4Yk4.', '4.kR2wR2yR2wRk4.', '4.kRwkR2yRkwRk4.', '4.k4R2y4Rk4.', '4.k4yY5yk4.', '4.ky8uyk4.', '4.ky3u2m3uyk4.', '4.ky8uyk4.', '4.k2y6u2yk4.', '3.k3a6y3ak3.', '2.k4a6y4ak2.', '2.k3aA6yA3ak2.', '2.k3aA6yA3ak2.', '2.k5a2A7ak2.', '2.k14Ak2.', '2.k6a2A6ak2.', '2.k6a2A6ak2.', '2.k6a2k6ak2.', '2.16k2.', '6.kyk2.kyk6.', '6.kyk2.kyk6.', '5.k2yk2.k2yk5.', '5.4k2.4k5.'];
@@ -163,6 +164,11 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   const JEANNE = ['6.8k', '4.2k8!2k', '3.k12!k', '2.k4!2~8!k', '2.k3!~5!2~3!k', '.k16!k', '.k3!~6!~5!k', '.k2!~2!~3!~2!~3!k2.p', '.k2!s2!3s!3s!s2!k.p', '.k2!s2k7s2ks!k2.p', '.k2!swK7sKws!kw>', '.k2!s2K7s2Ks2w', '.k2!2c8sc2w!k2.p', '.k2!9s2ws2!k3.p', '.k2!7s2Q8w>', '.k2!k8s3w2!k3.p', '2.k2!3k4s3k~3w2.p', '2.k3s3w2b3ws!~!kw>', '.k4s3w2b3w~!~sk', '.ksk5w2b3w!~!sk', '.ksk5w2b3w~!~sk', '.ksk5w2b3w!~!sk', '.ksk5w2b3w~!~skw>', '.k2s11b!~2sk', '2.2k11bk~k', '3.k5b2k5bk', '3.k5sk.k5sk', '3.k5=k.k5=k', '3.k5=k.k5=k', '3.k5=k.k5=k', '2.8k.8k', '2.7k3.7k'];
   const ALIEN = ['7.8k', '5.2k8;2k', '4.k12;k', '3.k14;k', '2.k16;k', '2.k3;2:6;2:3;k', '2.k2;4k4;4k2;k', '2.k;k2r<rk2;kr<2rk;k', '2.k;2k3rk2;k3r2k;k', '2.k:;4k4;4k;:k', '3.k:12;:k', '3.k2:4;2k4;2:k', '4.k2:8;2:k', '5.k2:;4k;2:k', '6.2k6:2k', '7.k6:k', '4.2k3:4;3:2k', '3.k4:6k4:k', '2.k2;:2k6[2k:2;k', '2.k2;k3[2(4[]k2;k', '2.k;:k2[(:3[3]k:;k', '2.k;:k3[2:2[3]k:;k', '2.k;k;2[2:/2:[2];k;k', '2.k;k2;2[:/:[2]2;k;k', '2.k2:k2;2[/[2]2;k2:k', '3.3k2:6k2:3k', '4.k13:k', '4.k5:2k6:k', '4.k4:k2.k5:k', '4.k4:k2.k5:k', '3.k5;k2.k6;k', '3.7k2.8k'];
   const JEDI = ['7.2k.2k.2k', 'w|4.kh2k2h2khk5.|w', 'w|4.k9hk4.|w', 'w|3.k10hk4.|w', 'w|3.k10{k4.|w', '|w|2.k10{k3.|w|', '|w|2.k{2k4{2k{k3.|w|', '|w|2.k{wk4{wk{k3.|w|', '|w|.k}10{}k2.|w|', '|w|2.k4{2}4{k3.|w|', '.|w|.k10{k2.|w|', '.|w|.k3{4k3{k2.|w|', '.|w|2.k}6{}k3.|w|', '.|w|3.k6}k4.|w|', '.|w|2.k8bk3.|w|', '.|w|2k10b2k.|w|', '.|wk14bk|w|', '3.A4b6w4bkA', '3.Abk3b4w3bkbkA', '3.Abk10bkbkA', '3.k}k10bk}2k', '3.A{k10bk{kA', '3.k{k10bk{k', '4.k.k8bk.k', '6.k8Pk', '6.k4Pk3Pk', '6.k3Pk.k2Pk', '6.k3Pk.k2Pk', '6.k3Pk.k2Pk', '5.k4bk.k4bk', '5.6k.6k', '.'];
+  const SILVER = ['6.8k', '4.2k8x2k', '3.k12xk3.k', '2.k3xf7xf2xk.kAk', '.k3xf9xf2x2kAk', '.k2xf4xf6xfx2kAk', 'k3xf3xf4xf2xfx2kAk', 'k2xf2xsfx3sxfsxfx2kAk', 'kxfF11sFfx2kbk', '.kxFs2k6s2ksFxk2bk', '.kxFswQ6sQwsFx2kAk', '.k2xs2Q6s2Qsxf2kAk', '.kxfsc2sS5s2csx2kAk', '.k2x12sfx2kAk', '.kfx5s2m5s2x2kAk', '.k2xk10skxf2kAk', '.kxfx3k4s3kxfx2kAk', '2.kxk4-2w4-kxk.kbk', '.k2x5-2w5-2x2kbk', '.k-x2-C2-aw2-C2-x-2kCk', '.k-k3-Cw2awC3-k-s2Ck', '.kCk4-4w4-kCs2Ck', '.kCk3-C4w4-kC2k2Ck', '2ksk-C2-4w2-C-ks2k2Ck', 'kxk6ba7bk.4k', 'kxf14tk', 'kfxt2n8t2ntk', 'kxft2s4tk2t2s2tk', '.kxk2tn2t2k2tn2tk', '.kfk5f2k5fk', '.2k6B2k6Bk', '2.7k2.7k'];
+  const WOLF = ['2.2k15.2k', '2.kik13.kik', '2.k2ik2.7k2.k2ik', '2.kx2i2k7x2k2ixk', '.k19xk', '.k2x4G7x4G2xk', 'k4xkQ>k5xk>Qk4xk', 'kxf3x2kx5Wx2k3xfxk', 'k7x2W3b2W7xk', '.k5xk3Wb3Wk5xk', 'k3xfxkwk5mkwkxf3xk', '.k4xkw%5m%wk4xk', 'k2xf3xkw5mwk2xf3xk', '.k6x7k6xk', '2.2k-13x-2k', '.k2x2-11x2-2xk', 'k3x-5xfxf5x-3xk', 'k2xD-D5xf5xD-D2xk', 'kG2Dk-x2D5x2Dx-k2DGk', 'k3Gk-4x3D4x-k3Gk', 'k3G2kx3D3x3Dx2k3Gk', 'k3Gk.k9xk.k3Gk', 'k4Gk.k7xk.k4Gk', 'kbkbkbk9nkbkbkbk', '.k.k.2k4nx4n2k.k.k', '6.k3nk2x2k2nk', '5.k2Gnk4xkn2Gk', '5.k3Gk2xI2xk3Gk', '4.k3Gk3xI2x2k3Gk', '4.k2G2k2xI3xk.k2Gk', '3.k3bk.k4xk2.k3bk', '3.5k2.4k3.5k'];
+  const MRSHA = ['16.3k', '14.2k$<$2k', '13.k3$<3$k', '12.k2$%$<$%2$k', '12.k$%2$<2$%$k', '3.8k.k$%2$<2$%$k', '2.k8h2k4%<4%k', '.k11h2k2%k2%k%k', '.k12h3k$2k.2k', 'k14hk.k', 'khW2h3W2h3W2hk.k', 'kh12Whk.k', 'khW2k6W2kWh2k', 'khW$k6Wk$Wh2k', 'k%Wi8WiW%2k', 'k%6W$5W%2k', 'k2%k8Wk2%2k', '.k2%3k2W3k2%2k', '2.k4,k2bk4,k', '.k5,k2bk5,k', 'k$2,"3,2b3,"2,$k', 'k3,"3,2b3,"3,k', 'k2"4,4"4,2"k', 'k$k11"k$k4Ak', '.k2,"6b"3,2k$2k', 'k4,"4b"5,k', '4k,"Wk2.kW",4k', '3.k3bk2.k3bk', '3.k3bk2.k3bk', '3.k3bk2.k3bk', '2.k4bk2.k4bk', '2.6k2.6k'];
+  const KAST = ['6.8k', '4.2k8W2k', '3.k12Wk', '2.k14Wk', '2.k13WDk', '.k15WDk', '.k15WDk', '.k15WDk', '.k15WDk', '.k15WDk', '.k2W2kwk4Wkw2kWDk', '.k15WDk', '.k15WDk', '.k8WD6WDk', '.kD13W2Dk', '2.k2D10W2Dk', '3.3kD6WD3k', '6.k5pk', '4.2k7W2k', '3.k11Wk', '2.kWk3WD3WD2WkWk', '.kW2k4WDWD3WkWk', 'kWk.k10WkWk', 'kWk.k9WDkWk', '.kW2k9WDkWk', '2.kWk9WDkDk', '3.2k5Wk3WDk^k', '4.k4WDkD2WD2k', '4.k4Wk.k2WDk', '4.k4Wk.k2WDk', '3.k^4Wk.k^2WDk', '3.7k.6k'];
+  const BATYA = ['6.7k', '5.k3sw3sk', '4.k4sw5sk', '3.k12sk', '2.kp13spk', '2.kpa11sapk', '.kpas2S6s2Ssapk', '.kpa2s3k2s3k2sapk', '.kp3sRkR2sRkR3spk', '.k2s2c3s2E3s2c2sk', '.ks2S3s4E3s2Ssk', '.ksS^s^s4as^s^Ss3k', '2.ks^s^a4ka^s^s2k2$k', '2.k2s^s^4s^s^2s2k[]k', '3.2k11s3k[]k', '4.3k7s4k2[2]k', '3.k3sk5wk3sk2[2]k', '2.k3sk7wk2sk4wk', '2.k2skD8wD2kw2$wk', '2.k2sD10wDk4wk', '2.k2sk11wk2[2]k', '2.k2sk5wu5wks[]sk', '2.k2sD11wk2s2]k', '2.k2sD3wu7w6k', '2.k2sk11@k', '3.2k@w8@w@k', '4.k@w8@w@k', '4.k@w3@k4@w@k', '4.k@w2@k.k3@w@k', '4.k3pk3.k3pk', '3.k4Ck3.k4Ck', '3.6k3.6k'];
   const rle = rows => rows.map(r => { let o = ''; r.replace(/(\d*)(\D)/g, (m, n, ch) => { o += ch.repeat(n ? +n : 1); return m; }); return o; });
   function spriteCanvas(rows, extra) {
     const r = rle(rows), cv = document.createElement('canvas'); cv.width = 23; cv.height = r.length;
@@ -183,10 +189,15 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     v2: spriteCanvas(V2),
     jeanne: spriteCanvas(JEANNE),
     alien: spriteCanvas(ALIEN),
-    jedi: spriteCanvas(JEDI)
+    jedi: spriteCanvas(JEDI),
+    silver: spriteCanvas(SILVER),
+    silverWolf: spriteCanvas(WOLF),
+    mrsha: spriteCanvas(MRSHA),
+    kast: spriteCanvas(KAST),
+    batya: spriteCanvas(BATYA)
   };
-  const PORTRAIT_Y = { crow: 1, mrp: 3, tramp: 2, dog: 4, toad: 1, pink: 3, v1: 0, v2: 0, jeanne: 3, alien: 2, jedi: 1 };
-  const PORTRAIT_X = { dog: 0, toad: 1, v1: 1, v2: 1, alien: 1, jedi: 2 };
+  const PORTRAIT_Y = { crow: 1, mrp: 3, tramp: 2, dog: 4, toad: 1, pink: 3, v1: 0, v2: 0, jeanne: 3, alien: 2, jedi: 1, silver: 3, mrsha: 6, kast: 3, batya: 2 };
+  const PORTRAIT_X = { dog: 0, toad: 1, v1: 1, v2: 1, alien: 1, jedi: 2, kast: 1, batya: 1 };
 
   /* ================= data ================= */
   const LOCS = [
@@ -215,20 +226,21 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     [[0, 0], [1, 0], [2, 0], [2, 1], [2, 2], [1, 2], [0, 2], [0, 1]]
   ];
   const gridSize = l => LAYOUTS[l].reduce(([c, r], [x, y]) => [Math.max(c, x + 1), Math.max(r, y + 1)], [0, 0]);
+  // max: how many machines of a type the factory may own; the maxes of a workshop add up to its slot count.
+  // Once all are placed, the card stops dropping
   const MACH = {
-    saw: { loc: 0, name: 'Пилорама', short: 'ПИЛОРАМА', rate: 1, value: 1, desc: 'Распиливает брёвна на доски.' },
-    bench: { loc: 0, name: 'Верстак', short: 'ВЕРСТАК', rate: 0.6, value: 2.2, desc: 'Строгает доски, поэтому они дороже.' },
-    dryer: { loc: 0, name: 'Сушилка', short: 'СУШИЛКА', rate: 0.35, value: 4, desc: 'Работает медленно, зато сухая доска стоит дорого.' },
-    sander: { loc: 0, name: 'Шлифовальный станок', short: 'ШЛИФОВКА', rate: 0.5, value: 3, desc: 'Полирует доски до блеска.' },
-    mixer: { loc: 1, name: 'Глиномешалка', short: 'МЕШАЛКА', rate: 0.8, value: 3, desc: 'Месит глину и лепит сырые кирпичи.' },
-    press: { loc: 1, name: 'Пресс', short: 'ПРЕСС', rate: 0.5, value: 6, desc: 'Прессует ровные крепкие кирпичи.' },
-    kiln: { loc: 1, name: 'Печь для обжига', short: 'ПЕЧЬ', rate: 0.3, value: 12, desc: 'Обжигает кирпичи. Медленно, но очень дорого.' },
-    wire: { loc: 2, name: 'Волочильный стан', short: 'ВОЛОЧЕНИЕ', rate: 0.7, value: 8, desc: 'Тянет стальную проволоку для гвоздей.' },
-    nailer: { loc: 2, name: 'Гвоздильный автомат', short: 'ГВОЗДИЛКА', rate: 1.5, value: 5, desc: 'Рубит проволоку и штампует шляпки. Очень быстрый.' },
-    tumbler: { loc: 2, name: 'Галтовочный барабан', short: 'ГАЛТОВКА', rate: 0.4, value: 25, desc: 'Полирует гвозди до блеска. Медленно, но очень дорого.' },
-    melt: { loc: 3, name: 'Стекловарка', short: 'ВАРКА', rate: 0.9, value: 30, desc: 'Варит песок в жидкое стекло.' },
-    blower: { loc: 3, name: 'Стеклодувка', short: 'ВЫДУВКА', rate: 0.5, value: 70, desc: 'Выдувает бутылки и вазы.' },
-    vitrage: { loc: 3, name: 'Витражный стол', short: 'ВИТРАЖ', rate: 0.25, value: 180, desc: 'Собирает цветные витражи. Медленно, но очень дорого.' },
+    saw: { loc: 0, name: 'Пилорама', short: 'ПИЛОРАМА', rate: 1, value: 1, max: 1, desc: 'Распиливает брёвна на доски.' },
+    bench: { loc: 0, name: 'Верстак', short: 'ВЕРСТАК', rate: 0.6, value: 2.2, max: 1, desc: 'Строгает доски, поэтому они дороже.' },
+    dryer: { loc: 0, name: 'Сушилка', short: 'СУШИЛКА', rate: 0.35, value: 4, max: 1, desc: 'Работает медленно, зато сухая доска стоит дорого.' },
+    mixer: { loc: 1, name: 'Глиномешалка', short: 'МЕШАЛКА', rate: 0.8, value: 3, max: 2, desc: 'Месит глину и лепит сырые кирпичи.' },
+    press: { loc: 1, name: 'Пресс', short: 'ПРЕСС', rate: 0.5, value: 6, max: 1, desc: 'Прессует ровные крепкие кирпичи.' },
+    kiln: { loc: 1, name: 'Печь для обжига', short: 'ПЕЧЬ', rate: 0.3, value: 12, max: 1, desc: 'Обжигает кирпичи. Медленно, но очень дорого.' },
+    wire: { loc: 2, name: 'Волочильный стан', short: 'ВОЛОЧЕНИЕ', rate: 0.7, value: 8, max: 2, desc: 'Тянет стальную проволоку для гвоздей.' },
+    nailer: { loc: 2, name: 'Гвоздильный автомат', short: 'ГВОЗДИЛКА', rate: 1.5, value: 5, max: 2, desc: 'Рубит проволоку и штампует шляпки. Очень быстрый.' },
+    tumbler: { loc: 2, name: 'Галтовочный барабан', short: 'ГАЛТОВКА', rate: 0.4, value: 25, max: 2, desc: 'Полирует гвозди до блеска. Медленно, но очень дорого.' },
+    melt: { loc: 3, name: 'Стекловарка', short: 'ВАРКА', rate: 0.9, value: 30, max: 3, desc: 'Варит песок в жидкое стекло.' },
+    blower: { loc: 3, name: 'Стеклодувка', short: 'ВЫДУВКА', rate: 0.5, value: 70, max: 3, desc: 'Выдувает бутылки и вазы.' },
+    vitrage: { loc: 3, name: 'Витражный стол', short: 'ВИТРАЖ', rate: 0.25, value: 180, max: 2, desc: 'Собирает цветные витражи. Медленно, но очень дорого.' },
     belt: { loc: -1, name: 'Конвейер', short: 'КОНВЕЙЕР', rate: 0, value: 0, desc: 'Сам ничего не делает. Связан со всем рядом и ускоряет каждый станок на 30%. Сотрудник ему не нужен.' }
   };
   const WORKERS = {
@@ -242,8 +254,14 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     v2: { name: 'V2', she: true, role: 'Робот-горничная', power: 1.5, speed: 1.0, luck: 0.05, perk: 'Реванш: самая сильная на заводе. Рядом с V1 включается «Дуэт горничных»: доход цеха ×2.' },
     jeanne: { name: 'Жанна', she: true, role: 'Азартная курильщица', power: 1.0, speed: 1.1, luck: 0.3, perk: 'Джекпот: очень удачливая, и если штука выпала двойной, она выходит тройной.' },
     alien: { name: 'Пришелец', role: 'Гость с зелёной планеты', power: 1.6, speed: 0.7, luck: 0.1, perk: 'Телепатия: связан со всеми станками своего цеха, их бонусы доходят до него, как от соседей.' },
-    jedi: { name: 'Джедай', role: 'Магистр двух мечей', power: 1.3, speed: 1.3, luck: 0.05, perk: 'Два меча: работники соседних станков +15% скорости. Рядом с Пришельцем включается «Зелёная сила».' }
+    jedi: { name: 'Хаба', role: 'Магистр двух мечей', power: 1.3, speed: 1.3, luck: 0.05, perk: 'Два меча: работники соседних станков +15% скорости. Рядом с Пришельцем включается «Зелёная сила», с Кастомкой и Батей «Семейный подряд».' },
+    silver: { name: 'Сильвер', she: true, role: 'Охотница-оборотень', power: 1.5, speed: 1.0, luck: 0.08, perk: 'Серебряная пуля: каждая 10-я штука выходит тройной. Во время скилла превращается в волчицу.' },
+    mrsha: { name: 'Мисис Ха', she: true, role: 'Вампирша под зонтом', power: 1.2, speed: 1.2, luck: 0.1, perk: 'Укус: +10% силы за каждого работающего соседа.' },
+    kast: { name: 'Кастомка', she: true, role: 'Дефолтный скин', power: 1.1, speed: 1.1, luck: 0.1, perk: 'Пустой холст: работники соседних станков +10% удачи. С Хабой и Батей включается «Семейный подряд».' },
+    batya: { name: 'Батя', role: 'Ветеран цеха', power: 1.8, speed: 0.6, luck: 0.2, perk: 'Пьяному везёт: удача 20%. С Хабой и Кастомкой включается «Семейный подряд».' }
   };
+  const FAMILY = ['jedi', 'kast', 'batya'];
+  const SKIN_KINDS = { power: 'сила', speed: 'скорость', value: 'цена' };
   // skills are bought once with coins and then fire on their own while the worker stands at a machine:
   // active for dur seconds at the start of every cd-second cycle
   const SKILLS = {
@@ -257,13 +275,16 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     v2: { name: 'Удар кулаком', kind: 'value', mult: 4, dur: 8, cd: 60, cost: 4000, desc: 'Раз в минуту на 8 с товар с её станка стоит ×4.' },
     jeanne: { name: 'К чёрту всё!', kind: 'luck', dur: 8, cd: 50, cost: 15000, desc: 'Каждые 50 с на 8 с закуривает всю пачку: каждая штука выходит двойной, а с джекпотом тройной.' },
     alien: { name: 'Хрустальный шар', kind: 'teamValue', mult: 2, dur: 10, cd: 70, cost: 25000, desc: 'Раз в 70 с на 10 с весь его цех продаёт товар ×2.' },
-    jedi: { name: 'Буря мечей', kind: 'speed', mult: 4, dur: 8, cd: 50, cost: 20000, desc: 'Каждые 50 с на 8 с работает на 400% скорости.' }
+    jedi: { name: 'Буря мечей', kind: 'speed', mult: 4, dur: 8, cd: 50, cost: 20000, desc: 'Каждые 50 с на 8 с работает на 400% скорости.' },
+    silver: { name: 'Обращение', kind: 'power', mult: 3, dur: 10, cd: 60, cost: 30000, desc: 'Раз в минуту на 10 с превращается в волчицу: сила ×3.' },
+    mrsha: { name: 'Красный зонт', kind: 'value', mult: 3, dur: 10, cd: 60, cost: 20000, desc: 'Раз в минуту на 10 с товар с её станка стоит ×3.' },
+    // Kastomka's kind is rolled at the start of every cycle: power, speed or value
+    kast: { name: 'Рандомный скин', kind: 'random', mult: 3, dur: 10, cd: 60, cost: 20000, desc: 'Раз в минуту на 10 с надевает случайный скин: сила, скорость или цена ×3.' },
+    batya: { name: 'Сто грамм', kind: 'power', mult: 4, dur: 8, cd: 50, cost: 15000, desc: 'Каждые 50 с на 8 с принимает сто грамм: сила ×4.' }
   };
   const CARDS = {
     m_bench: { name: 'Верстак', type: 'machine', machine: 'bench', tag: 'Станки', rar: 0, desc: 'Доска стоит 2,2. Рядом с пилорамой: +25% к цене её досок.' },
-    m_saw: { name: 'Пилорама', type: 'machine', machine: 'saw', tag: 'Станки', rar: 0, desc: 'Ещё одна пилорама. Соседям +15% скорости. Две пилорамы: +25% скорости обеим.' },
     m_dryer: { name: 'Сушилка', type: 'machine', machine: 'dryer', tag: 'Станки', rar: 1, desc: 'Доска стоит 4, но медленно. Соседям +20% к цене.' },
-    m_sander: { name: 'Шлифовальный станок', type: 'machine', machine: 'sander', tag: 'Станки', rar: 1, desc: 'Доска стоит 3. Рядом с верстаком: +40% к цене.' },
     m_mixer: { name: 'Глиномешалка', type: 'machine', machine: 'mixer', tag: 'Станки', rar: 0, desc: 'Кирпич стоит 3. Рядом с прессом: +30% скорости пресса.' },
     m_press: { name: 'Пресс', type: 'machine', machine: 'press', tag: 'Станки', rar: 1, desc: 'Кирпич стоит 6. Рядом с печью: +25% к цене обожжённых.' },
     m_kiln: { name: 'Печь для обжига', type: 'machine', machine: 'kiln', tag: 'Станки', rar: 1, desc: 'Кирпич стоит 12. Если в цеху досок работает пилорама: +25% скорости.' },
@@ -297,7 +318,11 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     m_vitrage: { name: 'Витражный стол', type: 'machine', machine: 'vitrage', tag: 'Станки', rar: 1, desc: 'Стекло стоит 180. Медленно, зато красиво.' },
     w_jeanne: { name: 'Новый сотрудник', type: 'worker', worker: 'jeanne', tag: 'Сотрудники', rar: 2, loc: 3, desc: 'Приходит Жанна. Удача 30%, двойные штуки выходят тройными.' },
     w_alien: { name: 'Новый сотрудник', type: 'worker', worker: 'alien', tag: 'Сотрудники', rar: 3, loc: 3, desc: 'Прилетает Пришелец. Очень сильный, телепатически связан со всем цехом.' },
-    w_jedi: { name: 'Новый сотрудник', type: 'worker', worker: 'jedi', tag: 'Сотрудники', rar: 2, loc: 3, desc: 'Приходит Джедай. Быстрый и сильный, ускоряет соседей на 15%.' },
+    w_jedi: { name: 'Новый сотрудник', type: 'worker', worker: 'jedi', tag: 'Сотрудники', rar: 2, loc: 3, desc: 'Приходит Хаба. Быстрый и сильный, ускоряет соседей на 15%.' },
+    w_silver: { name: 'Новый сотрудник', type: 'worker', worker: 'silver', tag: 'Сотрудники', rar: 3, loc: 3, desc: 'Приходит Сильвер. Каждая 10-я штука тройная, в скилле становится волчицей.' },
+    w_mrsha: { name: 'Новый сотрудник', type: 'worker', worker: 'mrsha', tag: 'Сотрудники', rar: 2, loc: 3, desc: 'Приходит Мисис Ха. Сильнее с каждым работающим соседом.' },
+    w_kast: { name: 'Новый сотрудник', type: 'worker', worker: 'kast', tag: 'Сотрудники', rar: 2, loc: 3, desc: 'Приходит Кастомка. Соседям +10% удачи, дружит с Хабой и Батей.' },
+    w_batya: { name: 'Новый сотрудник', type: 'worker', worker: 'batya', tag: 'Сотрудники', rar: 2, loc: 3, desc: 'Приходит Батя. Очень сильный и везучий, но медленный.' },
     s_tint: { name: 'Цветное стекло', type: 'mupg', loc: 3, tag: 'Улучшения', rar: 0, eff: { value: 0.25 }, desc: 'Стекло с этого станка: +25% к цене.' },
     u_glass: { name: 'Витрины в городе', type: 'global', tag: 'Улучшения', rar: 1, loc: 3, eff: { glassPrice: 0.25 }, desc: 'Стекло: +25% к цене.' },
     s_grease: { name: 'Смазка', type: 'mupg', tag: 'Улучшения', rar: 1, eff: { rate: 0.15, value: 0.10 }, desc: 'Любой станок: +15% скорости и +10% к цене.' }
@@ -318,8 +343,6 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (src === 'dryer') return { rate: 0, value: 0.20, text: 'Сушилка рядом: +20% к цене' };
     if (src === 'saw' && dst !== 'saw') return { rate: 0.15, value: 0, text: 'Пилорама рядом: +15% скорости' };
     if (src === 'bench' && dst === 'saw') return { rate: 0, value: 0.25, text: 'Верстак строгает: +25% к цене' };
-    if (src === 'bench' && dst === 'sander') return { rate: 0, value: 0.40, text: 'Верстак и шлифовка: +40% к цене' };
-    if (src === 'sander' && dst === 'bench') return { rate: 0, value: 0.20, text: 'Шлифовка рядом: +20% к цене' };
     if (src === 'mixer' && dst === 'press') return { rate: 0.30, value: 0, text: 'Свежая глина: +30% скорости' };
     if (src === 'press' && dst === 'kiln') return { rate: 0, value: 0.25, text: 'Ровные кирпичи: +25% к цене' };
     if (src === 'kiln' && dst === 'mixer') return { rate: 0.15, value: 0, text: 'Тёплая глина: +15% скорости' };
@@ -346,7 +369,6 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     bench: r => { r(5, 0, 1, 5, '#8a5a32'); r(3, 0, 5, 2, '#7d8794'); r(1, 6, 14, 4, K); r(2, 7, 12, 2, '#c98a4a'); r(2, 7, 12, 1, '#e5a86a'); r(2, 10, 3, 6, K); r(3, 10, 1, 5, '#a06a36'); r(11, 10, 3, 6, K); r(12, 10, 1, 5, '#a06a36'); r(9, 4, 5, 2, K); r(10, 4, 3, 1, '#e3b47c'); },
     saw: (r, d) => { d(8, 8, 7, K); d(8, 8, 6, '#d6dbe0'); for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4; r(8 + Math.round(Math.cos(a) * 5), 8 + Math.round(Math.sin(a) * 5), 1, 1, '#7d8794'); } r(7, 7, 3, 3, '#5a6270'); r(10, 4, 2, 1, '#ffffff'); },
     dryer: r => { r(2, 1, 12, 15, K); r(3, 2, 10, 13, '#7d8a96'); r(4, 4, 8, 7, '#3a2f3a'); r(5, 5, 6, 1, '#d9a066'); r(5, 7, 6, 1, '#d9a066'); r(4, 10, 8, 1, '#f28c3a'); r(6, 12, 4, 2, K); },
-    sander: r => { r(3, 1, 10, 5, K); r(4, 2, 8, 3, '#cdb88c'); r(6, 2, 1, 3, '#a8946a'); r(9, 2, 1, 3, '#a8946a'); r(2, 5, 12, 11, K); r(3, 6, 10, 9, '#5fa08c'); r(4, 8, 2, 2, '#e0533a'); r(7, 8, 2, 2, '#7ee081'); r(10, 8, 2, 5, '#3f7466'); },
     mixer: r => { r(2, 1, 12, 10, K); r(3, 2, 10, 8, '#d9a066'); r(5, 2, 1, 8, '#b98a4a'); r(9, 2, 1, 8, '#b98a4a'); r(4, 3, 5, 3, K); r(5, 4, 3, 1, '#b5653f'); r(1, 11, 14, 2, K); r(2, 13, 2, 3, K); r(12, 13, 2, 3, K); },
     press: r => { r(1, 0, 14, 16, K); r(2, 1, 2, 14, '#9aa3ad'); r(12, 1, 2, 14, '#9aa3ad'); r(4, 1, 8, 2, '#e0a32e'); r(7, 3, 2, 3, '#5a6270'); r(4, 6, 8, 2, '#7d8794'); r(4, 11, 8, 4, '#2b2135'); r(5, 12, 6, 2, '#c4553a'); },
     kiln: r => { r(10, 0, 4, 5, K); r(11, 1, 2, 4, '#8a5a4a'); r(1, 4, 14, 12, K); r(2, 5, 12, 10, '#b5654c'); r(2, 8, 12, 1, '#94523d'); r(4, 9, 8, 7, K); r(5, 10, 6, 6, '#d9622a'); r(6, 12, 4, 4, '#f28c3a'); r(7, 13, 2, 2, '#f2c94c'); },
@@ -378,6 +400,10 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     jeanne: (r, d, x) => { x.drawImage(SPR.jeanne, 3, 3, 19, 19, 0, 0, 16, 16); },
     alien: (r, d, x) => { x.drawImage(SPR.alien, 2, 1, 19, 19, 0, 0, 16, 16); },
     jedi: (r, d, x) => { x.drawImage(SPR.jedi, 2, 0, 19, 19, 0, 0, 16, 16); },
+    silver: (r, d, x) => { x.drawImage(SPR.silver, 0, 0, 19, 19, 0, 0, 16, 16); },
+    mrsha: (r, d, x) => { x.drawImage(SPR.mrsha, 0, 1, 23, 23, 0, 0, 16, 16); },
+    kast: (r, d, x) => { x.drawImage(SPR.kast, 0, 0, 19, 19, 0, 0, 16, 16); },
+    batya: (r, d, x) => { x.drawImage(SPR.batya, 1, 0, 21, 21, 0, 0, 16, 16); },
     melt: r => { r(2, 4, 12, 11, K); r(3, 5, 10, 9, '#6a5a7a'); r(3, 5, 10, 3, '#ff9a3a'); r(4, 5, 6, 1, '#ffd76a'); r(6, 1, 2, 2, '#ffb35a'); r(9, 0, 1, 2, '#ffb35a'); r(1, 14, 14, 2, K); r(4, 15, 8, 1, '#f2c14e'); },
     blower: (r, d) => { for (let i = 0; i < 8; i++) r(i, 13 - i, 2, 2, K); r(1, 13, 1, 1, '#9aa3ad'); d(10, 6, 5, K); d(10, 6, 4, '#7fd6e0'); r(8, 4, 2, 2, '#e9fff8'); },
     vitrage: r => { r(1, 1, 14, 14, K); const VC = ['#e0533a', '#f2c14e', '#7ee081', '#4f8fd6', '#9b6bd6', '#ff8fc8']; for (let i = 0; i < 9; i++) r(2 + (i % 3) * 4, 2 + Math.floor(i / 3) * 4, 3, 3, VC[(i * 2 + 1) % 6]); },
@@ -386,11 +412,11 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     grease: r => { r(4, 3, 5, 1, K); r(4, 3, 1, 4, K); r(8, 3, 1, 4, K); r(1, 7, 10, 9, K); r(2, 8, 8, 7, '#5a6270'); r(3, 9, 2, 2, '#9aa3ad'); r(10, 5, 5, 2, K); r(14, 3, 2, 3, K); r(14, 8, 1, 2, '#f2c14e'); }
   };
   const CARD_ICON = {
-    m_bench: 'bench', m_saw: 'saw', m_dryer: 'dryer', m_sander: 'sander', m_mixer: 'mixer', m_press: 'press', m_kiln: 'kiln', m_belt: 'belt',
+    m_bench: 'bench', m_dryer: 'dryer', m_mixer: 'mixer', m_press: 'press', m_kiln: 'kiln', m_belt: 'belt',
     w_tramp: 'tramp', w_dog: 'dog', w_toad: 'toad', w_pink: 'pink', w_v1: 'v1', w_v2: 'v2', m_wire: 'wire', m_nailer: 'nailer', m_tumbler: 'tumbler', s_zinc: 'zinc', u_nails: 'nails', u_power: 'power', u_speed: 'speed', u_price: 'price', u_bricks: 'bricks',
     e_coffee: 'coffee', e_helmet: 'helmet', e_gloves: 'gloves', e_mask: 'mask', e_horseshoe: 'horseshoe', e_chainsaw: 'chainsaw',
     s_blade: 'blade', s_varnish: 'varnish', s_glaze: 'glaze', s_grease: 'grease',
-    m_melt: 'melt', m_blower: 'blower', m_vitrage: 'vitrage', w_jeanne: 'jeanne', w_alien: 'alien', w_jedi: 'jedi', s_tint: 'tint', u_glass: 'glass'
+    m_melt: 'melt', m_blower: 'blower', m_vitrage: 'vitrage', w_jeanne: 'jeanne', w_alien: 'alien', w_jedi: 'jedi', w_silver: 'silver', w_mrsha: 'mrsha', w_kast: 'kast', w_batya: 'batya', s_tint: 'tint', u_glass: 'glass'
   };
   const ICONS = {};
   for (const id in CARD_ICON) ICONS[id] = makeIcon(ICON_DRAW[CARD_ICON[id]]);
@@ -399,16 +425,16 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   const KEY = 'pixel-factory-save-v1';
   const emptySlots = n => Array.from({ length: n }, () => ({ machine: null, worker: null, upg: [], acc: 0 }));
   const fresh = () => ({
-    v: 7, money: 0, xp: 0, level: 1, planks: 0, bricks: 0, nails: 0, glass: 0, earned: 0, cur: 0,
+    v: 9, money: 0, xp: 0, level: 1, planks: 0, bricks: 0, nails: 0, glass: 0, earned: 0, cur: 0,
     locs: [
       { unlocked: true, slots: [{ machine: null, worker: null, upg: [], acc: 0 }, { machine: 'saw', worker: 'crow', upg: [], acc: 0 }, { machine: null, worker: null, upg: [], acc: 0 }] },
       { unlocked: false, slots: emptySlots(4) },
       { unlocked: false, slots: emptySlots(6) },
       { unlocked: false, slots: emptySlots(8) }
     ],
-    workers: { crow: { unlocked: true, equip: [] }, mrp: { unlocked: true, equip: [] }, tramp: { unlocked: false, equip: [] }, dog: { unlocked: false, equip: [] }, toad: { unlocked: false, equip: [] }, pink: { unlocked: false, equip: [] }, v1: { unlocked: false, equip: [] }, v2: { unlocked: false, equip: [] }, jeanne: { unlocked: false, equip: [] }, alien: { unlocked: false, equip: [] }, jedi: { unlocked: false, equip: [] } },
-    lockers: ['crow', 'mrp', 'tramp', 'dog', 'toad', 'pink', 'v1', 'v2', 'jeanne', 'alien', 'jedi'],
-    cards: [], offers: [], shopBuys: 0, crowCount: 0, firstOffer: false, crateIn: 20,
+    workers: { crow: { unlocked: true, equip: [] }, mrp: { unlocked: true, equip: [] }, tramp: { unlocked: false, equip: [] }, dog: { unlocked: false, equip: [] }, toad: { unlocked: false, equip: [] }, pink: { unlocked: false, equip: [] }, v1: { unlocked: false, equip: [] }, v2: { unlocked: false, equip: [] }, jeanne: { unlocked: false, equip: [] }, alien: { unlocked: false, equip: [] }, jedi: { unlocked: false, equip: [] }, silver: { unlocked: false, equip: [] }, mrsha: { unlocked: false, equip: [] }, kast: { unlocked: false, equip: [] }, batya: { unlocked: false, equip: [] } },
+    lockers: ['crow', 'mrp', 'tramp', 'dog', 'toad', 'pink', 'v1', 'v2', 'jeanne', 'alien', 'jedi', 'silver', 'mrsha', 'kast', 'batya'],
+    cards: [], offers: [], shopBuys: 0, crowCount: 0, silverCount: 0, firstOffer: false, crateIn: 20,
     // t: run time, q: current quota, qT/qEarned: time and coins inside it, opened: run time each workshop opened at
     run: { t: 0, q: 1, qT: 0, qEarned: 0, rule: null, over: false, rep: 0, passed: [], hired: 0, skills: 0, bestRate: 0, opened: [0, null, null, null] }
   });
@@ -434,7 +460,23 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       for (const id of ['jeanne', 'alien', 'jedi']) { s.workers[id] = { unlocked: false, equip: [] }; s.lockers.push(id); }
       s.glass = 0; s.v = 6;
     }
-    return s.v === 6 || s.v === 7 ? s : null;
+    if (s.v === 6) {
+      for (const id of ['silver', 'mrsha', 'kast', 'batya']) { s.workers[id] = { unlocked: false, equip: [] }; s.lockers.push(id); }
+      s.silverCount = 0; s.v = 7;
+    }
+    if (s.v === 7) {
+      // build 8 dropped the sander and set per-type limits: machines over a limit leave their slot
+      const seen = {};
+      s.locs.forEach(L => L.slots.forEach((z, i) => {
+        const M = MACH[z.machine];
+        if (!z.machine || (M && (!M.max || (seen[z.machine] = (seen[z.machine] || 0) + 1) <= M.max))) return;
+        L.slots[i] = { machine: null, worker: null, upg: [], acc: 0 };
+      }));
+      s.cards = s.cards.filter(id => CARDS[id]);
+      s.offers = s.offers.map(o => ({ ...o, ids: o.ids.filter(id => CARDS[id]) })).filter(o => o.ids.length);
+      s.v = 8;
+    }
+    return s.v === 8 || s.v === 9 ? s : null;
   }
   // meta lives across runs: reputation, its unlocks, achievements and records
   const META_KEY = 'pixel-factory-meta-v1';
@@ -448,7 +490,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     try {
       const s = migrate(JSON.parse(localStorage.getItem(KEY)));
       // a save from the endless version is sold off: its level becomes starting reputation
-      if (s && s.v === 6) { legacyRep = Math.min(40, s.level); meta.rep += legacyRep; saveMeta(); return null; }
+      if (s && s.v === 8) { legacyRep = Math.min(40, s.level); meta.rep += legacyRep; saveMeta(); return null; }
       return s;
     } catch (e) { return null; }
   }
@@ -466,6 +508,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   let state = load() || newRun();
   save();
 
+  let lockerPage = 0;
   let mode = null, selSlot = null, selWorker = null, view = 'main', offersHidden = false, confirmQuit = false, shareCode = '';
   let crate = null, floats = [], incomeNow = 0, t = 0;
   const slotsOf = l => state.locs[l].slots;
@@ -512,6 +555,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     { id: 'maids', name: 'Горничные в деле', desc: 'Собрать комбо «Дуэт горничных»', rep: 3, test: (end, g) => g.combos.includes('maids') },
     { id: 'green', name: 'Сила с нами', desc: 'Собрать комбо «Зелёная сила»', rep: 3, test: (end, g) => g.combos.includes('green') },
     { id: 'night', name: 'Без сна', desc: 'Собрать комбо «Ночная смена»', rep: 3, test: (end, g) => g.combos.includes('night') },
+    { id: 'family', name: 'Вся семья в сборе', desc: 'Собрать комбо «Семейный подряд»', rep: 3, test: (end, g) => g.combos.includes('family') },
     { id: 'sanepid', name: 'Чистые руки', desc: 'Пройти проверку «Санэпидем»', rep: 3, test: () => state.run.passed.includes('sanepid') },
     { id: 'strike', name: 'Штрейкбрехеры', desc: 'Пройти проверку «Забастовка»', rep: 3, test: () => state.run.passed.includes('strike') },
     { id: 'blackout', name: 'При свечах', desc: 'Пройти проверку «Блэкаут»', rep: 3, test: () => state.run.passed.includes('blackout') },
@@ -551,7 +595,6 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const g = { power: pr('Сотрудники') * 0.05, speed: pr('Экипировка') * 0.05, price: pr('Станки') * 0.05, brickPrice: 0, nailPrice: 0, glassPrice: 0, income: 1 + pr('Улучшения') * 0.03, tc, combos: [] };
     state.cards.forEach(id => { const cd = CARDS[id]; if (cd.type === 'global') for (const k in cd.eff) g[k] += cd.eff[k]; });
     if (state.cards.includes('e_coffee') && !rule('sanepid') && !rule('blackout') && anySlot(s => s.machine === 'belt') && state.workers.tramp.unlocked) { g.combos.push('night'); g.income *= 1.5; }
-    if (slotsOf(0).filter(s => s.machine === 'saw').length >= 2) g.combos.push('saws');
     g.sawWorking = slotsOf(0).some(s => s.machine === 'saw' && s.worker);
     g.kilnWorking = slotsOf(1).some(s => s.machine === 'kiln' && s.worker);
     g.tumblerWorking = slotsOf(2).some(s => s.machine === 'tumbler' && s.worker);
@@ -561,6 +604,11 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const pa = workerPlace('alien'), pj = workerPlace('jedi');
     g.green = !!(pa && pj && pa.l === pj.l && adjacent(pa.l, pa.i, pj.i));
     if (g.green) g.combos.push('green');
+    // family: Haba, Kastomka and Batya; any two side by side get +20% power, all three in one workshop double its income
+    const fam = FAMILY.map(workerPlace);
+    g.familyPair = fam.some((a, x) => a && fam.some((b, y) => y > x && b && a.l === b.l && adjacent(a.l, a.i, b.i)));
+    g.familyLoc = fam.every(p => p && p.l === fam[0].l) ? fam[0].l : -1;
+    if (g.familyPair || g.familyLoc >= 0) g.combos.push('family');
     g.team = []; g.teamV = [];
     if (skillOn('dog')) g.team[workerPlace('dog').l] = SKILLS.dog.mult;
     if (skillOn('alien')) g.teamV[pa.l] = SKILLS.alien.mult;
@@ -597,7 +645,6 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const notes = [];
     linked(l, i).forEach(j => { const m2 = sl[j].machine; if (!m2 || s.machine === 'belt') return; const e = effect(m2, s.machine); rb += e.rate; vb += e.value; notes.push(e.text); });
     s.upg.forEach(u => { const ef = CARDS[u].eff; rb += ef.rate || 0; vb += ef.value || 0; notes.push(`${CARDS[u].name}: ${CARDS[u].desc.toLowerCase()}`); });
-    if (s.machine === 'saw' && g.combos.includes('saws')) { rb += 0.25; notes.push('Две пилорамы: +25% скорости'); }
     if (s.machine === 'wire' && g.kilnWorking) { vb += 0.2; notes.push('Печь из цеха 2 закаляет проволоку: +20% к цене'); }
     if (s.machine === 'kiln' && g.sawWorking) { rb += 0.25; notes.push('Обрезки досок из цеха 1 на растопку: +25% скорости'); }
     if (s.machine === 'vitrage' && g.tumblerWorking) { vb += 0.2; notes.push('Блестящие гвозди из цеха 3 для рам: +20% к цене'); }
@@ -611,24 +658,31 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (s.worker === 'toad' && !near.length) { speedM *= 1.35; notes.push('Сэр Жаб один и не трусится: +35% скорости'); }
     if (s.worker === 'pink') { vb += 0.2; notes.push('Зефирка завязывает бантик: +20% к цене'); }
     if (s.worker !== 'dog' && near.some(j => sl[j].worker === 'dog')) { power *= 1.1; notes.push('Пёс Бро даёт кулачок: +10% силы'); }
-    if (s.worker !== 'jedi' && near.some(j => sl[j].worker === 'jedi')) { speedM *= 1.15; notes.push('Джедай машет мечами рядом: +15% скорости'); }
+    if (s.worker !== 'jedi' && near.some(j => sl[j].worker === 'jedi')) { speedM *= 1.15; notes.push('Хаба машет мечами рядом: +15% скорости'); }
+    if (s.worker === 'mrsha' && near.length) { power *= 1 + 0.1 * near.length; notes.push(`Укус: +${near.length * 10}% силы`); }
+    if (FAMILY.includes(s.worker) && near.some(j => FAMILY.includes(sl[j].worker))) { power *= 1.2; notes.push('Семейный подряд рядом: +20% силы'); }
+    const kastNear = s.worker !== 'kast' && near.some(j => sl[j].worker === 'kast');
+    if (kastNear) notes.push('Кастомка рядом: +10% удачи');
     if (g.green && (s.worker === 'alien' || s.worker === 'jedi')) { power *= 1.5; notes.push('Зелёная сила: сила ×1,5'); }
     if (ws.fb > 0) notes.push(`Друзья по шкафчику: +${pct(ws.fb)} силы`);
     if (s.worker === 'mrp' && !ws.hasCoffee) notes.push('Мистер Жопосранчик без кофе: скорость вдвое ниже');
     const sk = SKILLS[s.worker], skM = { speed: g.team[l] || 1, power: 1, value: 1, income: 1 };
     if (g.team[l]) notes.push(`Пёс Бро, «${SKILLS.dog.name}»: скорость ×${fmt(SKILLS.dog.mult)}`);
     if (g.teamV[l]) { skM.value *= g.teamV[l]; notes.push(`Пришелец, «${SKILLS.alien.name}»: цена ×${fmt(SKILLS.alien.mult)}`); }
-    if (skM[sk.kind] && skillOn(s.worker)) { skM[sk.kind] *= sk.mult; notes.push(`Скилл «${sk.name}»: ×${fmt(sk.mult)}`); }
+    const kind = sk.kind === 'random' ? state.workers[s.worker].skKind || 'power' : sk.kind;
+    if (skM[kind] && skillOn(s.worker)) { skM[kind] *= sk.mult; notes.push(`Скилл «${sk.name}»: ${sk.kind === 'random' ? SKIN_KINDS[kind] + ' ' : ''}×${fmt(sk.mult)}`); }
     // luck is the chance of a double piece; Jeanne's jackpot makes it triple, her skill makes every piece lucky
-    const luck = s.worker === 'jeanne' && skillOn('jeanne') ? 1 : ws.luck, extra = s.worker === 'jeanne' ? 2 : 1;
+    const luck = s.worker === 'jeanne' && skillOn('jeanne') ? 1 : Math.min(0.9, ws.luck + (kastNear ? 0.1 : 0)), extra = s.worker === 'jeanne' ? 2 : 1;
     if (luck === 1) notes.push(`Скилл «${sk.name}»: каждая штука ×3`);
     power *= skM.power;
     const rate = M.rate * BAL.tempo * ws.speed * speedM * skM.speed * (1 + rb);
     const value = M.value * power * skM.value * (1 + vb) * (1 + g.price + [0, g.brickPrice, g.nailPrice, g.glassPrice][l]);
-    const crowM = s.worker === 'crow' ? 1 + 1 / 7 : 1;
+    const crowM = s.worker === 'crow' ? 1 + 1 / 7 : s.worker === 'silver' ? 1 + 2 / 10 : 1;
     const duo = g.maidsLoc === l ? 2 : 1;
     if (duo > 1) notes.push('Дуэт горничных: доход цеха ×2');
-    return { rate, value, income: rate * value * (1 + luck * extra) * crowM * duo * skM.income * g.income, notes, ws, M, luck, extra };
+    const family = g.familyLoc === l ? 2 : 1;
+    if (family > 1) notes.push('Семейный подряд в сборе: доход цеха ×2');
+    return { rate, value, income: rate * value * (1 + luck * extra) * crowM * duo * family * skM.income * g.income, notes, ws, M, luck, extra };
   }
   function totalIncome() {
     const g = globals();
@@ -638,8 +692,10 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   }
 
   /* ================= cards ================= */
+  const machineCount = machine => state.locs.reduce((n, L) => n + L.slots.filter(s => s.machine === machine).length, 0);
   function canPlaceMachine(machine) {
     const ml = MACH[machine].loc;
+    if (MACH[machine].max && machineCount(machine) >= MACH[machine].max) return false;
     return state.locs.some((L, l) => L.unlocked && (ml < 0 || ml === l) && L.slots.some(s => !s.machine) && !(machine === 'belt' && L.slots.some(s => s.machine === 'belt')));
   }
   function eligible(id) {
@@ -671,6 +727,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   function choose(id) {
     const offer = state.offers.shift();
     const cd = CARDS[id], cl = cardLoc(id);
+    if (cd.type === 'machine' && !canPlaceMachine(cd.machine)) { state.offers.unshift(offer); toast(MACH[cd.machine].max && machineCount(cd.machine) >= MACH[cd.machine].max ? `Все станки «${MACH[cd.machine].name}» уже стоят` : 'Для этого станка нет свободного места'); return; }
     if (cd.type === 'machine') { mode = { kind: 'place', card: id, offer }; if (cl >= 0) state.cur = cl; }
     else if (cd.type === 'equip') mode = { kind: 'equip', card: id, offer };
     else if (cd.type === 'mupg') { mode = { kind: 'upgrade', card: id, offer }; if (cl >= 0) state.cur = cl; }
@@ -681,7 +738,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   function finish(id, target) {
     const cd = CARDS[id], before = globals().combos;
     state.cards.push(id);
-    if (cd.type === 'worker') { state.workers[cd.worker].unlocked = true; state.run.hired++; toast(`${WORKERS[cd.worker].name} ${WORKERS[cd.worker].she ? 'пришла' : 'пришёл'} на завод!`); }
+    if (cd.type === 'worker') { state.workers[cd.worker].unlocked = true; state.run.hired++; lockerPage = Math.floor(state.lockers.indexOf(cd.worker) / NL); toast(`${WORKERS[cd.worker].name} ${WORKERS[cd.worker].she ? 'пришла' : 'пришёл'} на завод!`); }
     if (cd.type === 'machine') slotsOf(target.l)[target.i].machine = cd.machine;
     if (cd.type === 'equip') state.workers[target].equip.push(id);
     if (cd.type === 'mupg') slotsOf(target.l)[target.i].upg.push(id);
@@ -694,7 +751,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (got('maids')) toast('Комбо «Дуэт горничных»: доход цеха ×2!');
     else if (got('night')) toast('Комбо «Ночная смена»: доход ×1,5!');
     else if (got('green')) toast('Комбо «Зелёная сила»: сила ×1,5!');
-    else if (got('saws')) toast('Комбо «Две пилорамы»: +25% скорости!');
+    else if (got('family')) toast('Комбо «Семейный подряд»: +20% силы!');
   }
   function unlockLoc(l) {
     const L = state.locs[l], cost = LOCS[l].cost;
@@ -709,13 +766,14 @@ textarea{height:84px;resize:vertical;word-break:break-all}
 
   /* ================= simulation ================= */
   let achTimer = 0;
+  const rollSkin = id => { if (SKILLS[id].kind === 'random') state.workers[id].skKind = Object.keys(SKIN_KINDS)[Math.floor(Math.random() * 3)]; };
   function tick(dt) {
     if (guest || state.run.over) return;
     for (const id in SKILLS) {
       const w = state.workers[id], wp = w.skill && workerPlace(id);
       if (!wp) continue;
       w.skT = (w.skT || 0) + dt;
-      if (w.skT >= SKILLS[id].cd) { w.skT -= SKILLS[id].cd; if (wp.l === state.cur) floats.push({ slot: wp.i, txt: SKILLS[id].name.toUpperCase() + '!', life: 1.4, skill: true }); }
+      if (w.skT >= SKILLS[id].cd) { w.skT -= SKILLS[id].cd; rollSkin(id); if (wp.l === state.cur) floats.push({ l: wp.l, slot: wp.i, txt: SKILLS[id].name.toUpperCase() + '!', life: 1.4, skill: true }); }
     }
     const g = globals();
     let total = 0;
@@ -732,11 +790,12 @@ textarea{height:84px;resize:vertical;word-break:break-all}
         let count = n;
         if (n < 20) { for (let k = 0; k < n; k++) if (Math.random() < st.luck) count += st.extra; } else count += Math.round(n * st.luck * st.extra);
         if (s.worker === 'crow') { const b = state.crowCount; state.crowCount += n; count += Math.floor(state.crowCount / 7) - Math.floor(b / 7); }
+        if (s.worker === 'silver') { const b = state.silverCount; state.silverCount += n; count += 2 * (Math.floor(state.silverCount / 10) - Math.floor(b / 10)); }
         if (s.worker === 'crow' && skillOn('crow')) count *= SKILLS.crow.mult;
         const gain = count * st.value * g.income;
         state.money += gain; state.xp += gain; state.earned += gain; state.run.qEarned += gain;
         state[LOCS[l].goods] += count;
-        if (l === state.cur && floats.length < 20) floats.push({ slot: i, txt: '+' + fmt(gain), life: 1, dbl: count > n });
+        if (l === state.cur && floats.length < 20) floats.push({ l, slot: i, txt: '+' + fmt(gain), life: 1, dbl: count > n });
       });
     });
     incomeNow = total;
@@ -802,9 +861,13 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   let OX = 6;
   const colX = c => OX + c * 78, rowY = r => 36 + r * 78;
   const SX = i => colX(LAYOUTS[state.cur][i][0]), SY = i => rowY(LAYOUTS[state.cur][i][1]);
-  // lockers: two rows of LROW, each row 60 px tall so a resting worker fits under its locker
-  const NL = 12, LROW = 6, LW = 28, LH = 44;
-  const LX = i => Math.round((W - (LROW * 38 - 10)) / 2) + (i % LROW) * 38, LYi = i => LY + Math.floor(i / LROW) * 60;
+  // lockers: pages of NL, each page two rows of LROW, each row 60 px tall so a resting worker fits under its locker
+  const NL = 16, LROW = 8, LW = 26, LH = 44;
+  const LX = i => Math.round((W - (LROW * 29 - 3)) / 2) + (i % LROW) * 29, LYi = i => LY + Math.floor(i % NL / LROW) * 60;
+  // there is always a page with free lockers ahead, so new workers have somewhere to go
+  const lockerPages = () => Math.max(2, Math.ceil((state.lockers.length + 1) / NL));
+  const onPage = i => Math.floor(i / NL) === lockerPage;
+  const PTW = 16, PTX = p => W - 6 - (lockerPages() - p) * (PTW + 2), PTY = () => FL + 3;
   const crateX = () => Math.round(20 + crate.f * (W - 50));
   function layout() {
     const [cols, rows] = gridSize(state.cur);
@@ -859,14 +922,6 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       for (let i = 0; i < 2; i++) { const px = x + ((t * 10 + i * 16) % 32); if (px < x + 23) { R(px, y + 11, 9, 4, K); R(px + 1, y + 12, 7, 2, item); } }
       R(x + 10, y + 1, 12, 8, K); R(x + 11, y + 2, 10, 6, '#f2b53a');
       R(x + 13, y + 4, 5, 2, K); R(x + 17, y + 3, 1, 4, K); R(x + 18, y + 4, 1, 2, K);
-    } else if (type === 'sander') {
-      R(x + 4, y + 8, 24, 22, K); R(x + 5, y + 9, 22, 20, '#5fa08c'); R(x + 5, y + 9, 22, 1, '#86c2ad');
-      R(x + 6, y + 3, 20, 7, K); R(x + 7, y + 4, 18, 5, '#cdb88c');
-      const off = Math.floor(t * 12) % 4;
-      for (let i = 0; i < 18; i += 4) R(x + 7 + ((i + off) % 18), y + 4, 1, 5, '#a8946a');
-      R(x + 8, y + 13, 10, 7, K); R(x + 9, y + 14, 3, 2, '#e0533a'); R(x + 13, y + 14, 3, 2, '#7ee081'); R(x + 9, y + 17, 7, 1, '#9aa3ad');
-      for (let j = 0; j < 3; j++) R(x + 20, y + 13 + j * 3, 5, 1, '#3f7466');
-      R(x + 5, y + 29, 4, 2, K); R(x + 23, y + 29, 4, 2, K);
     } else if (type === 'mixer') {
       R(x + 4, y + 22, 24, 4, K); R(x + 5, y + 23, 22, 2, '#5a6270');
       R(x + 6, y + 26, 3, 5, K); R(x + 23, y + 26, 3, 5, K);
@@ -932,7 +987,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     }
   }
   function pile(x, y, n, col) { for (let k = 0; k < n; k++) { R(x, y - k * 3, 12, 4, K); R(x + 1, y - k * 3 + 1, 10, 2, col); } }
-  const sprOf = id => id === 'mrp' && state.workers.mrp.equip.includes('e_coffee') ? SPR.mrpCoffee : SPR[id];
+  const sprOf = id => id === 'mrp' && state.workers.mrp.equip.includes('e_coffee') ? SPR.mrpCoffee : id === 'silver' && skillOn('silver') ? SPR.silverWolf : SPR[id];
   const border = (x, y, w, h, col) => { R(x - 2, y - 2, w + 4, 2, col); R(x - 2, y + h, w + 4, 2, col); R(x - 2, y, 2, h, col); R(x + w, y, 2, h, col); };
 
   const VCOL = ['#e0533a', '#f2c14e', '#7ee081', '#4f8fd6', '#9b6bd6', '#ff8fc8', '#3fd0c9'];
@@ -1037,20 +1092,25 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     }
     // locker room (shared by all workshops)
     R(0, FL, W, H - FL, '#4b5568'); R(0, FL, W, 1, K); R(0, H - 14, W, 14, '#3e4757');
-    for (let i = 0; i < NL; i++) {
+    for (let p = 0; p < lockerPages(); p++) {
+      const x = PTX(p), y = PTY(), on = p === lockerPage;
+      R(x, y, PTW, 12, K); R(x + 1, y + 1, PTW - 2, 10, on ? '#f2c14e' : '#6a7488');
+      if (mode && mode.kind === 'equip' && !on) border(x, y, PTW, 12, `rgba(126,224,129,${pulse})`);
+    }
+    for (let i = lockerPage * NL; i < (lockerPage + 1) * NL; i++) {
       const x = LX(i), y = LYi(i), id = state.lockers[i];
       const open = i < state.lockers.length, w = id ? state.workers[id] : null;
       R(x, y, LW, LH, K); R(x + 1, y + 1, LW - 2, LH - 2, open ? '#6fa3b5' : '#4a5a66'); R(x + 1, y + 1, LW - 2, 1, open ? '#94c3d3' : '#5d6f7c');
       for (let j = 0; j < 3; j++) R(x + 6, y + 25 + j * 2, 13, 1, open ? '#4f8296' : '#3d4b55');
-      R(x + 22, y + 24, 2, 8, '#d6dbe0');
+      R(x + 21, y + 24, 2, 8, '#d6dbe0');
       if (!open) { R(x + 10, y + 10, 8, 7, '#8a5a12'); R(x + 12, y + 11, 6, 5, '#f2c14e'); R(x + 12, y + 7, 6, 1, '#9aa3ad'); R(x + 12, y + 7, 1, 3, '#9aa3ad'); R(x + 17, y + 7, 1, 3, '#9aa3ad'); continue; }
-      R(x + 3, y + 4, 22, 16, w && w.unlocked ? '#f3e9d2' : '#cfc6b6');
+      R(x + 2, y + 4, 22, 16, w && w.unlocked ? '#f3e9d2' : '#cfc6b6');
       if (w && w.unlocked) {
-        gx.drawImage(SPR[id], PORTRAIT_X[id] || 0, PORTRAIT_Y[id], 20, 14, x + 4, y + 5, 20, 14); R(x + 13, y + 3, 2, 2, '#e0533a');
+        gx.drawImage(SPR[id], PORTRAIT_X[id] || 0, PORTRAIT_Y[id], 20, 14, x + 3, y + 5, 20, 14); R(x + 12, y + 3, 2, 2, '#e0533a');
         const wp = workerPlace(id);
-        if (w.skill && (!skillOn(id) || Math.floor(t * 4) % 2)) { R(x + 19, y + 35, 3, 3, '#ffd54a'); R(x + 18, y + 38, 3, 3, '#ffd54a'); }
+        if (w.skill && (!skillOn(id) || Math.floor(t * 4) % 2)) { R(x + 18, y + 35, 3, 3, '#ffd54a'); R(x + 17, y + 38, 3, 3, '#ffd54a'); }
         if (wp) { R(x + 3, y + 34, 13, 7, K); R(x + 4, y + 35, 11, 5, LOCS[wp.l].item); }
-        else { const bob = Math.floor(t * 1.2 + i) % 2; gx.drawImage(sprOf(id), x + 3, y + 25 - bob); }
+        else { const bob = Math.floor(t * 1.2 + i) % 2; gx.drawImage(sprOf(id), x + 2, y + 25 - bob); }
       }
       let col = null;
       if (selWorker === id) col = `rgba(255,213,74,${pulse})`;
@@ -1059,8 +1119,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     }
     for (let i = 0; i < state.lockers.length - 1; i++) {
       const a = state.lockers[i], b = state.lockers[i + 1];
-      if ((i + 1) % LROW === 0 || !(a && b && state.workers[a].unlocked && state.workers[b].unlocked)) continue;
-      const hx = LX(i) + LW + 2, hy = LYi(i) + 8 - (Math.floor(t * 2) % 2);
+      if ((i + 1) % LROW === 0 || !onPage(i) || !(a && b && state.workers[a].unlocked && state.workers[b].unlocked)) continue;
+      const hx = LX(i) + LW - 1, hy = LYi(i) + 8 - (Math.floor(t * 2) % 2);
       const HEART = [[1, 0, 2], [4, 0, 2], [0, 1, 7], [0, 2, 7], [1, 3, 5], [2, 4, 3], [3, 5, 1]];
       for (const [dx, dy, w] of HEART) R(hx + dx - 1, hy + dy - 1, w + 2, 1, K);
       for (const [dx, dy, w] of HEART) R(hx + dx, hy + dy, w, 1, (a === 'mrp' || b === 'mrp') ? '#ff5f87' : '#ff9ab3');
@@ -1090,13 +1150,16 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (l === 3 && state.locs[3].unlocked) { T('ГОРН', colX(1) + SW / 2, rowY(1) + SH - 6, 6, '#fff1b0', 'center'); T('+20% СКОР.', colX(1) + SW / 2, rowY(1) + 1, 5, '#ffd76a', 'center'); }
     if (crate) T('ПОСЫЛКА', crateX() + 7, FL - 26, 6, '#fff1b0', 'center');
     T('РАЗДЕВАЛКА', 6, FL + 4, 6, '#c9d3e0');
-    T('ОБЩАЯ НА ВЕСЬ ЗАВОД', W - 6, FL + 4, 5, '#8d97a8', 'right', false);
+    T('ОБЩАЯ НА ВЕСЬ ЗАВОД', PTX(0) - 5, FL + 4, 5, '#8d97a8', 'right', false);
+    for (let p = 0; p < lockerPages(); p++) T(String(p + 1), PTX(p) + PTW / 2, PTY() + 3, 6, p === lockerPage ? K : '#e6ebf2', 'center', false);
     state.lockers.forEach((id, i) => {
+      if (!onPage(i)) return;
       if (id && !state.workers[id].unlocked) { T('?', LX(i) + LW / 2, LYi(i) + 6, 12, '#6b6178', 'center', false); return; }
       const wp = id && workerPlace(id);
       if (wp) T('Ц' + (wp.l + 1), LX(i) + 9.5, LYi(i) + 35, 5, K, 'center', false);
     });
     floats.forEach(f => {
+      if (f.l !== l) return;
       c.globalAlpha = Math.max(0, Math.min(1, f.life * 1.6));
       if (f.skill) T(f.txt, SX(f.slot) + SW / 2, SY(f.slot) + 30 - (1.4 - f.life) * 14, 6, '#ffd54a', 'center');
       else T(f.txt + (f.dbl ? ' x2' : ''), SX(f.slot) + 50, SY(f.slot) + 46 - (1 - f.life) * 22, 7, f.dbl ? '#7ee081' : '#f2c14e', 'center');
@@ -1127,13 +1190,15 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   function hit(x, y) {
     if (crate && x >= crateX() - 4 && x <= crateX() + 18 && y >= FL - 30 && y <= FL) return { crate: true };
     for (let i = 0; i < slotsOf(state.cur).length; i++) if (x >= SX(i) && x < SX(i) + SW && y >= SY(i) && y < SY(i) + SH) return { slot: i };
-    for (let i = 0; i < NL; i++) if (x >= LX(i) - 3 && x < LX(i) + LW + 3 && y >= LYi(i) - 4 && y < LYi(i) + 58) return { locker: i };
+    for (let p = 0; p < lockerPages(); p++) if (x >= PTX(p) - 1 && x < PTX(p) + PTW + 1 && y >= PTY() - 3 && y < PTY() + 15) return { page: p };
+    for (let i = lockerPage * NL; i < (lockerPage + 1) * NL; i++) if (x >= LX(i) - 1 && x < LX(i) + LW + 2 && y >= LYi(i) - 4 && y < LYi(i) + 58) return { locker: i };
     return null;
   }
   cv.addEventListener('click', e => {
     const h = hit(...toLogical(e));
     if (!h) { if (!mode) { selSlot = null; selWorker = null; renderSheet(); } return; }
     if (h.crate) { if (!guest) { openCrate(); toast('Посылка открыта!'); } return; }
+    if (h.page != null) { lockerPage = h.page; return; }
     if (h.locker != null) return tapLocker(h.locker);
     if (h.slot != null) return tapSlot(h.slot);
   });
@@ -1211,7 +1276,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   function cardHTML(id) {
     const cd = CARDS[id], cl = cardLoc(id);
     const kind = cd.type === 'machine' || cd.type === 'equip' ? cd.tag : `${TYPE_LABEL[cd.type]} · ${cd.tag}`;
-    const where = cl >= 0 ? `<br>${LOCS[cl].name}` : '';
+    const M = cd.type === 'machine' && MACH[cd.machine];
+    const where = (cl >= 0 ? `<br>${LOCS[cl].name}` : '') + (M && M.max ? `<br>есть ${machineCount(cd.machine)} из ${M.max}` : '');
     return `<button type="button" class="card r${cd.rar}" data-act="pick" data-id="${id}"><span class="band">${esc(cd.name)}</span><span class="top"><img class="ic" src="${ICONS[id]}" alt=""><span class="ct">${kind}${where}</span></span><span class="cd">${esc(cd.desc)}</span><span class="rar">${RAR[cd.rar]}</span></button>`;
   }
   const SRC = { level: 'Новый уровень', crate: 'Посылка', shop: 'Магазин', quota: 'Квота' };
@@ -1244,7 +1310,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   }
   function idleHTML() {
     const g = globals();
-    const combos = g.combos.map(k => ({ night: '<span class="chip" style="--rc:var(--r3)">Ночная смена ×1,5</span>', saws: '<span class="chip" style="--rc:var(--r2)">Две пилорамы</span>', maids: `<span class="chip" style="--rc:var(--r3)">Дуэт горничных: цех ${g.maidsLoc + 1} ×2</span>`, green: '<span class="chip" style="--rc:var(--r2)">Зелёная сила ×1,5</span>' })[k]).join('');
+    const combos = g.combos.map(k => ({ night: '<span class="chip" style="--rc:var(--r3)">Ночная смена ×1,5</span>', maids: `<span class="chip" style="--rc:var(--r3)">Дуэт горничных: цех ${g.maidsLoc + 1} ×2</span>`, green: '<span class="chip" style="--rc:var(--r2)">Зелёная сила ×1,5</span>', family: `<span class="chip" style="--rc:var(--r3)">Семейный подряд${g.familyLoc >= 0 ? `: цех ${g.familyLoc + 1} ×2` : ''}</span>` })[k]).join('');
     if (guest) return `<h2>Завод: ${esc(guest.n)}</h2><p class="muted">Это снимок чужого завода: можно нажимать на станки и сотрудников и смотреть, как всё устроено.</p><h3>Рекорды</h3>${recordsHTML(guest.r, guest.a.length, meta.records)}`;
     return `<h2>Цех ${state.cur + 1} · ${LOCS[state.cur].name}</h2><p class="muted">Нажми на шкафчик, а потом на станок, чтобы поставить туда сотрудника. Каждый сотрудник один на весь завод. Соседние станки усиливают друг друга, соседи по шкафчику дружат.</p>${combos ? `<h3>Активные комбо</h3><div class="row">${combos}</div>` : ''}<p class="muted">Досок: <b id="live-planks">0</b> · кирпичей: <b id="live-bricks">0</b> · гвоздей: <b id="live-nails">0</b> · стекла: <b id="live-glass">0</b></p>`;
   }
@@ -1274,9 +1340,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const g = globals(), counts = {};
     state.cards.forEach(id => counts[id] = (counts[id] || 0) + 1);
     const sets = Object.keys(TAGS).map(tg => { const n = g.tc[tg] || 0, p = Math.floor(n / 2); return `<dt class="${p ? 'on' : ''}">${tg}: ${n}</dt><dd>${TAGS[tg]}. Комплектов: ${p}</dd>`; }).join('');
-    const night = g.combos.includes('night'), saws = g.combos.includes('saws');
+    const night = g.combos.includes('night');
     const owned = Object.keys(counts).map(id => chip(id).replace('</span>', counts[id] > 1 ? ` ×${counts[id]}</span>` : '</span>')).join('') || '<span class="muted">Пока нет карт</span>';
-    return `<h2>Колода</h2><h3>Комплекты по тегам</h3><dl class="sets">${sets}</dl><h3>Комбо</h3><dl class="sets"><dt class="${night ? 'on' : ''}">Ночная смена</dt><dd>Крепкий кофе + Конвейер + Бродяга: доход ×1,5</dd><dt class="${saws ? 'on' : ''}">Две пилорамы</dt><dd>Две пилорамы в цеху досок: +25% скорости обеим</dd><dt class="${g.sawWorking && anySlot(s => s.machine === 'kiln') ? 'on' : ''}">Растопка</dt><dd>Пилорама работает в цеху 1: печи в цеху 2 +25% скорости</dd><dt class="${g.kilnWorking && anySlot(s => s.machine === 'wire') ? 'on' : ''}">Закалка</dt><dd>Печь работает в цеху 2: проволока в цеху 3 +20% к цене</dd><dt class="${g.maidsLoc >= 0 ? 'on' : ''}">Дуэт горничных</dt><dd>V1 и V2 на соседних станках: доход их цеха ×2</dd><dt class="${g.green ? 'on' : ''}">Зелёная сила</dt><dd>Пришелец и Джедай на соседних станках: сила обоих ×1,5</dd><dt class="${g.tumblerWorking && anySlot(s => s.machine === 'vitrage') ? 'on' : ''}">Рамы на гвоздях</dt><dd>Барабан работает в цеху 3: витражи в цеху 4 +20% к цене</dd></dl><h3>Твои карты</h3><div class="row">${owned}</div><div class="row"><button class="btn" type="button" data-act="back">Назад</button></div>`;
+    return `<h2>Колода</h2><h3>Комплекты по тегам</h3><dl class="sets">${sets}</dl><h3>Комбо</h3><dl class="sets"><dt class="${night ? 'on' : ''}">Ночная смена</dt><dd>Крепкий кофе + Конвейер + Бродяга: доход ×1,5</dd><dt class="${g.sawWorking && anySlot(s => s.machine === 'kiln') ? 'on' : ''}">Растопка</dt><dd>Пилорама работает в цеху 1: печи в цеху 2 +25% скорости</dd><dt class="${g.kilnWorking && anySlot(s => s.machine === 'wire') ? 'on' : ''}">Закалка</dt><dd>Печь работает в цеху 2: проволока в цеху 3 +20% к цене</dd><dt class="${g.maidsLoc >= 0 ? 'on' : ''}">Дуэт горничных</dt><dd>V1 и V2 на соседних станках: доход их цеха ×2</dd><dt class="${g.green ? 'on' : ''}">Зелёная сила</dt><dd>Пришелец и Хаба на соседних станках: сила обоих ×1,5</dd><dt class="${g.combos.includes('family') ? 'on' : ''}">Семейный подряд</dt><dd>Хаба, Кастомка и Батя: соседям по станку из этой тройки +20% силы, все трое в одном цеху: доход цеха ×2</dd><dt class="${g.tumblerWorking && anySlot(s => s.machine === 'vitrage') ? 'on' : ''}">Рамы на гвоздях</dt><dd>Барабан работает в цеху 3: витражи в цеху 4 +20% к цене</dd></dl><h3>Твои карты</h3><div class="row">${owned}</div><div class="row"><button class="btn" type="button" data-act="back">Назад</button></div>`;
   }
   const mmss = sec => `${Math.floor(sec / 60)}:${String(Math.floor(sec % 60)).padStart(2, '0')}`;
   // two columns when comparing with a friend: theirs first, ours second
@@ -1321,7 +1387,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (m[1] === '1') bytes = await pipe(bytes, new DecompressionStream('deflate-raw'));
     const d = JSON.parse(new TextDecoder().decode(bytes)), st = d.s;
     // a friend's code is drawn with our code, so only known ids may pass
-    const ok = st && st.v === 7 && st.run && Array.isArray(st.locs) && st.locs.length === 4 && st.locs.every((L, l) => Array.isArray(L.slots) && L.slots.length === LAYOUTS[l].length && L.slots.every(z => (!z.machine || MACH[z.machine]) && (!z.worker || WORKERS[z.worker]) && Array.isArray(z.upg) && z.upg.every(u => CARDS[u])))
+    const ok = st && st.v === 9 && st.run && Array.isArray(st.locs) && st.locs.length === 4 && st.locs.every((L, l) => Array.isArray(L.slots) && L.slots.length === LAYOUTS[l].length && L.slots.every(z => (!z.machine || MACH[z.machine]) && (!z.worker || WORKERS[z.worker]) && Array.isArray(z.upg) && z.upg.every(u => CARDS[u])))
       && Array.isArray(st.cards) && st.cards.every(id => CARDS[id]) && Object.keys(WORKERS).every(id => st.workers[id] && st.workers[id].equip.every(e => CARDS[e]))
       && Array.isArray(st.lockers) && st.lockers.every(id => WORKERS[id]) && d.r && Array.isArray(d.a);
     if (!ok) throw new Error('bad state');
@@ -1371,7 +1437,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     else if (act === 'skill') {
       const sk = SKILLS[selWorker], w = state.workers[selWorker];
       if (w.skill || state.money < sk.cost) return;
-      state.money -= sk.cost; w.skill = true; w.skT = 0; state.run.skills++;
+      state.money -= sk.cost; w.skill = true; w.skT = 0; state.run.skills++; rollSkin(selWorker);
       toast(`Скилл «${sk.name}» открыт!`); save(); renderSheet();
     }
     else if (act === 'rest') { const wp = workerPlace(selWorker); if (wp) slotsOf(wp.l)[wp.i].worker = null; save(); renderSheet(); }
@@ -1453,6 +1519,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
 
   let last = performance.now(), saveTimer = 0, liveTimer = 0;
   function loop(now) {
+    // schedule the next frame first: an error in one frame must not stop the whole game
+    requestAnimationFrame(loop);
     const dt = Math.min(0.25, (now - last) / 1000); last = now;
     t += dt;
     tick(dt);
@@ -1460,7 +1528,6 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     liveTimer += dt; if (liveTimer > 0.25) { liveTimer = 0; updateLive(); }
     saveTimer += dt; if (saveTimer > 5) { saveTimer = 0; save(); }
     if (toastTimer > 0) { toastTimer -= dt; if (toastTimer <= 0) $toast.hidden = true; }
-    requestAnimationFrame(loop);
   }
   if (BOT) window.PF = { BAL, get state() { return state; }, set state(v) { state = v; }, meta, tick, totalIncome, globals, eligible, finish, unlockLoc, openCrate, shopCost, rerollCost, rollOffer, quotaTarget, quotaTime, newRun, workerPlace, slotStats, onStrike, rule, get crate() { return crate; }, CARDS, MACH, LOCS, SKILLS, LAYOUTS, WORKERS };
   else requestAnimationFrame(loop);
