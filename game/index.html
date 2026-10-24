@@ -672,7 +672,7 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
       const w = state.workers[id], wp = w.skill && workerPlace(id);
       if (!wp) continue;
       w.skT = (w.skT || 0) + dt;
-      if (w.skT >= SKILLS[id].cd) { w.skT -= SKILLS[id].cd; rollSkin(id); if (wp.l === state.cur) floats.push({ slot: wp.i, txt: SKILLS[id].name.toUpperCase() + '!', life: 1.4, skill: true }); }
+      if (w.skT >= SKILLS[id].cd) { w.skT -= SKILLS[id].cd; rollSkin(id); if (wp.l === state.cur) floats.push({ l: wp.l, slot: wp.i, txt: SKILLS[id].name.toUpperCase() + '!', life: 1.4, skill: true }); }
     }
     const g = globals();
     let total = 0;
@@ -694,7 +694,7 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
         const gain = count * st.value * g.income;
         state.money += gain; state.xp += gain; state.earned += gain;
         state[LOCS[l].goods] += count;
-        if (l === state.cur && floats.length < 20) floats.push({ slot: i, txt: '+' + fmt(gain), life: 1, dbl: count > n });
+        if (l === state.cur && floats.length < 20) floats.push({ l, slot: i, txt: '+' + fmt(gain), life: 1, dbl: count > n });
       });
     });
     incomeNow = total;
@@ -1023,6 +1023,7 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
       if (wp) T('Ц' + (wp.l + 1), LX(i) + 9.5, LYi(i) + 35, 5, K, 'center', false);
     });
     floats.forEach(f => {
+      if (f.l !== l) return;
       c.globalAlpha = Math.max(0, Math.min(1, f.life * 1.6));
       if (f.skill) T(f.txt, SX(f.slot) + SW / 2, SY(f.slot) + 30 - (1.4 - f.life) * 14, 6, '#ffd54a', 'center');
       else T(f.txt + (f.dbl ? ' x2' : ''), SX(f.slot) + 50, SY(f.slot) + 46 - (1 - f.life) * 22, 7, f.dbl ? '#7ee081' : '#f2c14e', 'center');
@@ -1276,6 +1277,8 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
 
   let last = performance.now(), saveTimer = 0, liveTimer = 0;
   function loop(now) {
+    // schedule the next frame first: an error in one frame must not stop the whole game
+    requestAnimationFrame(loop);
     const dt = Math.min(0.25, (now - last) / 1000); last = now;
     t += dt;
     tick(dt);
@@ -1283,7 +1286,6 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
     liveTimer += dt; if (liveTimer > 0.25) { liveTimer = 0; updateLive(); }
     saveTimer += dt; if (saveTimer > 5) { saveTimer = 0; save(); }
     if (toastTimer > 0) { toastTimer -= dt; if (toastTimer <= 0) $toast.hidden = true; }
-    requestAnimationFrame(loop);
   }
   requestAnimationFrame(loop);
 })();
