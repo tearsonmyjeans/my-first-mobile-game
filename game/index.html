@@ -243,9 +243,11 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     wire: { loc: 2, name: 'Волочильный стан', short: 'ВОЛОЧЕНИЕ', rate: 0.7, value: 8, max: 2, desc: 'Тянет стальную проволоку для гвоздей.' },
     nailer: { loc: 2, name: 'Гвоздильный автомат', short: 'ГВОЗДИЛКА', rate: 1.5, value: 5, max: 2, desc: 'Рубит проволоку и штампует шляпки. Очень быстрый.' },
     tumbler: { loc: 2, name: 'Галтовочный барабан', short: 'ГАЛТОВКА', rate: 0.4, value: 25, max: 2, desc: 'Полирует гвозди до блеска. Медленно, но очень дорого.' },
-    melt: { loc: 3, name: 'Стекловарка', short: 'ВАРКА', rate: 0.9, value: 30, max: 3, desc: 'Варит песок в жидкое стекло.' },
-    blower: { loc: 3, name: 'Стеклодувка', short: 'ВЫДУВКА', rate: 0.5, value: 70, max: 3, desc: 'Выдувает бутылки и вазы.' },
+    melt: { loc: 3, name: 'Стекловарка', short: 'ВАРКА', rate: 0.9, value: 30, max: 2, desc: 'Варит песок в жидкое стекло.' },
+    blower: { loc: 3, name: 'Стеклодувка', short: 'ВЫДУВКА', rate: 0.5, value: 70, max: 2, desc: 'Выдувает бутылки и вазы.' },
     vitrage: { loc: 3, name: 'Витражный стол', short: 'ВИТРАЖ', rate: 0.25, value: 180, max: 2, desc: 'Собирает цветные витражи. Медленно, но очень дорого.' },
+    engraver: { loc: 3, name: 'Гравёр', short: 'ГРАВЁР', rate: 0.6, value: 60, max: 1, desc: 'Гравирует узоры на стекле. Рядом с витражом ускоряет его на 25%.' },
+    lens: { loc: 3, name: 'Линзовый станок', short: 'ЛИНЗЫ', rate: 0.15, value: 450, max: 1, desc: 'Шлифует линзы. Очень медленно, но очень дорого. Соседям +10% удачи.' },
     belt: { loc: -1, name: 'Конвейер', short: 'КОНВЕЙЕР', rate: 0, value: 0, desc: 'Сам ничего не делает. Связан со всем рядом и ускоряет каждый станок на 30%. Сотрудник ему не нужен.' }
   };
   const WORKERS = {
@@ -321,6 +323,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     m_melt: { name: 'Стекловарка', type: 'machine', machine: 'melt', tag: 'Станки', rar: 0, desc: 'Стекло стоит 30. Рядом со стеклодувкой: +30% её скорости.' },
     m_blower: { name: 'Стеклодувка', type: 'machine', machine: 'blower', tag: 'Станки', rar: 1, desc: 'Стекло стоит 70. Рядом с витражом: +25% к его цене.' },
     m_vitrage: { name: 'Витражный стол', type: 'machine', machine: 'vitrage', tag: 'Станки', rar: 1, desc: 'Стекло стоит 180. Медленно, зато красиво.' },
+    m_engraver: { name: 'Гравёр', type: 'machine', machine: 'engraver', tag: 'Станки', rar: 1, desc: 'Стекло стоит 60. Рядом с витражом: +25% его скорости.' },
+    m_lens: { name: 'Линзовый станок', type: 'machine', machine: 'lens', tag: 'Станки', rar: 2, desc: 'Стекло стоит 450, но очень медленно. Соседям +10% удачи, стеклодувке рядом +20% к цене.' },
     w_jeanne: { name: 'Новый сотрудник', type: 'worker', worker: 'jeanne', tag: 'Сотрудники', rar: 2, loc: 3, desc: 'Приходит Жанна. Удача 30%, двойные штуки выходят тройными.' },
     w_alien: { name: 'Новый сотрудник', type: 'worker', worker: 'alien', tag: 'Сотрудники', rar: 3, loc: 3, desc: 'Прилетает Пришелец. Очень сильный, телепатически связан со всем цехом.' },
     w_jedi: { name: 'Новый сотрудник', type: 'worker', worker: 'jedi', tag: 'Сотрудники', rar: 2, loc: 3, desc: 'Приходит Хаба. Быстрый и сильный, ускоряет соседей на 15%.' },
@@ -379,6 +383,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (src === 'melt' && dst === 'blower') return { rate: 0.30, value: 0, text: 'Горячее стекло рядом: +30% скорости' };
     if (src === 'blower' && dst === 'vitrage') return { rate: 0, value: 0.25, text: 'Выдутое стекло: +25% к цене' };
     if (src === 'vitrage' && dst === 'melt') return { rate: 0.15, value: 0, text: 'Обрезки витража в переплавку: +15% скорости' };
+    if (src === 'engraver' && dst === 'vitrage') return { rate: 0.25, value: 0, text: 'Гравёр размечает витраж: +25% скорости' };
+    // the lens machine gives every neighbour luck instead of the plain +3%, and the blower a better price too
+    if (src === 'lens') return { rate: 0, value: dst === 'blower' ? 0.2 : 0, luck: 0.1, text: dst === 'blower' ? 'Линзы рядом: +20% к цене и +10% удачи' : 'Линзы рядом: +10% удачи' };
     return { rate: 0, value: 0.03, text: `${MACH[src].name} рядом: +3% к цене` };
   }
 
@@ -469,7 +476,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   const KEY = 'pixel-factory-save-v1';
   const emptySlots = n => Array.from({ length: n }, () => ({ machine: null, worker: null, upg: [], acc: 0 }));
   const fresh = () => ({
-    v: 9, money: 0, xp: 0, level: 1, planks: 0, bricks: 0, nails: 0, glass: 0, earned: 0, cur: 0,
+    v: 10, money: 0, xp: 0, level: 1, planks: 0, bricks: 0, nails: 0, glass: 0, earned: 0, cur: 0,
     locs: [
       { unlocked: true, slots: [{ machine: null, worker: null, upg: [], acc: 0 }, { machine: 'saw', worker: 'crow', upg: [], acc: 0 }, { machine: null, worker: null, upg: [], acc: 0 }] },
       { unlocked: false, slots: emptySlots(4) },
@@ -521,7 +528,13 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       s.offers = s.offers.map(o => ({ ...o, ids: o.ids.filter(id => CARDS[id]) })).filter(o => o.ids.length);
       s.v = 8;
     }
-    return s.v === 8 || s.v === 9 ? s : null;
+    if (s.v === 9) {
+      // build 10: the glass workshop got the engraver and the lens machine, so melters and blowers are capped at 2
+      const seen = {};
+      s.locs[3].slots.forEach((z, i) => { if ((z.machine === 'melt' || z.machine === 'blower') && (seen[z.machine] = (seen[z.machine] || 0) + 1) > 2) s.locs[3].slots[i] = { machine: null, worker: null, upg: [], acc: 0 }; });
+      s.v = 10;
+    }
+    return s.v === 8 || s.v === 10 ? s : null;
   }
   // meta lives across runs: reputation, its unlocks, achievements and records
   const META_KEY = 'pixel-factory-meta-v1';
@@ -743,9 +756,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const sl = slotsOf(l), s = sl[i];
     if (!s.machine) return null;
     const M = MACH[s.machine];
-    let rb = 0, vb = 0;
+    let rb = 0, vb = 0, lb = 0;
     const notes = [];
-    linked(l, i).forEach(j => { const m2 = sl[j].machine; if (!m2 || s.machine === 'belt') return; const e = effect(m2, s.machine); rb += e.rate; vb += e.value; notes.push(e.text); });
+    linked(l, i).forEach(j => { const m2 = sl[j].machine; if (!m2 || s.machine === 'belt') return; const e = effect(m2, s.machine); rb += e.rate; vb += e.value; lb += e.luck || 0; notes.push(e.text); });
     let rX = 1, vX = 1;
     s.upg.forEach(u => { const ef = CARDS[u].eff; rX *= ef.rate || 1; vX *= ef.value || 1; if (u === 's_gold') vX *= Math.pow(1.1, g.tc['Станки'] || 0); notes.push(`${CARDS[u].name}: ${CARDS[u].desc.toLowerCase()}`); });
     if (s.machine === 'wire' && g.kilnWorking) { vb += 0.2; notes.push('Печь из цеха 2 закаляет проволоку: +20% к цене'); }
@@ -776,7 +789,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const kind = sk.kind === 'random' ? state.workers[s.worker].skKind || 'power' : sk.kind;
     if (skM[kind] && skillOn(s.worker)) { skM[kind] *= sk.mult; notes.push(`Скилл «${sk.name}»: ${sk.kind === 'random' ? SKIN_KINDS[kind] + ' ' : ''}×${fmt(sk.mult)}`); }
     // luck is the chance of a double piece; Jeanne's jackpot makes it triple, her skill makes every piece lucky
-    const luck = g.noLuck ? 0 : s.worker === 'jeanne' && skillOn('jeanne') ? 1 : Math.min(0.9, ws.luck + (kastNear ? 0.1 : 0)), extra = s.worker === 'jeanne' ? 2 : 1;
+    const luck = g.noLuck ? 0 : s.worker === 'jeanne' && skillOn('jeanne') ? 1 : Math.min(0.9, ws.luck + lb + (kastNear ? 0.1 : 0)), extra = s.worker === 'jeanne' ? 2 : 1;
     if (luck === 1) notes.push(`Скилл «${sk.name}»: каждая штука ×3`);
     power *= skM.power;
     const rate = M.rate * BAL.tempo * ws.speed * speedM * skM.speed * (1 + rb) * rX;
@@ -1564,13 +1577,14 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (!m) throw new Error('bad code');
     let bytes = Uint8Array.from(atob(m[2]), ch => ch.charCodeAt(0));
     if (m[1] === '1') bytes = await pipe(bytes, new DecompressionStream('deflate-raw'));
-    const d = JSON.parse(new TextDecoder().decode(bytes)), st = d.s;
+    // a code from the previous build is brought up to date like a save
+    const d = JSON.parse(new TextDecoder().decode(bytes)), st = d.s && d.s.v === 9 ? migrate(d.s) : d.s;
     // a friend's code is drawn with our code, so only known ids may pass
-    const ok = st && st.v === 9 && st.run && Array.isArray(st.locs) && st.locs.length === 4 && st.locs.every((L, l) => Array.isArray(L.slots) && L.slots.length === LAYOUTS[l].length && L.slots.every(z => (!z.machine || MACH[z.machine]) && (!z.worker || WORKERS[z.worker]) && Array.isArray(z.upg) && z.upg.every(u => CARDS[u])))
+    const ok = st && st.v === 10 && st.run && Array.isArray(st.locs) && st.locs.length === LOCS.length && st.locs.every((L, l) => Array.isArray(L.slots) && L.slots.length === LAYOUTS[l].length && L.slots.every(z => (!z.machine || MACH[z.machine]) && (!z.worker || WORKERS[z.worker]) && Array.isArray(z.upg) && z.upg.every(u => CARDS[u])))
       && Array.isArray(st.cards) && st.cards.every(id => CARDS[id]) && Object.keys(WORKERS).every(id => st.workers[id] && st.workers[id].equip.every(e => CARDS[e]))
       && Array.isArray(st.lockers) && st.lockers.every(id => WORKERS[id]) && d.r && Array.isArray(d.a);
     if (!ok) throw new Error('bad state');
-    st.offers = []; st.cur = Math.max(0, Math.min(3, st.cur | 0));
+    st.offers = []; st.cur = Math.max(0, Math.min(LOCS.length - 1, st.cur | 0));
     return { n: String(d.n).slice(0, 20), r: d.r, a: d.a.filter(id => ACH.some(x => x.id === id)), s: st };
   }
   function visit(d) {
