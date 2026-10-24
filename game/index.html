@@ -158,7 +158,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     '[': '#d8f4f2', ']': '#9ccfd0', '(': '#e9fff0', '{': '#a8e86c', '}': '#6cb544', '|': '#b8ff5c',
     '-': '#c8662e', ',': '#34406a', '"': '#222a48'
   };
-  const GIRL = ['6.8k6.', '4.2k8h2k4.', '3.k3h3H6hk3.', '2.kh4k4h4khk2.', '2.khk2qk4hk2qkhk2.', '.k2h4k4h4k2hk.', '.k16hk.', '.k16hk.', '.k16hk.', '.k10h3s3hk.', '.k7h6s3hk.', '.k5hwe2swe2s3hk.', '.k4hs2e2s2e2s3hk.', '.k3hsc3sp2scs3hk.', '.k3h3sp2mp3s3hk.', '.k3hk8sk3hk.', '2.k2h3k4s3k2hk2.', '3.k4o4b4ok3.', '2.k5o4b5ok2.', '.kbo2O2o4b2o2Oobk.', '.kb5o4b5obk.', '.ks5o4b5osk.', '.ks5o4b5odk.', '.ks5OO2qO5Osk.', '.kb14gbk.', '2.k14gk2.', '2.kg2G8g2Ggk2.', '2.kg2G3g2k3g2Ggk2.', '3.k5g2k5gk3.', '3.k5g2k5gk3.', '2.k6B2k6Bk2.', '2.7k2.7k2.'];
+  const GIRL = ['6.8k8.', '4.2k8h2k6.', '3.k12hk5.', '2.k14h2k3.', '2.k14hk2hk.', '.k16h2khk', '.k16hk2hk', '.k16hk2hk', '.k16hk2hk', '.k4hs4hs4hshk2hk', '.kh3s2k4s2k3shkhk.', '.kh3swe4swe3shkhk.', '.kh3s2e4s2e3shkhk.', '.khsc4sp5scshkhk.', '.kh5s2m7sh2k2.', '2.k14sk4.', '4.4k4s4k6.', '2.k4o6s4ok2.', '.ks3oOsb2sbsO3osk.', '.ks3ok6bk3osk.', '.ks3oOs4bsO3osk.', '.ks3oO6sO3osk.', '.ks3oO6sO3osk.', '.ks6O2q6Osk.', '.k3V10b3Vk.', '2.kV2s2V4b2V2sVk2.', '2.kOoO3V2k2V2s2Vk2.', '2.k3OV2s2k2s4Vk2.', '3.k3OVs2k2V2sVk3.', '3.kV2s2V2k3VsVk3.', '2.k6b2k6bk2.', '2.7k2.7k2.'];
   const MRP = ['6.8k6.', '6.ktT4tk6.', '6.k6tk6.', '6.k6nk6.', '4.k10tk4.', '4.12k4.', '4.k10yk4.', '4.k2y6Y2yk4.', '4.k10yk4.', '4.k4Y2y4Yk4.', '4.kR2wR2yR2wRk4.', '4.kRwkR2yRkwRk4.', '4.k4R2y4Rk4.', '4.k4yY5yk4.', '4.ky8uyk4.', '4.ky3u2m3uyk4.', '4.ky8uyk4.', '4.k2y6u2yk4.', '3.k3a6y3ak3.', '2.k4a6y4ak2.', '2.k3aA6yA3ak2.', '2.k3aA6yA3ak2.', '2.k5a2A7ak2.', '2.k14Ak2.', '2.k6a2A6ak2.', '2.k6a2A6ak2.', '2.k6a2k6ak2.', '2.16k2.', '6.kyk2.kyk6.', '6.kyk2.kyk6.', '5.k2yk2.k2yk5.', '5.4k2.4k5.'];
   const TRAMP = ['5.k3.k3.k6.', '4.khk.khk.khk5.', '3.k11hk4.', '2.k3h2v8hk3.', '.k2h3v11hk.', '.k5h2v9hk.', '.k16hk.', '.k3h2s3h3s5hk.', '.k3h10s3hk.', '.k3hs2k4s2ks3hk.', '.k3hP2eP2s2e2s3hk.', '.k3h3P2sS4s3hk.', '.k3h7s2xs3hk.', '.k3h3s3ms2xs3hk.', '.k3hk8sk3hk.', '2.k2h3k4s3k2hk2.', '2.k3f2r4b2r3fk2.', '.k4f2r4b2r4fk.', '.k5frb2rbr5fk.', '.kF4frb2rbr4fFk.', '.kF4f2b2r2b4fFk.', '.kF5f4b5fFk.', '.kF6F2q6FFk.', '.ks6f2F6fsk.', '2.k6f2F6fk2.', '2.k6f2F6fk2.', '2.k5fF2kF5fk2.', '2.16k2.', '3.k5g2k5gk3.', '3.k5g2k5gk3.', '2.k6B2k6Bk2.', '2.7k2.7k2.'];
 
@@ -176,10 +176,11 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   const KAST = ['6.8k', '4.2k8W2k', '3.k12Wk', '2.k14Wk', '2.k13WDk', '.k15WDk', '.k15WDk', '.k15WDk', '.k15WDk', '.k15WDk', '.k2W2kwk4Wkw2kWDk', '.k15WDk', '.k15WDk', '.k8WD6WDk', '.kD13W2Dk', '2.k2D10W2Dk', '3.3kD6WD3k', '6.k5pk', '4.2k7W2k', '3.k11Wk', '2.kWk3WD3WD2WkWk', '.kW2k4WDWD3WkWk', 'kWk.k10WkWk', 'kWk.k9WDkWk', '.kW2k9WDkWk', '2.kWk9WDkDk', '3.2k5Wk3WDk^k', '4.k4WDkD2WD2k', '4.k4Wk.k2WDk', '4.k4Wk.k2WDk', '3.k^4Wk.k^2WDk', '3.7k.6k'];
   const BATYA = ['6.7k', '5.k3sw3sk', '4.k4sw5sk', '3.k12sk', '2.kp13spk', '2.kpa11sapk', '.kpas2S6s2Ssapk', '.kpa2s3k2s3k2sapk', '.kp3sRkR2sRkR3spk', '.k2s2c3s2E3s2c2sk', '.ks2S3s4E3s2Ssk', '.ksS^s^s4as^s^Ss3k', '2.ks^s^a4ka^s^s2k2$k', '2.k2s^s^4s^s^2s2k[]k', '3.2k11s3k[]k', '4.3k7s4k2[2]k', '3.k3sk5wk3sk2[2]k', '2.k3sk7wk2sk4wk', '2.k2skD8wD2kw2$wk', '2.k2sD10wDk4wk', '2.k2sk11wk2[2]k', '2.k2sk5wu5wks[]sk', '2.k2sD11wk2s2]k', '2.k2sD3wu7w6k', '2.k2sk11@k', '3.2k@w8@w@k', '4.k@w8@w@k', '4.k@w3@k4@w@k', '4.k@w2@k.k3@w@k', '4.k3pk3.k3pk', '3.k4Ck3.k4Ck', '3.6k3.6k'];
   const rle = rows => rows.map(r => { let o = ''; r.replace(/(\d*)(\D)/g, (m, n, ch) => { o += ch.repeat(n ? +n : 1); return m; }); return o; });
-  function spriteCanvas(rows, extra) {
+  // pal swaps colours: Kastomka's skin recolours her white suit
+  function spriteCanvas(rows, extra, pal = {}) {
     const r = rle(rows), cv = document.createElement('canvas'); cv.width = 23; cv.height = r.length;
     const x = cv.getContext('2d');
-    r.forEach((s, yy) => [...s].forEach((ch, xx) => { if (ch !== '.') { x.fillStyle = PAL[ch]; x.fillRect(xx, yy, 1, 1); } }));
+    r.forEach((s, yy) => [...s].forEach((ch, xx) => { if (ch !== '.') { x.fillStyle = pal[ch] || PAL[ch]; x.fillRect(xx, yy, 1, 1); } }));
     if (extra) extra((a, b, c, d, col) => { x.fillStyle = col; x.fillRect(a, b, c, d); });
     return cv;
   }
@@ -200,6 +201,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     silverWolf: spriteCanvas(WOLF),
     mrsha: spriteCanvas(MRSHA),
     kast: spriteCanvas(KAST),
+    kast_power: spriteCanvas(KAST, null, { W: '#e8574a', D: '#b8363a', '^': '#8a2a30' }),
+    kast_speed: spriteCanvas(KAST, null, { W: '#7fd0f0', D: '#4a9ac8', '^': '#2f6e9a' }),
+    kast_value: spriteCanvas(KAST, null, { W: '#f7c948', D: '#d9971f', '^': '#a86a1a' }),
     batya: spriteCanvas(BATYA)
   };
   const PORTRAIT_Y = { crow: 1, mrp: 3, tramp: 2, dog: 4, toad: 1, pink: 3, v1: 0, v2: 0, jeanne: 3, alien: 2, jedi: 1, silver: 3, mrsha: 6, kast: 3, batya: 2 };
@@ -1209,7 +1213,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     }
   }
   function pile(x, y, n, col) { for (let k = 0; k < n; k++) { R(x, y - k * 3, 12, 4, K); R(x + 1, y - k * 3 + 1, 10, 2, col); } }
-  const sprOf = id => id === 'mrp' && state.workers.mrp.equip.includes('e_coffee') ? SPR.mrpCoffee : id === 'silver' && skillOn('silver') ? SPR.silverWolf : SPR[id];
+  const sprOf = id => id === 'mrp' && state.workers.mrp.equip.includes('e_coffee') ? SPR.mrpCoffee : id === 'silver' && skillOn('silver') ? SPR.silverWolf
+    : id === 'kast' && skillOn('kast') ? SPR['kast_' + (state.workers.kast.skKind || 'power')] : SPR[id];
   const border = (x, y, w, h, col) => { R(x - 2, y - 2, w + 4, 2, col); R(x - 2, y + h, w + 4, 2, col); R(x - 2, y, 2, h, col); R(x + w, y, 2, h, col); };
 
   const VCOL = ['#e0533a', '#f2c14e', '#7ee081', '#4f8fd6', '#9b6bd6', '#ff8fc8', '#3fd0c9'];
