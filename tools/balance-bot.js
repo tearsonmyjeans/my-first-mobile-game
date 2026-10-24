@@ -61,9 +61,9 @@ const RUNS = +process.argv[2] || 8, UNL = process.argv[3] || '', BAL = JSON.pars
         if (choice) P.finish(...choice);
         optimize(2);
       }
-      const log = { opened: [0, null, null, null], quotaAt: [], cards: 0, level: 0 };
+      const log = { opened: [0, null, null, null, null], quotaAt: [], cards: 0, level: 0 };
       let sinceOpt = 0;
-      const nextLoc = () => [1, 2, 3].find(l => !P.state.locs[l].unlocked);
+      const nextLoc = () => [1, 2, 3, 4].find(l => !P.state.locs[l].unlocked);
       // save up for the next workshop when it is less than a minute of income away
       const saving = () => { const n = nextLoc(); return n && (P.LOCS[n].cost - P.state.money) < inc() * 60; };
       function unlockNext() { const n = nextLoc(); if (n && P.state.money >= P.LOCS[n].cost) { P.unlockLoc(n); log.opened[n] = Math.round(P.state.run.t); optimize(3); } }

@@ -35,7 +35,7 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
 .xpbar{height:8px;background:#110d17;border:2px solid var(--line);border-radius:3px;overflow:hidden}
 .xpbar i{display:block;height:100%;width:0;background:var(--green)}
 #xptext{font:400 11px var(--pixel);color:var(--muted);white-space:nowrap}
-.tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}
 .tab{font:400 13px/1.1 var(--pixel);color:var(--ink);background:var(--panel);border:2px solid var(--line);border-radius:8px;padding:8px 6px;cursor:pointer;white-space:pre-line}
 .tab[aria-pressed="true"]{background:var(--gold);border-color:#a8781a;color:var(--paper-ink)}
 .tab.locked{color:var(--muted);border-style:dashed}
@@ -120,6 +120,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     <button class="tab" id="tab1" type="button" data-loc="1">Цех 2 · Кирпичи</button>
     <button class="tab" id="tab2" type="button" data-loc="2">Цех 3 · Гвозди</button>
     <button class="tab" id="tab3" type="button" data-loc="3">Цех 4 · Стекло</button>
+    <button class="tab" id="tab4" type="button" data-loc="4">Цех 5 · Пуфики</button>
   </nav>
   <div class="stage">
     <canvas id="game" role="img" aria-label="Цех завода: места под станки и раздевалка с сотрудниками"></canvas>
@@ -220,7 +221,11 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       board: '#6a3f8a', boardHi: '#9a6ac2', goods: 'glass', unit: 'Стекло', unit1: 'Цена стекла', start: 'melt', hot: [1, 3, 5, 7],
       plates: ['#b34f78', '#c7723a', '#b89a2a', '#4f9550', '#3a87a0', '#4f63bf', '#7f52b8', '#a8479a'],
       desc: 'Четвёртая ветка завода. Восемь мест стоят кольцом вокруг горна. Места посередине сторон касаются горна и работают на 20% быстрее. Если в цеху гвоздей крутится барабан, витражи выходят дороже.',
-      opened: 'Цех стекла открыт! Поставь к стекловарке сотрудника' }
+      opened: 'Цех стекла открыт! Поставь к стекловарке сотрудника' },
+    { name: 'Пуфики', sign: 'ЦЕХ 5 · ПУФИКИ', cost: 300000000, wall: '#6aa2dc', mortar: '#5a90cc', floor: '#94643a', grid: '#94643a', plate: '#a8763f', frame: '#5a3420', item: '#f08cb4',
+      glass: '#cfe8f2', board: '#2f5e46', boardHi: '#3f7a5a', goods: 'poufs', unit: 'Пуфики', unit1: 'Цена пуфика',
+      desc: 'Пятая ветка завода, школьный класс. Шьют чехлы и набивают пуфики. Места два, а станков с собой нет: швейная машинка придёт в ближайшем выборе карт. Если в цеху досок работает сушилка, пуфики дороже, а если в цеху стекла работает витраж, набивка быстрее.',
+      opened: 'Цех пуфиков открыт! Швейная машинка ждёт в ближайшем выборе карт' }
   ];
   // slot i sits at [column, row] of its workshop's grid; slot indexes never move, so saves stay valid
   const LAYOUTS = [
@@ -228,7 +233,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     [[0, 1], [1, 1], [2, 1], [1, 0]],
     [[0, 1], [1, 1], [2, 1], [3, 1], [1, 0], [2, 0]],
     // a ring around the furnace in the middle cell: slots go clockwise from the top left corner
-    [[0, 0], [1, 0], [2, 0], [2, 1], [2, 2], [1, 2], [0, 2], [0, 1]]
+    [[0, 0], [1, 0], [2, 0], [2, 1], [2, 2], [1, 2], [0, 2], [0, 1]],
+    [[0, 0], [1, 0]]
   ];
   const gridSize = l => LAYOUTS[l].reduce(([c, r], [x, y]) => [Math.max(c, x + 1), Math.max(r, y + 1)], [0, 0]);
   // max: how many machines of a type the factory may own; the maxes of a workshop add up to its slot count.
@@ -248,6 +254,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     vitrage: { loc: 3, name: 'Витражный стол', short: 'ВИТРАЖ', rate: 0.25, value: 180, max: 2, desc: 'Собирает цветные витражи. Медленно, но очень дорого.' },
     engraver: { loc: 3, name: 'Гравёр', short: 'ГРАВЁР', rate: 0.6, value: 60, max: 1, desc: 'Гравирует узоры на стекле. Рядом с витражом ускоряет его на 25%.' },
     lens: { loc: 3, name: 'Линзовый станок', short: 'ЛИНЗЫ', rate: 0.15, value: 450, max: 1, desc: 'Шлифует линзы. Очень медленно, но очень дорого. Соседям +10% удачи.' },
+    sew: { loc: 4, name: 'Швейная машинка', short: 'ШВЕЙКА', rate: 0.5, value: 1500, max: 1, desc: 'Шьёт яркие чехлы для пуфиков.' },
+    stuff: { loc: 4, name: 'Набивочный автомат', short: 'НАБИВКА', rate: 0.3, value: 3500, max: 1, desc: 'Набивает пуфики мягкими шариками. Медленно, но дорого.' },
     belt: { loc: -1, name: 'Конвейер', short: 'КОНВЕЙЕР', rate: 0, value: 0, desc: 'Сам ничего не делает. Связан со всем рядом и ускоряет каждый станок на 30%. Сотрудник ему не нужен.' }
   };
   const WORKERS = {
@@ -332,6 +340,10 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     w_mrsha: { name: 'Новый сотрудник', type: 'worker', worker: 'mrsha', tag: 'Сотрудники', rar: 2, loc: 3, desc: 'Приходит Мисис Ха. Сильнее с каждым работающим соседом.' },
     w_kast: { name: 'Новый сотрудник', type: 'worker', worker: 'kast', tag: 'Сотрудники', rar: 2, loc: 3, desc: 'Приходит Кастомка. Соседям +10% удачи, дружит с Хабой и Батей.' },
     w_batya: { name: 'Новый сотрудник', type: 'worker', worker: 'batya', tag: 'Сотрудники', rar: 2, loc: 3, desc: 'Приходит Батя. Очень сильный и везучий, но медленный.' },
+    m_sew: { name: 'Швейная машинка', type: 'machine', machine: 'sew', tag: 'Станки', rar: 0, desc: 'Пуфик стоит 1500. Вместе с набивкой: «Уютно», сила обоих ×1,5.' },
+    m_stuff: { name: 'Набивочный автомат', type: 'machine', machine: 'stuff', tag: 'Станки', rar: 1, desc: 'Пуфик стоит 3500. Если в цеху стекла работает витраж: +20% скорости.' },
+    s_velour: { name: 'Велюр', type: 'mupg', loc: 4, tag: 'Улучшения', rar: 0, eff: { value: 1.5 }, desc: 'Пуфики с этого станка: цена ×1,5.' },
+    u_poufs: { name: 'Мода на пуфики', type: 'global', tag: 'Улучшения', rar: 1, loc: 4, eff: { poufPrice: 1.6 }, desc: 'Пуфики: цена ×1,6.' },
     s_tint: { name: 'Цветное стекло', type: 'mupg', loc: 3, tag: 'Улучшения', rar: 0, eff: { value: 1.5 }, desc: 'Стекло с этого станка: цена ×1,5.' },
     u_glass: { name: 'Витрины в городе', type: 'global', tag: 'Улучшения', rar: 1, loc: 3, eff: { glassPrice: 1.6 }, desc: 'Стекло: цена ×1,6.' },
     s_grease: { name: 'Смазка', type: 'mupg', tag: 'Улучшения', rar: 1, eff: { rate: 1.4, value: 1.2 }, desc: 'Любой станок: скорость ×1,4 и цена ×1,2.' },
@@ -476,19 +488,20 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   const KEY = 'pixel-factory-save-v1';
   const emptySlots = n => Array.from({ length: n }, () => ({ machine: null, worker: null, upg: [], acc: 0 }));
   const fresh = () => ({
-    v: 10, money: 0, xp: 0, level: 1, planks: 0, bricks: 0, nails: 0, glass: 0, earned: 0, cur: 0,
+    v: 10, money: 0, xp: 0, level: 1, planks: 0, bricks: 0, nails: 0, glass: 0, poufs: 0, earned: 0, cur: 0,
     locs: [
       { unlocked: true, slots: [{ machine: null, worker: null, upg: [], acc: 0 }, { machine: 'saw', worker: 'crow', upg: [], acc: 0 }, { machine: null, worker: null, upg: [], acc: 0 }] },
       { unlocked: false, slots: emptySlots(4) },
       { unlocked: false, slots: emptySlots(6) },
-      { unlocked: false, slots: emptySlots(8) }
+      { unlocked: false, slots: emptySlots(8) },
+      { unlocked: false, slots: emptySlots(2) }
     ],
     workers: { crow: { unlocked: true, equip: [] }, mrp: { unlocked: true, equip: [] }, tramp: { unlocked: false, equip: [] }, dog: { unlocked: false, equip: [] }, toad: { unlocked: false, equip: [] }, pink: { unlocked: false, equip: [] }, v1: { unlocked: false, equip: [] }, v2: { unlocked: false, equip: [] }, jeanne: { unlocked: false, equip: [] }, alien: { unlocked: false, equip: [] }, jedi: { unlocked: false, equip: [] }, silver: { unlocked: false, equip: [] }, mrsha: { unlocked: false, equip: [] }, kast: { unlocked: false, equip: [] }, batya: { unlocked: false, equip: [] } },
     lockers: ['crow', 'mrp', 'tramp', 'dog', 'toad', 'pink', 'v1', 'v2', 'jeanne', 'alien', 'jedi', 'silver', 'mrsha', 'kast', 'batya'],
     cards: [], offers: [], shopBuys: 0, crowCount: 0, silverCount: 0, firstOffer: false, crateIn: 20,
     // t: run time, q: current quota, qT/qEarned: time and coins inside it, opened: run time each workshop opened at;
     // brk: a break between shifts, time stands still; shop: the break's showcase as [{ id, bought }]
-    run: { t: 0, q: 1, qT: 0, qEarned: 0, brk: true, shop: [], rule: null, over: false, rep: 0, passed: [], hired: 0, skills: 0, bestRate: 0, opened: [0, null, null, null] }
+    run: { t: 0, q: 1, qT: 0, qEarned: 0, brk: true, shop: [], rule: null, over: false, rep: 0, passed: [], hired: 0, skills: 0, bestRate: 0, opened: [0, null, null, null, null] }
   });
   function migrate(s) {
     if (!s) return null;
@@ -532,6 +545,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       // build 10: the glass workshop got the engraver and the lens machine, so melters and blowers are capped at 2
       const seen = {};
       s.locs[3].slots.forEach((z, i) => { if ((z.machine === 'melt' || z.machine === 'blower') && (seen[z.machine] = (seen[z.machine] || 0) + 1) > 2) s.locs[3].slots[i] = { machine: null, worker: null, upg: [], acc: 0 }; });
+      // and the poufs workshop opened
+      s.locs.push({ unlocked: false, slots: emptySlots(2) }); s.poufs = 0; if (s.run) s.run.opened.push(null);
       s.v = 10;
     }
     return s.v === 8 || s.v === 10 ? s : null;
@@ -696,8 +711,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     state.cards.forEach(id => { const tg = CARDS[id].tag; tc[tg] = (tc[tg] || 0) + 1; });
     const pr = tg => Math.floor((tc[tg] || 0) / 2);
     // tag sets add up, card effects are multipliers (powerX and so on) so every card stays as strong as its number
-    const g = { power: pr('Сотрудники') * 0.05, speed: pr('Экипировка') * 0.05, price: pr('Станки') * 0.05, powerX: 1, speedX: 1, priceX: 1, locX: [1, 1, 1, 1], income: 1 + pr('Улучшения') * 0.03, tc, combos: [] };
-    const LOC_KEY = { brickPrice: 1, nailPrice: 2, glassPrice: 3 };
+    const g = { power: pr('Сотрудники') * 0.05, speed: pr('Экипировка') * 0.05, price: pr('Станки') * 0.05, powerX: 1, speedX: 1, priceX: 1, locX: LOCS.map(() => 1), income: 1 + pr('Улучшения') * 0.03, tc, combos: [] };
+    const LOC_KEY = { brickPrice: 1, nailPrice: 2, glassPrice: 3, poufPrice: 4 };
     state.cards.forEach(id => { const cd = CARDS[id]; if (cd.type === 'global') for (const k in cd.eff) { if (k in LOC_KEY) g.locX[LOC_KEY[k]] *= cd.eff[k]; else g[k + 'X'] *= cd.eff[k]; } });
     // Radio grows with every quota passed after it was taken; Union with every worker on the factory
     (state.run.radio || []).forEach(q0 => { g.priceX *= Math.pow(1.1, passedQ() - q0); });
@@ -712,6 +727,11 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     g.sawWorking = slotsOf(0).some(s => s.machine === 'saw' && s.worker);
     g.kilnWorking = slotsOf(1).some(s => s.machine === 'kiln' && s.worker);
     g.tumblerWorking = slotsOf(2).some(s => s.machine === 'tumbler' && s.worker);
+    // poufs: both machines working make it cosy, a working dryer gives frames, a working stained glass table gives glass legs
+    g.dryerWorking = slotsOf(0).some(s => s.machine === 'dryer' && s.worker);
+    g.vitrageWorking = slotsOf(3).some(s => s.machine === 'vitrage' && s.worker);
+    g.cozy = ['sew', 'stuff'].every(m => slotsOf(4).some(s => s.machine === m && s.worker && !onStrike(s.worker)));
+    if (g.cozy) g.combos.push('cozy');
     const p1 = workerPlace('v1'), p2 = workerPlace('v2');
     g.maidsLoc = p1 && p2 && p1.l === p2.l && adjacent(p1.l, p1.i, p2.i) ? p1.l : -1;
     if (g.maidsLoc >= 0) g.combos.push('maids');
@@ -764,6 +784,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (s.machine === 'wire' && g.kilnWorking) { vb += 0.2; notes.push('Печь из цеха 2 закаляет проволоку: +20% к цене'); }
     if (s.machine === 'kiln' && g.sawWorking) { rb += 0.25; notes.push('Обрезки досок из цеха 1 на растопку: +25% скорости'); }
     if (s.machine === 'vitrage' && g.tumblerWorking) { vb += 0.2; notes.push('Блестящие гвозди из цеха 3 для рам: +20% к цене'); }
+    if (l === 4 && g.dryerWorking) { vb += 0.2; notes.push('Каркас из сухих досок цеха 1: +20% к цене'); }
+    if (s.machine === 'stuff' && g.vitrageWorking) { rb += 0.2; notes.push('Стеклянные ножки из цеха 4: +20% скорости'); }
     if (s.machine !== 'belt' && LOCS[l].hot && LOCS[l].hot.includes(i)) { rb += 0.2; notes.push('Жар горна: +20% скорости'); }
     if (!s.worker || M.rate === 0 || onStrike(s.worker)) return { rate: 0, value: 0, income: 0, notes, ws: null, M };
     const ws = workerStats(s.worker, g);
@@ -781,6 +803,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const kastNear = s.worker !== 'kast' && near.some(j => sl[j].worker === 'kast');
     if (kastNear) notes.push('Кастомка рядом: +10% удачи');
     if (g.green && (s.worker === 'alien' || s.worker === 'jedi')) { power *= 1.5; notes.push('Зелёная сила: сила ×1,5'); }
+    if (g.cozy && l === 4) { power *= 1.5; notes.push('Уютно: сила ×1,5'); }
     if (ws.fb > 0) notes.push(`Друзья по шкафчику: +${pct(ws.fb)} силы`);
     if (s.worker === 'mrp' && !ws.hasCoffee) notes.push('Мистер Жопосранчик без кофе: скорость вдвое ниже');
     const sk = SKILLS[s.worker], skM = { speed: g.team[l] || 1, power: 1, value: 1, income: 1 };
@@ -837,10 +860,12 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     return pick;
   }
   const rollMastery = () => Object.keys(CARDS).filter(id => CARDS[id].mastery && !state.cards.includes(id)).sort(() => Math.random() - 0.5).slice(0, 3);
+  const addSew = o => { if (!o.ids.includes('m_sew') && eligible('m_sew')) o.ids[o.ids.length - 1] = 'm_sew'; };
   function queueOffer(src) {
     if (src === 'mastery' && !rollMastery().length) src = 'level';
     if (!state.firstOffer) { state.firstOffer = true; state.offers.push({ src, ids: ['m_bench', 'e_coffee', 'u_power'] }); }
     else state.offers.push({ src, ids: src === 'mastery' ? rollMastery() : rollOffer() });
+    if (state.run.sewDue && src !== 'mastery') { addSew(state.offers[state.offers.length - 1]); state.run.sewDue = false; }
     offersHidden = !state.run.brk; // cards that come during a shift wait for the break
     renderSheet();
   }
@@ -903,13 +928,16 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     else if (got('green')) toast('Комбо «Зелёная сила»: сила ×1,5!');
     else if (got('family')) toast('Комбо «Семейный подряд»: +20% силы!');
     else if (got('post')) toast('Комбо «Почтовый день»: посылки ×2!');
+    else if (got('cozy')) toast('Комбо «Уютно»: сила ×1,5!');
   }
   function unlockLoc(l) {
     const L = state.locs[l], cost = LOCS[l].cost;
     if (L.unlocked) return;
     if (state.money < cost) { toast(`Чтобы открыть цех, нужно ${fmt(cost)} монет`); return; }
     state.money -= cost; L.unlocked = true; state.run.opened[l] = state.run.t;
-    L.slots[1].machine = LOCS[l].start;
+    if (LOCS[l].start) L.slots[1].machine = LOCS[l].start;
+    // the poufs workshop starts empty: its sewing machine is promised in the next card pick, a waiting one if there is one
+    if (l === 4) { const o = state.offers.find(x => ['level', 'quota', 'crate'].includes(x.src)); if (o) addSew(o); else state.run.sewDue = true; }
     state.cur = l; selSlot = null; selWorker = null;
     toast(LOCS[l].opened);
     save(); renderSheet(); renderTabs();
@@ -1041,8 +1069,10 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   function layout() {
     const [cols, rows] = gridSize(state.cur);
     const w = Math.max(240, cols * 78 + 6), fl = rowY(rows) + 12; // fl: floor ends, locker room begins
+    // the slots are centred before the early exit: poufs and planks share a canvas size but not a column count
+    OX = Math.round((w - (cols * 78 - 6)) / 2);
     if (w === W && fl === FL && cv.style.aspectRatio) return;
-    W = w; FL = fl; LY = FL + 22; H = LY + 122; OX = Math.round((W - (cols * 78 - 6)) / 2);
+    W = w; FL = fl; LY = FL + 22; H = LY + 122;
     low.width = W; low.height = H; cv.style.aspectRatio = `${W} / ${H}`;
     fit();
   }
@@ -1153,6 +1183,29 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       R(x + 4, y + 1, 7, 1, 'rgba(255,255,255,.45)');
       const sx = Math.floor((t * 10) % 40); if (sx < 24) { R(x + 4 + sx, y + 3, 1, 1, '#ffffff'); R(x + 3 + sx, y + 4, 3, 1, 'rgba(255,255,255,.7)'); R(x + 4 + sx, y + 5, 1, 1, '#ffffff'); }
       R(x + 14, y + 22, 4, 6, K); R(x + 15, y + 22, 2, 5, '#8a5a32'); R(x + 5, y + 27, 22, 3, K); R(x + 6, y + 28, 20, 1, '#8a5a32');
+    } else if (type === 'sew') {
+      R(x + 1, y + 20, 30, 4, K); R(x + 2, y + 21, 28, 2, '#a8693a'); R(x + 2, y + 21, 28, 1, '#c98a52');
+      R(x + 3, y + 24, 3, 6, K); R(x + 26, y + 24, 3, 6, K);
+      const off = Math.floor(t * 6) % 4;
+      R(x + 3, y + 18, 16, 3, K); R(x + 4, y + 19, 14, 1, '#f08cb4'); for (let i = 0; i < 4; i++) R(x + 4 + (i * 4 + off) % 14, y + 19, 2, 1, '#fff1f6');
+      R(x + 6, y + 15, 22, 4, K); R(x + 7, y + 16, 20, 2, '#7fc8b4');
+      R(x + 20, y + 4, 8, 12, K); R(x + 21, y + 5, 6, 11, '#7fc8b4');
+      R(x + 5, y + 3, 23, 6, K); R(x + 6, y + 4, 21, 4, '#7fc8b4'); R(x + 6, y + 4, 21, 1, '#b8eedd'); R(x + 12, y + 6, 7, 1, '#f2c14e');
+      R(x + 5, y + 8, 6, 5, K); R(x + 6, y + 8, 4, 4, '#7fc8b4');
+      const ny = Math.floor(t * 10) % 2; R(x + 8, y + 12, 1, 4 + ny, '#e9eef2');
+      disc(x + 28, y + 9, 3, K); disc(x + 28, y + 9, 2, '#c9d0d6'); R(x + 28 + (Math.floor(t * 6) % 2), y + 8, 1, 1, K);
+      R(x + 14, y, 4, 4, K); R(x + 15, y + 1, 2, 2, '#ff6fa8'); R(x + 16, y + 3, 1, 1, '#ff6fa8');
+      for (let k = 0; k < 6; k++) R(x + 9 + k, y + 2 + Math.round(k * 0.3), 1, 1, '#ff6fa8');
+    } else if (type === 'stuff') {
+      R(x + 3, y + 23, 26, 7, K); R(x + 4, y + 24, 24, 5, '#9b6bd6'); R(x + 4, y + 24, 24, 1, '#c09af0');
+      for (let i = 0; i < 3; i++) R(x + 7 + i * 8, y + 26, 3, 2, '#7a4fb3');
+      R(x + 6, y + 3, 20, 8, K); R(x + 7, y + 4, 18, 6, '#c9d0d6'); R(x + 7, y + 4, 18, 1, '#e9eef2');
+      R(x + 9, y + 9, 14, 3, K); R(x + 10, y + 10, 12, 1, '#9aa3ad');
+      for (const [cx, cy, r] of [[11, 3, 3], [17, 2, 3], [22, 3, 2]]) { const b = Math.round(Math.sin(t * 3 + cx) * 0.6); disc(x + cx, y + cy + b, r + 1, K); disc(x + cx, y + cy + b, r, '#ffffff'); }
+      R(x + 14, y + 12, 4, 3, K); R(x + 15, y + 12, 2, 3, '#9aa3ad');
+      const rr = 3 + Math.floor(((t * 0.6) % 1) * 4), cy = y + 22 - rr;
+      disc(x + 16, cy, rr + 1, K); disc(x + 16, cy, rr, '#f08cb4'); R(x + 14, cy - rr + 1, 2, 1, '#ffd0e4'); R(x + 16, cy - 1, 1, 1, '#c94f7c');
+      R(x + 26, y + 12, 5, 9, K); R(x + 27, y + 13, 3, 7, '#f2c14e'); R(x + 28, y + 14, 1, 1, Math.floor(t * 3) % 2 ? '#7ee081' : '#3d7a4a');
     }
   }
   function pile(x, y, n, col) { for (let k = 0; k < n; k++) { R(x, y - k * 3, 12, 4, K); R(x + 1, y - k * 3 + 1, 10, 2, col); } }
@@ -1190,14 +1243,41 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       // the whole wall is stained glass
       for (let xx = 0; xx < W; xx += 10) for (let r = 0; r < 3; r++) { R(xx + 1, 1 + r * 9, 8, 8, VCOL[(xx / 10 * 2 + r * 3) % VCOL.length]); R(xx + 2, 2 + r * 9, 3, 1, 'rgba(255,255,255,.35)'); }
     }
+    else if (l === 4) {
+      // classroom: light blue paint, a darker painted band below
+      R(0, 0, W, 3, '#8cbcea'); R(0, 19, W, 9, '#4f86c4'); R(0, 19, W, 1, '#3f6fa8');
+    }
     else { for (let xx = 0; xx < W; xx += 30) R(xx, 0, 1, 29, LT.mortar); R(0, 14, W, 1, LT.mortar); R(0, 22, W, 3, '#5f6168'); R(0, 22, W, 1, '#9a9ca5'); for (let xx = 8; xx < W; xx += 40) R(xx, 21, 4, 5, '#4a4c53'); }
-    if (l !== 3) for (const wx of [14, W - 54]) { R(wx, 4, 40, 17, K); R(wx + 1, 5, 38, 15, LT.glass); R(wx + 4, 7, 6, 1, '#f4f0e6'); R(wx + 20, 5, 1, 15, K); R(wx + 1, 12, 38, 1, K); }
+    if (l === 4) for (const wx of [14, W - 54]) {
+      R(wx, 3, 40, 2, '#c9d0d6'); for (let i = 0; i < 10; i++) { R(wx + 1 + i * 4, 5, 3, 15, '#a8dcf4'); R(wx + 4 + i * 4, 5, 1, 15, '#6fb4dc'); }
+      R(wx + 4, 21, 32, 7, K); R(wx + 5, 22, 30, 5, '#e9eef2'); for (let i = 0; i < 7; i++) R(wx + 7 + i * 4, 22, 1, 5, '#b8c0c8');
+    }
+    if (l === 4) R(W / 2 - 46, 3, 92, 19, '#b8c0c8');
+    if (l !== 3 && l !== 4) for (const wx of [14, W - 54]) { R(wx, 4, 40, 17, K); R(wx + 1, 5, 38, 15, LT.glass); R(wx + 4, 7, 6, 1, '#f4f0e6'); R(wx + 20, 5, 1, 15, K); R(wx + 1, 12, 38, 1, K); }
     R(W / 2 - 44, 5, 88, 15, K); R(W / 2 - 43, 6, 86, 13, LT.board); R(W / 2 - 43, 6, 86, 1, LT.boardHi);
     R(0, 28, W, 3, '#5a3f36');
     // floor
     R(0, 31, W, FL - 31, LT.floor);
     for (let yy = 31; yy < FL; yy += 20) R(0, yy, W, 1, LT.grid);
     for (let xx = 0; xx < W; xx += 20) R(xx, 31, 1, FL - 31, LT.grid);
+    if (l === 4) {
+      // star parquet: light strips make octagons, dark wooden stars sit where they meet
+      const TS = 24, LS = '#d9bc84', LD = '#bf9f68';
+      for (let ty = 31; ty < FL; ty += TS) for (let tx = -12; tx < W; tx += TS) {
+        R(tx + 3, ty + 3, 9, 9, '#a3713f'); R(tx + 12, ty + 12, 9, 9, '#a3713f'); R(tx + 12, ty + 3, 9, 9, '#8a5a30'); R(tx + 3, ty + 12, 9, 9, '#8a5a30');
+        R(tx + 7, ty + 1, 10, 2, LS); R(tx + 7, ty + 21, 10, 2, LD); R(tx + 1, ty + 7, 2, 10, LS); R(tx + 21, ty + 7, 2, 10, LD);
+        for (let k = 0; k < 5; k++) { R(tx + 16 + k, ty + 2 + k, 2, 2, LS); R(tx + 21 - k, ty + 16 + k, 2, 2, LD); R(tx + 2 + k, ty + 16 + k, 2, 2, LD); R(tx + 7 - k, ty + 2 + k, 2, 2, LS); }
+        const cx = tx + TS, cy = ty + TS; R(cx - 2, cy - 2, 4, 4, '#5a3420'); R(cx - 1, cy - 4, 2, 8, '#5a3420'); R(cx - 4, cy - 1, 8, 2, '#5a3420');
+      }
+      R(0, FL - 1, W, 1, '#5a3420');
+      // a black bean bag and a school desk
+      const ell = (cx, cy, rx, ry, col) => { for (let dy = -ry; dy <= ry; dy++) { const w = Math.round(rx * Math.sqrt(1 - (dy / ry) ** 2)); R(cx - w, cy + dy, w * 2 + 1, 1, col); } };
+      const bx = 4, by = FL - 26; R(bx + 2, by + 22, 28, 2, 'rgba(30,20,40,.3)');
+      ell(bx + 15, by + 15, 14, 8, K); ell(bx + 12, by + 8, 9, 7, K); ell(bx + 15, by + 15, 13, 7, '#3a3a44'); ell(bx + 12, by + 8, 8, 6, '#3a3a44');
+      ell(bx + 10, by + 6, 4, 3, '#4c4c58'); R(bx + 6, by + 13, 12, 1, '#2a2a32'); R(bx + 18, by + 9, 1, 5, '#2a2a32'); R(bx + 21, by + 15, 6, 1, '#2a2a32'); R(bx + 4, by + 17, 5, 1, '#4c4c58');
+      const dx = W - 36, dy = FL - 34; R(dx + 2, dy + 28, 28, 2, 'rgba(30,20,40,.3)'); R(dx, dy, 30, 5, K); R(dx + 1, dy + 1, 28, 3, '#d9a66a'); R(dx + 1, dy + 1, 28, 1, '#ecc48f'); R(dx + 6, dy + 5, 18, 5, K); R(dx + 7, dy + 5, 16, 4, '#c98a52');
+      R(dx + 3, dy + 5, 2, 22, '#c9d0d6'); R(dx + 25, dy + 5, 2, 22, '#c9d0d6'); R(dx + 1, dy + 26, 6, 2, '#9aa3ad'); R(dx + 23, dy + 26, 6, 2, '#9aa3ad');
+    }
     if (l === 3) {
       // coloured light falls through the stained glass onto the floor
       for (let k = 0; k < 6; k++) for (let yy = 31; yy < FL; yy += 2) R(k * 44 - 20 + (yy - 31) * 0.35, yy, 16, 2, VCOL_A[k]);
@@ -1208,7 +1288,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     sl.forEach((s, i) => {
       const x = SX(i), y = SY(i);
       if (LT.plates) { R(x, y, SW, SH, K); R(x + 1, y + 1, SW - 2, SH - 2, LT.plates[i]); R(x + 1, y + 1, SW - 2, 1, 'rgba(255,255,255,.3)'); for (let k = 0; k < 5; k++) R(x + 6 + k * 14, y + 1 + (k % 2) * 30, 1, 1, 'rgba(255,255,255,.5)'); }
-      else { R(x, y, SW, SH, '#857d72'); R(x + 1, y + 1, SW - 2, SH - 2, LT.plate); }
+      else { R(x, y, SW, SH, LT.frame || '#857d72'); R(x + 1, y + 1, SW - 2, SH - 2, LT.plate); }
       for (const [ax, ay, dx, dy] of [[x + 2, y + 2, 1, 1], [x + SW - 3, y + 2, -1, 1], [x + 2, y + SH - 3, 1, -1], [x + SW - 3, y + SH - 3, -1, -1]]) {
         R(dx > 0 ? ax : ax - 5, ay, 6, 1, '#e9c046'); R(ax, dy > 0 ? ay : ay - 5, 1, 6, '#e9c046');
       }
@@ -1502,9 +1582,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   }
   function idleHTML() {
     const g = globals();
-    const combos = g.combos.map(k => ({ night: '<span class="chip" style="--rc:var(--r3)">Ночная смена ×1,5</span>', maids: `<span class="chip" style="--rc:var(--r3)">Дуэт горничных: цех ${g.maidsLoc + 1} ×2</span>`, green: '<span class="chip" style="--rc:var(--r2)">Зелёная сила ×1,5</span>', family: `<span class="chip" style="--rc:var(--r3)">Семейный подряд${g.familyLoc >= 0 ? `: цех ${g.familyLoc + 1} ×2` : ''}</span>`, post: '<span class="chip" style="--rc:var(--r3)">Почтовый день: посылки ×2</span>' })[k]).join('') + (state.run.subs ? `<span class="chip" style="--rc:var(--r3)">Подписка: +${pct(state.run.subs)} дохода</span>` : '');
+    const combos = g.combos.map(k => ({ night: '<span class="chip" style="--rc:var(--r3)">Ночная смена ×1,5</span>', maids: `<span class="chip" style="--rc:var(--r3)">Дуэт горничных: цех ${g.maidsLoc + 1} ×2</span>`, green: '<span class="chip" style="--rc:var(--r2)">Зелёная сила ×1,5</span>', family: `<span class="chip" style="--rc:var(--r3)">Семейный подряд${g.familyLoc >= 0 ? `: цех ${g.familyLoc + 1} ×2` : ''}</span>`, post: '<span class="chip" style="--rc:var(--r3)">Почтовый день: посылки ×2</span>', cozy: '<span class="chip" style="--rc:var(--r1)">Уютно: сила ×1,5</span>' })[k]).join('') + (state.run.subs ? `<span class="chip" style="--rc:var(--r3)">Подписка: +${pct(state.run.subs)} дохода</span>` : '');
     if (guest) return `<h2>Завод: ${esc(guest.n)}</h2><p class="muted">Это снимок чужого завода: можно нажимать на станки и сотрудников и смотреть, как всё устроено.</p><h3>Рекорды</h3>${recordsHTML(guest.r, guest.a.length, meta.records)}`;
-    return `<h2>Цех ${state.cur + 1} · ${LOCS[state.cur].name}</h2><p class="muted">Нажми на шкафчик, а потом на станок, чтобы поставить туда сотрудника. Каждый сотрудник один на весь завод. Соседние станки усиливают друг друга, соседи по шкафчику дружат.</p>${combos ? `<h3>Активные комбо</h3><div class="row">${combos}</div>` : ''}<p class="muted">Досок: <b id="live-planks">0</b> · кирпичей: <b id="live-bricks">0</b> · гвоздей: <b id="live-nails">0</b> · стекла: <b id="live-glass">0</b></p>`;
+    return `<h2>Цех ${state.cur + 1} · ${LOCS[state.cur].name}</h2><p class="muted">Нажми на шкафчик, а потом на станок, чтобы поставить туда сотрудника. Каждый сотрудник один на весь завод. Соседние станки усиливают друг друга, соседи по шкафчику дружат.</p>${combos ? `<h3>Активные комбо</h3><div class="row">${combos}</div>` : ''}<p class="muted">Досок: <b id="live-planks">0</b> · кирпичей: <b id="live-bricks">0</b> · гвоздей: <b id="live-nails">0</b> · стекла: <b id="live-glass">0</b> · пуфиков: <b id="live-poufs">0</b></p>`;
   }
   function slotHTML(i) {
     const l = state.cur, s = slotsOf(l)[i];
@@ -1534,7 +1614,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const sets = Object.keys(TAGS).map(tg => { const n = g.tc[tg] || 0, p = Math.floor(n / 2); return `<dt class="${p ? 'on' : ''}">${tg}: ${n}</dt><dd>${TAGS[tg]}. Комплектов: ${p}</dd>`; }).join('');
     const night = g.combos.includes('night');
     const owned = Object.keys(counts).map(id => chip(id).replace('</span>', counts[id] > 1 ? ` ×${counts[id]}</span>` : '</span>')).join('') || '<span class="muted">Пока нет карт</span>';
-    return `<h2>Колода</h2><h3>Комплекты по тегам</h3><dl class="sets">${sets}</dl><h3>Комбо</h3><dl class="sets"><dt class="${night ? 'on' : ''}">Ночная смена</dt><dd>Крепкий кофе + Конвейер + Бродяга: доход ×1,5</dd><dt class="${g.sawWorking && anySlot(s => s.machine === 'kiln') ? 'on' : ''}">Растопка</dt><dd>Пилорама работает в цеху 1: печи в цеху 2 +25% скорости</dd><dt class="${g.kilnWorking && anySlot(s => s.machine === 'wire') ? 'on' : ''}">Закалка</dt><dd>Печь работает в цеху 2: проволока в цеху 3 +20% к цене</dd><dt class="${g.maidsLoc >= 0 ? 'on' : ''}">Дуэт горничных</dt><dd>V1 и V2 на соседних станках: доход их цеха ×2</dd><dt class="${g.green ? 'on' : ''}">Зелёная сила</dt><dd>Пришелец и Хаба на соседних станках: сила обоих ×1,5</dd><dt class="${g.combos.includes('family') ? 'on' : ''}">Семейный подряд</dt><dd>Хаба, Кастомка и Батя: соседям по станку из этой тройки +20% силы, все трое в одном цеху: доход цеха ×2</dd><dt class="${g.tumblerWorking && anySlot(s => s.machine === 'vitrage') ? 'on' : ''}">Рамы на гвоздях</dt><dd>Барабан работает в цеху 3: витражи в цеху 4 +20% к цене</dd><dt class="${g.combos.includes('post') ? 'on' : ''}">Почтовый день</dt><dd>Почтальон + Курьер + Подписка: монеты в посылках ×2</dd></dl><h3>Твои карты</h3><div class="row">${owned}</div><div class="row"><button class="btn" type="button" data-act="back">Назад</button></div>`;
+    return `<h2>Колода</h2><h3>Комплекты по тегам</h3><dl class="sets">${sets}</dl><h3>Комбо</h3><dl class="sets"><dt class="${night ? 'on' : ''}">Ночная смена</dt><dd>Крепкий кофе + Конвейер + Бродяга: доход ×1,5</dd><dt class="${g.sawWorking && anySlot(s => s.machine === 'kiln') ? 'on' : ''}">Растопка</dt><dd>Пилорама работает в цеху 1: печи в цеху 2 +25% скорости</dd><dt class="${g.kilnWorking && anySlot(s => s.machine === 'wire') ? 'on' : ''}">Закалка</dt><dd>Печь работает в цеху 2: проволока в цеху 3 +20% к цене</dd><dt class="${g.maidsLoc >= 0 ? 'on' : ''}">Дуэт горничных</dt><dd>V1 и V2 на соседних станках: доход их цеха ×2</dd><dt class="${g.green ? 'on' : ''}">Зелёная сила</dt><dd>Пришелец и Хаба на соседних станках: сила обоих ×1,5</dd><dt class="${g.combos.includes('family') ? 'on' : ''}">Семейный подряд</dt><dd>Хаба, Кастомка и Батя: соседям по станку из этой тройки +20% силы, все трое в одном цеху: доход цеха ×2</dd><dt class="${g.tumblerWorking && anySlot(s => s.machine === 'vitrage') ? 'on' : ''}">Рамы на гвоздях</dt><dd>Барабан работает в цеху 3: витражи в цеху 4 +20% к цене</dd><dt class="${g.cozy ? 'on' : ''}">Уютно</dt><dd>Швейная машинка и набивочный автомат работают: сила обоих сотрудников ×1,5</dd><dt class="${g.dryerWorking && state.locs[4].unlocked ? 'on' : ''}">Каркас</dt><dd>Сушилка работает в цеху 1: пуфики +20% к цене</dd><dt class="${g.vitrageWorking && anySlot(s => s.machine === 'stuff') ? 'on' : ''}">Стеклянные ножки</dt><dd>Витраж работает в цеху 4: набивка +20% скорости</dd><dt class="${g.combos.includes('post') ? 'on' : ''}">Почтовый день</dt><dd>Почтальон + Курьер + Подписка: монеты в посылках ×2</dd></dl><h3>Твои карты</h3><div class="row">${owned}</div><div class="row"><button class="btn" type="button" data-act="back">Назад</button></div>`;
   }
   const mmss = sec => `${Math.floor(sec / 60)}:${String(Math.floor(sec % 60)).padStart(2, '0')}`;
   // two columns when comparing with a friend: theirs first, ours second
@@ -1607,7 +1687,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       set('live-skill', !workerPlace(selWorker) ? 'Срабатывает, только когда сотрудник у станка' : skillOn(selWorker) ? `Активен: ещё ${Math.ceil(skDur(selWorker) - w.skT)} с` : `Перезарядка: ${Math.ceil(sk.cd - w.skT)} с`);
     }
     if (selWorker) { const ws = workerStats(selWorker, g); set('live-power', fmt(ws.power)); set('live-speed', fmt(ws.speed)); set('live-luck', pct(ws.luck)); }
-    set('live-planks', fmt(state.planks)); set('live-bricks', fmt(state.bricks)); set('live-nails', fmt(state.nails || 0)); set('live-glass', fmt(state.glass || 0));
+    set('live-planks', fmt(state.planks)); set('live-bricks', fmt(state.bricks)); set('live-nails', fmt(state.nails || 0)); set('live-glass', fmt(state.glass || 0)); set('live-poufs', fmt(state.poufs || 0));
   }
   document.querySelector('.sheet').addEventListener('click', e => {
     const b = e.target.closest('[data-act]');
