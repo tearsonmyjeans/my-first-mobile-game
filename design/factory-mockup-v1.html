@@ -1,0 +1,555 @@
+<title>Цех досок</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&family=Tiny5&display=swap">
+<style>
+/* Layout: phone-sized game screen on the left, side panel on the right (selected machine, staff, palette); stacks on phones */
+:root{
+  --bg:#e7e5ee;
+  --surface:#f5f4f9;
+  --ink:#2b2135;
+  --muted:#625979;
+  --line:#d2cde0;
+  --accent:#e0a32e;
+  --accent-ink:#8a5a00;
+  --good:#3f9a52;
+  --bezel:#2b2135;
+  --pixel:"Tiny5","Courier New",monospace;
+  --body:"Nunito","Segoe UI",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#16121e;--surface:#211b2b;--ink:#ece8f5;--muted:#a69dbb;--line:#352d45;
+    --accent:#f2b53a;--accent-ink:#f2b53a;--good:#7ee081;--bezel:#0c0a11;color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#16121e;--surface:#211b2b;--ink:#ece8f5;--muted:#a69dbb;--line:#352d45;
+  --accent:#f2b53a;--accent-ink:#f2b53a;--good:#7ee081;--bezel:#0c0a11;color-scheme:dark;
+}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 var(--body)}
+.wrap{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:36px 64px;display:flex;flex-direction:column;gap:28px}
+.eyebrow{font:400 13px/1.2 var(--pixel);letter-spacing:.08em;text-transform:uppercase;color:var(--accent-ink);margin:0}
+h1{font:400 clamp(36px,6vw,60px)/1 var(--pixel);margin:8px 0 10px;text-wrap:balance}
+.lead{margin:0;max-width:62ch;color:var(--muted);font-size:17px}
+.layout{display:grid;grid-template-columns:minmax(0,440px) minmax(0,1fr);gap:32px;align-items:start}
+@media (max-width:880px){.layout{grid-template-columns:minmax(0,1fr)}}
+.phone{background:var(--bezel);border-radius:28px;padding:14px 10px;box-shadow:0 24px 50px -28px rgba(20,10,40,.7);max-width:440px;width:100%;margin:0 auto}
+#game{display:block;width:100%;max-width:100%;aspect-ratio:240/428;height:auto;border-radius:16px;image-rendering:pixelated;touch-action:manipulation}
+.hint{font-size:14px;color:var(--muted);text-align:center;margin:10px 0 0}
+.side{display:flex;flex-direction:column;gap:22px;min-width:0}
+.panel{background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.panel h2{font:400 22px/1.1 var(--pixel);margin:0}
+.panel h3{font:400 13px/1.2 var(--pixel);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:4px 0 0}
+.panel p{margin:0;max-width:62ch}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:400 14px/1 var(--pixel);border:2px solid var(--ink);color:var(--ink);background:transparent;border-radius:8px;padding:7px 10px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#2b2135}
+.chip:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.tagc{font:400 13px/1 var(--pixel);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:5px 8px}
+.links{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px}
+.links li{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:baseline}
+.links b{font:400 14px var(--pixel);color:var(--good);white-space:nowrap}
+.links .off b{color:var(--muted)}
+.staff{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (max-width:520px){.staff{grid-template-columns:minmax(0,1fr)}}
+.worker{background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.worker .top{display:flex;gap:14px;align-items:flex-end}
+.spr{width:92px;height:auto;aspect-ratio:23/32;image-rendering:pixelated;background:#a39b8f;border-radius:10px;padding:6px;box-sizing:content-box;flex:none}
+.worker h3{font:400 19px/1.1 var(--pixel);margin:0;color:var(--ink);letter-spacing:0;text-transform:none}
+.role{font-size:14px;color:var(--muted);margin:2px 0 0}
+.stats{display:grid;grid-template-columns:auto 1fr auto;gap:4px 10px;align-items:center;font-size:14px;margin:0}
+.stats dt{color:var(--muted)}
+.stats dd{margin:0}
+.bar{height:8px;background:var(--line);border-radius:2px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent)}
+.num{font:400 14px var(--pixel);font-variant-numeric:tabular-nums;margin:0}
+.perk{font-size:14px;margin:0}
+.perk b{font-family:var(--pixel);font-weight:400}
+.legend{display:grid;grid-template-columns:auto 1fr;gap:8px 12px;align-items:center;font-size:15px;margin:0}
+.sw{width:18px;height:18px;border-radius:3px;border:2px solid}
+.palette{display:grid;grid-template-columns:repeat(auto-fill,minmax(26px,1fr));gap:4px}
+.palette span{aspect-ratio:1;border-radius:3px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)}
+</style>
+
+<main class="wrap">
+  <header>
+    <p class="eyebrow">Пиксельный завод · макет v1</p>
+    <h1>Цех досок</h1>
+    <p class="lead">Предварительный дизайн главного экрана первой локации. Нажми на любой станок или пустое место в сетке и увидишь, с кем оно связано. Карточки внизу экрана тоже нажимаются.</p>
+  </header>
+
+  <div class="layout">
+    <div>
+      <div class="phone"><canvas id="game" role="img" aria-label="Экран игры: цех досок с сеткой станков 3 на 3, раздевалкой и выбором карточки"></canvas></div>
+      <p class="hint">Попробуй выбрать конвейер: он связан со всем своим рядом.</p>
+    </div>
+
+    <div class="side">
+      <section class="panel" aria-labelledby="sel-name">
+        <h3>Выбранное место</h3>
+        <h2 id="sel-name">Пилорама</h2>
+        <p id="sel-desc"></p>
+        <div class="chips" id="pick" role="group" aria-label="Выбрать станок"></div>
+        <h3>Связи с соседями</h3>
+        <ul class="links" id="sel-links"></ul>
+        <h3>Установленные карты</h3>
+        <div class="chips" id="sel-cards"></div>
+      </section>
+
+      <section aria-label="Сотрудники" class="staff">
+        <article class="worker">
+          <div class="top">
+            <canvas class="spr" width="23" height="32" data-spr="girl" role="img" aria-label="Спрайт Вороны"></canvas>
+            <div><h3>Ворона</h3><p class="role">Оператор пилорамы</p></div>
+          </div>
+          <dl class="stats">
+            <dt>Сила</dt><dd><div class="bar"><i style="width:60%"></i></div></dd><dd class="num">6</dd>
+            <dt>Скорость</dt><dd><div class="bar"><i style="width:80%"></i></div></dd><dd class="num">8</dd>
+            <dt>Удача</dt><dd><div class="bar"><i style="width:50%"></i></div></dd><dd class="num">5</dd>
+          </dl>
+          <div class="chips"><span class="tagc">Защитные очки</span><span class="tagc">Перчатки без пальцев</span></div>
+          <p class="perk"><b>Меткий распил.</b> Каждая 7-я доска выходит двойной.</p>
+        </article>
+        <article class="worker">
+          <div class="top">
+            <canvas class="spr" width="23" height="32" data-spr="mrp" role="img" aria-label="Спрайт Мистера Жопосранчика"></canvas>
+            <div><h3>Мистер Жопосранчик</h3><p class="role">Помощник у верстака</p></div>
+          </div>
+          <dl class="stats">
+            <dt>Сила</dt><dd><div class="bar"><i style="width:40%"></i></div></dd><dd class="num">4</dd>
+            <dt>Скорость</dt><dd><div class="bar"><i style="width:30%"></i></div></dd><dd class="num">3</dd>
+            <dt>Удача</dt><dd><div class="bar"><i style="width:90%"></i></div></dd><dd class="num">9</dd>
+          </dl>
+          <div class="chips"><span class="tagc">Цилиндр</span><span class="tagc">Кружка кофе</span></div>
+          <p class="perk"><b>Ооо-ви-и!</b> +5% силы соседу по шкафчику. Без кофе работает вполсилы.</p>
+        </article>
+      </section>
+
+      <section class="panel" aria-labelledby="h-legend">
+        <h2 id="h-legend">Как читать экран</h2>
+        <dl class="legend">
+          <dt><span class="sw" style="display:block;border-color:#ffd54a;background:transparent"></span></dt><dd>Выбранный станок</dd>
+          <dt><span class="sw" style="display:block;border-color:#7ee081;background:transparent"></span></dt><dd>Соседи: их карты работают вместе с картами выбранного</dd>
+          <dt><span class="sw" style="display:block;border-color:#2b2135;background:rgba(30,22,45,.5)"></span></dt><dd>Не связаны с выбранным станком</dd>
+          <dt><span class="sw" style="display:block;border-color:#2b2135;background:#4f8fd6"></span></dt><dd>Фишки в углу места показывают, сколько карт установлено</dd>
+          <dt><span class="sw" style="display:block;border-color:#2b2135;background:#ff7a9a"></span></dt><dd>Сердечко в раздевалке: соседи по шкафчику дружат и дают бонус</dd>
+        </dl>
+        <h3>Палитра</h3>
+        <div class="palette" id="palette"></div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<script>
+(() => {
+  const W = 240, H = 428;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const PAL = {
+    k: '#2b2135', w: '#f4efe6',
+    s: '#f2c7a5', S: '#d9a07f', c: '#e8968a',
+    h: '#2a2433', H: '#3fb6b0', q: '#f2c94c',
+    o: '#6f7a3e', O: '#545d2c', b: '#26222e', d: '#5a4a6a', p: '#c9c9d6', m: '#9c4a4a',
+    g: '#4a4a57', G: '#363641', B: '#5a3a2c',
+    y: '#f1e08a', Y: '#d4bf5e', t: '#5b7f8a', T: '#7fa3ad', n: '#2e3f45', R: '#d9535a', e: '#2a2433',
+    u: '#a89a5c', a: '#aab4bd', A: '#7f8a94'
+  };
+
+  const GIRL = [
+    '6.8k6.', '4.2k8h2k4.', '3.k3h3H6hk3.', '2.kh4k4h4khk2.', '2.khk2qk4hk2qkhk2.', '.k2h4k4h4k2hk.',
+    '.k16hk.', '.k16hk.', '.k16hk.', '.k10h3s3hk.', '.k7h6s3hk.', '.k5hwe2swe2s3hk.', '.k4hs2e2s2e2s3hk.',
+    '.k3hsc3sp2scs3hk.', '.k3h3sp2mp3s3hk.', '.k3hk8sk3hk.', '2.k2h3k4s3k2hk2.',
+    '3.k4o4b4ok3.', '2.k5o4b5ok2.', '.kbo2O2o4b2o2Oobk.', '.kb5o4b5obk.', '.ks5o4b5osk.', '.ks5o4b5odk.',
+    '.ks5OO2qO5Osk.', '.kb14gbk.', '2.k14gk2.', '2.kg2G8g2Ggk2.', '2.kg2G3g2k3g2Ggk2.',
+    '3.k5g2k5gk3.', '3.k5g2k5gk3.', '2.k6B2k6Bk2.', '2.7k2.7k2.'
+  ];
+  const MRP = [
+    '6.8k6.', '6.ktT4tk6.', '6.k6tk6.', '6.k6nk6.', '4.k10tk4.', '4.12k4.',
+    '4.k10yk4.', '4.k2y6Y2yk4.', '4.k10yk4.', '4.k4Y2y4Yk4.', '4.kR2wR2yR2wRk4.', '4.kRwkR2yRkwRk4.',
+    '4.k4R2y4Rk4.', '4.k4yY5yk4.', '4.ky8uyk4.', '4.ky3u2m3uyk4.', '4.ky8uyk4.', '4.k2y6u2yk4.',
+    '3.k3a6y3ak3.', '2.k4a6y4ak2.', '2.k3aA6yA3ak2.', '2.k3aA6yA3ak2.', '2.k5a2A7ak2.', '2.k14Ak2.',
+    '2.k6a2A6ak2.', '2.k6a2A6ak2.', '2.k6a2k6ak2.', '2.16k2.', '6.kyk2.kyk6.', '6.kyk2.kyk6.',
+    '5.k2yk2.k2yk5.', '5.4k2.4k5.'
+  ];
+
+  const rle = rows => rows.map(r => { let out = ''; r.replace(/(\d*)(\D)/g, (m, n, ch) => { out += ch.repeat(n ? +n : 1); return m; }); return out; });
+  function spriteCanvas(rows, w, extra) {
+    const r = rle(rows);
+    const cv = document.createElement('canvas'); cv.width = w; cv.height = r.length;
+    const x = cv.getContext('2d');
+    r.forEach((s, yy) => [...s].forEach((ch, xx) => { if (ch !== '.') { x.fillStyle = PAL[ch]; x.fillRect(xx, yy, 1, 1); } }));
+    if (extra) extra(x);
+    return cv;
+  }
+  const SPR = {
+    girl: spriteCanvas(GIRL, 23),
+    mrp: spriteCanvas(MRP, 23, x => {
+      const f = (a, b, c, d, col) => { x.fillStyle = col; x.fillRect(a, b, c, d); };
+      f(15, 21, 2, 2, PAL.y);
+      f(16, 19, 5, 6, PAL.k); f(17, 20, 3, 4, '#e8e4da'); f(17, 20, 3, 1, '#6b4226'); f(21, 21, 1, 3, PAL.k);
+    })
+  };
+
+  /* ---------- game screen ---------- */
+  const main = document.getElementById('game');
+  const c = main.getContext('2d');
+  const low = document.createElement('canvas'); low.width = W; low.height = H;
+  const g = low.getContext('2d');
+  const R = (x, y, w, h, col) => { g.fillStyle = col; g.fillRect(Math.round(x), Math.round(y), w, h); };
+  const K = PAL.k;
+  let S = 2;
+
+  const GX = 18, GY = 76, CELL = 64, GAP = 6;
+  const cellXY = (r, col) => [GX + col * (CELL + GAP), GY + r * (CELL + GAP)];
+  const layout = [['empty', 'bench', 'sander'], ['dryer', 'saw', 'belt'], ['empty', 'empty', 'empty']];
+  const workers = { '1,1': { spr: 'girl', i: 0 }, '0,1': { spr: 'mrp', i: 1 } };
+
+  const INFO = {
+    saw: { name: 'Пилорама', desc: 'Распиливает брёвна на доски. Главный станок цеха, у неё работает Ворона.', cards: [['Острое полотно', '#4f8fd6'], ['Смазка', '#8a93a0'], ['Ворона', '#9b6bd6']] },
+    bench: { name: 'Верстак', desc: 'Строгает доски, и они дорожают. Здесь стоит Мистер Жопосранчик.', cards: [['Набор рубанков', '#8a93a0'], ['Мистер Жопосранчик', '#9b6bd6']] },
+    dryer: { name: 'Сушилка', desc: 'Сушит доски. Работает медленнее, зато сухие доски стоят дороже.', cards: [['Термостат', '#4f8fd6']] },
+    belt: { name: 'Конвейер', desc: 'Перевозит доски. Особое правило: связан со всем своим рядом, а не только с соседями по сторонам.', cards: [['Резиновая лента', '#8a93a0']] },
+    sander: { name: 'Шлифовальный станок', desc: 'Полирует доски до блеска. Стоит в углу, поэтому касается только двух соседей.', cards: [['Наждачка Р120', '#8a93a0']] },
+    empty: { name: 'Свободное место', desc: 'Сюда можно поставить новый станок. Он сразу подключится ко всем соседям.', cards: [] }
+  };
+  const PAIRS = {
+    'saw|bench': 'Доски сразу строгаются: +10% к цене',
+    'saw|dryer': 'Свежий распил сохнет быстрее: +8% скорости',
+    'saw|belt': 'Доски уезжают сами: +12% скорости пилорамы',
+    'bench|sander': 'Шлифовка после строгания: +15% к цене',
+    'belt|sander': 'Готовые доски сразу на склад: +5% скорости',
+    'dryer|belt': 'Конвейер подаёт сухие доски: +7% скорости'
+  };
+  const pairText = (a, b) => PAIRS[a + '|' + b] || PAIRS[b + '|' + a] || 'Общая связка: +3% к силе обоих';
+
+  function neighbors(r, col) {
+    const out = [];
+    const add = (rr, cc) => { if (rr >= 0 && rr < 3 && cc >= 0 && cc < 3 && !(rr === r && cc === col) && !out.some(p => p[0] === rr && p[1] === cc)) out.push([rr, cc]); };
+    add(r - 1, col); add(r + 1, col); add(r, col - 1); add(r, col + 1);
+    if (layout[r][col] === 'belt') for (let cc = 0; cc < 3; cc++) add(r, cc);
+    for (let rr = 0; rr < 3; rr++) for (let cc = 0; cc < 3; cc++) if (layout[rr][cc] === 'belt' && rr === r) add(rr, cc);
+    return out;
+  }
+
+  let sel = { r: 1, c: 1 };
+  let pickedCard = 1;
+  let t = 1;
+
+  function disc(cx, cy, r, col) { for (let dy = -r; dy <= r; dy++) { const w = Math.round(Math.sqrt(r * r - dy * dy)); R(cx - w, cy + dy, w * 2 + 1, 1, col); } }
+
+  function machine(type, x, y) {
+    R(x + 2, y + 30, 28, 3, 'rgba(30,20,40,.22)');
+    if (type === 'saw') {
+      R(x + 6, y + 20, 20, 10, K); R(x + 7, y + 21, 18, 8, '#e0a32e'); R(x + 7, y + 21, 18, 1, '#f5c45a');
+      for (let i = 0; i < 18; i += 4) R(x + 7 + i, y + 27, 2, 2, K);
+      R(x + 21, y + 23, 2, 2, Math.floor(t * 2) % 2 ? '#7ee081' : '#3d7a4a');
+      R(x, y + 15, 32, 6, K); R(x + 1, y + 16, 30, 4, '#9aa3ad'); R(x + 1, y + 16, 30, 1, '#c9d0d6');
+      R(x + 1, y + 9, 17, 7, K); R(x + 2, y + 10, 15, 5, '#a8693a'); R(x + 2, y + 10, 15, 1, '#c4844f'); R(x + 2, y + 10, 3, 5, '#e3b47c'); R(x + 3, y + 11, 1, 3, '#c4844f');
+      const cx = x + 23, cy = y + 10;
+      disc(cx, cy, 7, K); disc(cx, cy, 6, '#d6dbe0');
+      for (let i = 0; i < 8; i++) { const a = t * 8 + i * Math.PI / 4; R(cx + Math.round(Math.cos(a) * 5), cy + Math.round(Math.sin(a) * 5), 1, 1, '#7d8794'); }
+      R(cx - 1, cy - 1, 3, 3, '#5a6270');
+      R(cx - 7, y + 1, 15, 3, K); R(cx - 6, y + 2, 13, 1, '#f2b53a');
+      for (let i = 0; i < 5; i++) { const ph = (t * 1.7 + i * 0.21) % 1; R(cx - 8 - ph * 10, cy + 2 - ph * 6 + Math.sin(i * 3 + t * 5) * 2, 1, 1, '#ecc48f'); }
+    } else if (type === 'bench') {
+      R(x + 1, y, 30, 13, K); R(x + 2, y + 1, 28, 11, '#d2b48a');
+      for (let i = 0; i < 7; i++) for (let j = 0; j < 3; j++) R(x + 4 + i * 4, y + 3 + j * 3, 1, 1, '#b8956a');
+      R(x + 5, y + 3, 1, 7, '#8a5a32'); R(x + 3, y + 2, 5, 2, '#7d8794');
+      R(x + 11, y + 3, 8, 4, '#c9d0d6'); R(x + 11, y + 7, 8, 1, '#7d8794'); R(x + 19, y + 3, 3, 4, '#c4844f');
+      R(x + 25, y + 2, 2, 8, '#9aa3ad'); R(x + 24, y + 2, 4, 2, '#9aa3ad');
+      R(x, y + 14, 32, 6, K); R(x + 1, y + 15, 30, 4, '#c98a4a'); R(x + 1, y + 15, 30, 1, '#e5a86a');
+      R(x + 26, y + 11, 5, 4, K); R(x + 27, y + 12, 3, 2, '#5a6270');
+      R(x + 4, y + 11, 14, 4, K); R(x + 5, y + 12, 12, 2, '#e3b47c');
+      R(x + 2, y + 20, 4, 10, K); R(x + 3, y + 20, 2, 9, '#a06a36'); R(x + 26, y + 20, 4, 10, K); R(x + 27, y + 20, 2, 9, '#a06a36');
+      R(x + 5, y + 25, 22, 3, K); R(x + 6, y + 26, 20, 1, '#a06a36');
+      for (let i = 0; i < 3; i++) { const ph = (t * 1.1 + i / 3) % 1; R(x + 18 + ph * 6, y + 12 - ph * 7 + i, 2, 1, '#f0c890'); }
+    } else if (type === 'dryer') {
+      R(x + 2, y + 2, 28, 28, K); R(x + 3, y + 3, 26, 26, '#7d8a96'); R(x + 3, y + 3, 26, 1, '#a3afba');
+      R(x + 5, y + 6, 22, 17, K); R(x + 6, y + 7, 20, 15, '#3a2f3a');
+      for (let i = 0; i < 3; i++) R(x + 7, y + 9 + i * 4, 18, 2, '#d9a066');
+      R(x + 7, y + 20, 18, 1, Math.floor(t * 6) % 2 ? '#f28c3a' : '#d9622a');
+      R(x + 12, y + 25, 8, 3, K); R(x + 13, y + 26, (Math.floor(t * 2) % 6) + 1, 1, '#f2b53a');
+      for (let i = 0; i < 3; i++) { const ph = (t * 0.9 + i / 3) % 1; R(x + 9 + i * 7 + Math.round(Math.sin(t * 4 + i)), y + 1 - ph * 6, 1, 2, `rgba(255,200,140,${((1 - ph) * 0.8).toFixed(2)})`); }
+    } else if (type === 'belt') {
+      R(x, y + 14, 32, 10, K); R(x + 1, y + 15, 30, 7, '#4b4f5a');
+      const off = Math.floor(t * 10) % 6;
+      for (let i = -6; i < 30; i += 6) { const xx = x + 1 + i + off; if (xx >= x + 1 && xx < x + 30) R(xx, y + 16, 2, 5, '#5f6573'); }
+      R(x - 1, y + 15, 3, 7, '#9aa3ad'); R(x + 30, y + 15, 3, 7, '#9aa3ad');
+      R(x + 3, y + 24, 3, 6, K); R(x + 26, y + 24, 3, 6, K);
+      for (let i = 0; i < 2; i++) { const px = x + ((t * 10 + i * 16) % 32); if (px < x + 23) { R(px, y + 11, 9, 4, K); R(px + 1, y + 12, 7, 2, '#e3b47c'); } }
+      R(x + 10, y + 1, 12, 8, K); R(x + 11, y + 2, 10, 6, '#f2b53a');
+      R(x + 13, y + 4, 5, 2, K); R(x + 17, y + 3, 1, 4, K); R(x + 18, y + 4, 1, 2, K);
+    } else if (type === 'sander') {
+      R(x + 4, y + 8, 24, 22, K); R(x + 5, y + 9, 22, 20, '#5fa08c'); R(x + 5, y + 9, 22, 1, '#86c2ad');
+      R(x + 6, y + 3, 20, 7, K); R(x + 7, y + 4, 18, 5, '#cdb88c');
+      const off = Math.floor(t * 12) % 4;
+      for (let i = 0; i < 18; i += 4) R(x + 7 + ((i + off) % 18), y + 4, 1, 5, '#a8946a');
+      R(x + 8, y + 13, 10, 7, K); R(x + 9, y + 14, 3, 2, '#e0533a'); R(x + 13, y + 14, 3, 2, '#7ee081'); R(x + 9, y + 17, 7, 1, '#9aa3ad');
+      for (let j = 0; j < 3; j++) R(x + 20, y + 13 + j * 3, 5, 1, '#3f7466');
+      R(x + 5, y + 29, 4, 2, K); R(x + 23, y + 29, 4, 2, K);
+      for (let i = 0; i < 4; i++) { const ph = (t * 1.3 + i / 4) % 1; R(x + 26 + ph * 5, y + 4 - ph * 4 + i, 1, 1, '#e8dcc0'); }
+    }
+  }
+
+  function planks(x, y, n) { for (let i = 0; i < n; i++) { R(x, y - i * 3, 12, 4, K); R(x + 1, y - i * 3 + 1, 10, 2, '#e3b47c'); } }
+
+  function drawWorld() {
+    // HUD
+    R(0, 0, W, 31, '#2b2135'); R(0, 31, W, 1, '#4a3f5c');
+    disc(11, 9, 4, '#8a5a12'); disc(11, 9, 3, '#f2c14e'); R(10, 7, 1, 2, '#fff1b0');
+    R(6, 19, 11, 5, K); R(7, 20, 9, 3, '#e3b47c'); R(7, 20, 9, 1, '#f2cf9a');
+    R(W - 68, 6, 62, 20, '#3b3150');
+    R(W - 63, 9, 13, 14, '#f2b53a'); R(W - 62, 10, 11, 12, '#e0a32e');
+    R(W - 46, 18, 36, 4, K); R(W - 45, 19, Math.round(34 * (0.45 + 0.1 * ((t * 0.2) % 1))), 2, '#7ee081');
+    // shop title row
+    R(0, 32, W, 15, '#3b3150');
+    R(8, 36, 1, 7, '#6d6284'); R(7, 37, 1, 5, '#6d6284'); R(6, 38, 1, 3, '#6d6284'); R(5, 39, 1, 1, '#6d6284');
+    R(W - 14, 38, 6, 5, '#8a7e9e'); R(W - 13, 36, 4, 2, '#8a7e9e'); R(W - 12, 37, 2, 1, '#3b3150');
+    // wall
+    R(0, 47, W, 25, '#b0654c');
+    for (let yy = 47; yy < 72; yy += 6) { R(0, yy, W, 1, '#94523d'); for (let xx = ((yy / 6) % 2) * 6; xx < W; xx += 12) R(xx, yy, 1, 6, '#94523d'); }
+    for (const wx of [22, 178]) {
+      R(wx, 50, 40, 17, K); R(wx + 1, 51, 38, 15, '#bfe3ef');
+      R(wx + 4, 53, 6, 1, '#eaf7fb'); R(wx + 4, 54, 3, 1, '#eaf7fb');
+      R(wx + 20, 51, 1, 15, K); R(wx + 1, 58, 38, 1, K);
+    }
+    R(104, 51, 32, 14, K); R(105, 52, 30, 12, '#c98a4a'); R(105, 52, 30, 1, '#e5a86a');
+    R(0, 70, W, 3, '#5a3f36');
+    // floor
+    R(0, 73, W, 229, '#a39b8f');
+    for (let yy = 73; yy < 302; yy += 20) R(0, yy, W, 1, '#978f83');
+    for (let xx = 0; xx < W; xx += 20) R(xx, 73, 1, 229, '#978f83');
+    R(6, 286, 9, 3, '#958d81'); R(226, 120, 7, 2, '#958d81');
+
+    // cells
+    const nb = neighbors(sel.r, sel.c);
+    const isNb = (r, col) => nb.some(p => p[0] === r && p[1] === col);
+    for (let r = 0; r < 3; r++) for (let col = 0; col < 3; col++) {
+      const [x, y] = cellXY(r, col), type = layout[r][col];
+      R(x, y, CELL, CELL, '#857d72'); R(x + 1, y + 1, CELL - 2, CELL - 2, '#938b7f');
+      for (const [ax, ay, dx, dy] of [[x + 2, y + 2, 1, 1], [x + CELL - 3, y + 2, -1, 1], [x + 2, y + CELL - 3, 1, -1], [x + CELL - 3, y + CELL - 3, -1, -1]]) {
+        R(dx > 0 ? ax : ax - 5, ay, 6, 1, '#e9c046'); R(ax, dy > 0 ? ay : ay - 5, 1, 6, '#e9c046');
+      }
+      if (type === 'empty') {
+        const col2 = isNb(r, col) ? '#c7e8c0' : '#b2a99c';
+        R(x + CELL / 2 - 1, y + CELL / 2 - 6, 2, 12, col2); R(x + CELL / 2 - 6, y + CELL / 2 - 1, 12, 2, col2);
+        continue;
+      }
+      const wk = workers[r + ',' + col];
+      if (wk) machine(type, x + 28, y + 6); else machine(type, x + 16, y + 12);
+      if (type === 'saw') planks(x + 46, y + 56, 3);
+      if (type === 'bench') planks(x + 46, y + 56, 2);
+      if (wk) { const bob = Math.floor(t * 2 + wk.i) % 2; g.drawImage(SPR[wk.spr], x + 5, y + 29 - bob); }
+      const cards = INFO[type].cards;
+      cards.forEach((cd, i) => { R(x + 4 + i * 5, y + 4, 4, 6, K); R(x + 5 + i * 5, y + 5, 2, 4, cd[1]); });
+    }
+    // highlight
+    const pulse = 0.6 + 0.4 * Math.sin(t * 5);
+    for (let r = 0; r < 3; r++) for (let col = 0; col < 3; col++) {
+      const [x, y] = cellXY(r, col);
+      const border = (colr) => { R(x - 2, y - 2, CELL + 4, 2, colr); R(x - 2, y + CELL, CELL + 4, 2, colr); R(x - 2, y, 2, CELL, colr); R(x + CELL, y, 2, CELL, colr); };
+      if (r === sel.r && col === sel.c) border(`rgba(255,213,74,${pulse.toFixed(2)})`);
+      else if (isNb(r, col)) border(layout[r][col] === 'empty' ? 'rgba(126,224,129,.55)' : '#7ee081');
+      else R(x, y, CELL, CELL, 'rgba(30,22,45,.45)');
+    }
+    // connectors between linked cells
+    const linked = [[sel.r, sel.c], ...nb];
+    const has = (r, col) => linked.some(p => p[0] === r && p[1] === col);
+    const nbOrSel = (r, col) => (r === sel.r && col === sel.c) || isNb(r, col);
+    for (let r = 0; r < 3; r++) for (let col = 0; col < 3; col++) {
+      if (!has(r, col)) continue;
+      const [x, y] = cellXY(r, col);
+      const belt = layout[sel.r][sel.c] === 'belt';
+      const touchesSel = (rr, cc) => (r === sel.r && col === sel.c) || (rr === sel.r && cc === sel.c) || (belt && r === sel.r && rr === sel.r);
+      if (col < 2 && has(r, col + 1) && nbOrSel(r, col + 1) && touchesSel(r, col + 1)) { R(x + CELL, y + CELL / 2 - 4, GAP, 8, K); R(x + CELL + 1, y + CELL / 2 - 3, GAP - 2, 6, '#7ee081'); }
+      if (r < 2 && has(r + 1, col) && touchesSel(r + 1, col)) { R(x + CELL / 2 - 4, y + CELL, 8, GAP, K); R(x + CELL / 2 - 3, y + CELL + 1, 6, GAP - 2, '#7ee081'); }
+    }
+
+    // info bar
+    R(0, 284, W, 16, 'rgba(43,33,53,.85)');
+
+    // locker room
+    R(0, 302, W, 48, '#4b5568'); R(0, 302, W, 1, '#2b2135'); R(0, 347, W, 3, '#3a4252');
+    const lx0 = 11, ly = 313;
+    for (let i = 0; i < 7; i++) {
+      const x = lx0 + i * 32;
+      const locked = i >= 4;
+      R(x, ly, 26, 34, K); R(x + 1, ly + 1, 24, 32, locked ? '#4a5a66' : '#6fa3b5'); R(x + 1, ly + 1, 24, 1, locked ? '#5d6f7c' : '#94c3d3');
+      for (let j = 0; j < 3; j++) R(x + 6, ly + 22 + j * 2, 12, 1, locked ? '#3d4b55' : '#4f8296');
+      R(x + 21, ly + 21, 2, 7, '#d6dbe0');
+      if (i < 2) {
+        R(x + 2, ly + 3, 22, 16, '#f3e9d2'); R(x + 2, ly + 3, 22, 1, '#d8ccb0');
+        const spr = SPR[i === 0 ? 'girl' : 'mrp'];
+        g.drawImage(spr, 0, i === 0 ? 1 : 3, 20, 14, x + 3, ly + 4, 20, 14);
+        R(x + 12, ly + 2, 2, 2, '#e0533a');
+      } else if (locked) {
+        R(x + 9, ly + 9, 8, 7, '#8a5a12'); R(x + 10, ly + 10, 6, 5, '#f2c14e'); R(x + 10, ly + 6, 6, 1, '#9aa3ad'); R(x + 10, ly + 6, 1, 3, '#9aa3ad'); R(x + 15, ly + 6, 1, 3, '#9aa3ad'); R(x + 12, ly + 12, 2, 2, K);
+      }
+    }
+    const hx = lx0 + 26, hy = ly + 8 - (Math.floor(t * 2) % 2);
+    const HEART = [[1, 0, 2], [4, 0, 2], [0, 1, 7], [0, 2, 7], [1, 3, 5], [2, 4, 3], [3, 5, 1]];
+    for (const [dx, dy, w] of HEART) R(hx - 1 + dx - 1, hy + dy - 1, w + 2, 1, K);
+    for (const [dx, dy, w] of HEART) R(hx - 1 + dx, hy + dy, w, 1, '#ff7a9a');
+    R(hx, hy + 1, 1, 1, '#ffd1dc');
+
+    // card picker
+    R(0, 350, W, 78, '#2b2135');
+    const CARDS = [
+      { col: '#8a93a0', icon: 'worker' }, { col: '#4f8fd6', icon: 'coffee' }, { col: '#9b6bd6', icon: 'belt' }
+    ];
+    CARDS.forEach((cd, i) => {
+      const x = 6 + i * 78, y = 362 - (pickedCard === i ? 3 : 0);
+      if (pickedCard === i) { R(x - 2, y - 2, 76, 68, `rgba(255,213,74,${pulse.toFixed(2)})`); }
+      R(x, y, 72, 64, K); R(x + 1, y + 1, 70, 62, cd.col); R(x + 3, y + 13, 66, 48, '#f3e9d2');
+      R(x + 64, y + 3, 4, 4, '#ffffff'); R(x + 65, y + 4, 2, 2, cd.col);
+      const ix = x + 28, iy = y + 15;
+      if (cd.icon === 'worker') {
+        R(ix + 4, iy + 1, 8, 7, K); R(ix + 5, iy + 2, 6, 5, PAL.s); R(ix + 4, iy + 1, 8, 2, PAL.h);
+        R(ix + 2, iy + 9, 12, 6, K); R(ix + 3, iy + 10, 10, 5, PAL.o);
+        R(ix + 12, iy, 5, 1, '#3f9a52'); R(ix + 14, iy - 2, 1, 5, '#3f9a52');
+      } else if (cd.icon === 'coffee') {
+        R(ix + 2, iy + 4, 11, 11, K); R(ix + 3, iy + 5, 9, 9, '#e8e4da'); R(ix + 3, iy + 5, 9, 2, '#6b4226'); R(ix + 13, iy + 7, 2, 5, K);
+        const st = Math.floor(t * 3) % 2;
+        R(ix + 5 + st, iy, 1, 3, '#b8b0c4'); R(ix + 9 - st, iy + 1, 1, 2, '#b8b0c4');
+      } else {
+        R(ix, iy + 6, 16, 6, K); R(ix + 1, iy + 7, 14, 4, '#4b4f5a');
+        const off = Math.floor(t * 8) % 4; for (let k = 0; k < 14; k += 4) R(ix + 1 + ((k + off) % 14), iy + 8, 1, 2, '#6b7180');
+        R(ix + 3, iy + 2, 7, 4, K); R(ix + 4, iy + 3, 5, 2, '#e3b47c');
+        R(ix + 2, iy + 12, 2, 3, K); R(ix + 12, iy + 12, 2, 3, K);
+      }
+    });
+  }
+
+  function T(str, x, y, size, color, align = 'left', shadow = true, weight = 600) {
+    c.font = `${size}px "Tiny5","Courier New",monospace`;
+    c.textAlign = align; c.textBaseline = 'top';
+    if (shadow) { c.fillStyle = 'rgba(20,14,30,.65)'; c.fillText(str, x + 0.5, y + 0.5); }
+    c.fillStyle = color; c.fillText(str, x, y);
+  }
+  const fmt = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+
+  function drawText() {
+    c.setTransform(S, 0, 0, S, 0, 0);
+    const money = 1240 + Math.floor(t * 34), boards = 86 + Math.floor(t * 3);
+    T(fmt(money), 19, 3.5, 9, '#ffffff');
+    T('+34/с', 19 + c.measureText(fmt(money)).width + 4, 5, 6, '#7ee081');
+    T(fmt(boards) + ' досок', 20, 17, 7, '#e3d8f0');
+    T('3', W - 56.5, 9, 10, '#2b2135', 'center', false, 700);
+    T('УРОВЕНЬ', W - 46, 8.5, 6, '#e3d8f0');
+    T('ЦЕХ 1 · ДОСКИ', W / 2, 35.5, 8, '#ffffff', 'center');
+    T('кирпичи', W - 17, 36.5, 6, '#8a7e9e', 'right', false);
+    const info = INFO[layout[sel.r][sel.c]];
+    const n = neighbors(sel.r, sel.c);
+    const linkedMachines = n.filter(p => layout[p[0]][p[1]] !== 'empty').length;
+    T(info.name.toUpperCase(), 8, 287.5, 7, '#ffd54a');
+    T(`соседей: ${n.length} · связок: ${linkedMachines}`, W - 8, 288, 6.5, '#e3d8f0', 'right');
+    T('РАЗДЕВАЛКА', 8, 304.5, 6, '#c9d3e0');
+    T("НОВЫЙ УРОВЕНЬ! ВЫБЕРИ КАРТУ", W / 2, 351, 7, '#f2c14e', 'center');
+    const CARDS = [
+      ['+1 СОТРУДНИК', 'СОТРУДНИК', 'Новый работник', 'и свой шкафчик'],
+      ['КРЕПКИЙ КОФЕ', 'ЭКИПИРОВКА', '+15% скорости', 'хозяину шкафчика'],
+      ['КОНВЕЙЕР', 'СТАНОК', 'Связывает станок', 'со всем рядом']
+    ];
+    const tagCol = ['#5f6773', '#2f6bb0', '#6e43a8'];
+    CARDS.forEach((cd, i) => {
+      const x = 6 + i * 78, y = 362 - (pickedCard === i ? 3 : 0);
+      T(cd[0], x + 34, y + 3, 6.5, '#ffffff', 'center');
+      T(cd[1], x + 36, y + 34, 5, tagCol[i], 'center', false, 700);
+      T(cd[2], x + 36, y + 42, 5.5, '#2b2135', 'center', false, 500);
+      T(cd[3], x + 36, y + 50, 5.5, '#2b2135', 'center', false, 500);
+    });
+    for (const [key, amt] of [['1,1', '+3'], ['0,1', '+1']]) {
+      const [r, col] = key.split(',').map(Number);
+      const [x, y] = cellXY(r, col);
+      const ph = (t * 0.7 + r * 0.4) % 1;
+      c.globalAlpha = Math.max(0, 1 - ph);
+      T(amt, x + 52, y + 36 - ph * 14, 7, '#f2c14e');
+      c.globalAlpha = 1;
+    }
+  }
+
+  function fit() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 3);
+    S = Math.max(1, Math.round(main.clientWidth * dpr / W));
+    main.width = W * S; main.height = H * S;
+  }
+  function render() {
+    drawWorld();
+    c.setTransform(1, 0, 0, 1, 0, 0);
+    c.imageSmoothingEnabled = false;
+    c.drawImage(low, 0, 0, main.width, main.height);
+    drawText();
+  }
+
+  /* ---------- side panel ---------- */
+  const elName = document.getElementById('sel-name'), elDesc = document.getElementById('sel-desc'),
+    elLinks = document.getElementById('sel-links'), elCards = document.getElementById('sel-cards'), elPick = document.getElementById('pick');
+  const MACHINES = [];
+  for (let r = 0; r < 3; r++) for (let col = 0; col < 3; col++) if (layout[r][col] !== 'empty') MACHINES.push([r, col]);
+  MACHINES.forEach(([r, col]) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'chip'; b.id = `pick-${r}-${col}`; b.textContent = INFO[layout[r][col]].name;
+    b.addEventListener('click', () => select(r, col));
+    elPick.appendChild(b);
+  });
+  function updatePanel() {
+    const type = layout[sel.r][sel.c], info = INFO[type];
+    elName.textContent = info.name;
+    elDesc.textContent = info.desc;
+    elLinks.innerHTML = '';
+    const nb = neighbors(sel.r, sel.c);
+    nb.forEach(([r, col]) => {
+      const other = layout[r][col];
+      const li = document.createElement('li');
+      const b = document.createElement('b'); const sp = document.createElement('span');
+      if (other === 'empty') { li.className = 'off'; b.textContent = 'Пусто'; sp.textContent = 'Поставь сюда станок, и связка заработает'; }
+      else if (type === 'empty') { b.textContent = INFO[other].name; sp.textContent = 'Подключится к новому станку'; }
+      else { b.textContent = INFO[other].name; sp.textContent = pairText(type, other); }
+      li.append(b, sp); elLinks.appendChild(li);
+    });
+    elCards.innerHTML = '';
+    if (!info.cards.length) { const s = document.createElement('span'); s.className = 'tagc'; s.textContent = 'Пока ничего'; elCards.appendChild(s); }
+    info.cards.forEach(cd => { const s = document.createElement('span'); s.className = 'tagc'; s.style.borderColor = cd[1]; s.textContent = cd[0]; elCards.appendChild(s); });
+    elPick.querySelectorAll('.chip').forEach(b => b.setAttribute('aria-pressed', String(b.id === `pick-${sel.r}-${sel.c}`)));
+  }
+  function select(r, col) { sel = { r, c: col }; updatePanel(); render(); }
+
+  function toLogical(e) {
+    const rect = main.getBoundingClientRect();
+    return [(e.clientX - rect.left) / rect.width * W, (e.clientY - rect.top) / rect.height * H];
+  }
+  function hit(lx, ly) {
+    for (let r = 0; r < 3; r++) for (let col = 0; col < 3; col++) {
+      const [x, y] = cellXY(r, col);
+      if (lx >= x && lx < x + CELL && ly >= y && ly < y + CELL) return { cell: [r, col] };
+    }
+    for (let i = 0; i < 3; i++) { const x = 6 + i * 78; if (lx >= x && lx < x + 72 && ly >= 358 && ly < 428) return { card: i }; }
+    return null;
+  }
+  main.addEventListener('click', e => {
+    const h = hit(...toLogical(e));
+    if (!h) return;
+    if (h.cell) select(h.cell[0], h.cell[1]);
+    else { pickedCard = h.card; render(); }
+  });
+  main.addEventListener('mousemove', e => { main.style.cursor = hit(...toLogical(e)) ? 'pointer' : 'default'; });
+
+  document.querySelectorAll('canvas.spr').forEach(cv => {
+    const x = cv.getContext('2d'); x.imageSmoothingEnabled = false; x.drawImage(SPR[cv.dataset.spr], 0, 0);
+  });
+  const pal = document.getElementById('palette');
+  [...new Set(Object.values(PAL))].forEach(col => { const s = document.createElement('span'); s.style.background = col; s.title = col; pal.appendChild(s); });
+
+  fit(); updatePanel(); render();
+  window.addEventListener('resize', () => { fit(); render(); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(render);
+  if (!reduce) {
+    let last = performance.now();
+    const loop = now => { t += Math.min(0.05, (now - last) / 1000); last = now; render(); requestAnimationFrame(loop); };
+    requestAnimationFrame(loop);
+  }
+})();
+</script>
