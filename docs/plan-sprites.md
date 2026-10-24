@@ -171,3 +171,43 @@ kZXZk..kwwwDkDwwwk.....
 ```
 
 При вставке: в `globals()` у `locX` пятый элемент, в `newRun()` пятый цех `emptySlots(2)`, вкладка `tab4`. В `layout()` `OX` надо считать до раннего выхода: у пуфиков ширина и высота пола те же, что у цеха досок, и без этого места прижимаются влево. Рама места для `l === 4` цвета `#5a3420`.
+
+
+## Главная мразь цеха
+
+Худи `A` с бликами `a` и тенями `g`, лицо — пустота `b`, шнурки капюшона `p`, штаны `G`. Новых цветов не нужно.
+
+```
+......kkkkkkkk......
+....kkAAAAAAAAkk....
+...kAAaAAAAAAaAAk...
+..kAAaAAAAAAAAaAAk..
+..kAaAAAAAAAAAAaAk..
+.kAAaAAkkkkkkAAaAAk.
+.kAaAAkbbbbbbkAAaAk.
+.kAaAkbbbbbbbbkAaAk.
+.kAAAkbbbbbbbbkAAAk.
+.kAAkbbbbbbbbbbkAAk.
+.kAAkbbbbbbbbbbkAAk.
+.kAAkbbbbbbbbbbkAAk.
+.kgAkbbbbbbbbbbkAgk.
+.kgAAkbbbbbbbbkAAgk.
+..kgAAkbbbbbbkAAgk..
+..kgAAAkkkkkkAAAgk..
+.kgAAAAAAggAAAAAAgk.
+.kAAAAApAggApAAAAAk.
+kAAAAAApAggApAAAAAAk
+kAgAAAApAggApAAAAgAk
+kAgAAAAAAggAAAAAAgAk
+kAgAkggggggggggkAgAk
+kAgAkAAAAggAAAAkAgAk
+kAAAkAAAAggAAAAkAAAk
+.kggggggggggggggggk.
+..kGGGGGGGGGGGGGGk..
+..kGGGGGGkkGGGGGGk..
+...kGGGGGkkGGGGGk...
+...kGGGGGkkGGGGGk...
+...kGGGGGkkGGGGGk...
+..kbbbbbbkkbbbbbbk..
+..kkkkkkk..kkkkkkk..
+```
