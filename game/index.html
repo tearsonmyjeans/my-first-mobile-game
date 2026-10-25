@@ -288,7 +288,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     alien: { name: 'Пришелец', role: 'Гость с зелёной планеты', power: 1.6, speed: 0.7, luck: 0.1, perk: 'Телепатия: связан со всеми станками своего цеха, их бонусы доходят до него, как от соседей.' },
     jedi: { name: 'Хаба', role: 'Магистр двух мечей', power: 1.3, speed: 1.3, luck: 0.05, perk: 'Два меча: работники соседних станков +15% скорости. Рядом с Пришельцем включается «Зелёная сила», с Кастомкой и Батей «Семейный подряд».' },
     silver: { name: 'Сильвер', she: true, role: 'Охотница-оборотень', power: 1.5, speed: 1.0, luck: 0.08, perk: 'Серебряная пуля: каждая 10-я штука выходит тройной. Во время скилла превращается в волчицу.' },
-    mrsha: { name: 'Мисис Ха', she: true, role: 'Вампирша под зонтом', power: 1.2, speed: 1.2, luck: 0.1, perk: 'Укус: +10% силы за каждого работающего соседа.' },
+    mrsha: { name: 'Мисис Ха', she: true, role: 'Вампирша под зонтом', power: 1.2, speed: 1.2, luck: 0.1, perk: 'Укус: +10% силы за каждого работающего соседа. Лучшая швея: за швейной машинкой сила и скорость ×1,5, а все пуфики цеха +25% к цене.' },
     kast: { name: 'Кастомка', she: true, role: 'Дефолтный скин', power: 1.1, speed: 1.1, luck: 0.1, perk: 'Пустой холст: работники соседних станков +10% удачи. С Хабой и Батей включается «Семейный подряд».' },
     batya: { name: 'Батя', role: 'Ветеран цеха', power: 1.8, speed: 0.6, luck: 0.2, perk: 'Пьяному везёт: удача 20%. С Хабой и Кастомкой включается «Семейный подряд».' },
     thoth: { name: 'Тот', role: 'Бог мудрости на полставки', power: 1.3, speed: 1.0, luck: 0.1, perk: 'Смеётся последним: в последние 30 с смены сила ×2.' },
@@ -365,7 +365,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     w_alien: { name: 'Новый сотрудник', type: 'worker', worker: 'alien', tag: 'Сотрудники', rar: 3, loc: 3, desc: 'Прилетает Пришелец. Очень сильный, телепатически связан со всем цехом.' },
     w_jedi: { name: 'Новый сотрудник', type: 'worker', worker: 'jedi', tag: 'Сотрудники', rar: 2, loc: 3, desc: 'Приходит Хаба. Быстрый и сильный, ускоряет соседей на 15%.' },
     w_silver: { name: 'Новый сотрудник', type: 'worker', worker: 'silver', tag: 'Сотрудники', rar: 3, loc: 3, desc: 'Приходит Сильвер. Каждая 10-я штука тройная, в скилле становится волчицей.' },
-    w_mrsha: { name: 'Новый сотрудник', type: 'worker', worker: 'mrsha', tag: 'Сотрудники', rar: 2, loc: 3, desc: 'Приходит Мисис Ха. Сильнее с каждым работающим соседом.' },
+    w_mrsha: { name: 'Новый сотрудник', type: 'worker', worker: 'mrsha', tag: 'Сотрудники', rar: 2, loc: 3, desc: 'Приходит Мисис Ха. Лучшая швея завода, сильнее с каждым работающим соседом.' },
     w_kast: { name: 'Новый сотрудник', type: 'worker', worker: 'kast', tag: 'Сотрудники', rar: 2, loc: 3, desc: 'Приходит Кастомка. Соседям +10% удачи, дружит с Хабой и Батей.' },
     w_batya: { name: 'Новый сотрудник', type: 'worker', worker: 'batya', tag: 'Сотрудники', rar: 2, loc: 3, desc: 'Приходит Батя. Очень сильный и везучий, но медленный.' },
     w_thoth: { name: 'Новый сотрудник', type: 'worker', worker: 'thoth', tag: 'Сотрудники', rar: 3, loc: 3, desc: 'Приходит Тот. Смеётся последним: в конце смены сила ×2.' },
@@ -399,6 +399,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     u_snailpost: { name: 'Улитка-почтальон', type: 'global', tag: 'Улучшения', rar: 2, once: true, eff: {}, desc: 'Посылки не исчезают, а монет в них ×3.', minus: 'Посылки приходят вдвое реже.' },
     u_sub: { name: 'Подписка', type: 'global', tag: 'Улучшения', rar: 3, once: true, eff: {}, desc: 'Каждая открытая посылка: +3% ко всему доходу до конца забега.' },
     // mastery cards never drop as usual cards: every masteryEvery-th level offers 1 of 3 of them, each once per run
+    // the only way to open a skill from shift skillCoinQ on: every quota pick then offers one
+    k_skill: { name: 'Мастер-класс', type: 'skill', tag: 'Сотрудники', rar: 1, desc: 'Открывает скилл сотруднику на выбор.' },
     x_speed: { name: 'Мастер скорости', type: 'global', tag: 'Мастерство', rar: 3, mastery: true, eff: { speed: 1.5 }, desc: 'Все сотрудники: скорость ×1,5.' },
     x_power: { name: 'Мастер силы', type: 'global', tag: 'Мастерство', rar: 3, mastery: true, eff: { power: 1.5 }, desc: 'Все сотрудники: сила ×1,5.' },
     x_luck: { name: 'Мастер удачи', type: 'global', tag: 'Мастерство', rar: 3, mastery: true, eff: {}, desc: 'Все сотрудники: удача +20%.' },
@@ -406,7 +408,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     x_wholesale: { name: 'Оптовик', type: 'global', tag: 'Мастерство', rar: 3, mastery: true, eff: {}, desc: 'С каждой витрины можно купить 2 карты.' },
     x_logistics: { name: 'Мастер логистики', type: 'global', tag: 'Мастерство', rar: 3, mastery: true, eff: {}, desc: 'Золотые посылки приходят в 3 раза чаще.' }
   };
-  const TYPE_LABEL = { machine: 'Станок', worker: 'Сотрудник', global: 'Для всех', equip: 'Экипировка', mupg: 'На станок' };
+  const TYPE_LABEL = { machine: 'Станок', worker: 'Сотрудник', global: 'Для всех', equip: 'Экипировка', mupg: 'На станок', skill: 'Скилл' };
   const RAR = ['обычная', 'редкая', 'эпическая', 'легендарная'];
   const RAR_COL = ['#8a93a0', '#4f8fd6', '#9b6bd6', '#e0a32e'];
   const TAGS = {
@@ -539,6 +541,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     lin: (r, d, x) => { x.drawImage(SPR.lin, 0, 0, 22, 22, 0, 0, 16, 16); },
     horse: (r, d, x) => { x.drawImage(SPR.horse, 4, 0, 18, 18, 0, 0, 16, 16); },
     rabbit: (r, d, x) => { x.drawImage(SPR.rabbit, 2, 1, 19, 19, 0, 0, 16, 16); },
+    // Master class: a chalkboard with a yellow lightning, the same lightning as on a locker with an opened skill
+    masterclass: r => { r(0, 1, 16, 12, K); r(1, 2, 14, 10, '#8a5a32'); r(2, 3, 12, 8, '#2f5d4a'); r(2, 3, 12, 1, '#3f7a60'); r(8, 3, 3, 1, '#ffd54a'); r(7, 4, 3, 1, '#ffd54a'); r(6, 5, 3, 1, '#ffd54a'); r(5, 6, 5, 1, '#ffd54a'); r(7, 7, 2, 1, '#ffd54a'); r(6, 8, 2, 1, '#ffd54a'); r(5, 9, 2, 1, '#ffd54a'); r(10, 9, 3, 1, '#e9eef2'); r(3, 13, 2, 3, K); r(11, 13, 2, 3, K); r(4, 13, 1, 2, '#8a5a32'); r(12, 13, 1, 2, '#8a5a32'); },
     grease: r => { r(4, 3, 5, 1, K); r(4, 3, 1, 4, K); r(8, 3, 1, 4, K); r(1, 7, 10, 9, K); r(2, 8, 8, 7, '#5a6270'); r(3, 9, 2, 2, '#9aa3ad'); r(10, 5, 5, 2, K); r(14, 3, 2, 3, K); r(14, 8, 1, 2, '#f2c14e'); }
   };
   const CARD_ICON = {
@@ -551,7 +555,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     x_speed: 'mSpeed', x_power: 'mPower', x_luck: 'mLuck', x_skill: 'mSkill', x_wholesale: 'mWholesale',
     m_engraver: 'engraver', m_lens: 'lens', m_sew: 'sew', m_stuff: 'stuff', s_velour: 'velour', u_poufs: 'poufs',
     u_postman: 'postman', u_courier: 'courier', u_customs: 'customs', u_sub: 'sub', x_logistics: 'mLogistics', u_snailpost: 'snailpost',
-    s_hand: 'hand', u_snails: 'snails', w_thoth: 'thoth', w_rat: 'rat', w_lin: 'lin', w_horse: 'horse', w_rabbit: 'rabbit'
+    s_hand: 'hand', u_snails: 'snails', w_thoth: 'thoth', w_rat: 'rat', w_lin: 'lin', w_horse: 'horse', w_rabbit: 'rabbit', k_skill: 'masterclass'
   };
   const ICONS = {};
   for (const id in CARD_ICON) ICONS[id] = makeIcon(ICON_DRAW[CARD_ICON[id]]);
@@ -663,8 +667,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
 
   // run balance in one place so the balance bot can tune it: tempo speeds up every machine,
   // xp/shop/quota grow geometrically, every levelEvery-th level gives a card, crates come every crate..2×crate seconds;
-  // a crate holds a share of the quota: plain crateQ, gold crateGoldQ (chance crateGold), or a card pick (chance crateCard)
-  const BAL = { tempo: 2, xp0: 15, xpK: 2.2, levelEvery: 3, shopQ: 0.3, shopRoll: 1, rarPrice: [0.6, 1, 1.6, 2.4], masteryEvery: 9, crate: 40, crateQ: [0.02, 0.06], crateGoldQ: [0.08, 0.12], crateGold: 0.1, crateCard: 0.05, quotaT: 90, quota0: 210, quotaK: 1.9, quotaA: 1.2 };
+  // a crate holds a share of the quota: plain crateQ, gold crateGoldQ (chance crateGold), or a card pick (chance crateCard);
+  // crates pay at most crateCap of the quota a shift, so they help but never carry it; from shift skillCoinQ skills are opened only by cards
+  const BAL = { tempo: 2, xp0: 15, xpK: 2.2, levelEvery: 3, shopQ: 0.3, shopRoll: 1, rarPrice: [0.6, 1, 1.6, 2.4], masteryEvery: 9, crate: 40, crateQ: [0.02, 0.06], crateGoldQ: [0.08, 0.12], crateGold: 0.1, crateCard: 0.05, quotaT: 90, quota0: 210, quotaK: 1.9, quotaA: 1.2, crateCap: 0.3, skillCoinQ: 10 };
   const need = l => Math.round(BAL.xp0 * Math.pow(BAL.xpK, l - 1));
   // the showcase is priced off the quota just passed, so a runaway income cannot make cards free
   const shopBase = () => quotaTarget(Math.max(1, state.run.q - 1)) * BAL.shopQ;
@@ -677,6 +682,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (id === 'crow' && !n) return 150;
     return Math.round(quotaTarget(Math.max(1, state.run.q - 1)) * (cd ? SKILL_RAR[cd.rar] : 0.5) * Math.pow(1.5, n));
   }
+  const skillLocked = () => state.run.q >= BAL.skillCoinQ;
   const rollShop = () => rollOffer().slice(0, 3).map(id => ({ id, bought: false }));
   // one purchase per showcase: after it the showcase locks until it is refreshed, and every refresh in a break costs twice the last
   const shopRollCost = () => Math.round(shopBase() * BAL.shopRoll / (hasUnlock('reroll') ? 2 : 1) * Math.pow(2, state.run.shopRolls || 0));
@@ -710,9 +716,13 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   const cardN = id => state.cards.filter(x => x === id).length;
   // how fast the crate timer runs: Postman doubles it, a working Rabbit detective adds 25%
   const crateFreq = () => Math.pow(2, cardN('u_postman') - cardN('u_snailpost')) * (workerPlace('rabbit') ? 1.25 : 1);
+  const crateFull = () => (state.run.qCrate || 0) >= curQuota() * BAL.crateCap;
+  // once the shift's crate coins are used up, only card crates still come
   function rollCrate() {
     const r = Math.random(), gold = BAL.crateGold * (state.cards.includes('x_logistics') ? 3 : 1);
-    return { f: Math.random(), born: t, life: state.cards.includes('u_snailpost') ? Infinity : state.cards.includes('u_customs') ? 8 : 20, kind: r < BAL.crateCard ? 'card' : r < BAL.crateCard + gold ? 'gold' : 'plain' };
+    const kind = r < BAL.crateCard ? 'card' : r < BAL.crateCard + gold ? 'gold' : 'plain';
+    if (kind !== 'card' && crateFull()) return null;
+    return { f: Math.random(), born: t, life: state.cards.includes('u_snailpost') ? Infinity : state.cards.includes('u_customs') ? 8 : 20, kind };
   }
 
   // every third quota is an inspection with a nasty rule for its whole period
@@ -818,6 +828,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     g.vitrageWorking = slotsOf(3).some(s => s.machine === 'vitrage' && s.worker);
     g.cozy = ['sew', 'stuff'].every(m => slotsOf(4).some(s => s.machine === m && s.worker && !onStrike(s.worker)));
     if (g.cozy) g.combos.push('cozy');
+    // Mrs Ha is the best seamstress: at the sewing machine she makes every pouf of the workshop dearer
+    const pHa = workerPlace('mrsha');
+    g.couture = !!(pHa && slotsOf(pHa.l)[pHa.i].machine === 'sew' && !onStrike('mrsha'));
     const p1 = workerPlace('v1'), p2 = workerPlace('v2');
     g.maidsLoc = p1 && p2 && p1.l === p2.l && adjacent(p1.l, p1.i, p2.i) ? p1.l : -1;
     if (g.maidsLoc >= 0) g.combos.push('maids');
@@ -878,6 +891,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (s.machine === 'kiln' && g.sawWorking) { rb += 0.25; notes.push('Обрезки досок из цеха 1 на растопку: +25% скорости'); }
     if (s.machine === 'vitrage' && g.tumblerWorking) { vb += 0.2; notes.push('Блестящие гвозди из цеха 3 для рам: +20% к цене'); }
     if (l === 4 && g.dryerWorking) { vb += 0.2; notes.push('Каркас из сухих досок цеха 1: +20% к цене'); }
+    if (l === 4 && g.couture) { vb += 0.25; notes.push('Мисис Ха шьёт чехлы: +25% к цене'); }
     if (s.machine === 'stuff' && g.vitrageWorking) { rb += 0.2; notes.push('Стеклянные ножки из цеха 4: +20% скорости'); }
     if (s.machine !== 'belt' && LOCS[l].hot && LOCS[l].hot.includes(i)) { rb += 0.2; notes.push('Жар горна: +20% скорости'); }
     if (!s.worker || M.rate === 0 || onStrike(s.worker)) return { rate: 0, value: 0, income: 0, notes, ws: null, M };
@@ -891,6 +905,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (s.worker !== 'dog' && near.some(j => sl[j].worker === 'dog')) { power *= 1.1; notes.push('Пёс Бро даёт кулачок: +10% силы'); }
     if (s.worker !== 'jedi' && near.some(j => sl[j].worker === 'jedi')) { speedM *= 1.15; notes.push('Хаба машет мечами рядом: +15% скорости'); }
     state.workers[s.worker].equip.forEach(e => { if (e === 'e_loner') { power *= near.length ? 0.6 : 2.2; notes.push(near.length ? 'Одиночка с соседями: сила ×0,6' : 'Одиночка один: сила ×2,2'); } });
+    if (s.worker === 'mrsha' && s.machine === 'sew') { power *= 1.5; speedM *= 1.5; notes.push('Лучшая швея: сила и скорость ×1,5'); }
     if (s.worker === 'mrsha' && near.length) { power *= 1 + 0.1 * near.length; notes.push(`Укус: +${near.length * 10}% силы`); }
     if (FAMILY.includes(s.worker) && near.some(j => FAMILY.includes(sl[j].worker))) { power *= 1.2; notes.push('Семейный подряд рядом: +20% силы'); }
     const kastNear = s.worker !== 'kast' && near.some(j => sl[j].worker === 'kast');
@@ -960,6 +975,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (cd.type === 'machine') return canPlaceMachine(cd.machine);
     if (cd.type === 'worker') return !state.workers[cd.worker].unlocked;
     if (cd.once && state.cards.includes(id)) return false;
+    if (cd.type === 'skill') return Object.values(state.workers).some(w => w.unlocked && !w.skill);
     if (cd.type === 'mupg') return anySlot((s, l) => s.machine && s.machine !== 'belt' && (cl < 0 || cl === l));
     return true;
   }
@@ -981,6 +997,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (src === 'mastery' && !rollMastery().length) src = 'level';
     if (!state.firstOffer) { state.firstOffer = true; state.offers.push({ src, ids: ['m_bench', 'e_coffee', 'u_power'] }); }
     else state.offers.push({ src, ids: src === 'mastery' ? rollMastery() : rollOffer() });
+    const last = state.offers[state.offers.length - 1];
+    if (src === 'quota' && skillLocked() && eligible('k_skill') && !last.ids.includes('k_skill')) last.ids[0] = 'k_skill';
     if (state.run.sewDue && src !== 'mastery') { addSew(state.offers[state.offers.length - 1]); state.run.sewDue = false; }
     offersHidden = !state.run.brk; // cards that come during a shift wait for the break
     renderSheet();
@@ -991,6 +1009,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (cd.type === 'machine' && !canPlaceMachine(cd.machine)) { state.offers.unshift(offer); toast(MACH[cd.machine].max && machineCount(cd.machine) >= MACH[cd.machine].max ? `Все станки «${MACH[cd.machine].name}» уже стоят` : 'Для этого станка нет свободного места'); return; }
     if (cd.type === 'machine') { mode = { kind: 'place', card: id, offer }; if (cl >= 0) state.cur = cl; }
     else if (cd.type === 'equip') mode = { kind: 'equip', card: id, offer };
+    else if (cd.type === 'skill') mode = { kind: 'skill', card: id, offer };
     else if (cd.type === 'mupg') { mode = { kind: 'upgrade', card: id, offer }; if (cl >= 0) state.cur = cl; }
     else finish(id);
     selSlot = null; selWorker = null;
@@ -1003,6 +1022,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (cd.type === 'machine') slotsOf(target.l)[target.i].machine = cd.machine;
     if (cd.type === 'equip') state.workers[target].equip.push(id);
     if (cd.type === 'mupg') slotsOf(target.l)[target.i].upg.push(id);
+    if (cd.type === 'skill') { openSkill(target); toast(`${WORKERS[target].name}: скилл «${SKILLS[target].name}» открыт!`); }
     applyNow(id);
     mode = null;
     comboToast(before);
@@ -1022,6 +1042,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       if ((cd.type === 'worker' || (cd.type === 'mupg' && (cardLoc(id) < 0 || cardLoc(id) === l))) && s.machine && s.machine !== 'belt') tg.push({ l, i });
     }); });
     if (cd.type === 'equip') Object.keys(state.workers).forEach(w => { if (state.workers[w].unlocked) tg.push(w); });
+    // a skill works only part of its cycle, so its gain is averaged over the cycle
+    if (cd.type === 'skill') Object.keys(state.workers).forEach(w => { if (state.workers[w].unlocked && !state.workers[w].skill && workerPlace(w)) tg.push(w); });
     if (cd.type === 'global') tg.push(null);
     let best = 0;
     try {
@@ -1032,7 +1054,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
         if (cd.type === 'machine') slotsOf(t.l)[t.i].machine = cd.machine;
         if (cd.type === 'equip') state.workers[t].equip.push(id);
         if (cd.type === 'mupg') slotsOf(t.l)[t.i].upg.push(id);
-        best = Math.max(best, totalIncome() - base);
+        if (cd.type === 'skill') openSkill(t);
+        best = Math.max(best, (totalIncome() - base) * (cd.type === 'skill' ? skillShare(t) : 1));
       }
     } finally { state = saved; }
     return best;
@@ -1063,6 +1086,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
 
   /* ================= simulation ================= */
   let achTimer = 0;
+  const openSkill = id => { const w = state.workers[id]; w.skill = true; w.skT = 0; state.run.skills++; rollSkin(id); };
+  const skillShare = id => Math.min(1, skDur(id) / (SKILLS[id].shift ? quotaTime() : SKILLS[id].cd));
   const rollSkin = id => { if (SKILLS[id].kind === 'random') state.workers[id].skKind = Object.keys(SKIN_KINDS)[Math.floor(Math.random() * 3)]; };
   function tick(dt) {
     // the Horse's strength builds up at a machine and is lost in the locker room
@@ -1105,7 +1130,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       state.xp -= need(state.level); state.level++;
       if (state.level % BAL.levelEvery === 0) { toast(`Уровень ${state.level}! Карта ждёт тебя в перерыве`); queueOffer(state.level % BAL.masteryEvery === 0 ? 'mastery' : 'level'); } else toast(`Уровень ${state.level}! Карта через ${BAL.levelEvery - state.level % BAL.levelEvery}`);
     }
-    if (!crate) { if (!rule('audit')) { state.crateIn -= dt * crateFreq(); if (state.crateIn <= 0) { crate = rollCrate(); toast(crate.kind === 'gold' ? 'Золотая посылка! Нажми на неё' : crate.kind === 'card' ? 'Посылка с картой! Нажми на неё' : 'С конвейера съехала посылка! Нажми на неё'); } } }
+    if (!crate) { if (!rule('audit')) { state.crateIn -= dt * crateFreq(); if (state.crateIn <= 0) { crate = rollCrate(); if (!crate) state.crateIn = newCrate(); else toast(crate.kind === 'gold' ? 'Золотая посылка! Нажми на неё' : crate.kind === 'card' ? 'Посылка с картой! Нажми на неё' : 'С конвейера съехала посылка! Нажми на неё'); } } }
     else { crate.life -= dt; if (crate.life <= 0) { if (state.cards.includes('u_courier')) toast(crateText(openCrate(true), 'Курьер открыл посылку')); else { crate = null; state.crateIn = newCrate(); } } }
     floats.forEach(f => { f.life -= dt * 0.8; });
     floats = floats.filter(f => f.life > 0);
@@ -1124,18 +1149,19 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     crate = null; state.crateIn = newCrate();
     run.subs = (run.subs || 0) + 0.03 * cardN('u_sub');
     if (kind === 'card') { queueOffer('crate'); return { card: true }; }
-    const gain = curQuota() * rnd(kind === 'gold' ? BAL.crateGoldQ : BAL.crateQ) * Math.pow(3, cardN('u_customs') + cardN('u_snailpost')) * (globals().combos.includes('post') ? 2 : 1) * (courier ? 0.5 : 1);
-    state.money += gain; state.earned += gain; run.qEarned += gain;
-    return { gain, gold: kind === 'gold' };
+    const room = Math.max(0, curQuota() * BAL.crateCap - (run.qCrate || 0));
+    const gain = Math.min(room, curQuota() * rnd(kind === 'gold' ? BAL.crateGoldQ : BAL.crateQ) * Math.pow(3, cardN('u_customs') + cardN('u_snailpost')) * (globals().combos.includes('post') ? 2 : 1) * (courier ? 0.5 : 1));
+    state.money += gain; state.earned += gain; run.qEarned += gain; run.qCrate = (run.qCrate || 0) + gain;
+    return { gain, gold: kind === 'gold', full: crateFull() };
   }
-  const crateText = (r, who = 'В посылке') => r.card ? `${who}: внутри карта, выбор в перерыве!` : `${who}: ${fmt(r.gain)} монет${r.gold ? ', золотая!' : '!'}`;
+  const crateText = (r, who = 'В посылке') => r.card ? `${who}: внутри карта, выбор в перерыве!` : `${who}: ${fmt(r.gain)} монет${r.gold ? ', золотая!' : '!'}${r.full ? ' Посылок с монетами до конца смены больше не будет' : ''}`;
   function passQuota() {
     const run = state.run, wasRule = run.rule;
     if (wasRule) run.passed.push(wasRule.id);
     run.rep += wasRule ? 2 : 1;
     const piggy = state.cards.filter(id => id === 'u_piggy').length;
     if (piggy) { state.money += run.qEarned * 0.1 * piggy; toast(`Копилка: +${fmt(run.qEarned * 0.1 * piggy)} монет`); }
-    run.q++; run.qT = 0; run.qEarned = 0; run.rule = null;
+    run.q++; run.qT = 0; run.qEarned = 0; run.qCrate = 0; run.rule = null;
     run.brk = true; run.shopClosed = !!(wasRule && wasRule.id === 'audit'); run.shop = run.shopClosed ? [] : rollShop(); run.shopLocked = false; run.shopRolls = 0;
     if (run.q % 3 === 0) {
       const ids = Object.keys(RULES).filter(id => RULES[id].ok()), id = ids[Math.floor(Math.random() * ids.length)];
@@ -1460,7 +1486,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
         const cl = mode.card ? cardLoc(mode.card) : -1;
         const locOk = cl < 0 || cl === l;
         const beltBlock = mode.card && CARDS[mode.card].machine === 'belt' && sl.some(z => z.machine === 'belt');
-        if ((mode.kind === 'place' && !s.machine && locOk && !beltBlock) || (mode.kind === 'upgrade' && s.machine && s.machine !== 'belt' && locOk) || (mode.kind === 'equip' && s.worker) || (mode.kind === 'move' && i !== mode.from)) col = `rgba(126,224,129,${pulse})`;
+        if ((mode.kind === 'place' && !s.machine && locOk && !beltBlock) || (mode.kind === 'upgrade' && s.machine && s.machine !== 'belt' && locOk) || (mode.kind === 'equip' && s.worker) || (mode.kind === 'skill' && s.worker && !state.workers[s.worker].skill) || (mode.kind === 'move' && i !== mode.from)) col = `rgba(126,224,129,${pulse})`;
         if (mode.kind === 'move' && i === mode.from) col = '#ffd54a';
       } else if (selWorker) { if (s.machine && s.machine !== 'belt') col = `rgba(126,224,129,${pulse})`; }
       else if (selSlot === i) col = `rgba(255,213,74,${pulse})`;
@@ -1491,7 +1517,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     for (let p = 0; p < lockerPages(); p++) {
       const x = PTX(p), y = PTY(), on = p === lockerPage;
       R(x, y, PTW, 12, K); R(x + 1, y + 1, PTW - 2, 10, on ? '#f2c14e' : '#6a7488');
-      if (mode && mode.kind === 'equip' && !on) border(x, y, PTW, 12, `rgba(126,224,129,${pulse})`);
+      if (mode && (mode.kind === 'equip' || mode.kind === 'skill') && !on) border(x, y, PTW, 12, `rgba(126,224,129,${pulse})`);
     }
     for (let i = lockerPage * NL; i < (lockerPage + 1) * NL; i++) {
       const x = LX(i), y = LYi(i), id = state.lockers[i];
@@ -1510,7 +1536,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       }
       let col = null;
       if (selWorker === id) col = `rgba(255,213,74,${pulse})`;
-      else if (mode && mode.kind === 'equip' && w && w.unlocked) col = `rgba(126,224,129,${pulse})`;
+      else if (mode && (mode.kind === 'equip' || (mode.kind === 'skill' && w && !w.skill)) && w && w.unlocked) col = `rgba(126,224,129,${pulse})`;
       if (col) border(x, y, LW, LH, col);
     }
     for (let i = 0; i < state.lockers.length - 1; i++) {
@@ -1603,6 +1629,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (i >= state.lockers.length) { toast('Этот шкафчик откроется позже'); return; }
     if (mode) {
       if (mode.kind === 'equip' && id && state.workers[id].unlocked) finish(mode.card, id);
+      if (mode.kind === 'skill' && id && state.workers[id].unlocked) { if (state.workers[id].skill) toast('У этого сотрудника скилл уже открыт'); else finish(mode.card, id); }
       return;
     }
     if (!id || !state.workers[id].unlocked) { toast('Сотрудник ещё не пришёл. Ищи карту «Новый сотрудник»'); return; }
@@ -1627,6 +1654,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       }
       else if (mode.kind === 'upgrade' && s.machine && s.machine !== 'belt') finish(mode.card, { l, i });
       else if (mode.kind === 'equip' && s.worker) finish(mode.card, s.worker);
+      else if (mode.kind === 'skill' && s.worker) { if (state.workers[s.worker].skill) toast('У этого сотрудника скилл уже открыт'); else finish(mode.card, s.worker); }
       else if (mode.kind === 'move') {
         if (i !== mode.from) { [sl[mode.from], sl[i]] = [sl[i], sl[mode.from]]; toast('Станок переставлен'); save(); }
         mode = null; selSlot = i; renderSheet();
@@ -1686,7 +1714,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     else if (view === 'friends') h = friendsHTML();
     else if (state.run.over && !guest && selSlot == null && !selWorker) h = endHTML();
     else if (mode) {
-      const txt = { place: 'Нажми на пустое место, куда поставить станок', equip: 'Нажми на сотрудника или его шкафчик', upgrade: 'Нажми на станок, который улучшить', move: 'Нажми на место, куда переставить станок' }[mode.kind];
+      const txt = { place: 'Нажми на пустое место, куда поставить станок', equip: 'Нажми на сотрудника или его шкафчик', skill: 'Нажми на сотрудника без скилла или его шкафчик', upgrade: 'Нажми на станок, который улучшить', move: 'Нажми на место, куда переставить станок' }[mode.kind];
       const extra = mode.card && CARDS[mode.card].machine === 'belt' ? '<p class="muted">Конвейер можно поставить в любой открытый цех, переключай цеха вкладками.</p>' : '';
       h = `${mode.card ? `<div class="row">${chip(mode.card)}</div>` : ''}<div class="prompt">${txt}</div>${extra}<div class="row"><button class="btn" type="button" data-act="cancel">Отмена</button></div>`;
     } else if (state.offers.length && !offersHidden && !guest && !state.run.over) {
@@ -1746,7 +1774,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   }
   function skillHTML(id) {
     const sk = SKILLS[id], has = state.workers[id].skill;
-    return `<h3>Скилл</h3><p><b>${sk.name}</b>: ${esc(sk.desc)}</p>${has ? '<p class="on" id="live-skill"></p>' : `<div class="row"><button class="btn primary" type="button" data-act="skill" ${state.money < skillCost(id) ? 'disabled' : ''}>Открыть за ${fmt(skillCost(id))}</button></div>`}`;
+    return `<h3>Скилл</h3><p><b>${sk.name}</b>: ${esc(sk.desc)}</p>${has ? '<p class="on" id="live-skill"></p>' : skillLocked() ? `<p class="muted">С ${BAL.skillCoinQ}-й квоты скиллы за монеты не продаются: открой его картой «Мастер-класс». Она есть в каждом выборе за квоту.</p>` : `<div class="row"><button class="btn primary" type="button" data-act="skill" ${state.money < skillCost(id) ? 'disabled' : ''}>Открыть за ${fmt(skillCost(id))}</button></div>`}`;
   }
   function workerHTML(id) {
     const Wd = WORKERS[id], st = state.workers[id], ws = workerStats(id, globals());
@@ -1874,8 +1902,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     else if (act === 'skill') {
       const sk = SKILLS[selWorker], w = state.workers[selWorker];
       const cost = skillCost(selWorker);
-      if (w.skill || state.money < cost) return;
-      state.money -= cost; w.skill = true; w.skT = 0; state.run.skills++; rollSkin(selWorker);
+      if (w.skill || skillLocked() || state.money < cost) return;
+      state.money -= cost; openSkill(selWorker);
       toast(`Скилл «${sk.name}» открыт!`); save(); renderSheet();
     }
     else if (act === 'rest') { const wp = workerPlace(selWorker); if (wp) slotsOf(wp.l)[wp.i].worker = null; save(); renderSheet(); }
@@ -1964,7 +1992,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     saveTimer += dt; if (saveTimer > 5) { saveTimer = 0; save(); }
     if (toastTimer > 0) { toastTimer -= dt; if (toastTimer <= 0) $toast.hidden = true; }
   }
-  if (BOT) window.PF = { BAL, get state() { return state; }, set state(v) { state = v; }, meta, tick, totalIncome, globals, eligible, finish, unlockLoc, openCrate, cardPrice, skillCost, buyCard, startShift, curQuota, rerollCost, rollNewShop, shopRollCost, rollOffer, ICONS, quotaTarget, quotaTime, newRun, workerPlace, slotStats, onStrike, rule, get crate() { return crate; }, CARDS, MACH, LOCS, SKILLS, LAYOUTS, WORKERS };
+  if (BOT) window.PF = { BAL, get state() { return state; }, set state(v) { state = v; }, meta, tick, totalIncome, globals, eligible, finish, unlockLoc, openCrate, cardPrice, skillCost, skillLocked, skillShare, buyCard, startShift, curQuota, rerollCost, rollNewShop, shopRollCost, rollOffer, ICONS, quotaTarget, quotaTime, newRun, workerPlace, slotStats, onStrike, rule, get crate() { return crate; }, CARDS, MACH, LOCS, SKILLS, LAYOUTS, WORKERS };
   else requestAnimationFrame(loop);
 })();
 </script>

@@ -45,6 +45,7 @@ const RUNS = +process.argv[2] || 8, UNL = process.argv[3] || '', BAL = JSON.pars
         if (cd.type === 'machine') return slotsAll(st).filter(({ l, s }) => !s.machine && (cl < 0 || cl === l) && !(cd.machine === 'belt' && st.locs[l].slots.some(z => z.machine === 'belt'))).map(({ l, i }) => ({ l, i }));
         if (cd.type === 'mupg') return slotsAll(st).filter(({ l, s }) => s.machine && s.machine !== 'belt' && (cl < 0 || cl === l)).map(({ l, i }) => ({ l, i }));
         if (cd.type === 'equip') return Object.keys(st.workers).filter(w => st.workers[w].unlocked);
+        if (cd.type === 'skill') return Object.keys(st.workers).filter(w => st.workers[w].unlocked && !st.workers[w].skill && P.workerPlace(w));
         return [undefined];
       }
       function pickOffer() {
@@ -52,22 +53,24 @@ const RUNS = +process.argv[2] || 8, UNL = process.argv[3] || '', BAL = JSON.pars
         let best = -1, choice = null;
         for (const id of offer.ids) for (const tg of targets(id)) {
           P.state = clone(orig); P.state.offers.shift();
+          const v0 = inc();
           P.finish(id, tg); optimize(1);
-          // next-workshop machines and new workers pay off later: small bonus so they are not always skipped
-          const v = inc() * (P.CARDS[id].type === 'worker' ? 1.05 : 1);
+          // next-workshop machines and new workers pay off later: small bonus so they are not always skipped;
+          // a skill works only part of its cycle, so its gain is averaged
+          const v = P.CARDS[id].type === 'skill' ? v0 + (inc() - v0) * P.skillShare(tg) : inc() * (P.CARDS[id].type === 'worker' ? 1.05 : 1);
           if (v > best) { best = v; choice = [id, tg]; }
         }
         P.state = orig; P.state.offers.shift();
         if (choice) P.finish(...choice);
         optimize(2);
       }
-      const log = { opened: [0, null, null, null, null], quotaAt: [], cards: 0, level: 0 };
+      const log = { opened: [0, null, null, null, null], quotaAt: [], cards: 0, level: 0, crate: 0 };
       let sinceOpt = 0;
       const nextLoc = () => [1, 2, 3, 4].find(l => !P.state.locs[l].unlocked);
       // save up for the next workshop when it is less than a minute of income away
       const saving = () => { const n = nextLoc(); return n && (P.LOCS[n].cost - P.state.money) < inc() * 60; };
       function unlockNext() { const n = nextLoc(); if (n && P.state.money >= P.LOCS[n].cost) { P.unlockLoc(n); log.opened[n] = Math.round(P.state.run.t); optimize(3); } }
-      function buySkills() { const s2 = P.state; for (const w in P.SKILLS) { const ws = s2.workers[w]; if (ws.unlocked && !ws.skill && P.workerPlace(w) && s2.money >= P.skillCost(w) * 2) { s2.money -= P.skillCost(w); ws.skill = true; ws.skT = 0; s2.run.skills++; } } }
+      function buySkills() { const s2 = P.state; if (P.skillLocked()) return; for (const w in P.SKILLS) { const ws = s2.workers[w]; if (ws.unlocked && !ws.skill && P.workerPlace(w) && s2.money >= P.skillCost(w) * 2) { s2.money -= P.skillCost(w); ws.skill = true; ws.skT = 0; s2.run.skills++; } } }
       // the break: time stands still, so the bot does all its shopping and thinking here
       function breakTurn() {
         while (P.state.offers.length) pickOffer();
@@ -90,16 +93,16 @@ const RUNS = +process.argv[2] || 8, UNL = process.argv[3] || '', BAL = JSON.pars
         if (step % 4) continue;
         if (step % 240 === 0) (log.rateAt = log.rateAt || []).push(Math.round(inc()));
         if (st.run.q - 1 > log.quotaAt.length) log.quotaAt.push(Math.round(st.run.t));
-        if (P.crate) P.openCrate();
+        if (P.crate) { const r = P.openCrate(); if (!r.card) log.crate += r.gain; }
         unlockNext();
         if (!saving()) buySkills();
         if (++sinceOpt >= 10) { sinceOpt = 0; optimize(2); }
       }
       const st = P.state;
-      return { passed: st.run.q - 1, end: Math.round(st.run.t), opened: log.opened, quotaAt: log.quotaAt, cards: st.cards.length, level: st.level, earned: st.earned, rate: st.run.bestRate, rateAt: log.rateAt };
+      return { passed: st.run.q - 1, end: Math.round(st.run.t), opened: log.opened, quotaAt: log.quotaAt, cards: st.cards.length, level: st.level, earned: st.earned, rate: st.run.bestRate, rateAt: log.rateAt, crateShare: log.crate / st.earned, skills: st.run.skills };
     }, [UNL, BAL, COSTS]));
     const x = res[res.length - 1];
-    console.log(`run ${r + 1}: квот ${x.passed}, конец ${Math.floor(x.end / 60)}:${String(x.end % 60).padStart(2, '0')}, цеха ${x.opened.map(v => v == null ? '—' : Math.round(v / 6) / 10).join('/')} мин, карт ${x.cards}, ур ${x.level}, доход ${Math.round(x.rate)}/с, квоты на ${x.quotaAt.map(v => Math.round(v / 6) / 10).join(' ')}`);
+    console.log(`run ${r + 1}: квот ${x.passed}, конец ${Math.floor(x.end / 60)}:${String(x.end % 60).padStart(2, '0')}, цеха ${x.opened.map(v => v == null ? '—' : Math.round(v / 6) / 10).join('/')} мин, карт ${x.cards}, ур ${x.level}, доход ${Math.round(x.rate)}/с, скиллов ${x.skills}, посылки ${Math.round(x.crateShare * 100)}% денег, квоты на ${x.quotaAt.map(v => Math.round(v / 6) / 10).join(' ')}`);
     if (process.env.RATES) console.log('  доход по минутам:', x.rateAt.join(' '));
   }
   await b.close();
