@@ -2,7 +2,7 @@
 // Цены и скорости станков не выбраны: value: 1 и desc: 'x' — заглушки. Цех 10 — индекс цеха 9.
 // Особенность цеха: в центре Эталон на широком месте (два столбца). Сотрудник ему не нужен,
 // своих скорости и цены нет (0), доход растёт от числа работающих соседей (максимум 4).
-// Статус: Эталон одобрен. Четыре станка вокруг нарисованы и ждут одобрения, сцена цеха ещё не нарисована.
+// Статус: Эталон и четыре станка вокруг него нарисованы и одобрены, сцена цеха ещё не нарисована (будет белой).
 
 // ===== LAYOUTS: после пепси =====
     // a pair on top, the etalon across both columns in the middle (anchored at column 0), a pair below
@@ -19,15 +19,15 @@
     toilet: { loc: 9, name: 'Унитаз', short: 'УНИТАЗ', rate: 0.5, value: 1, max: 1, desc: 'x' },
     airfryer: { loc: 9, name: 'Аэрогриль', short: 'АЭРОГРИЛЬ', rate: 0.5, value: 1, max: 1, desc: 'x' },
     shorts: { loc: 9, name: 'Студия коротких видео', short: 'ШОРТСЫ', rate: 0.8, value: 1, max: 1, desc: 'x' },
-    energy: { loc: 9, name: 'Автомат энергетиков', short: 'ЭНЕРГЕТИКИ', rate: 0.6, value: 1, max: 1, desc: 'x' },
+    drinks: { loc: 9, name: 'Автомат с пивом и колой', short: 'ПИВО-КОЛА', rate: 0.6, value: 1, max: 1, desc: 'x' },
 
-// ===== ICON_DRAW: иконки карт станков 16×16 (ждут одобрения) =====
+// ===== ICON_DRAW: иконки карт станков 16×16 =====
     toilet: (r, d) => { r(3, 0, 10, 7, K); r(4, 1, 8, 5, '#f4f7f9'); r(10, 1, 2, 5, '#d8dee4'); r(1, 2, 2, 2, K); r(1, 7, 14, 4, K); r(2, 8, 12, 2, '#ffffff'); r(4, 8, 8, 1, '#5aa9e6'); r(4, 11, 8, 5, K); r(5, 11, 6, 4, '#e9eef2'); r(9, 11, 2, 4, '#c9d0d6'); r(14, 0, 2, 9, '#f2c94c'); r(14, 4, 2, 1, '#d9453f'); },
     airfryer: (r, d) => { r(2, 0, 12, 16, K); r(3, 1, 10, 14, '#2e2e38'); r(3, 1, 1, 14, '#4a4a58'); r(5, 2, 6, 3, '#141419'); r(6, 3, 1, 1, '#ff8a3a'); r(8, 3, 1, 1, '#ff8a3a'); r(3, 9, 10, 1, K); r(0, 10, 3, 3, K); r(1, 11, 1, 1, '#55556a'); for (let k = 0; k < 4; k++) r(5 + k * 2, 6 + (k % 2), 1, 3, '#f2c94c'); },
     shorts: (r, d) => { d(8, 7, 7, K); d(8, 7, 6, '#fff1b0'); d(8, 7, 5, K); r(5, 1, 7, 13, K); r(6, 2, 5, 11, '#ff6fa8'); r(7, 5, 3, 4, '#ffd6e6'); r(8, 6, 1, 2, K); r(6, 12, 3, 1, '#ffffff'); r(7, 14, 3, 2, K); r(12, 1, 1, 1, '#ff5f87'); r(14, 1, 1, 1, '#ff5f87'); r(12, 2, 3, 1, '#ff5f87'); r(13, 3, 1, 1, '#ff5f87'); },
-    energy: (r, d) => { r(2, 0, 12, 16, K); r(3, 1, 10, 14, '#2e2e38'); r(3, 1, 10, 3, '#7ee081'); r(8, 1, 1, 1, '#f2c94c'); r(7, 2, 2, 1, '#f2c94c'); r(7, 3, 1, 1, '#f2c94c'); r(4, 5, 6, 7, '#1d2a24'); for (let k = 0; k < 2; k++) for (let j = 0; j < 2; j++) { r(5 + k * 3, 6 + j * 3, 2, 2, '#7ee081'); r(5 + k * 3, 6 + j * 3, 2, 1, '#c9d0d6'); } r(11, 6, 1, 1, '#7ee081'); r(11, 8, 1, 1, '#55556a'); r(4, 13, 8, 1, '#141419'); },
+    drinks: (r, d) => { r(2, 0, 12, 16, K); r(3, 1, 10, 14, '#e9eef2'); r(3, 1, 5, 3, '#d9453f'); r(4, 2, 3, 1, '#ffffff'); r(8, 1, 5, 3, '#e0a32e'); r(8, 1, 5, 1, '#fff6e0'); r(4, 5, 8, 8, '#1b2230'); r(5, 7, 1, 1, '#5a3410'); r(5, 6, 1, 1, '#f2c94c'); r(4, 8, 3, 3, '#7a4a1a'); r(4, 9, 3, 1, '#f2c94c'); r(8, 7, 3, 1, '#c9d0d6'); r(8, 8, 3, 3, '#d9453f'); r(8, 9, 3, 1, '#ffffff'); r(4, 11, 8, 1, '#44505c'); r(12, 6, 1, 1, '#7ee081'); r(4, 13, 8, 2, '#1b2230'); },
 
-// ===== machine(): ветки перед 'sew' (ждут одобрения) =====
+// ===== machine(): ветки перед 'sew' =====
     } else if (type === 'toilet') {
       // a toilet on the calibration stand: the flush lever kicks, the water swirls, a gauge and a ruler check the level
       const ell = (ex, ey, rx, ry, col) => { for (let dy = -ry; dy <= ry; dy++) { const w = Math.round(rx * Math.sqrt(1 - (dy / ry) ** 2)); R(ex - w, ey + dy, w * 2 + 1, 1, col); } };
@@ -71,21 +71,24 @@
       R(x + 12, y + 3, 9, 1, '#141419'); R(x + 12, y + 20, 9, 1, '#141419'); R(x + 12, y + 19, Math.round(sw * 9), 1, '#ffffff');
       for (let k = 0; k < 3; k++) { const s = (t * 0.7 + k / 3) % 1, hx = x + 24 + Math.round(Math.sin(s * 6 + k) * 2), hy = y + 18 - Math.round(s * 18); R(hx, hy, 1, 1, '#ff5f87'); R(hx + 2, hy, 1, 1, '#ff5f87'); R(hx, hy + 1, 3, 1, '#ff5f87'); R(hx + 1, hy + 2, 1, 1, '#ff5f87'); }
       R(x + 13, y + 1, 7, 2, K); R(x + 15, y + 1, 3, 1, '#2e2e38');
-    } else if (type === 'energy') {
-      // the energy drink machine: a lit fridge of green cans, a can drops into the tray and the bolt sign buzzes
-      R(x + 5, y + 1, 23, 29, K); R(x + 6, y + 2, 21, 27, '#2e2e38'); R(x + 6, y + 2, 2, 27, '#4a4a58');
-      const buzz = (t % 1.7) < 0.12;
-      R(x + 7, y + 3, 19, 5, buzz ? '#3f8a4f' : '#7ee081');
-      for (const [a, b, w] of [[17, 3, 2], [16, 4, 2], [15, 5, 3], [16, 6, 2], [15, 7, 1]]) R(x + a, y + b, w, 1, buzz ? '#c9a23a' : '#f2c94c');
-      R(x + 8, y + 9, 13, 14, K); R(x + 9, y + 10, 11, 12, '#1d2a24');
-      for (let r = 0; r < 3; r++) for (let k = 0; k < 3; k++) { const cxk = x + 10 + k * 4, cyk = y + 11 + r * 4; R(cxk, cyk, 2, 3, '#3f8a4f'); R(cxk, cyk, 1, 3, '#7ee081'); R(cxk, cyk, 2, 1, '#c9d0d6'); }
-      R(x + 9, y + 10, 1, 12, 'rgba(255,255,255,.25)');
-      for (let k = 0; k < 3; k++) R(x + 23, y + 11 + k * 4, 2, 2, k === Math.floor(t * 3) % 3 ? '#7ee081' : '#55556a');
-      R(x + 22, y + 23, 4, 1, '#55556a');
-      R(x + 8, y + 24, 17, 4, K); R(x + 9, y + 25, 15, 2, '#141419');
-      const dr = (t * 0.7) % 1;
-      if (dr < 0.4) { const cy2 = y + 12 + Math.round(dr / 0.4 * 13); if (cy2 < y + 22) R(x + 14, cy2, 2, 3, '#7ee081'); else { R(x + 13, y + 25, 3, 2, '#7ee081'); R(x + 13, y + 25, 3, 1, '#c9d0d6'); } }
-      else { R(x + 13, y + 25, 3, 2, '#7ee081'); R(x + 13, y + 25, 3, 1, '#c9d0d6'); }
+    } else if (type === 'drinks') {
+      // a fridge of beer and cola: the sign is half cola red, half beer gold with foam, a drink drops into the tray
+      R(x + 5, y + 1, 23, 29, K); R(x + 6, y + 2, 21, 27, '#e9eef2'); R(x + 6, y + 2, 2, 27, '#ffffff'); R(x + 25, y + 2, 2, 27, '#c9d0d6');
+      const buzz = (t % 2.3) < 0.12;
+      R(x + 7, y + 3, 9, 5, buzz ? '#9a3a3a' : '#d9453f'); R(x + 8, y + 5, 7, 1, '#ffffff'); R(x + 9, y + 6, 4, 1, '#ffffff');
+      R(x + 16, y + 3, 10, 5, buzz ? '#a87a2a' : '#e0a32e'); R(x + 16, y + 3, 10, 2, '#fff6e0'); R(x + 18, y + 5, 1, 1, '#fff6e0'); R(x + 22, y + 5, 1, 1, '#fff6e0');
+      R(x + 8, y + 9, 14, 14, K); R(x + 9, y + 10, 12, 12, '#1b2230');
+      // b is the bottom row of the drink: a beer is a brown bottle with a gold label, a cola a red can with a white band
+      const beer = (bx, b) => { R(bx + 1, b - 4, 1, 1, '#f2c94c'); R(bx + 1, b - 3, 1, 1, '#5a3410'); R(bx, b - 2, 3, 3, '#7a4a1a'); R(bx, b - 1, 3, 1, '#f2c94c'); };
+      const cola = (bx, b) => { R(bx, b - 3, 3, 1, '#c9d0d6'); R(bx, b - 2, 3, 3, '#d9453f'); R(bx, b - 1, 3, 1, '#ffffff'); };
+      for (let r = 0; r < 2; r++) { for (let k = 0; k < 3; k++) ((r + k) % 2 ? cola : beer)(x + 10 + k * 4, y + 15 + r * 5); R(x + 9, y + 16 + r * 5, 12, 1, '#44505c'); }
+      R(x + 9, y + 10, 1, 11, 'rgba(255,255,255,.25)');
+      for (let k = 0; k < 3; k++) R(x + 23, y + 11 + k * 4, 2, 2, k === Math.floor(t * 3) % 3 ? '#7ee081' : '#9aa3ad');
+      R(x + 23, y + 23, 2, 1, '#9aa3ad');
+      R(x + 8, y + 24, 17, 4, K); R(x + 9, y + 25, 15, 2, '#1b2230');
+      const dr = (t * 0.7) % 1, which = Math.floor(t * 0.7) % 2 ? cola : beer, fy = y + 13 + Math.round(dr / 0.4 * 12);
+      if (dr < 0.4 && fy < y + 22) which(x + 14, fy);
+      else { R(x + 12, y + 25, 5, 2, which === cola ? '#d9453f' : '#7a4a1a'); R(x + 12, y + 25, 5, 1, which === cola ? '#ffffff' : '#f2c94c'); }
       R(x + 5, y + 29, 23, 2, K);
 
 // ===== etalon(): широкий станок, рядом с furnace() и extractor() (одобрен) =====
