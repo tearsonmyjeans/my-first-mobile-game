@@ -5,8 +5,9 @@
     { name: 'Манга', sign: 'ЦЕХ 8 · МАНГА', cost: 1e14, wall: '#efe6cf', mortar: '#9a7650', floor: '#cfc890', grid: '#cfc890', plate: '#fbf8f0', frame: '#2b2135', item: '#fbf8f0', board: '#c8323c', boardHi: '#e05a5a', goods: 'manga', unit: 'Манга', unit1: 'Цена тома', start: 'sketch', desc: 'x', opened: 'x' }
 
 // ===== LAYOUTS: после голубей =====
-    // a cross of manga panels: one on top between the second and third, a row of four, one below the second
-    [[1.5, 0], [0, 1], [1, 1], [2, 1], [3, 1], [1, 2]]
+    // a cross of manga panels: a row of four, one below the second; the top one sits apart over the gap between the second and third
+    // and touches nobody, so it gets no neighbour bonuses
+    [[1.5, 0], [0, 1.25], [1, 1.25], [2, 1.25], [3, 1.25], [1, 2.25]]
 
 // ===== MACH: перед belt =====
     sketch: { loc: 7, name: 'Стол набросков', short: 'НАБРОСКИ', rate: 0.9, value: 1, max: 3, desc: 'x' },
@@ -97,7 +98,7 @@
       const shadow = (x, y, w) => R(x, y, w, 3, 'rgba(30,20,40,.28)');
 
       // top left: a kotatsu with mikans, cup ramen and energy cans; the mangaka sleeps half under the quilt in a hachimaki, a snot bubble swells
-      const kx = 42, ky = 60;
+      const kx = 42, ky = 68;
       shadow(kx - 34, ky + 38, 116);
       R(kx - 5, ky + 6, 82, 32, K); R(kx - 4, ky + 7, 80, 30, '#d9734a');
       for (let i = 0; i < 10; i++) for (let j = 0; j < 4; j++) if ((i + j) % 2) { R(kx - 2 + i * 8, ky + 10 + j * 7, 3, 3, '#e8956a'); R(kx - 1 + i * 8, ky + 11 + j * 7, 1, 1, '#fbe3d6'); }
@@ -128,7 +129,7 @@
       }
 
       // top right: a shelf of tankobon with a waving maneki-neko on top, a red phone on a stool rings with the deadline
-      const sx = W - 72, sy = 46;
+      const sx = W - 72, sy = 56;
       shadow(sx, sy + 62, 66);
       R(sx, sy, 66, 63, K); R(sx + 1, sy + 1, 64, 61, '#8a5a32'); R(sx + 1, sy + 1, 2, 61, '#a8693a');
       const BC = ['#c8323c', '#f2c94c', '#3f7ac2', '#57b04f', '#f4efe6', '#9a6ac2', '#ff8a3a', '#3a3346'];
@@ -149,7 +150,7 @@
       R(mx + 5, my + 11, 7, 4, K); R(mx + 6, my + 12, 5, 2, '#f2c94c');
       R(mx - 3, my + 1 + wave * 2, 4, 6, K); R(mx - 2, my + 2 + wave * 2, 2, 4, '#fbf8f0'); R(mx - 2, my + 2 + wave * 2, 2, 1, '#f2a0a8');
       // the phone: a red rotary set, the handset jumps on its cradle while it rings, the coiled cord hangs off the stool
-      const px = W - 112, py = 80, ring = t % 4 < 1.2, sh = ring ? (Math.floor(t * 20) % 2 ? 1 : -1) : 0, lift = ring ? 2 : 0;
+      const px = W - 112, py = 90, ring = t % 4 < 1.2, sh = ring ? (Math.floor(t * 20) % 2 ? 1 : -1) : 0, lift = ring ? 2 : 0;
       shadow(px, py + 30, 30);
       R(px, py + 12, 30, 4, K); R(px + 1, py + 13, 28, 2, '#a8693a'); R(px + 3, py + 16, 2, 15, K); R(px + 25, py + 16, 2, 15, K); R(px + 4, py + 24, 22, 1, K);
       for (let k = 0; k < 6; k++) R(px + 26 + (k % 2), py + 14 + k * 2, 2, 1, '#c8323c');
@@ -161,7 +162,7 @@
       if (ring) for (const [a, b, w, h] of [[-3, -2, 1, 4], [-5, -1, 1, 2], [33, -2, 1, 4], [35, -1, 1, 2]]) R(px + a, py + b, w, h, K);
 
       // bottom left: a glowing vending machine, now and then a can drops into the tray
-      const vx = 16, vy = 196, flick = Math.floor(t * 7) % 23 === 0;
+      const vx = 16, vy = rowY(2.25) + 4, flick = Math.floor(t * 7) % 23 === 0;
       R(vx - 6, vy + 74, 56, 4, 'rgba(160,210,255,.3)');
       R(vx, vy, 44, 74, K); R(vx + 1, vy + 1, 42, 72, '#e9eef2'); R(vx + 1, vy + 1, 2, 72, '#ffffff'); R(vx + 41, vy + 1, 2, 72, '#c9d0d6');
       R(vx + 3, vy + 3, 38, 6, K); R(vx + 4, vy + 4, 36, 4, flick ? '#5b7fa8' : '#8fd3f0'); R(vx + 6, vy + 5, 14, 2, '#ffffff'); R(vx + 24, vy + 5, 14, 2, '#c8323c');
@@ -180,7 +181,7 @@
       R(vx + 6, vy + 53, 32, 4, '#5a5662'); R(vx + 6, vy + 53, 32, 1, '#7a7682');
 
       // bottom right: a shiba sleeps on a purple zabuton, a cardboard standee of the magical girl heroine, crumpled drafts fly into the bin
-      const dx = 176, dy = 236, br2 = Math.round(Math.sin(t * 2));
+      const dx = 176, dy = rowY(2.25) + 44, br2 = Math.round(Math.sin(t * 2));
       shadow(dx - 6, dy + 27, 54);
       R(dx - 6, dy + 14, 52, 13, K); R(dx - 5, dy + 15, 50, 11, '#7a3a8a'); R(dx - 5, dy + 15, 50, 2, '#9a5aaa'); for (const a of [-7, 45]) { R(dx + a, dy + 13, 2, 2, '#f2c94c'); R(dx + a, dy + 26, 2, 2, '#f2c94c'); }
       ell(dx + 22, dy + 12 - br2, 17, 9 + br2, K); ell(dx + 22, dy + 12 - br2, 16, 8 + br2, '#d98a3a'); ell(dx + 20, dy + 16, 10, 4, '#fbf3e4');
@@ -190,7 +191,7 @@
       R(dx + 2, dy + 4 + twitch, 4, 5, K); R(dx + 3, dy + 5 + twitch, 2, 3, '#d98a3a'); R(dx + 9, dy + 4, 4, 5, K); R(dx + 10, dy + 5, 2, 3, '#d98a3a');
       R(dx + 3, dy + 13, 3, 1, K); R(dx + 9, dy + 13, 3, 1, K); R(dx - 2, dy + 16, 3, 2, K); R(dx + 1, dy + 19, 2, 1, K);
       // the standee: pink twin tails, huge blue eyes, a star wand that sparkles
-      const gx0 = 226, gy0 = 200;
+      const gx0 = 226, gy0 = rowY(2.25) + 8;
       shadow(gx0, gy0 + 64, 34);
       R(gx0 + 3, gy0 + 60, 28, 4, K); R(gx0 + 4, gy0 + 61, 26, 2, '#c9a26a');
       ell(gx0 + 4, gy0 + 24, 5, 14, K); ell(gx0 + 30, gy0 + 24, 5, 14, K); ell(gx0 + 4, gy0 + 24, 4, 13, '#f58bb8'); ell(gx0 + 30, gy0 + 24, 4, 13, '#f58bb8');
@@ -204,13 +205,13 @@
       R(gx0 + 29, gy0 + 22, 1, 18, K); R(gx0 + 27, gy0 + 15, 5, 5, K); R(gx0 + 28, gy0 + 14, 3, 7, K); R(gx0 + 28, gy0 + 16, 3, 3, '#f2c94c'); R(gx0 + 29, gy0 + 15, 1, 5, '#f2c94c');
       for (let k = 0; k < 4; k++) { const a = t * 3 + k * Math.PI / 2, sx2 = gx0 + 29 + Math.round(Math.cos(a) * 7), sy2 = gy0 + 17 + Math.round(Math.sin(a) * 7); R(sx2, sy2 - 1, 1, 3, k % 2 ? '#ffd54a' : '#fff1b0'); R(sx2 - 1, sy2, 3, 1, k % 2 ? '#ffd54a' : '#fff1b0'); }
       const pb = (cx, cy, r) => { disc(cx, cy, r + 1, K); disc(cx, cy, r, '#fbf8f0'); R(cx - 1, cy - 1, 2, 1, '#c9c2b4'); R(cx, cy + 1, 1, 1, '#c9c2b4'); };
-      const tb = W - 40, tby = 222;
+      const tb = W - 40, tby = rowY(2.25) + 30;
       shadow(tb - 2, tby + 40, 30);
       R(tb, tby + 10, 26, 32, K); R(tb + 1, tby + 11, 24, 30, '#9aa3ad'); R(tb + 1, tby + 11, 3, 30, '#c9d0d6'); for (let k = 0; k < 4; k++) R(tb + 7 + k * 5, tby + 13, 1, 27, '#7f8a94');
       for (const [a, b, r] of [[6, 6, 4], [14, 4, 4], [21, 7, 3], [10, 0, 3]]) pb(tb + a, tby + b, r);
       R(tb - 1, tby + 8, 28, 4, K); R(tb, tby + 9, 26, 2, '#c9d0d6');
       for (const [a, b] of [[-8, 42], [-16, 46], [12, 52]]) pb(tb + a, tby + b, 2);
-      const f = (t * 0.45) % 1, fx = 170 + (tb + 12 - 170) * f, fy = 200 + (tby - 2 - 200) * f - Math.sin(f * Math.PI) * 26;
+      const f = (t * 0.45) % 1, fx = 170 + (tb + 12 - 170) * f, fy = tby - 22 + 20 * f - Math.sin(f * Math.PI) * 26;
       pb(Math.round(fx), Math.round(fy), 2);
 
       // sakura petals drift across the tatami
@@ -220,3 +221,4 @@
 // ===== drawWorld(): прочие правки =====
 // окна:        добавить l !== 7
 // сетка пола:  добавить l !== 7
+// colX/rowY:   округлять (c => OX + Math.round(c * 78), r => 36 + Math.round(r * 78)), иначе дробные ряды манги рисуются между пикселями
