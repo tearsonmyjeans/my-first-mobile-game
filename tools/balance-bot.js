@@ -53,11 +53,12 @@ const RUNS = +process.argv[2] || 8, UNL = process.argv[3] || '', BAL = JSON.pars
         let best = -1, choice = null;
         for (const id of offer.ids) for (const tg of targets(id)) {
           P.state = clone(orig); P.state.offers.shift();
-          const v0 = inc();
+          const v0 = P.avgIncome();
           P.finish(id, tg); optimize(1);
+          // cards are judged by the mean income of a shift, since some of them change during it;
           // next-workshop machines and new workers pay off later: small bonus so they are not always skipped;
           // a skill works only part of its cycle, so its gain is averaged
-          const v = P.CARDS[id].type === 'skill' ? v0 + (inc() - v0) * P.skillShare(tg) : inc() * (P.CARDS[id].type === 'worker' ? 1.05 : 1);
+          const v1 = P.avgIncome(), v = P.CARDS[id].type === 'skill' ? v0 + (v1 - v0) * P.skillShare(tg) : v1 * (P.CARDS[id].type === 'worker' ? 1.05 : 1);
           if (v > best) { best = v; choice = [id, tg]; }
         }
         P.state = orig; P.state.offers.shift();
