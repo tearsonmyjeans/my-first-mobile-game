@@ -161,7 +161,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     // punctuation ran out, so the newest colours are Russian letters
     ф: '#b885dc', ч: '#8e58c0', ш: '#5f3590', л: '#cdd27a', ь: '#9aa34e',
     // pure white and pale yellow: glints on the card icons
-    Б: '#ffffff', Ж: '#fff1b0'
+    Б: '#ffffff', Ж: '#fff1b0',
+    // Raven's cloak and skin, Arc Warden's armour, the Nurse's dress, the zombie girl's skin and the Tuesday ghost
+    ж: '#6c66c0', з: '#46409a', э: '#2c2866', и: '#ece2ef', б: '#a65d6e', г: '#6b3550', д: '#d99a92', ц: '#c8a88c', щ: '#9a765e', ю: '#b8c79c', я: '#8b9d78', ы: '#e2f2f6', й: '#a9c6d6'
   };
   const GIRL = ['6.8k8.', '4.2k8h2k6.', '3.k12hk5.', '2.k14h2k3.', '2.k14hk2hk.', '.k16h2khk', '.k16hk2hk', '.k16hk2hk', '.k16hk2hk', '.k4hs4hs4hshk2hk', '.kh3s2k4s2k3shkhk.', '.kh3swe4swe3shkhk.', '.kh3s2e4s2e3shkhk.', '.khsc4sp5scshkhk.', '.kh5s2m7sh2k2.', '2.k14sk4.', '4.4k4s4k6.', '2.k4o6s4ok2.', '.ks3oOsb2sbsO3osk.', '.ks3ok6bk3osk.', '.ks3oOs4bsO3osk.', '.ks3oO6sO3osk.', '.ks3oO6sO3osk.', '.ks6O2q6Osk.', '.k3V10b3Vk.', '2.kV2s2V4b2V2sVk2.', '2.kOoO3V2k2V2s2Vk2.', '2.k3OV2s2k2s4Vk2.', '3.k3OVs2k2V2sVk3.', '3.kV2s2V2k3VsVk3.', '2.k6b2k6bk2.', '2.7k2.7k2.'];
   const MRP = ['6.8k6.', '6.ktT4tk6.', '6.k6tk6.', '6.k6nk6.', '4.k10tk4.', '4.12k4.', '4.k10yk4.', '4.k2y6Y2yk4.', '4.k10yk4.', '4.k4Y2y4Yk4.', '4.kR2wR2yR2wRk4.', '4.kRwkR2yRkwRk4.', '4.k4R2y4Rk4.', '4.k4yY5yk4.', '4.ky8uyk4.', '4.ky3u2m3uyk4.', '4.ky8uyk4.', '4.k2y6u2yk4.', '3.k3a6y3ak3.', '2.k4a6y4ak2.', '2.k3aA6yA3ak2.', '2.k3aA6yA3ak2.', '2.k5a2A7ak2.', '2.k14Ak2.', '2.k6a2A6ak2.', '2.k6a2A6ak2.', '2.k6a2k6ak2.', '2.16k2.', '6.kyk2.kyk6.', '6.kyk2.kyk6.', '5.k2yk2.k2yk5.', '5.4k2.4k5.'];
@@ -185,6 +187,18 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   const LIN = ['kRk20.', 'чwчk5.3k11.', '3чk.4k3л4k7.', '3ч2kл2w2ь2w2ь2лk6.', 'k2чk2лwp2ьwpь2w2лk5.', 'k2чk3л7ь3л4k2.', 'k2ч2k11лk4чk.', 'k2ч6k3л5k4чk.', 'k2чk5фчk6ч2k2чk.', 'k2чk4ф3ч4k2ч2kчk2.', 'k2ч3ф2k3ч2wkw3чkчk2.', '.2k2фkфчk2чwbkw3чkчk2.', '2.k3ф4ч[6чшk2чk.', '2.k2ф5ч[6чшk2шk.', '2.kфч11k2шk2шk.', '2.k2чk2wk2wk3wk2шk2Jk.', '2.k3ч9b3шk2Jk.', '3.k2чk2b2E3bk2шч4Qk', '3.k3ч7k3шчфч2Qk', '4.k6ч5шk3ч2fk', '5.k4ч5шk.kfч2fk', '6.2k2ч3ш2k2.k4Qk', '5.k2ч5k2шk.k4Rk', '5.k2чшk.k3шk.k4Rk', '5.k2чшk.k3шk.k4Rk', '5.k2чшk.k3шk.k4Qk', '5.k2чшk.k3шk2.4k.', '5.k2чшk.k3ш2k6.', '4.k5ч2k5шk5.', '4.k5ч2k5шk5.', '5.5k2.5k6.', '23.'];
   const HORSE = ['9.k2Wk2Wk7.', '9.kWikiWk7.', '9.k5Ak7.', '8.kAa4Wa2k5.', '8.k6Wa2Ak4.', '8.k3W2kWa2Ak4.', '8.k3WmwWa2Ak4.', '7.k3Wi3Wa2Ak4.', '6.k7WAa2Ak4.', '6.k6WkAa2Ak4.', '5.kW2p3W2kAa2Ak4.', '6.k3p3WDAa2Ak4.', '5.k4p3WD2k2Ak4.', '5.k4A3WD2k2Ak4.', '6.4k3WD2k2qk4.', '9.k4s2k2ak4.', '8.k6sk2ak4.', '8.k4sSsk2ak4.', '7.2k5sSk2ak4.', '6.k8sk2ak4.', '5.k10skAk4.', '5.k9wskAk4.', '5.k9Ks2k5.', '6.k7wsk7.', '5.k3w3K3wk7.', '5.k4Kk4Kk7.', '5.k4wk4wk7.', '5.k4Kk4Kk7.', '5.k4wk4wk7.', '5.k4Kk4Kk7.', '5.k4wk4wk7.', '6.4k.4k8.'];
   const RABBIT = ['5.k3Wk3.k3Wk5.', '5.kWIWk3.kWIWk5.', '5.kWIWk3.kWIWk5.', '5.kWIW5kWIWk5.', '5.k2f7F2fk5.', '5.k9f2Fk5.', '5.k9f2Fk5.', '5.k11Ck5.', '2.4k11f4k2.', '.k19fk.', '.k19Fk.', '2.2kW3k7W3kW2k2.', '4.k3ik5Wk3ik4.', '4.k3wk5Wk3wk4.', '4.kw2Kk5Wk2Kwk4.', '4.5kWI2EI5k4.', '5.k3W6I3Wk4.', '5.k4W4I4Wk4.', '5.2k3W4k3WFk4.', '4.k2FkWk4WkWFfk4.', '5.4k2f2W2F3k5.', '5.k2Wk2fU2Fk3Wk4.', '5.kWDkCfUFCk3Wk4.', '5.4k2fU2FkWDWk4.', '5.k5U2C2U3k5.', '5.kF4fU5Fk5.', '5.kF2fCfUFC3Fk5.', '5.kF4fU5Fk5.', '6.2k3Wk3W2k6.', '7.k3Wk3Wk7.', '7.k3Dk3Dk7.', '8.3k.3k8.'];
+  const SUNFLOWER = ['8.3k.3k8.', '7.k3yk3yk7.', '4.3k!2y!k!2y!3k4.', '3.k2y!k3!k3!k!2yk3.', '2.k3y!Z7~Z!3yk2.', '3.ky2!~7&~2!yk3.', '.4k!~7&2Q~!4k.', 'k2y2!~2&2k&2Q2k2Q~2!2yk', 'k2y!~3&wB3QwB3Q~!2yk', '.ky!~&2Q2B3Q2B3Q~!yk.', '2.2k~3Q2k3Q2k3Q~2k2.', '.ky!~Q2~7Q2~X~!yk.', 'k2y!~2ck5Q2Xk2c~!2yk', 'k2y2!~2QkQ4Xk2X~2!2yk', '.4k~2QX5k3X~4k.', '3.kyZ~9X~Zyk3.', '2.k3yZ2~5X2~Z3yk2.', '3.k2yZkZ~X:}XZkZ2yk3.', '4.3kZ2yk:}kyZ3k4.', '7.k2yk:}3k7.', '7.4k:}2k2}k5.', '6.k2}2k:}2k:k6.', '7.k:2k:}k9.', '10.k:}k9.', '5.4k.k:}3k7.', '3.2k{3}2k:}k2}{2k4.', '2.k{4}2:k:}k:4}{k2.', '.k{4}3:k:}3:4}{k.', '.k3}4:2k:}k4:3}k.', '2.2k3:2k.k:}3k3:2k2.', '4.3k2.2k:}2k.3k4.', '10.4k9.'];
+  const FLYTRAP = ['5.6k12.', '3.2kJ5L3k9.', '2.kJ9L3k7.', '.kJ7Lv3LkJk6.', 'k3Lv5L2v2LkLk6.', 'k9Mv3Lk8.', '.kWkWkWkWkMv2Lk8.', '.k9iM2L2k7.', '2k2i3E5iML3k6.', '2kWkWkWkWkiMLkLvk6.', 'k`k8MkLvk8.', "k`'k7MkLvk8.", '.k`k2O5MvkLvk7.', ".k`'9kLvk7.", '.k`k8.kLvk4.2k.', 'kLk9.kLvk2.kLJk.', 'kJ2L2k5.kLvk2.kMLJk.', '.kJ3L2k2.kLvk.2kM2LJk.', '.k3L2M2L2kLv2kL3M2Lk.', '2.kM2L2MLkLvk2M3LMk3.', '.21k.', '.k17D2^k.', '.kD3^f8^f3^2+k.', '2.4kf8kf5k2.', '.kfkD^F8^F2^+kfk.', '.kfkD13^+kfk.', '2.kfkD11^+kfk2.', '3.2kD11^+2k3.', '5.13k5.', '4.kfk.kfk.kfk.kfk4.', '3.kfk2.kfk.kfk2.kfk3.', '2.k2fk.kfFk.kFfk.k2fk2.'];
+  const HONEYBEAR = ['2.2kC2k9.2kC2k2.', '.k5C9k5Ck.', ".kC2f2Ck4'3Ck2C2fCk.", ".kC2fC4'8C2fCk.", ".k3C3'13Ck.", "2.2k2'13C2k2.", "2.k'2C2k7C2k3Ck2.", '2.k3Cwk7Cwk3Ck2.', '2.k8Cf7CBk2.', '2.k2Cc3Cf3kf3Cc2Bk2.', '2.k5C3fk3f5Bk2.', '3.k4C2fkfk2f4Bk3.', '4.k3C2f&*&2f3Bk4.', '5.k3CBf&f4Bk5.', '6.2k7B2k6.', "2.3k2'9CB3k3.", ".k2'Ck'9CBk2CBk.", ".k2'Ck'9kBk2CBk.", ".k2'C2k*2&*3&*&2k2CBk.", ".k2'C2k&`&3`&2`2k2CBk.", ".k2'3C'k2-&3-k4CBk.", ".k2'4Ck-&*&-k4C2Bk.", "2.2k2'2Ck5-k2CB3k2.", "3.kC'Ck`5-mkC2Bk3.", "3.k2C2'7k4Bk3.", '3.k6C3F6Ck3.', '3.k6CkBk6Ck3.', '3.k6Ck.k6Ck3.', '3.k6Ck.k6Ck3.', '3.k6Ck.k6Ck3.', '3.2k4f2k.2k4f2k3.', '4.6k3.6k4.'];
+  const ARC = ['8.7k8.', '6.2kб5дб2k6.', '5.kбд7kдбk5.', '4.kбдk#5@#kдбk4.', '4.kбk@_2?[?_@#kбk4.', '4.kбk@_2@_2@_#kбk4.', '2k2.kбk@3w@3w#kбk2.2k', 'kд3kбk#@2w_2w@#kб3kдk', 'kдб2kбk@_ч4?_#kб2kбдk', 'kбдбkбk#@_3?_@#kбkбдбk', 'kбдбkбгk#@3_@#kгбkбдбk', 'kб2дбkгб7kбгkб2дбk', 'kгб2дб2kг5бг2kб2дбгk', 'kб2д2бkг2б@?@2бгk2б2дбk', 'kгб2дбkгб@?[?@бгkб2дбгk', 'k2г2бгkг2б@?@2бгkг2б2гk', '.6kбг2б_2бгб6k.', '.kгбk%kбг2бг2бгбk%kбгk.', '.kгбk%kб2г3б2гбk%kбгkф', '.kгбk%k2g?3g?2gk%kбгk.', 'kб2дб2k3б3г3б2kб2дбk', 'kб2?б2k2б2гk2б2г2kб2?бk', 'kдб?д2kд2бгkд2бг2kд?бдk', 'k3бг2ka2Aaka2Aa2kг3бk', 'kб?2г2kA2aAkA2aA2k2г?бk', '.4k%kд2бгkд2бгk%4k.', '2.k3%k3бгk3бгk3%k2.', '2.kr2%kg2Ggkg2Ggk2%rk2.', '3.kr%kg2Ggkg2Ggk%rk3.', '4.k3gGgk.kgG3gk4.', '3.k6gk.k6gk3.', '3.8k.8k3.'];
+  const NURSE = ['8.7k8.', '.k4.2k7w2k6.', 'kak2.k2wD5wD2wk5.', 'kaAk.kD4wm4wDk5.', 'kaAk.13k5.', 'kaA2kx^3xD^3xD^xk4.', 'kaA2k2xD^4xD^2xDk4.', 'kaA2kD^3xD^4xD^k4.', '5k3xD^3xD^3xk4.', 'k2B2kxD^4xD^2xD^k4.', 'k2s2kD^3xD^3xD^xk4.', 'k2s2k3xD^3m3xD^k4.', 'kSs2kxD^xm3%mD^2xk4.', '.kSs2k3xD^2mxD^xk5.', '2.kSs3kD^3xD^2k6.', '3.kSs4k3S9k.', '3.kSs3цщsщ5ц4sk.', '3.kSsцmц3щ2ц%ц2kS3sk', '4.kцm3цщ2ц%цk2.ksksk', '5.k2цщ3цщцk3.k.k.k', '5.k3ц2щ3цk8.', '4.k3цm2щ3цщk7.', '4.k3ц%mщ4цщk6.', '4.kщ3ц3щ2ц2щk6.', '4.13k6.', '5.k2sSk.k2sSk7.', '5.k2sSk.k2sSk7.', '6.k2sk.k2sSk7.', '6.k2sk2.k2sk7.', '6.kSsk2.kSsk7.', '5.k3xk2.k3xk6.', '5.2k.2k2.2k.2k6.'];
+  const NEMU = ['7.8k8.', '5.2k8h2k6.', '4.k10h2wk5.', '3.k10hwDhk5.', '3.k2hg8hg2hk4.', '2.k16hk3.', '2.k16hk3.', '2.k16hk3.', '2.k16hk3.', '2.k3h2s2h2s2h2s3hk3.', '2.k2hs3k5s3ks2hk2.', '2.k2hsGgw4sGgws2hk3.', '2.k2hs2c7s2cs2hk2.', '2.k2h6sE5s2hk3.', '2.k2hk11sk2hk2.', '2.k6hk3Sk6hk2.', 'khg2k3hkr$p$rk3hk4.', 'kgh2k4bw3sw4bk4.', 'khgk3bN2bwsw2bN3bk3.', 'kgh2k3bk5bk3bk4.', 'khgk.k2wk5bk2wk5.', 'kghk.kwDk2wi2wkDwk5.', 'khgk.k2s7b2sk5.', 'kghk2.2k7b2k6.', 'khgk2.k9bk6.', 'k2ik3.k2sSkS2sk7.', '.2k4.k2sSkS2sk7.', '7.k2sSkS2sk7.', '8.ksSkSsk8.', '8.ksSkSsk8.', '6.k4bk4bk6.', '6.11k6.'];
+  const TUESDAY = ['23.', '7.8k8.', '5.2k8ы2k6.', '4.k12ыk5.', '3.k2ы2w9ыйk4.', '3.kы2w10ыйk4.', '2.k2ыw12ыйk3.', '2.k15ыйk3.', '2.k3ы3k4ы3k2ыйk3.', '2.k2ы5k2ы5kыйk3.', '2.k2ы2kw2k2ы2kw2kыйk3.', '2.k2ы5k2ы5kыйk3.', '2.k2ый3kй2ый3kйыйk3.', '2.k3ы3й4ы3й2ыйk3.', '2.kыc12ыcйk3.', '2.k6ы4k5ыйk3.', '2.k5ыk4ыk4ыйk3.', '2.k15ыйk3.', '2.k10ы10k', '.k2ыk8ыk8Rk', 'k2ыk9ыk8Rk', 'kыk10ыk3w2k3wk', '.2k10ыk2wk2wk2wk', '2.k10ыk4wk3wk', '2.k10ыk3wk4wk', '2.k10ыk2w4k2wk', '2.kый3ый4ыk8wk', '2.kый3ый3ый10k', '2.kйkйыйkйыйkйыйk6.', '3.k.kйk.kйk.kй2k6.', '23.', '5.12k6.'];
+  const ZOMBIE = ['8.7k8.', '6.2k7B2k6.', '5.k11Bk5.', '4.k2B2C9Bk4.', '4.kB2C10Bk4.', '3.k15Bk3.', '3.k15Bk3.', '3.k15Bk3.', '3.k3Bю5Bю5Bk3.', '3.k2B4юB5ю3Bk3.', '3.k2B3k5ю3k2Bk3.', '3.k2Bюwp5юpwю2Bk3.', '3.k2Bi2+5ю2+i2Bk3.', '3.k2B6юkюk2ю2Bk3.', '3.k2B3юEwE3юяю2Bk3.', '3.k2Bя4ю%4юя2Bk3.', '3.k3B3k3ю3k3Bk3.', '3.k4B3,ю3,4Bk3.', '4.k2W2,w,$,w2,2Wk4.', '4.k2W,w2,$2,w,2Wk4.', '4.k3W2,W$W2,3Wk4.', '4.kюk4W$4Wk2%k3.', '4.kюk9W2k%wk2.', '4.kю2k7W2k.kwk2.', '4.kюk,",",",",k.kwk2.', '4.k,",",",",",",k2wk.', '4.k,",",",",",",3k2.', '4.15k4.', '7.k2юk.k2юk7.', '7.k2юk.k2юk7.', '7.k2"k.k2"k7.', '6.k3Bk.k3Bk6.'];
+  const DIGGER = ['5.9k9.', '5.k7Nk9.', '5.kNV5Nk9.', '5.kNV5Nk9.', '5.kNV5Nk9.', '5.k7zk9.', '5.kl6zk5.2k2.', '2.15k.k2ak.', '2.k13N2k3aAk', '3.k2ф2ч4ф2чфk.k3aAk', '3.kф3k3I3kфk.k3aAk', '3.kфIkz3IzkIфk.k2a2Ak', '3.kфI2iIiI2iIфk2.k2Ak.', '3.kф9Iфk3.2k2.', '3.kф9Iфk2.kQk2.', '3.k2ф7I2фk2.kQk2.', '.kzk.3k3I3k.kz2kQk2.', '.k2zk3NzIz3Nk2z2kQk2.', '.kz5N3z5Nz2kQk2.', '2.k5NzEz6NkIQIk.', '.kIk4N3z6N2kQk2.', '2.k3Nk5zk4N2kQk2.', 'kNkNkNk5bk4N2kQk2.', 'k>*>kNk5bk4N2kQk2.', 'k*Z*kNk2bk2bk4N2kQk2.', 'k>*>kNk2bk2bk4N2kQk2.', '.k>k2Nk2bk2bk4N2kQk2.', '2.kzNzk2bk2bkzNzN2kQk2.', '2.5k2bk2b5k.kQk2.', '6.k2bk2bk5.kQk2.', '5.k3bk3bk4.kQk2.', '5.9k4.3k2.'];
+  const KANEKI = ['7.8k8.', '5.2k8h2k6.', '4.k12hk5.', '3.k3h3=8hk4.', '2.k2h2=7h2=3hk3.', '2.k16hk3.', '2.k16hk3.', '2.k3hs6hs5hk3.', '2.k2h2s2hs2h2s2hs2hk3.', '2.kh2s4k2sD4WDhk3.', '2.khskWAWA2sWDWD3Wk3.', '2.khskWAGA2s5Wshk3.', '2.kh2s4k2sWDWDWshk3.', '2.khsc6sD3WDchk3.', '2.kh6s2m6shk3.', '3.2k12s2k4.', '5.4k4s4k6.', '2.k3W2g2W2%2W2g3Wk3.', '2.kDWk2g2Wm%2W2gkWDk3.', '2.kDWk3gW2mW3gkWDk3.', '2.kDWk4gm%4gkWDk3.', '2.kDWk4g%m4gkWDk3.', '2.kDWk4gGk4gkWDk3.', '2.kDWk4gG5gkWDk3.', '2.kDWk4gGk4gkWDk3.', '2.k2sk10Gk2sk3.', '2.k2sk10bk2sk3.', '5.k4b2k4bk6.', '5.k4b2k4bk6.', '5.kbN2b2k2bNbk6.', '4.k5B2k5Bk5.', '4.6k2.6k5.'];
+  const GHOUL = ['7.8k3.k4.', '5.2k8W2k2.<k2.', '4.k12Wk2.$k.', '3.k3W3p7Wk2.$%k', '2.k2W2p7W2p3Wk<$k', '2.k5WD7WD2Wk$%k', '2.kWD6WD7Wk<$k', 'k.k3WD3WD2WD3WDWk$%k', '%.kWDsD2WsWD2s2WsDWk<$k', '%.kW6b2s4k2sWk$%k', '$.kW6b2sb<$b2sWk<$k', '%.kW6b2sb$<b2sWk$%k', '<$kW14bWk<$k', '$%kW2bWDWDWDWDWD2bWk.$%', '<$kW2bWDWDWDWDWD2bWk.<$', '$%.2k12b2k2.$%', '<$3.4k4s4k4.<$', '$%k3bN8bN3bk.$%', '<$k2bk10bk2bk.<$', '$%k2sk10bk2sk.$%', '$.ksSk10bkSsk.<$', '%.ksSk4bN5bkSsk.$%', '$.ksSk10bkSsk.<$', '%.ksSkbN6bNbkSsk.$%', '$.k2skbk2bk2bk2bk2sk3.', '2.2kbk10xkb2k3.', '2.k2sk10xk2sk3.', '3.$%k4x2k4xk$%4.', '2.<$2kDxDx2kxDxD2k<$3.', '.$%k.k2sSs2ksS2sk.k$%2.', '<$k.k5s2k5sk.k<$.', 'k3.kbsbsk2.ksbsbk4.k'];
+  const RAVEN = ['8.7k8.', '6.2k5ж2з2k6.', '5.k8ж3зk5.', '4.k10ж3зk4.', '3.k12ж3зk3.', '3.k3ж2э5ж2э3зk3.', '2.k3жэ3ш3ж3шэ3зk2.', '2.k2жэ5шж5шэ2зk2.', '2.k2жэ2ш3эR3э2шэ2зk2.', '2.k2жэ2ш2w3э2w2шэ2зk2.', '2.k2жэ2ш7и2шэ2зk2.', '2.k2жэ2шc5иc2шэ2зk2.', '2.k2жэ2ш3иm3и2шэ2зk2.', '2.k2ж2э2ш6иш2э2зk2.', '3.k2ж3э2kR2k3э2зk3.', '2.k2ж4э5з3э3зk2.', '2.k2ж2эkж6зk2э2зk2.', '2.k2ж2эkжзж4зk2э2зk2.', '2.k2ж2эkж3зэ2зk2эзфk2.', '.k2ж3э2kж2зэз2k2э3фk.', '.k2ж3э2kж4з2kэ2фч2фk', '.k2ж2эиZ$2Z$2Z$Zэ2и2зk.', 'k2ж2э2иk7зk3э2зk.', 'k2ж4эk2и3з2иk3э2зk.', 'k2ж4эk3иk3иk4э2зk', 'k2ж4эk3иk3иk4э2зk', 'k2ж4эk3чk3чk4э2зk', 'k2ж4эkзжзkзжзk4э2зk', 'k2ж4эkзжзkзжзk4э2зk', 'k2ж4эk3зk3зk4э2зk', 'k2ж4эk3зk3зk4э2зk', '23k'];
   const rle = rows => rows.map(r => { let o = ''; r.replace(/(\d*)(\D)/g, (m, n, ch) => { o += ch.repeat(n ? +n : 1); return m; }); return o; });
   // pal swaps colours: Kastomka's skin recolours her white suit
   function spriteCanvas(rows, extra, pal = {}) {
@@ -219,10 +233,24 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     rat: spriteCanvas(RAT),
     lin: spriteCanvas(LIN),
     horse: spriteCanvas(HORSE),
-    rabbit: spriteCanvas(RABBIT)
+    rabbit: spriteCanvas(RABBIT),
+    sunflower: spriteCanvas(SUNFLOWER),
+    flytrap: spriteCanvas(FLYTRAP),
+    honeybear: spriteCanvas(HONEYBEAR),
+    arc: spriteCanvas(ARC),
+    nurse: spriteCanvas(NURSE),
+    nemu: spriteCanvas(NEMU),
+    tuesday: spriteCanvas(TUESDAY),
+    zombie: spriteCanvas(ZOMBIE),
+    digger: spriteCanvas(DIGGER),
+    kaneki: spriteCanvas(KANEKI),
+    kanekiGhoul: spriteCanvas(GHOUL),
+    raven: spriteCanvas(RAVEN)
   };
-  const PORTRAIT_Y = { crow: 1, mrp: 3, tramp: 2, dog: 4, toad: 1, pink: 3, v1: 0, v2: 0, jeanne: 3, alien: 2, jedi: 1, silver: 3, mrsha: 6, kast: 3, batya: 2, thoth: 1, rat: 3, lin: 6, horse: 1, rabbit: 6 };
-  const PORTRAIT_X = { dog: 0, toad: 1, v1: 1, v2: 1, alien: 1, jedi: 2, kast: 1, batya: 1, thoth: 1, rat: 0, lin: 1, horse: 3, rabbit: 1 };
+  // Arc Warden's storm double: his sprite washed in see-through blue
+  SPR.arcDouble = (() => { const cv = document.createElement('canvas'); cv.width = 23; cv.height = 32; const x = cv.getContext('2d'); x.globalAlpha = 0.7; x.drawImage(SPR.arc, 0, 0); x.globalAlpha = 0.65; x.globalCompositeOperation = 'source-atop'; x.fillStyle = '#7fd0f0'; x.fillRect(0, 0, 23, 32); return cv; })();
+  const PORTRAIT_Y = { crow: 1, mrp: 3, tramp: 2, dog: 4, toad: 1, pink: 3, v1: 0, v2: 0, jeanne: 3, alien: 2, jedi: 1, silver: 3, mrsha: 6, kast: 3, batya: 2, thoth: 1, rat: 3, lin: 6, horse: 1, rabbit: 6, sunflower: 2, flytrap: 0, honeybear: 1, arc: 0, nurse: 1, nemu: 3, tuesday: 3, zombie: 3, digger: 5, kaneki: 3, raven: 4 };
+  const PORTRAIT_X = { dog: 0, toad: 1, v1: 1, v2: 1, alien: 1, jedi: 2, kast: 1, batya: 1, thoth: 1, rat: 0, lin: 1, horse: 3, rabbit: 1, sunflower: 1, flytrap: 1, honeybear: 1, arc: 1, nurse: 2, nemu: 1, tuesday: 0, zombie: 1, digger: 1, kaneki: 1, raven: 1 };
 
   /* ================= data ================= */
   const LOCS = [
@@ -299,7 +327,18 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     rat: { name: 'Главная мразь цеха', role: 'Тень в капюшоне', power: 1.0, speed: 1.0, luck: 0.05, perk: 'Крысит: у каждого работающего соседа сила −0,2, а он забирает её себе. Кролик-детектив рядом закрывает дело.' },
     lin: { name: 'Лин Лаф Лаг', role: 'Кувшин с сиропом', power: 1.2, speed: 0.7, luck: 0.15, perk: 'Laugh: работники соседних станков +10% удачи.' },
     horse: { name: 'Лошадь в гольфах', she: true, role: 'Рабочая лошадка', power: 1.5, speed: 1.1, luck: 0.05, perk: 'Пашет как лошадь: сила +5% за каждые 10 с смены у станка, до +50%. В раздевалке сбрасывается.' },
-    rabbit: { name: 'Кролик-детектив', role: 'Бешеный кролик в плаще', power: 0.9, speed: 1.3, luck: 0.1, perk: 'Сыщик: пока он работает, посылки приходят на 25% чаще. Рядом с Главной мразью цеха закрывает дело.' }
+    rabbit: { name: 'Кролик-детектив', role: 'Бешеный кролик в плаще', power: 0.9, speed: 1.3, luck: 0.1, perk: 'Сыщик: пока он работает, посылки приходят на 25% чаще. Рядом с Главной мразью цеха закрывает дело.' },
+    sunflower: { name: 'Подсолнух ГВ2', she: true, role: 'Цветок с газона', power: 0.9, speed: 1.1, luck: 0.1, perk: 'Солнышко: пока работает, каждые 15 с смены роняет солнышко: +1% квоты монетами. Рядом с Мухобойкой «Оборона газона».' },
+    flytrap: { name: 'Мухобойка', she: true, role: 'Живой плющ в горшке', power: 1.3, speed: 1.0, luck: 0.05, perk: 'Ест вредителей: в её цеху минус Зубастых улиток не действует, а Главная мразь цеха у неё не крысит.' },
+    honeybear: { name: 'Медаедь', role: 'Медведь из леса', power: 1.6, speed: 0.8, luck: 0.1, perk: 'Выбор очевиден: сотрудницам на соседних станках +15% силы.' },
+    arc: { name: 'Арк Варден', role: 'Дух бури', power: 1.3, speed: 1.2, luck: 0.05, perk: 'Искровой дух: каждые 20 с смены пускает искру в случайный станок своего цеха, там 5 с каждая штука двойная.' },
+    nurse: { name: 'Медсестра', she: true, role: 'Из Потустороннего мира', power: 1.3, speed: 1.0, luck: 0.05, perk: 'Без лица: не видит соседей, их бонусы и штрафы на неё не действуют, зато своя сила ×1,25.' },
+    nemu: { name: 'Нему Куроцучи', she: true, role: 'Искусственное тело', power: 1.0, speed: 1.2, luck: 0.1, perk: 'Искусственное тело: её сила, скорость и удача не ниже лучших среди работающих соседей.' },
+    tuesday: { name: 'Призрак вторника', role: 'Опять вторник', power: 0.9, speed: 1.1, luck: 0.1, perk: 'Опять вторник: в чётных сменах сила ×1,6, в нечётных ×0,8.' },
+    zombie: { name: 'Зомбачка', she: true, role: 'Школьница-зомби', power: 1.3, speed: 0.7, luck: 0.05, perk: 'Заражение: в начале смены кусает случайного соседа, до конца смены у него сила ×1,5 и скорость ×0,8. При «Санэпидеме» не кусает.' },
+    digger: { name: 'Могильщик', role: 'Сторож кладбища', power: 1.6, speed: 0.8, luck: 0.08, perk: 'Сторож кладбища: нежити на соседних станках +20% силы (призрак вторника, Зомбачка, Мисис Ха, Медсестра, Канеки и укушенные).' },
+    kaneki: { name: 'Канеки', role: 'Официант «Антейку»', power: 1.4, speed: 1.1, luck: 0.05, perk: 'Только кофе: гулю нельзя человеческую еду, она на него не действует. С Крепким кофе сила ×1,5, без кофе или с едой ×0,8.' },
+    raven: { name: 'Рейвен', she: true, role: 'Дочь Тригона', power: 1.2, speed: 1.0, luck: 0.15, perk: 'Медитация: удача +25%, пока на соседних станках никто не работает.' }
   };
   const FAMILY = ['jedi', 'kast', 'batya'];
   const SKIN_KINDS = { power: 'сила', speed: 'скорость', value: 'цена' };
@@ -328,7 +367,20 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     rat: { name: 'Возврат украденного', kind: 'return', dur: 10, cd: 30, desc: 'Каждые 30 с на 10 с возвращает украденное вдвойне: соседи получают +0,4 силы вместо −0,2, а сам теряет украденное.' },
     lin: { name: 'Lag', kind: 'luck', dur: 8, cd: 60, desc: 'Раз в минуту на 8 с удача +100%: каждая штука выходит двойной.' },
     horse: { name: 'Галоп', kind: 'gallop', dur: 10, cd: 60, desc: 'Раз в минуту на 10 с карты на её станке действуют дважды: Лак ×1,5 становится ×2,25.' },
-    rabbit: { name: 'Допрос', kind: 'nearSpeed', mult: 2, dur: 10, cd: 60, desc: 'Раз в минуту на 10 с работники соседних станков работают вдвое быстрее.' }
+    rabbit: { name: 'Допрос', kind: 'nearSpeed', mult: 2, dur: 10, cd: 60, desc: 'Раз в минуту на 10 с работники соседних станков работают вдвое быстрее.' },
+    sunflower: { name: 'Лечащий цветок', kind: 'nearPower', mult: 2, dur: 10, cd: 60, desc: 'Раз в минуту на 10 с работники соседних станков: сила ×2.' },
+    flytrap: { name: 'Щёлк!', kind: 'power', mult: 4, dur: 6, cd: 40, desc: 'Каждые 40 с на 6 с сила ×4.' },
+    honeybear: { name: 'Лес', kind: 'teamShe', mult: 2, dur: 10, cd: 60, desc: 'Раз в минуту на 10 с сотрудницы его цеха работают вдвое быстрее.' },
+    // the double stands at a free neighbouring machine; with none free his own machine earns ×2
+    arc: { name: 'Двойник бури', kind: 'double', dur: 10, cd: 60, desc: 'Раз в минуту на 10 с его двойник встаёт к свободному соседнему станку с его силой и скоростью. Если свободного нет, доход его станка ×2.' },
+    nurse: { name: 'Сирена', kind: 'siren', mult: 2, dur: 10, cd: 60, desc: 'Раз в минуту на 10 с её цех уходит в Потусторонний мир: цена товара в цеху ×2, а она дёргается: скорость ×2.' },
+    nemu: { name: 'Сверхрегенерация', kind: 'regen', mult: 2, dur: 10, cd: 60, desc: 'Раз в минуту на 10 с скиллы соседних сотрудников перезаряжаются вдвое быстрее.' },
+    // once a shift, with dur seconds left, the shift clock goes back by dur seconds
+    tuesday: { name: 'День сурка', kind: 'groundhog', shift: true, dur: 5, desc: 'Раз за смену, когда до конца остаётся 5 с, время смены откатывается на 5 с для всего завода.' },
+    zombie: { name: 'Голод', kind: 'speed', mult: 3, dur: 8, cd: 45, desc: 'Каждые 45 с на 8 с скорость ×3.' },
+    kaneki: { name: '1000 − 7', kind: 'ghoul', mult: 2, dur: 10, cd: 60, desc: 'Раз в минуту на 10 с превращается в гуля: сила и скорость ×2.' },
+    raven: { name: 'Азарат Метрион Зинтос', kind: 'teamLuck', dur: 10, cd: 60, desc: 'Раз в минуту на 10 с сотрудники её цеха: удача +50%.' },
+    digger: { name: 'Раскопки', kind: 'dig', dur: 3, cd: 60, desc: 'Раз в минуту выкапывает обычную посылку с монетами. При «Ревизии» не копает.' }
   };
   const CARDS = {
     m_bench: { name: 'Верстак', type: 'machine', machine: 'bench', tag: 'Станки', rar: 0, desc: 'Доска стоит 2,2. Рядом с пилорамой: +25% к цене её досок.' },
@@ -378,6 +430,18 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     w_lin: { name: 'Новый сотрудник', type: 'worker', worker: 'lin', tag: 'Сотрудники', rar: 2, desc: 'Приходит Лин Лаф Лаг. Удача 15%, соседям +10% удачи.' },
     w_horse: { name: 'Новый сотрудник', type: 'worker', worker: 'horse', tag: 'Сотрудники', rar: 1, desc: 'Приходит Лошадь в гольфах. Чем дольше у станка, тем сильнее.' },
     w_rabbit: { name: 'Новый сотрудник', type: 'worker', worker: 'rabbit', tag: 'Сотрудники', rar: 2, desc: 'Приходит Кролик-детектив. Быстрый, с ним посылки приходят чаще.' },
+    w_sunflower: { name: 'Новый сотрудник', type: 'worker', worker: 'sunflower', tag: 'Сотрудники', rar: 1, desc: 'Приходит Подсолнух ГВ2. Роняет солнышки с монетами.' },
+    w_flytrap: { name: 'Новый сотрудник', type: 'worker', worker: 'flytrap', tag: 'Сотрудники', rar: 1, desc: 'Приходит Мухобойка. Сильная, ест улиток и не даёт мрази крысить.' },
+    w_tuesday: { name: 'Новый сотрудник', type: 'worker', worker: 'tuesday', tag: 'Сотрудники', rar: 1, desc: 'Приходит Призрак вторника. В чётных сменах сильнее, в нечётных слабее.' },
+    w_honeybear: { name: 'Новый сотрудник', type: 'worker', worker: 'honeybear', tag: 'Сотрудники', rar: 2, loc: 3, desc: 'Приходит Медаедь. Очень сильный, сотрудницам рядом +15% силы.' },
+    w_nurse: { name: 'Новый сотрудник', type: 'worker', worker: 'nurse', tag: 'Сотрудники', rar: 2, loc: 3, desc: 'Приходит Медсестра. Не видит соседей, зато сила ×1,25.' },
+    w_zombie: { name: 'Новый сотрудник', type: 'worker', worker: 'zombie', tag: 'Сотрудники', rar: 2, loc: 3, desc: 'Приходит Зомбачка. Кусает соседа: он сильнее, но медленнее.' },
+    w_arc: { name: 'Новый сотрудник', type: 'worker', worker: 'arc', tag: 'Сотрудники', rar: 3, loc: 4, desc: 'Приходит Арк Варден. Пускает искры, в скилле зовёт двойника.' },
+    w_nemu: { name: 'Новый сотрудник', type: 'worker', worker: 'nemu', tag: 'Сотрудники', rar: 2, loc: 4, desc: 'Приходит Нему Куроцучи. Не слабее лучшего из соседей.' },
+    w_raven: { name: 'Новый сотрудник', type: 'worker', worker: 'raven', tag: 'Сотрудники', rar: 2, loc: 3, desc: 'Приходит Рейвен. Медитирует одна: удача +25%.' },
+    w_kaneki: { name: 'Новый сотрудник', type: 'worker', worker: 'kaneki', tag: 'Сотрудники', rar: 3, loc: 4, desc: 'Приходит Канеки. С кофе очень силён, еду не ест.' },
+    // afterQ: the card drops only from this shift on
+    w_digger: { name: 'Новый сотрудник', type: 'worker', worker: 'digger', tag: 'Сотрудники', rar: 2, afterQ: 5, desc: 'Приходит Могильщик. Сторожит нежить и выкапывает посылки.' },
     m_sew: { name: 'Швейная машинка', type: 'machine', machine: 'sew', tag: 'Станки', rar: 0, desc: 'Пуфик стоит 1500. Вместе с набивкой: «Уютно», сила обоих ×1,5.' },
     m_stuff: { name: 'Набивочный автомат', type: 'machine', machine: 'stuff', tag: 'Станки', rar: 1, desc: 'Пуфик стоит 3500. Если в цеху стекла работает витраж: +20% скорости.' },
     s_velour: { name: 'Велюр', type: 'mupg', loc: 4, tag: 'Улучшения', rar: 0, eff: { value: 1.5 }, desc: 'Пуфики с этого станка: цена ×1,5.' },
@@ -581,6 +645,17 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     lin: (r, d, x) => { x.drawImage(SPR.lin, 0, 0, 22, 22, 0, 0, 16, 16); },
     horse: (r, d, x) => { x.drawImage(SPR.horse, 4, 0, 18, 18, 0, 0, 16, 16); },
     rabbit: (r, d, x) => { x.drawImage(SPR.rabbit, 2, 1, 19, 19, 0, 0, 16, 16); },
+    sunflower: (r, d, x) => { x.drawImage(SPR.sunflower, 1, 0, 21, 21, 0, 0, 16, 16); },
+    flytrap: (r, d, x) => { x.drawImage(SPR.flytrap, 0, 0, 20, 20, 0, 0, 16, 16); },
+    honeybear: (r, d, x) => { x.drawImage(SPR.honeybear, 1, 0, 21, 21, 0, 0, 16, 16); },
+    arc: (r, d, x) => { x.drawImage(SPR.arc, 2, 0, 19, 19, 0, 0, 16, 16); },
+    nurse: (r, d, x) => { x.drawImage(SPR.nurse, 2, 0, 19, 19, 0, 0, 16, 16); },
+    nemu: (r, d, x) => { x.drawImage(SPR.nemu, 2, 0, 19, 19, 0, 0, 16, 16); },
+    tuesday: (r, d, x) => { x.drawImage(SPR.tuesday, 0, 1, 21, 21, 0, 0, 16, 16); },
+    zombie: (r, d, x) => { x.drawImage(SPR.zombie, 2, 0, 19, 19, 0, 0, 16, 16); },
+    digger: (r, d, x) => { x.drawImage(SPR.digger, 1, 2, 20, 20, 0, 0, 16, 16); },
+    kaneki: (r, d, x) => { x.drawImage(SPR.kaneki, 2, 0, 19, 19, 0, 0, 16, 16); },
+    raven: (r, d, x) => { x.drawImage(SPR.raven, 2, 1, 19, 19, 0, 0, 16, 16); },
     // Master class: a chalkboard with a yellow lightning, the same lightning as on a locker with an opened skill
     masterclass: r => { r(0, 1, 16, 12, K); r(1, 2, 14, 10, '#8a5a32'); r(2, 3, 12, 8, '#2f5d4a'); r(2, 3, 12, 1, '#3f7a60'); r(8, 3, 3, 1, '#ffd54a'); r(7, 4, 3, 1, '#ffd54a'); r(6, 5, 3, 1, '#ffd54a'); r(5, 6, 5, 1, '#ffd54a'); r(7, 7, 2, 1, '#ffd54a'); r(6, 8, 2, 1, '#ffd54a'); r(5, 9, 2, 1, '#ffd54a'); r(10, 9, 3, 1, '#e9eef2'); r(3, 13, 2, 3, K); r(11, 13, 2, 3, K); r(4, 13, 1, 2, '#8a5a32'); r(12, 13, 1, 2, '#8a5a32'); },
     grease: r => { r(4, 3, 5, 1, K); r(4, 3, 1, 4, K); r(8, 3, 1, 4, K); r(1, 7, 10, 9, K); r(2, 8, 8, 7, '#5a6270'); r(3, 9, 2, 2, '#9aa3ad'); r(10, 5, 5, 2, K); r(14, 3, 2, 3, K); r(14, 8, 1, 2, '#f2c14e'); },
@@ -626,6 +701,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     m_engraver: 'engraver', m_lens: 'lens', m_sew: 'sew', m_stuff: 'stuff', s_velour: 'velour', u_poufs: 'poufs',
     u_postman: 'postman', u_courier: 'courier', u_customs: 'customs', u_sub: 'sub', x_logistics: 'mLogistics', u_snailpost: 'snailpost',
     s_hand: 'hand', u_snails: 'snails', w_thoth: 'thoth', w_rat: 'rat', w_lin: 'lin', w_horse: 'horse', w_rabbit: 'rabbit', k_skill: 'masterclass',
+    w_sunflower: 'sunflower', w_flytrap: 'flytrap', w_honeybear: 'honeybear', w_arc: 'arc', w_nurse: 'nurse', w_nemu: 'nemu', w_tuesday: 'tuesday', w_zombie: 'zombie', w_digger: 'digger', w_kaneki: 'kaneki', w_raven: 'raven',
     u_scotch: 'scotch', e_thirst: 'thirst', e_soda: 'soda', s_plumbus: 'plumbus', u_squanch: 'squanch', u_hyper: 'hyper', u_triad: 'triad', s_veins: 'veins', s_banner: 'banner', s_sponge: 'sponge',
     u_zorya: 'zorya', s_ketchup: 'ketchup', e_mirror: 'mirror', s_spice: 'spice', s_sauce: 'sauce', e_crackers: 'crackers', s_glue: 'glue', u_fattoad: 'fattoad', u_novapost: 'novapost', e_shadow: 'shadow',
     u_pizza4: 'pizza4', e_pillow: 'pillow', e_honeycake: 'honeycake', e_jelly: 'jelly', m_pump: 'brickpump', e_flipflop: 'flipflop', u_waffle: 'waffle', s_queen: 'clayqueen', e_salve: 'burnsalve'
@@ -639,7 +715,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   // kiss: pieces made, for the 44th piece of Sponges 44
   const emptySlots = n => Array.from({ length: n }, () => ({ machine: null, worker: null, upg: [], acc: 0, kiss: 0 }));
   const fresh = () => ({
-    v: 11, money: 0, xp: 0, level: 1, planks: 0, bricks: 0, nails: 0, glass: 0, poufs: 0, earned: 0, cur: 0,
+    v: 12, money: 0, xp: 0, level: 1, planks: 0, bricks: 0, nails: 0, glass: 0, poufs: 0, earned: 0, cur: 0,
     locs: [
       { unlocked: true, slots: [{ machine: null, worker: null, upg: [], acc: 0, kiss: 0 }, { machine: 'saw', worker: 'crow', upg: [], acc: 0, kiss: 0 }, { machine: null, worker: null, upg: [], acc: 0, kiss: 0 }] },
       { unlocked: false, slots: emptySlots(4) },
@@ -648,14 +724,18 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       { unlocked: false, slots: emptySlots(2) }
     ],
     workers: { crow: { unlocked: true, equip: [] }, mrp: { unlocked: true, equip: [] }, tramp: { unlocked: false, equip: [] }, dog: { unlocked: false, equip: [] }, toad: { unlocked: false, equip: [] }, pink: { unlocked: false, equip: [] }, v1: { unlocked: false, equip: [] }, v2: { unlocked: false, equip: [] }, jeanne: { unlocked: false, equip: [] }, alien: { unlocked: false, equip: [] }, jedi: { unlocked: false, equip: [] }, silver: { unlocked: false, equip: [] }, mrsha: { unlocked: false, equip: [] }, kast: { unlocked: false, equip: [] }, batya: { unlocked: false, equip: [] },
-      thoth: { unlocked: false, equip: [] }, rat: { unlocked: false, equip: [] }, lin: { unlocked: false, equip: [] }, horse: { unlocked: false, equip: [] }, rabbit: { unlocked: false, equip: [] } },
-    lockers: ['crow', 'mrp', 'tramp', 'dog', 'toad', 'pink', 'v1', 'v2', 'jeanne', 'alien', 'jedi', 'silver', 'mrsha', 'kast', 'batya', 'thoth', 'rat', 'lin', 'horse', 'rabbit'],
+      thoth: { unlocked: false, equip: [] }, rat: { unlocked: false, equip: [] }, lin: { unlocked: false, equip: [] }, horse: { unlocked: false, equip: [] }, rabbit: { unlocked: false, equip: [] },
+      sunflower: { unlocked: false, equip: [] }, flytrap: { unlocked: false, equip: [] }, honeybear: { unlocked: false, equip: [] }, arc: { unlocked: false, equip: [] }, nurse: { unlocked: false, equip: [] }, nemu: { unlocked: false, equip: [] }, tuesday: { unlocked: false, equip: [] }, zombie: { unlocked: false, equip: [] }, digger: { unlocked: false, equip: [] }, kaneki: { unlocked: false, equip: [] }, raven: { unlocked: false, equip: [] } },
+    lockers: ['crow', 'mrp', 'tramp', 'dog', 'toad', 'pink', 'v1', 'v2', 'jeanne', 'alien', 'jedi', 'silver', 'mrsha', 'kast', 'batya', 'thoth', 'rat', 'lin', 'horse', 'rabbit',
+      'sunflower', 'flytrap', 'honeybear', 'arc', 'nurse', 'nemu', 'tuesday', 'zombie', 'digger', 'kaneki', 'raven'],
     cards: [], offers: [], shopBuys: 0, crowCount: 0, silverCount: 0, firstOffer: false, crateIn: 20,
     // t: run time, q: current quota, qT/qEarned: time and coins inside it, opened: run time each workshop opened at;
     // brk: a break between shifts, time stands still; shop: the break's showcase as [{ id, bought }];
-    // sq: this shift's Squanch rolls, nova: Nova poshta's card crate already came this shift
-    run: { t: 0, q: 1, qT: 0, qEarned: 0, brk: true, shop: [], rule: null, sq: [], nova: false, over: false, rep: 0, passed: [], hired: 0, skills: 0, bestRate: 0, opened: [0, null, null, null, null] }
+    // sq: this shift's Squanch rolls, nova: Nova poshta's card crate already came this shift; this shift's spark of Arc Warden,
+    // workers bitten by the zombie girl, the Tuesday ghost's rollback done; rose: «Rising from the dead» used up this run
+    run: { t: 0, q: 1, qT: 0, qEarned: 0, brk: true, shop: [], rule: null, sq: [], nova: false, spark: null, bitten: [], rolled: false, rose: false, over: false, rep: 0, passed: [], hired: 0, skills: 0, bestRate: 0, opened: [0, null, null, null, null] }
   });
+  const NEW_WORKERS = ['sunflower', 'flytrap', 'honeybear', 'arc', 'nurse', 'nemu', 'tuesday', 'zombie', 'digger', 'kaneki', 'raven'];
   function migrate(s) {
     if (!s) return null;
     if (s.v === 1) { s.locs = [{ unlocked: true, slots: s.slots }, { unlocked: false, slots: emptySlots(3) }]; delete s.slots; s.cur = 0; s.bricks = 0; s.v = 2; }
@@ -709,7 +789,13 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       s.run.sq = []; s.run.nova = false;
       s.v = 11;
     }
-    return s.v === 8 || s.v === 11 ? s : null;
+    if (s.v === 11) {
+      // build 12: eleven workers joined, with their lockers and the run state of their perks
+      for (const id of NEW_WORKERS) { s.workers[id] = { unlocked: false, equip: [] }; s.lockers.push(id); }
+      Object.assign(s.run, { spark: null, bitten: [], rolled: false, rose: false });
+      s.v = 12;
+    }
+    return s.v === 8 || s.v === 12 ? s : null;
   }
   // meta lives across runs: reputation, its unlocks, achievements and records
   const META_KEY = 'pixel-factory-meta-v1';
@@ -787,6 +873,10 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const run = state.run;
     if (!run.brk || run.over || state.offers.length || mode) return false;
     run.brk = false; run.shop = []; run.shopClosed = false;
+    // the zombie girl bites a random working neighbour, but not on a Sanepid
+    run.bitten = []; run.spark = null; run.rolled = false;
+    const pz = workerPlace('zombie');
+    if (pz && !rule('sanepid')) { const nb = neigh(pz.l, pz.i).map(j => slotsOf(pz.l)[j].worker).filter(Boolean); if (nb.length) run.bitten.push(nb[Math.floor(Math.random() * nb.length)]); }
     // Squanch: every copy squanches power, speed or price of everyone for the shift
     run.sq = Array.from({ length: cardN('u_squanch') }, () => SQ_KINDS[Math.floor(Math.random() * 3)]);
     if (run.sq.length) toast(`Посквончим: ${run.sq.map(k => SKIN_KINDS[k === 'price' ? 'value' : k]).join(' и ')} всех ×1,3`);
@@ -874,6 +964,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   const neigh = (l, i) => LAYOUTS[l].map((_, j) => j).filter(j => adjacent(l, i, j));
   // has: the worker has this perk, being that worker or wearing a Shadow that copies them
   const has = (w, p, g) => w === p || (!!w && !!g && !!g.shadow && g.shadow[w] === p);
+  // the undead for the Gravedigger: a fixed list and everyone the zombie girl has bitten this shift
+  const UNDEAD = ['tuesday', 'zombie', 'mrsha', 'nurse', 'kaneki'];
+  const isUndead = w => UNDEAD.includes(w) || (state.run.bitten || []).includes(w);
   function linked(l, i, g) {
     const sl = slotsOf(l), P = LAYOUTS[l], set = new Set(neigh(l, i)), w = sl[i].worker;
     if (has(w, 'alien', g)) sl.forEach((_, j) => { if (j !== i) set.add(j); }); // telepathy
@@ -969,9 +1062,27 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const pRat = workerPlace('rat'), pRab = workerPlace('rabbit');
     g.caseClosed = !!(pRat && pRab && pRat.l === pRab.l && adjacent(pRat.l, pRat.i, pRab.i));
     if (g.caseClosed) g.combos.push('case');
-    g.team = []; g.teamV = [];
+    g.team = []; g.teamV = []; g.teamShe = []; g.teamLuck = [];
     if (skillOn('dog')) g.team[workerPlace('dog').l] = SKILLS.dog.mult;
     if (skillOn('alien')) g.teamV[pa.l] = SKILLS.alien.mult;
+    if (skillOn('honeybear')) g.teamShe[workerPlace('honeybear').l] = SKILLS.honeybear.mult;
+    if (skillOn('raven')) g.teamLuck[workerPlace('raven').l] = 0.5;
+    // the Nurse's siren takes her workshop to the Otherworld: its goods sell ×2
+    g.siren = skillOn('nurse') ? workerPlace('nurse').l : -1;
+    // Lawn defence: Sunflower and the Flytrap side by side
+    const pSun = workerPlace('sunflower'), pFly = workerPlace('flytrap');
+    g.lawn = !!(pSun && pFly && pSun.l === pFly.l && adjacent(pSun.l, pSun.i, pFly.i));
+    if (g.lawn) g.combos.push('lawn');
+    // Arc Warden's double takes the first free machine next to him; with none free his own machine earns ×2
+    const pArc = skillOn('arc') && workerPlace('arc');
+    g.double = null;
+    if (pArc) { const sl = slotsOf(pArc.l), j = neigh(pArc.l, pArc.i).find(k => sl[k].machine && sl[k].machine !== 'belt' && !sl[k].worker); g.double = j != null ? { l: pArc.l, i: j } : { l: pArc.l, i: pArc.i, self: true }; }
+    // the graveyard: the gravedigger with the zombie girl spreads the bite, all three of the crew in one workshop can rise from the dead
+    const pZ = workerPlace('zombie'), pD = workerPlace('digger'), pT = workerPlace('tuesday');
+    g.epidemic = !!(pZ && pD && pZ.l === pD.l && adjacent(pZ.l, pZ.i, pD.i));
+    if (g.epidemic) g.combos.push('epidemic');
+    g.rising = !!(pZ && pD && pT && pZ.l === pD.l && pD.l === pT.l);
+    if (g.rising) g.combos.push('rising');
     // Shadow copies the perk of its working neighbour with the biggest income
     g.shadow = {};
     for (const w of crewIds) {
@@ -1001,7 +1112,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     // Morning after: Thirst and Gazyava on one worker drop Thirst's minus and give speed ×1,3
     const morning = st.equip.includes('e_thirst') && st.equip.includes('e_soda');
     st.equip.forEach(e => {
-      if (banned(e)) return;
+      if (banned(e) || (id === 'kaneki' && CARDS[e].food)) return;
       // the respirator shines on inspections: any rule makes it ×1,6
       let ef = e === 'e_mask' && state.run.rule ? { power: 1.6, speed: 1.6 } : CARDS[e].eff;
       if (e === 'e_thirst' && (mirror || morning)) ef = { power: 1.5 };
@@ -1020,9 +1131,11 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const bp = g.hyper && base.she ? Math.max(base.power, g.maxMale) * Math.pow(1.2, g.hyper) : base.power;
     let power = bp * (1 + g.power + fb) * g.powerX * p;
     if (mirror) power /= g.minusPower;
-    if (g.pizza.includes(id)) power *= Math.pow(1.4, cardN('u_pizza4'));
+    if (g.pizza.includes(id) && id !== 'kaneki') power *= Math.pow(1.4, cardN('u_pizza4'));
+    // Medovik is the honey bear's favourite: ×1,8 instead of ×1,4
+    if (id === 'honeybear') power *= Math.pow(1.8 / 1.4, st.equip.filter(e => e === 'e_honeycake').length);
     if (g.trio.has(id)) { const k = Math.pow(1.3, cardN('u_triad')); power *= k; speed *= k; }
-    return { power, speed, luck: g.noLuck && !mirror ? 0 : Math.min(0.9, base.luck + l + g.luck), fb, fr, hasCoffee, mirror };
+    return { power, speed, luck: g.noLuck && !mirror ? 0 : Math.min(0.9, base.luck + l + g.luck), fb, fr, hasCoffee, mirror, food };
   }
   function workerPlace(id) {
     for (let l = 0; l < state.locs.length; l++) { const i = slotsOf(l).findIndex(s => s.worker === id); if (i >= 0) return { l, i }; }
@@ -1046,12 +1159,13 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     let rX = 1, vX = 1;
     // the Horse's gallop makes every card on her machine work twice
     const twice = W === 'horse' && skillOn('horse') ? 2 : 1;
-    const ups = [...s.upg, ...glued(l, i)];
+    // food cards of the machine do not work for Kaneki
+    const allUps = [...s.upg, ...glued(l, i)], ups = W === 'kaneki' ? allUps.filter(u => !CARDS[u].food) : allUps;
     ups.forEach((u, k) => {
       // Mirror armour ignores the speed minus of Sweet and sour sauce
       const ef = CARDS[u].eff, rate = mirror && ef.rate < 1 ? 1 : ef.rate || 1;
       rX *= Math.pow(rate, twice); vX *= Math.pow((ef.value || 1) * (u === 's_gold' ? Math.pow(1.1, g.tc['Станки'] || 0) : 1), twice); lb += (ef.luck || 0) * twice;
-      notes.push(`${CARDS[u].name}${k >= s.upg.length ? ' (Супер клей рядом)' : ''}: ${CARDS[u].desc.toLowerCase()}`);
+      notes.push(`${CARDS[u].name}${s.upg.includes(u) ? '' : ' (Супер клей рядом)'}: ${CARDS[u].desc.toLowerCase()}`);
     });
     if (twice > 1 && s.upg.length) notes.push('Галоп: карты станка действуют дважды');
     // Sponges 44: every 44th piece is a kiss worth 4,4 pieces a sponge; kiss is its extra worth
@@ -1063,26 +1177,59 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (l === 4 && g.couture) { vb += 0.25; notes.push('Мисис Ха шьёт чехлы: +25% к цене'); }
     if (s.machine === 'stuff' && g.vitrageWorking) { rb += 0.2; notes.push('Стеклянные ножки из цеха 4: +20% скорости'); }
     if (s.machine !== 'belt' && LOCS[l].hot && LOCS[l].hot.includes(i)) { rb += 0.2; notes.push('Жар горна: +20% скорости'); }
-    const auto = !W && M.auto;
+    const dbl = !W && g.double && !g.double.self && g.double.l === l && g.double.i === i;
+    const auto = !W && (M.auto || dbl);
     if ((!W && !auto) || M.rate === 0 || onStrike(W)) return { rate: 0, value: 0, income: 0, notes, ws: null, M };
     const skM = { speed: g.team[l] || 1, power: 1, value: 1, income: 1 };
     if (g.teamV[l]) { skM.value *= g.teamV[l]; notes.push(`Пришелец, «${SKILLS.alien.name}»: цена ×${fmt(SKILLS.alien.mult)}`); }
+    if (g.siren === l) { skM.value *= SKILLS.nurse.mult; notes.push(`Медсестра, «${SKILLS.nurse.name}»: цена ×2 в Потустороннем мире`); }
+    // Arc Warden's spark: 5 s of double pieces on one machine of his workshop
+    const sp = state.run.spark, spark = !!(sp && sp.l === l && sp.i === i && !state.run.brk && state.run.qT < sp.until);
+    if (spark) notes.push('Искра Арка Вардена: каждая штука двойная');
     let ws = null, power, speed, B, luck, extra = 1, speedM = 1, mult = 1;
-    if (auto) {
+    if (dbl) {
+      // the storm double works with Arc Warden's own power and speed
+      const aws = workerStats('arc', g);
+      B = WORKERS.arc.power; skM.speed = 1; power = aws.power; speed = aws.speed;
+      luck = spark ? 1 : g.noLuck ? 0 : Math.min(0.9, aws.luck + lb);
+      notes.push(`Двойник Арка Вардена: сила ${fmt(power)}, скорость ${fmt(speed)}`);
+    } else if (auto) {
       // the brick pump works alone like a plain worker: global cards reach it, perks, equipment and the dog's skill do not
       B = M.auto.power; skM.speed = 1;
       power = B * (1 + g.power) * g.powerX; speed = M.auto.speed * (1 + g.speed) * g.speedX;
-      luck = g.noLuck ? 0 : Math.min(0.9, g.luck + lb);
+      luck = spark ? 1 : g.noLuck ? 0 : Math.min(0.9, g.luck + lb);
       notes.push(`Качает сам: сила ${fmt(B)}, скорость ${fmt(M.auto.speed)}`);
     } else {
       ws = workerStats(W, g); power = ws.power; speed = ws.speed;
-      const near = neigh(l, i).filter(j => sl[j].worker), nearHas = p => near.some(j => has(sl[j].worker, p, g));
+      // the Nurse has no face: she does not see her neighbours, and their bonuses and penalties pass her by
+      const near = W === 'nurse' ? [] : neigh(l, i).filter(j => sl[j].worker), nearHas = p => near.some(j => has(sl[j].worker, p, g));
+      // Nemu's artificial body is never worse than her best working neighbour
+      if (has(W, 'nemu', g) && near.length) {
+        const nb = near.map(j => workerStats(sl[j].worker, g));
+        power = Math.max(power, ...nb.map(o => o.power)); speed = Math.max(speed, ...nb.map(o => o.speed)); ws = { ...ws, luck: Math.max(ws.luck, ...nb.map(o => o.luck)) };
+        notes.push('Искусственное тело: не слабее лучшего соседа');
+      }
+      if (W === 'nurse') { power *= 1.25; notes.push('Без лица: соседей не видит, сила ×1,25'); }
+      if (W === 'nurse' && skillOn('nurse')) { speedM *= 2; notes.push('Сирена: дёргается, скорость ×2'); }
       if (g.shadow[W]) notes.push(`Тень повторяет перк: ${WORKERS[g.shadow[W]].name}`);
       if (has(W, 'tramp', g) && near.length) { power *= 1.2; notes.push('Бродяга в команде: +20% силы'); }
       if (has(W, 'toad', g) && !near.length) { speedM *= 1.35; notes.push('Сэр Жаб один и не трусится: +35% скорости'); }
       if (has(W, 'pink', g)) { vb += 0.2; notes.push('Зефирка завязывает бантик: +20% к цене'); }
       if (nearHas('dog')) { power *= 1.1; notes.push('Пёс Бро даёт кулачок: +10% силы'); }
       if (nearHas('jedi')) { speedM *= 1.15; notes.push('Хаба машет мечами рядом: +15% скорости'); }
+      if (WORKERS[W].she && nearHas('honeybear')) { power *= 1.15; notes.push('Медаедь рядом, выбор очевиден: +15% силы'); }
+      if (WORKERS[W].she && g.teamShe[l]) { skM.speed *= g.teamShe[l]; notes.push(`Медаедь, «${SKILLS.honeybear.name}»: скорость ×2`); }
+      if (W !== 'sunflower' && skillOn('sunflower') && near.some(j => sl[j].worker === 'sunflower')) { power *= SKILLS.sunflower.mult; notes.push(`Подсолнух, «${SKILLS.sunflower.name}»: сила ×2`); }
+      if (W === 'flytrap' && g.lawn) { power *= 1.5; notes.push('Оборона газона: сила ×1,5'); }
+      if (has(W, 'tuesday', g)) { const even = state.run.q % 2 === 0; power *= even ? 1.6 : 0.8; notes.push(even ? 'Опять вторник, чётная смена: сила ×1,6' : 'Нечётная смена: сила ×0,8'); }
+      if ((state.run.bitten || []).includes(W)) { power *= 1.5; speedM *= 0.8; notes.push('Укус Зомбачки: сила ×1,5, скорость ×0,8'); }
+      if (isUndead(W) && nearHas('digger')) { power *= 1.2; notes.push('Сторож кладбища рядом: +20% силы нежити'); }
+      if (W === 'kaneki') {
+        // Kaneki lives on coffee alone: any food on him, his machine or Pizza for four spoils it
+        const food = ws.food || allUps.some(u => CARDS[u].food) || g.pizza.includes('kaneki'), ok = ws.hasCoffee && !food;
+        power *= ok ? 1.5 : 0.8; notes.push(ok ? 'Только кофе: сила ×1,5' : food ? 'Человеческая еда: сила ×0,8' : 'Без кофе: сила ×0,8');
+        if (skillOn('kaneki')) { power *= SKILLS.kaneki.mult; speedM *= SKILLS.kaneki.mult; notes.push(`Скилл «${SKILLS.kaneki.name}»: гуль, сила и скорость ×2`); }
+      }
       // Mirror armour drops the Loner's minus
       state.workers[W].equip.forEach(e => { if (e === 'e_loner') { power *= near.length ? (mirror ? 1 : 0.6) : 2.2; notes.push(near.length ? (mirror ? 'Одиночка с соседями: минус снят бронёй' : 'Одиночка с соседями: сила ×0,6') : 'Одиночка один: сила ×2,2'); } });
       if (has(W, 'mrsha', g) && s.machine === 'sew') { power *= 1.5; speedM *= 1.5; notes.push('Лучшая швея: сила и скорость ×1,5'); }
@@ -1100,14 +1247,14 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       // Mirror armour turns the stealing back on the thief
       B = WORKERS[W].power;
       if (has(W, 'rat', g) && !(W === 'rat' && (skillOn('rat') || g.caseClosed)) && near.length) {
-        const d = near.reduce((a, j) => a + (hasEq(sl[j].worker, 'e_mirror') ? -0.2 : 0.2), 0);
+        const d = near.reduce((a, j) => a + (['flytrap', 'nurse'].includes(sl[j].worker) ? 0 : hasEq(sl[j].worker, 'e_mirror') ? -0.2 : 0.2), 0);
         power *= Math.max(0.1, B + d) / B; notes.push(d >= 0 ? `Крысит у соседей: +${fmt(d)} силы` : `Зеркальная броня соседа: −${fmt(-d)} силы`);
       }
       near.forEach(j => {
         const o = sl[j].worker;
         if (!has(o, 'rat', g)) return;
         if (o === 'rat' && skillOn('rat')) { power *= (B + 0.4) / B; notes.push('Мразь возвращает украденное: +0,4 силы'); }
-        else if (!(o === 'rat' && g.caseClosed) && !mirror) { power *= Math.max(0.1, B - 0.2) / B; notes.push(`${o === 'rat' ? 'Главная мразь цеха' : 'Тень мрази'} крысит: −0,2 силы`); }
+        else if (!(o === 'rat' && g.caseClosed) && !mirror && W !== 'flytrap') { power *= Math.max(0.1, B - 0.2) / B; notes.push(`${o === 'rat' ? 'Главная мразь цеха' : 'Тень мрази'} крысит: −0,2 силы`); }
       });
       if (g.green && (W === 'alien' || W === 'jedi')) { power *= 1.5; notes.push('Зелёная сила: сила ×1,5'); }
       if (W === 'alien' && g.zorya) { power *= Math.pow(1.3, g.zorya); notes.push('Зоря из Зорвеля: пришелец +30% силы'); }
@@ -1129,7 +1276,10 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       const sk = SKILLS[W], kind = sk.kind === 'random' ? state.workers[W].skKind || 'power' : sk.kind;
       if (skM[kind] && skillOn(W)) { skM[kind] *= sk.mult; notes.push(`Скилл «${sk.name}»: ${sk.kind === 'random' ? SKIN_KINDS[kind] + ' ' : ''}×${fmt(sk.mult)}`); }
       // luck is the chance of a double piece; Jeanne's jackpot makes it triple, her skill makes every piece lucky
-      luck = g.noLuck && !mirror ? 0 : sk.kind === 'luck' && skillOn(W) ? 1 : Math.min(0.9, ws.luck + lb + (kastNear ? 0.1 : 0) + (linNear ? 0.1 : 0));
+      const meditate = W === 'raven' && !near.length ? 0.25 : 0;
+      if (meditate) notes.push('Медитация: удача +25%');
+      if (g.teamLuck[l]) notes.push(`Рейвен, «${SKILLS.raven.name}»: удача +50%`);
+      luck = g.noLuck && !mirror ? 0 : (sk.kind === 'luck' && skillOn(W)) || spark ? 1 : Math.min(0.9, ws.luck + lb + (kastNear ? 0.1 : 0) + (linNear ? 0.1 : 0) + meditate + (g.teamLuck[l] || 0));
       extra = has(W, 'jeanne', g) ? 2 : 1;
       if (luck === 1) notes.push(`Скилл «${sk.name}»: каждая штука ×${1 + extra}`);
     }
@@ -1137,8 +1287,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     let rate = M.rate * BAL.tempo * speed * speedM * skM.speed * (1 + rb) * rX;
     let value = M.value * power * skM.value * (1 + vb) * vX * (1 + g.price) * g.priceX * g.locX[l];
     // Toothy snails slow everyone down, but not in a workshop where the Helping hand feeds them, and not Mirror armour
-    const hands = slotsOf(l).reduce((n, z) => n + z.upg.filter(u => u === 's_hand').length, 0);
-    if (g.snails && !hands && !mirror) { rate *= Math.pow(0.85, g.snails); notes.push('Зубастые улитки: скорость ×0,85'); }
+    const hands = slotsOf(l).reduce((n, z) => n + z.upg.filter(u => u === 's_hand').length, 0), flytrap = slotsOf(l).some(z => z.worker === 'flytrap');
+    if (g.snails && !hands && !mirror && !flytrap) { rate *= Math.pow(0.85, g.snails); notes.push('Зубастые улитки: скорость ×0,85'); }
+    if (g.snails && flytrap && !hands) notes.push('Мухобойка ест улиток: улитки не тормозят');
     if (g.snails && hands) notes.push('Робот кормит улиток: улитки не тормозят');
     // the Helping hand lifts the biggest of this machine's multipliers: power, speed or price
     if (hands) {
@@ -1152,6 +1303,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const family = g.familyLoc === l ? 2 : 1;
     if (family > 1) notes.push('Семейный подряд в сборе: доход цеха ×2');
     // mult: the income multipliers the simulation applies to every piece's coins on top of value
+    if (g.double && g.double.self && g.double.l === l && g.double.i === i) { mult *= 2; notes.push('Двойнику негде встать: доход станка ×2'); }
     mult *= duo * family;
     return { rate, value, mult, kiss, income: rate * value * (1 + luck * extra) * crowM * (1 + kiss / 44) * mult * skM.income * g.income, notes, ws, M, luck, extra };
   }
@@ -1173,6 +1325,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const cd = CARDS[id], cl = cardLoc(id);
     if (cl >= 0 && !state.locs[cl].unlocked) return false;
     if (cd.type === 'machine') return canPlaceMachine(cd.machine);
+    if (cd.afterQ && state.run.q < cd.afterQ) return false;
     if (cd.type === 'worker') return !state.workers[cd.worker].unlocked;
     if (cd.once && state.cards.includes(id)) return false;
     if (cd.type === 'skill') return Object.values(state.workers).some(w => w.unlocked && !w.skill);
@@ -1281,6 +1434,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     else if (got('case')) toast('Комбо «Дело закрыто»: мразь больше не крысит!');
     else if (got('morning')) toast('Комбо «Утро после»: минус Сушняка снят, скорость ×1,3!');
     else if (got('tape')) toast('Комбо «Скотч и клей»: у станка с клеем дружат все соседи!');
+    else if (got('lawn')) toast('Комбо «Оборона газона»: солнышки вдвое чаще, Мухобойка ×1,5!');
+    else if (got('epidemic')) toast('Комбо «Эпидемия»: укус расползается по цеху!');
+    else if (got('rising')) toast('Комбо «Восстание из мёртвых»: раз за забег завод не обанкротится!');
   }
   function unlockLoc(l) {
     const L = state.locs[l], cost = LOCS[l].cost;
@@ -1306,14 +1462,45 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (!guest) for (const w in state.workers) if (tiring(w) && !workerPlace(w)) state.workers[w].workT = 0;
     if (guest || state.run.over || state.run.brk) return;
     for (const w in state.workers) if (tiring(w) && workerPlace(w)) state.workers[w].workT = (state.workers[w].workT || 0) + dt;
+    const run = state.run, pNemu = skillOn('nemu') && workerPlace('nemu');
     for (const id in SKILLS) {
       const w = state.workers[id], wp = w.skill && workerPlace(id);
       if (!wp) continue;
-      if (SKILLS[id].shift) { const on = skillOn(id); if (on && !w.lit && wp.l === state.cur) floats.push({ l: wp.l, slot: wp.i, txt: SKILLS[id].name.toUpperCase() + '!', life: 1.4, skill: true }); w.lit = on; continue; }
-      w.skT = (w.skT || 0) + dt;
-      if (w.skT >= SKILLS[id].cd) { w.skT -= SKILLS[id].cd; rollSkin(id); if (wp.l === state.cur) floats.push({ l: wp.l, slot: wp.i, txt: SKILLS[id].name.toUpperCase() + '!', life: 1.4, skill: true }); }
+      if (SKILLS[id].shift) {
+        const on = skillOn(id); if (on && !w.lit && wp.l === state.cur) floats.push({ l: wp.l, slot: wp.i, txt: SKILLS[id].name.toUpperCase() + '!', life: 1.4, skill: true }); w.lit = on;
+        // Groundhog day: the shift clock goes back once a shift
+        if (id === 'tuesday' && on && !run.rolled) { run.rolled = true; run.qT = Math.max(0, run.qT - skDur(id)); toast(`Призрак вторника: «${SKILLS.tuesday.name}», +${skDur(id)} с к смене`); }
+        continue;
+      }
+      // Nemu's regeneration: the skills of her neighbours cool down twice as fast
+      const regen = pNemu && id !== 'nemu' && pNemu.l === wp.l && adjacent(wp.l, wp.i, pNemu.i) && w.skT >= skDur(id);
+      w.skT = (w.skT || 0) + dt * (regen ? SKILLS.nemu.mult : 1);
+      if (w.skT >= SKILLS[id].cd) {
+        w.skT -= SKILLS[id].cd; rollSkin(id);
+        if (wp.l === state.cur) floats.push({ l: wp.l, slot: wp.i, txt: SKILLS[id].name.toUpperCase() + '!', life: 1.4, skill: true });
+        if (id === 'digger' && !rule('audit')) digCrate();
+      }
     }
     const g = globals(), tp = skillOn('thoth') && workerPlace('thoth');
+    const every = p => Math.floor((run.qT + dt) / p) - Math.floor(run.qT / p);
+    // Sunflower drops a sun every 15 s of the shift (twice as often with Lawn defence): 1% of the quota in coins
+    const pSun = workerPlace('sunflower');
+    if (pSun && !onStrike('sunflower')) for (let k = every(g.lawn ? 7.5 : 15); k > 0; k--) {
+      const gain = curQuota() * 0.01;
+      state.money += gain; state.earned += gain; run.qEarned += gain;
+      if (pSun.l === state.cur) floats.push({ l: pSun.l, slot: pSun.i, txt: 'СОЛНЫШКО +' + fmt(gain), life: 1.4, skill: true });
+    }
+    // Arc Warden sends a spark into a random working machine of his workshop every 20 s
+    const pArc = workerPlace('arc');
+    if (pArc && every(20)) {
+      const sl = slotsOf(pArc.l), js = sl.map((z, j) => j).filter(j => sl[j].machine && sl[j].machine !== 'belt');
+      run.spark = { l: pArc.l, i: js[Math.floor(Math.random() * js.length)], until: run.qT + dt + 5 };
+    }
+    // Epidemic: every 20 s one more worker of the zombie girl's workshop is bitten
+    if (g.epidemic && every(20)) {
+      const pz = workerPlace('zombie'), cand = slotsOf(pz.l).map(z => z.worker).filter(w => w && w !== 'zombie' && !run.bitten.includes(w));
+      if (cand.length) { const w = cand[Math.floor(Math.random() * cand.length)]; run.bitten.push(w); toast(`Эпидемия: ${WORKERS[w].name} укушен${WORKERS[w].she ? 'а' : ''}`); }
+    }
     let total = 0;
     state.locs.forEach((L, l) => {
       if (!L.unlocked) return;
@@ -1354,11 +1541,15 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     else { crate.life -= dt; if (crate.life <= 0) { if (state.cards.includes('u_courier')) toast(crateText(openCrate(true), 'Курьер открыл посылку')); else { crate = null; state.crateIn = newCrate(); } } }
     floats.forEach(f => { f.life -= dt * 0.8; });
     floats = floats.filter(f => f.life > 0);
-    const run = state.run;
     run.t += dt; run.qT += dt;
     if (incomeNow > run.bestRate) run.bestRate = incomeNow;
     // a shift always lasts quotaTime(): the quota is checked only when it ends
-    if (run.qT >= quotaTime()) { if (run.qEarned >= curQuota()) passQuota(); else bankrupt(); }
+    if (run.qT >= quotaTime()) {
+      if (run.qEarned >= curQuota()) passQuota();
+      // Rising from the dead: once a run, the gravedigger digs the factory out of a quota missed by less than 30%
+      else if (g.rising && !run.rose && run.qEarned >= curQuota() * 0.7) { run.rose = true; passQuota(); toast('Восстание из мёртвых! Могильщик откопал завод, забег продолжается'); }
+      else bankrupt();
+    }
     achTimer += dt; if (achTimer > 1) { achTimer = 0; checkAch(false); }
   }
   // a crate holds a share of the current quota, not of the income: skills made the income swing too much.
@@ -1369,10 +1560,19 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     crate = null; state.crateIn = newCrate();
     run.subs = (run.subs || 0) + 0.03 * cardN('u_sub');
     if (kind === 'card') { queueOffer('crate'); return { card: true }; }
-    const room = Math.max(0, curQuota() * BAL.crateCap - (run.qCrate || 0));
+    return { gain: crateCoins(kind, courier), gold: kind === 'gold', full: crateFull() };
+  }
+  function crateCoins(kind, courier) {
+    const run = state.run, room = Math.max(0, curQuota() * BAL.crateCap - (run.qCrate || 0));
     const gain = Math.min(room, curQuota() * rnd(kind === 'gold' ? BAL.crateGoldQ : BAL.crateQ) * Math.pow(3, cardN('u_customs') + cardN('u_snailpost')) * (globals().combos.includes('post') ? 2 : 1) * (courier ? 0.5 : 1));
     state.money += gain; state.earned += gain; run.qEarned += gain; run.qCrate = (run.qCrate || 0) + gain;
-    return { gain, gold: kind === 'gold', full: crateFull() };
+    return gain;
+  }
+  // the Gravedigger's dig: a plain crate straight into the wallet, within the shift's crate limit
+  function digCrate() {
+    if (crateFull()) return;
+    state.run.subs = (state.run.subs || 0) + 0.03 * cardN('u_sub');
+    toast(`Могильщик выкопал посылку: ${fmt(crateCoins('plain'))} монет`);
   }
   const crateText = (r, who = 'В посылке') => r.card ? `${who}: внутри карта, выбор в перерыве!` : `${who}: ${fmt(r.gain)} монет${r.gold ? ', золотая!' : '!'}${r.full ? ' Посылок с монетами до конца смены больше не будет' : ''}`;
   function passQuota() {
@@ -1381,7 +1581,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     run.rep += wasRule ? 2 : 1;
     const piggy = state.cards.filter(id => id === 'u_piggy').length;
     if (piggy) { state.money += run.qEarned * 0.1 * piggy; toast(`Копилка: +${fmt(run.qEarned * 0.1 * piggy)} монет`); }
-    run.q++; run.qT = 0; run.qEarned = 0; run.qCrate = 0; run.rule = null; run.sq = []; run.nova = false;
+    run.q++; run.qT = 0; run.qEarned = 0; run.qCrate = 0; run.rule = null; run.sq = []; run.nova = false; run.bitten = []; run.spark = null; run.rolled = false;
     run.brk = true; run.shopClosed = !!(wasRule && wasRule.id === 'audit'); run.shop = run.shopClosed ? [] : rollShop(); run.shopLocked = false; run.shopRolls = 0;
     if (run.q % 3 === 0) {
       const ids = Object.keys(RULES).filter(id => RULES[id].ok()), id = ids[Math.floor(Math.random() * ids.length)];
@@ -1601,7 +1801,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     }
   }
   function pile(x, y, n, col) { for (let k = 0; k < n; k++) { R(x, y - k * 3, 12, 4, K); R(x + 1, y - k * 3 + 1, 10, 2, col); } }
-  const sprOf = id => id === 'mrp' && state.workers.mrp.equip.includes('e_coffee') ? SPR.mrpCoffee : id === 'silver' && skillOn('silver') ? SPR.silverWolf
+  const sprOf = id => id === 'mrp' && state.workers.mrp.equip.includes('e_coffee') ? SPR.mrpCoffee : id === 'silver' && skillOn('silver') ? SPR.silverWolf : id === 'kaneki' && skillOn('kaneki') ? SPR.kanekiGhoul
     : id === 'kast' && skillOn('kast') ? SPR['kast_' + (state.workers.kast.skKind || 'power')] : SPR[id];
   const border = (x, y, w, h, col) => { R(x - 2, y - 2, w + 4, 2, col); R(x - 2, y + h, w + 4, 2, col); R(x - 2, y, 2, h, col); R(x + w, y, 2, h, col); };
 
@@ -1677,7 +1877,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       furnace(colX(1) + SW / 2, rowY(1) + SH / 2);
     }
     // slots
-    const linkedSel = selSlot != null ? linked(l, selSlot) : [];
+    const linkedSel = selSlot != null ? linked(l, selSlot) : [], dblAt = skillOn('arc') ? globals().double : null;
     sl.forEach((s, i) => {
       const x = SX(i), y = SY(i);
       if (LT.plates) { R(x, y, SW, SH, K); R(x + 1, y + 1, SW - 2, SH - 2, LT.plates[i]); R(x + 1, y + 1, SW - 2, 1, 'rgba(255,255,255,.3)'); for (let k = 0; k < 5; k++) R(x + 6 + k * 14, y + 1 + (k % 2) * 30, 1, 1, 'rgba(255,255,255,.5)'); }
@@ -1691,6 +1891,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
         if ((s.worker || MACH[s.machine].auto) && s.machine !== 'belt') pile(x + 52, y + 63, 1 + Math.floor((t * 0.3 + i) % 3), LT.item);
         s.upg.forEach((u, k) => { R(x + 4 + k * 5, y + 4, 4, 6, K); R(x + 5 + k * 5, y + 5, 2, 4, RAR_COL[CARDS[u].rar]); });
       }
+      if (dblAt && dblAt.l === l && dblAt.i === i && !s.worker) gx.drawImage(SPR.arcDouble, x + 6, y + 40 - Math.floor(t * 2 + i) % 2);
+      const spk = state.run.spark;
+      if (spk && spk.l === l && spk.i === i && !state.run.brk && state.run.qT < spk.until) for (let k = 0; k < 4; k++) { const a = t * 6 + k * Math.PI / 2; R(x + 52 + Math.round(Math.cos(a) * 9), y + 34 + Math.round(Math.sin(a) * 9), 2, 2, k % 2 ? '#7fd0f0' : '#e9fff8'); }
       if (s.worker) {
         const bob = Math.floor(t * 2 + i) % 2, on = skillOn(s.worker), w = state.workers[s.worker];
         if (on) for (let k = 0; k < 6; k++) { const a = t * 4 + k * Math.PI / 3; R(x + 17 + Math.round(Math.cos(a) * 13), y + 56 + Math.round(Math.sin(a) * 15), 2, 2, k % 2 ? '#ffd54a' : '#fff1b0'); }
@@ -1789,7 +1992,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       T(MACH[s.machine].short, x + SW - 4, y + 4, 6, '#ffffff', 'right');
       const st = slotStats(l, i, g);
       if (s.machine === 'belt') T('+30% ВСЕМ', x + SW - 4, y + 11, 6, '#7ee081', 'right');
-      else if (!s.worker && !MACH[s.machine].auto) T('НЕТ РАБОТНИКА', x + SW - 4, y + 11, 6, '#ffb3a6', 'right');
+      else if (!s.worker && !(st && st.income > 0)) T('НЕТ РАБОТНИКА', x + SW - 4, y + 11, 6, '#ffb3a6', 'right');
       else T('+' + fmt(st.income) + '/с', x + SW - 4, y + 11, 6, '#7ee081', 'right');
     });
     if (l === 3 && state.locs[3].unlocked) { T('ГОРН', colX(1) + SW / 2, rowY(1) + SH - 6, 6, '#fff1b0', 'center'); T('+20% СКОР.', colX(1) + SW / 2, rowY(1) + 1, 5, '#ffd76a', 'center'); }
@@ -1980,7 +2183,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   }
   function idleHTML() {
     const g = globals();
-    const combos = g.combos.map(k => ({ night: '<span class="chip" style="--rc:var(--r3)">Ночная смена ×1,5</span>', maids: `<span class="chip" style="--rc:var(--r3)">Дуэт горничных: цех ${g.maidsLoc + 1} ×2</span>`, green: '<span class="chip" style="--rc:var(--r2)">Зелёная сила ×1,5</span>', family: `<span class="chip" style="--rc:var(--r3)">Семейный подряд${g.familyLoc >= 0 ? `: цех ${g.familyLoc + 1} ×2` : ''}</span>`, post: '<span class="chip" style="--rc:var(--r3)">Почтовый день: посылки ×2</span>', cozy: '<span class="chip" style="--rc:var(--r1)">Уютно: сила ×1,5</span>', case: '<span class="chip" style="--rc:var(--r2)">Дело закрыто</span>', robot: '<span class="chip" style="--rc:var(--r2)">Робот кормит улиток</span>', morning: '<span class="chip" style="--rc:var(--r1)">Утро после</span>', tape: '<span class="chip" style="--rc:var(--r1)">Скотч и клей</span>' })[k]).join('') + (state.run.subs ? `<span class="chip" style="--rc:var(--r3)">Подписка: +${pct(state.run.subs)} дохода</span>` : '');
+    const combos = g.combos.map(k => ({ night: '<span class="chip" style="--rc:var(--r3)">Ночная смена ×1,5</span>', maids: `<span class="chip" style="--rc:var(--r3)">Дуэт горничных: цех ${g.maidsLoc + 1} ×2</span>`, green: '<span class="chip" style="--rc:var(--r2)">Зелёная сила ×1,5</span>', family: `<span class="chip" style="--rc:var(--r3)">Семейный подряд${g.familyLoc >= 0 ? `: цех ${g.familyLoc + 1} ×2` : ''}</span>`, post: '<span class="chip" style="--rc:var(--r3)">Почтовый день: посылки ×2</span>', cozy: '<span class="chip" style="--rc:var(--r1)">Уютно: сила ×1,5</span>', case: '<span class="chip" style="--rc:var(--r2)">Дело закрыто</span>', robot: '<span class="chip" style="--rc:var(--r2)">Робот кормит улиток</span>', morning: '<span class="chip" style="--rc:var(--r1)">Утро после</span>', tape: '<span class="chip" style="--rc:var(--r1)">Скотч и клей</span>', lawn: '<span class="chip" style="--rc:var(--r1)">Оборона газона</span>', epidemic: '<span class="chip" style="--rc:var(--r2)">Эпидемия</span>', rising: `<span class="chip" style="--rc:var(--r3)">Восстание из мёртвых${state.run.rose ? ': использовано' : ''}</span>` })[k]).join('') + (state.run.subs ? `<span class="chip" style="--rc:var(--r3)">Подписка: +${pct(state.run.subs)} дохода</span>` : '');
     if (guest) return `<h2>Завод: ${esc(guest.n)}</h2><p class="muted">Это снимок чужого завода: можно нажимать на станки и сотрудников и смотреть, как всё устроено.</p><h3>Рекорды</h3>${recordsHTML(guest.r, guest.a.length, meta.records)}`;
     return `<h2>Цех ${state.cur + 1} · ${LOCS[state.cur].name}</h2><p class="muted">Нажми на шкафчик, а потом на станок, чтобы поставить туда сотрудника. Каждый сотрудник один на весь завод. Соседние станки усиливают друг друга, соседи по шкафчику дружат.</p>${combos ? `<h3>Активные комбо</h3><div class="row">${combos}</div>` : ''}<p class="muted">Досок: <b id="live-planks">0</b> · кирпичей: <b id="live-bricks">0</b> · гвоздей: <b id="live-nails">0</b> · стекла: <b id="live-glass">0</b> · пуфиков: <b id="live-poufs">0</b></p>`;
   }
@@ -2012,7 +2215,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const sets = Object.keys(TAGS).map(tg => { const n = g.tc[tg] || 0, p = Math.floor(n / 2); return `<dt class="${p ? 'on' : ''}">${tg}: ${n}</dt><dd>${TAGS[tg]}. Комплектов: ${p}</dd>`; }).join('');
     const night = g.combos.includes('night');
     const owned = Object.keys(counts).map(id => chip(id).replace('</span>', counts[id] > 1 ? ` ×${counts[id]}</span>` : '</span>')).join('') || '<span class="muted">Пока нет карт</span>';
-    return `<h2>Колода</h2><h3>Комплекты по тегам</h3><dl class="sets">${sets}</dl><h3>Комбо</h3><dl class="sets"><dt class="${night ? 'on' : ''}">Ночная смена</dt><dd>Крепкий кофе + Конвейер + Бродяга: доход ×1,5</dd><dt class="${g.sawWorking && anySlot(s => s.machine === 'kiln') ? 'on' : ''}">Растопка</dt><dd>Пилорама работает в цеху 1: печи в цеху 2 +25% скорости</dd><dt class="${g.kilnWorking && anySlot(s => s.machine === 'wire') ? 'on' : ''}">Закалка</dt><dd>Печь работает в цеху 2: проволока в цеху 3 +20% к цене</dd><dt class="${g.maidsLoc >= 0 ? 'on' : ''}">Дуэт горничных</dt><dd>V1 и V2 на соседних станках: доход их цеха ×2</dd><dt class="${g.green ? 'on' : ''}">Зелёная сила</dt><dd>Пришелец и Хаба на соседних станках: сила обоих ×1,5</dd><dt class="${g.combos.includes('family') ? 'on' : ''}">Семейный подряд</dt><dd>Хаба, Кастомка и Батя: соседям по станку из этой тройки +20% силы, все трое в одном цеху: доход цеха ×2</dd><dt class="${g.tumblerWorking && anySlot(s => s.machine === 'vitrage') ? 'on' : ''}">Рамы на гвоздях</dt><dd>Барабан работает в цеху 3: витражи в цеху 4 +20% к цене</dd><dt class="${g.cozy ? 'on' : ''}">Уютно</dt><dd>Швейная машинка и набивочный автомат работают: сила обоих сотрудников ×1,5</dd><dt class="${g.dryerWorking && state.locs[4].unlocked ? 'on' : ''}">Каркас</dt><dd>Сушилка работает в цеху 1: пуфики +20% к цене</dd><dt class="${g.vitrageWorking && anySlot(s => s.machine === 'stuff') ? 'on' : ''}">Стеклянные ножки</dt><dd>Витраж работает в цеху 4: набивка +20% скорости</dd><dt class="${g.caseClosed ? 'on' : ''}">Дело закрыто</dt><dd>Кролик-детектив рядом с Главной мразью цеха: мразь не крысит, у кролика сила ×1,5</dd><dt class="${g.combos.includes('robot') ? 'on' : ''}">Робот кормит улиток</dt><dd>Рука помощи + Зубастые улитки: в цеху с Рукой помощи минус улиток не действует</dd><dt class="${g.combos.includes('post') ? 'on' : ''}">Почтовый день</dt><dd>Почтальон + Курьер + Подписка: монеты в посылках ×2</dd><dt class="${g.combos.includes('morning') ? 'on' : ''}">Утро после</dt><dd>Сушняк и Газява у одного сотрудника: минус Сушняка снят, скорость ещё ×1,3</dd><dt class="${g.tape ? 'on' : ''}">Скотч и клей</dt><dd>Скотч братан + Супер клей: сотрудник у станка с клеем дружит со всеми соседями по станкам</dd></dl><h3>Твои карты</h3><div class="row">${owned}</div><div class="row"><button class="btn" type="button" data-act="back">Назад</button></div>`;
+    return `<h2>Колода</h2><h3>Комплекты по тегам</h3><dl class="sets">${sets}</dl><h3>Комбо</h3><dl class="sets"><dt class="${night ? 'on' : ''}">Ночная смена</dt><dd>Крепкий кофе + Конвейер + Бродяга: доход ×1,5</dd><dt class="${g.sawWorking && anySlot(s => s.machine === 'kiln') ? 'on' : ''}">Растопка</dt><dd>Пилорама работает в цеху 1: печи в цеху 2 +25% скорости</dd><dt class="${g.kilnWorking && anySlot(s => s.machine === 'wire') ? 'on' : ''}">Закалка</dt><dd>Печь работает в цеху 2: проволока в цеху 3 +20% к цене</dd><dt class="${g.maidsLoc >= 0 ? 'on' : ''}">Дуэт горничных</dt><dd>V1 и V2 на соседних станках: доход их цеха ×2</dd><dt class="${g.green ? 'on' : ''}">Зелёная сила</dt><dd>Пришелец и Хаба на соседних станках: сила обоих ×1,5</dd><dt class="${g.combos.includes('family') ? 'on' : ''}">Семейный подряд</dt><dd>Хаба, Кастомка и Батя: соседям по станку из этой тройки +20% силы, все трое в одном цеху: доход цеха ×2</dd><dt class="${g.tumblerWorking && anySlot(s => s.machine === 'vitrage') ? 'on' : ''}">Рамы на гвоздях</dt><dd>Барабан работает в цеху 3: витражи в цеху 4 +20% к цене</dd><dt class="${g.cozy ? 'on' : ''}">Уютно</dt><dd>Швейная машинка и набивочный автомат работают: сила обоих сотрудников ×1,5</dd><dt class="${g.dryerWorking && state.locs[4].unlocked ? 'on' : ''}">Каркас</dt><dd>Сушилка работает в цеху 1: пуфики +20% к цене</dd><dt class="${g.vitrageWorking && anySlot(s => s.machine === 'stuff') ? 'on' : ''}">Стеклянные ножки</dt><dd>Витраж работает в цеху 4: набивка +20% скорости</dd><dt class="${g.caseClosed ? 'on' : ''}">Дело закрыто</dt><dd>Кролик-детектив рядом с Главной мразью цеха: мразь не крысит, у кролика сила ×1,5</dd><dt class="${g.combos.includes('robot') ? 'on' : ''}">Робот кормит улиток</dt><dd>Рука помощи + Зубастые улитки: в цеху с Рукой помощи минус улиток не действует</dd><dt class="${g.combos.includes('post') ? 'on' : ''}">Почтовый день</dt><dd>Почтальон + Курьер + Подписка: монеты в посылках ×2</dd><dt class="${g.combos.includes('morning') ? 'on' : ''}">Утро после</dt><dd>Сушняк и Газява у одного сотрудника: минус Сушняка снят, скорость ещё ×1,3</dd><dt class="${g.tape ? 'on' : ''}">Скотч и клей</dt><dd>Скотч братан + Супер клей: сотрудник у станка с клеем дружит со всеми соседями по станкам</dd><dt class="${g.lawn ? 'on' : ''}">Оборона газона</dt><dd>Подсолнух и Мухобойка на соседних станках: солнышки вдвое чаще, у Мухобойки сила ×1,5</dd><dt class="${g.epidemic ? 'on' : ''}">Эпидемия</dt><dd>Зомбачка и Могильщик на соседних станках: каждые 20 с смены укушен ещё один работник её цеха</dd><dt class="${g.rising ? 'on' : ''}">Восстание из мёртвых</dt><dd>Призрак вторника, Зомбачка и Могильщик в одном цеху: раз за забег квота, набранная хотя бы на 70%, засчитывается${state.run.rose ? ' (уже использовано)' : ''}</dd></dl><h3>Твои карты</h3><div class="row">${owned}</div><div class="row"><button class="btn" type="button" data-act="back">Назад</button></div>`;
   }
   const mmss = sec => `${Math.floor(sec / 60)}:${String(Math.floor(sec % 60)).padStart(2, '0')}`;
   // two columns when comparing with a friend: theirs first, ours second
@@ -2056,9 +2259,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     let bytes = Uint8Array.from(atob(m[2]), ch => ch.charCodeAt(0));
     if (m[1] === '1') bytes = await pipe(bytes, new DecompressionStream('deflate-raw'));
     // a code from the previous build is brought up to date like a save
-    const d = JSON.parse(new TextDecoder().decode(bytes)), st = d.s && (d.s.v === 9 || d.s.v === 10) ? migrate(d.s) : d.s;
+    const d = JSON.parse(new TextDecoder().decode(bytes)), st = d.s && d.s.v >= 9 && d.s.v <= 11 ? migrate(d.s) : d.s;
     // a friend's code is drawn with our code, so only known ids may pass
-    const ok = st && st.v === 11 && st.run && Array.isArray(st.locs) && st.locs.length === LOCS.length && st.locs.every((L, l) => Array.isArray(L.slots) && L.slots.length === LAYOUTS[l].length && L.slots.every(z => (!z.machine || MACH[z.machine]) && (!z.worker || WORKERS[z.worker]) && Array.isArray(z.upg) && z.upg.every(u => CARDS[u])))
+    const ok = st && st.v === 12 && st.run && Array.isArray(st.locs) && st.locs.length === LOCS.length && st.locs.every((L, l) => Array.isArray(L.slots) && L.slots.length === LAYOUTS[l].length && L.slots.every(z => (!z.machine || MACH[z.machine]) && (!z.worker || WORKERS[z.worker]) && Array.isArray(z.upg) && z.upg.every(u => CARDS[u])))
       && Array.isArray(st.cards) && st.cards.every(id => CARDS[id]) && Object.keys(WORKERS).every(id => st.workers[id] && st.workers[id].equip.every(e => CARDS[e]))
       && Array.isArray(st.lockers) && st.lockers.every(id => WORKERS[id]) && d.r && Array.isArray(d.a);
     if (!ok) throw new Error('bad state');
@@ -2084,7 +2287,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       const w = state.workers[selWorker], sk = SKILLS[selWorker];
       const left = sk.shift ? quotaTime() - state.run.qT : skDur(selWorker) - w.skT;
       set('live-skill', !workerPlace(selWorker) ? 'Срабатывает, только когда сотрудник у станка' : skillOn(selWorker) ? `Активен: ещё ${Math.ceil(left)} с`
-        : sk.shift ? (state.run.brk ? `Сработает в последние ${skDur(selWorker)} с смены` : `До свитка: ${Math.ceil(left - skDur(selWorker))} с`) : `Перезарядка: ${Math.ceil(sk.cd - w.skT)} с`);
+        : sk.shift ? (state.run.brk ? `Сработает в последние ${skDur(selWorker)} с смены` : `До скилла: ${Math.ceil(left - skDur(selWorker))} с`) : `Перезарядка: ${Math.ceil(sk.cd - w.skT)} с`);
     }
     if (selWorker) { const ws = workerStats(selWorker, g); set('live-power', fmt(ws.power)); set('live-speed', fmt(ws.speed)); set('live-luck', pct(ws.luck)); }
     set('live-planks', fmt(state.planks)); set('live-bricks', fmt(state.bricks)); set('live-nails', fmt(state.nails || 0)); set('live-glass', fmt(state.glass || 0)); set('live-poufs', fmt(state.poufs || 0));
