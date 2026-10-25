@@ -506,6 +506,39 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     mLuck: (r, d) => { badge(d); for (const [a, b] of [[5, 4], [9, 4], [5, 8], [9, 8]]) { r(a, b, 3, 3, '#57b04f'); r(a, b, 1, 1, '#8fe07a'); } r(8, 7, 1, 1, '#2f6e3a'); r(9, 11, 1, 2, '#2f6e3a'); },
     mSkill: (r, d) => { badge(d); r(5, 3, 7, 1, K); r(5, 12, 7, 1, K); r(6, 4, 5, 2, K); r(7, 6, 3, 1, K); r(8, 7, 1, 2, K); r(7, 9, 3, 1, K); r(6, 10, 5, 2, K); r(7, 4, 3, 1, '#f2c94c'); r(7, 11, 3, 1, '#f2c94c'); },
     mWholesale: (r, d) => { badge(d); r(3, 5, 5, 7, K); r(4, 6, 3, 5, '#f3e9d2'); r(8, 4, 5, 7, K); r(9, 5, 3, 5, '#f3e9d2'); r(10, 6, 1, 3, '#4f8fd6'); r(5, 8, 1, 2, '#9b6bd6'); },
+    engraver: r => { r(1, 3, 10, 12, K); r(2, 4, 8, 10, '#9fe6ef'); r(2, 4, 8, 1, '#e9fff8'); r(4, 7, 4, 1, '#e9fff8'); r(4, 7, 1, 4, '#e9fff8'); r(4, 10, 4, 1, '#e9fff8'); r(7, 8, 1, 2, '#e9fff8'); r(9, 0, 6, 3, K); r(10, 1, 4, 1, '#e0a32e'); r(10, 3, 3, 6, K); r(11, 3, 1, 5, '#e9eef2'); r(12, 9, 1, 1, '#ffffff'); r(13, 8, 1, 1, '#fff1b0'); r(13, 10, 1, 1, '#fff1b0'); },
+    lens: (r, d) => { r(0, 5, 4, 1, '#f2c14e'); r(0, 10, 4, 1, '#f2c14e'); d(8, 8, 6, K); d(8, 8, 5, '#c9d0d6'); d(8, 8, 4, '#bfeef4'); r(6, 5, 2, 2, '#ffffff'); r(9, 9, 2, 2, '#7fd6e0'); r(14, 7, 2, 2, '#fff1b0'); },
+    sew: r => { r(1, 12, 14, 3, K); r(2, 13, 12, 1, '#a8693a'); r(1, 11, 7, 1, '#f08cb4'); r(3, 3, 11, 4, K); r(4, 4, 9, 2, '#7fc8b4'); r(4, 4, 9, 1, '#b8eedd'); r(11, 3, 3, 9, K); r(12, 5, 1, 6, '#7fc8b4'); r(3, 6, 3, 5, K); r(4, 7, 1, 3, '#7fc8b4'); r(4, 10, 1, 2, '#e9eef2'); r(7, 0, 3, 3, K); r(8, 1, 1, 1, '#ff6fa8'); r(7, 5, 3, 1, '#f2c14e'); },
+    stuff: (r, d) => { r(3, 1, 10, 5, K); r(4, 2, 8, 3, '#c9d0d6'); r(5, 1, 2, 1, '#ffffff'); r(9, 0, 2, 2, '#ffffff'); r(7, 6, 2, 2, K); d(8, 10, 4, K); d(8, 10, 3, '#f08cb4'); r(6, 8, 2, 1, '#ffd0e4'); r(1, 14, 14, 2, K); r(2, 14, 12, 1, '#9b6bd6'); },
+    velour: r => { r(1, 2, 14, 12, K); r(2, 3, 12, 10, '#b0436e'); for (let k = 0; k < 6; k++) r(3 + k * 2, 11 - k, 2, 1, '#d9688f'); r(10, 3, 4, 4, K); r(11, 3, 3, 3, '#7a2a50'); r(2, 3, 12, 1, '#d9688f'); },
+    poufs: (r, d) => { d(8, 10, 6, K); d(8, 10, 5, '#f08cb4'); d(8, 8, 3, '#ffd0e4'); r(3, 11, 11, 1, '#c94f7c'); r(8, 6, 1, 5, '#c94f7c'); r(1, 1, 1, 3, '#f2c14e'); r(0, 2, 3, 1, '#f2c14e'); r(13, 0, 1, 3, '#f2c14e'); r(12, 1, 3, 1, '#f2c14e'); },
+    postman: r => { r(1, 4, 14, 10, K); r(2, 5, 12, 8, '#f3e9d2'); for (let k = 0; k < 5; k++) { r(2 + k, 5 + k, 1, 1, K); r(13 - k, 5 + k, 1, 1, K); } r(11, 6, 2, 2, '#d9535a'); r(4, 1, 1, 2, '#9aa3ad'); r(8, 0, 1, 3, '#9aa3ad'); r(11, 1, 1, 2, '#9aa3ad'); },
+    courier: r => { r(5, 3, 11, 10, K); r(6, 4, 9, 8, '#c98a4a'); r(6, 4, 9, 1, '#e5a86a'); r(10, 4, 2, 8, '#e9c046'); r(0, 5, 4, 1, '#9aa3ad'); r(1, 8, 3, 1, '#9aa3ad'); r(0, 11, 4, 1, '#9aa3ad'); r(6, 13, 3, 3, K); r(12, 13, 3, 3, K); },
+    customs: (r, d) => { r(1, 4, 3, 12, K); r(2, 5, 1, 10, '#9aa3ad'); r(1, 4, 15, 4, K); for (let k = 0; k < 6; k++) r(2 + k * 2, 5, 2, 2, k % 2 ? '#f4efe6' : '#d9535a'); d(11, 12, 3, K); d(11, 12, 2, '#f2c14e'); r(10, 11, 1, 1, '#fff1b0'); r(7, 13, 1, 1, '#f2c14e'); r(14, 9, 1, 1, '#f2c14e'); },
+    sub: (r, d) => { r(2, 1, 11, 14, K); r(3, 2, 9, 12, '#f3e9d2'); r(4, 3, 7, 2, '#d9535a'); for (let k = 0; k < 3; k++) r(4, 7 + k * 2, 7, 1, '#9aa3ad'); d(12, 12, 3, K); d(12, 12, 2, '#7ee081'); r(12, 11, 1, 3, K); r(11, 12, 3, 1, K); },
+    snailpost: (r, d) => { r(1, 13, 14, 2, K); r(2, 13, 12, 1, '#d9c08a'); r(0, 8, 4, 6, K); r(1, 9, 2, 4, '#d9c08a'); r(1, 10, 1, 1, K); r(0, 4, 1, 4, K); r(3, 4, 1, 4, K); d(10, 9, 5, K); d(10, 9, 4, '#c98a4a'); d(10, 9, 2, '#a06a36'); r(10, 9, 1, 1, '#e5a86a'); r(9, 0, 7, 5, K); r(10, 1, 5, 3, '#f3e9d2'); r(10, 1, 1, 1, K); r(14, 1, 1, 1, K); r(11, 2, 3, 1, K); },
+    // two snails grinning straight at you with big human teeth, pale shells behind them
+    snails: (r, d) => {
+      const SH = '#ddd0e4', ST = '#b39fc4', O = '#e8a060', LIP = '#d9773a', M = '#5a1a1e';
+      d(13, 8, 4, K); d(13, 8, 3, SH); r(12, 6, 3, 1, ST); r(15, 8, 1, 3, ST); d(3, 4, 4, K); d(3, 4, 3, SH); r(1, 2, 4, 1, ST); r(0, 4, 1, 2, ST);
+      for (const [ax, top, h] of [[2, 0, 5], [6, 0, 5], [10, 2, 5], [13, 2, 5]]) { r(ax, top + 1, 1, h, '#e0843e'); r(ax, top, 1, 1, '#fff1b0'); }
+      // [left, top, width, height, rows of teeth]
+      for (const [x, y, w, h, tall] of [[0, 5, 9, 11, 2], [8, 7, 7, 9, 1]]) {
+        r(x + 1, y, w - 2, 1, K); r(x, y + 1, w, h - 1, K); r(x + 1, y + 1, w - 2, h - 2, O);
+        r(x + 1, y + 1, w - 2, 1, LIP); r(x + 1, y + 2, w - 2, tall, '#ffffff');
+        const my = y + 2 + tall; r(x + 1, my, w - 2, 1, M);
+        for (let k = x + 2; k < x + w - 1; k += 2) r(k, my - 1, 1, 1, M);
+        r(x + 1, my + 1, w - 2, 1, '#f4efe6'); for (let k = x + 1; k < x + w - 1; k += 3) r(k, my + 1, 1, 1, M);
+        r(x + 1, my + 2, w - 2, 1, '#f2c08a'); r(x + 2, y + h - 3, w - 4, 1, '#f2c08a');
+      }
+    },
+    hand: (r, d) => { r(0, 8, 5, 5, K); r(1, 9, 3, 3, '#9aa3ad'); r(4, 8, 3, 1, K); r(4, 11, 3, 1, K); r(5, 9, 1, 2, '#c9d0d6'); r(1, 10, 1, 1, '#5b8fd6'); d(8, 7, 3, K); d(8, 7, 2, '#d9535a'); r(7, 6, 1, 1, '#ff9a8a'); r(8, 2, 1, 2, '#8a5a32'); r(9, 2, 2, 1, '#57b04f'); r(10, 8, 6, 5, K); r(11, 9, 5, 3, '#f2c7a5'); r(9, 9, 2, 1, K); r(10, 10, 1, 1, '#f2c7a5'); r(11, 11, 5, 1, '#d9a07f'); },
+    mLogistics: (r, d) => { badge(d); r(4, 5, 8, 7, K); r(5, 6, 6, 5, '#e0a32e'); r(5, 6, 6, 1, '#f5d66e'); r(7, 6, 2, 5, '#fff1b0'); },
+    thoth: (r, d, x) => { x.drawImage(SPR.thoth, 0, 0, 22, 22, 0, 0, 16, 16); },
+    rat: (r, d, x) => { x.drawImage(SPR.rat, 0, 0, 20, 20, 0, 0, 16, 16); },
+    lin: (r, d, x) => { x.drawImage(SPR.lin, 0, 0, 22, 22, 0, 0, 16, 16); },
+    horse: (r, d, x) => { x.drawImage(SPR.horse, 4, 0, 18, 18, 0, 0, 16, 16); },
+    rabbit: (r, d, x) => { x.drawImage(SPR.rabbit, 2, 1, 19, 19, 0, 0, 16, 16); },
     grease: r => { r(4, 3, 5, 1, K); r(4, 3, 1, 4, K); r(8, 3, 1, 4, K); r(1, 7, 10, 9, K); r(2, 8, 8, 7, '#5a6270'); r(3, 9, 2, 2, '#9aa3ad'); r(10, 5, 5, 2, K); r(14, 3, 2, 3, K); r(14, 8, 1, 2, '#f2c14e'); }
   };
   const CARD_ICON = {
@@ -515,10 +548,13 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     s_blade: 'blade', s_varnish: 'varnish', s_glaze: 'glaze', s_grease: 'grease',
     m_melt: 'melt', m_blower: 'blower', m_vitrage: 'vitrage', w_jeanne: 'jeanne', w_alien: 'alien', w_jedi: 'jedi', w_silver: 'silver', w_mrsha: 'mrsha', w_kast: 'kast', w_batya: 'batya', s_tint: 'tint', u_glass: 'glass',
     u_overtime: 'overtime', u_credit: 'credit', e_loner: 'loner', u_hack: 'hack', u_radio: 'radio', u_piggy: 'piggy', s_gold: 'goldgear', u_union: 'union',
-    x_speed: 'mSpeed', x_power: 'mPower', x_luck: 'mLuck', x_skill: 'mSkill', x_wholesale: 'mWholesale'
+    x_speed: 'mSpeed', x_power: 'mPower', x_luck: 'mLuck', x_skill: 'mSkill', x_wholesale: 'mWholesale',
+    m_engraver: 'engraver', m_lens: 'lens', m_sew: 'sew', m_stuff: 'stuff', s_velour: 'velour', u_poufs: 'poufs',
+    u_postman: 'postman', u_courier: 'courier', u_customs: 'customs', u_sub: 'sub', x_logistics: 'mLogistics', u_snailpost: 'snailpost',
+    s_hand: 'hand', u_snails: 'snails', w_thoth: 'thoth', w_rat: 'rat', w_lin: 'lin', w_horse: 'horse', w_rabbit: 'rabbit'
   };
   const ICONS = {};
-  for (const id in CARDS) ICONS[id] = makeIcon(ICON_DRAW[CARD_ICON[id]] || (r => { r(2, 2, 12, 12, K); r(3, 3, 10, 10, '#f2c14e'); }));
+  for (const id in CARD_ICON) ICONS[id] = makeIcon(ICON_DRAW[CARD_ICON[id]]);
 
   /* ================= state ================= */
   const KEY = 'pixel-factory-save-v1';
@@ -1270,6 +1306,26 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       R(x + 4, y + 1, 7, 1, 'rgba(255,255,255,.45)');
       const sx = Math.floor((t * 10) % 40); if (sx < 24) { R(x + 4 + sx, y + 3, 1, 1, '#ffffff'); R(x + 3 + sx, y + 4, 3, 1, 'rgba(255,255,255,.7)'); R(x + 4 + sx, y + 5, 1, 1, '#ffffff'); }
       R(x + 14, y + 22, 4, 6, K); R(x + 15, y + 22, 2, 5, '#8a5a32'); R(x + 5, y + 27, 22, 3, K); R(x + 6, y + 28, 20, 1, '#8a5a32');
+    } else if (type === 'engraver') {
+      R(x + 1, y + 22, 30, 4, K); R(x + 2, y + 23, 28, 2, '#5a6270'); R(x + 2, y + 23, 28, 1, '#7d8794'); R(x + 3, y + 26, 3, 4, K); R(x + 26, y + 26, 3, 4, K);
+      R(x + 3, y + 5, 17, 17, K); R(x + 4, y + 6, 15, 16, '#9fe6ef'); R(x + 4, y + 6, 15, 1, '#e9fff8'); R(x + 5, y + 7, 2, 1, '#ffffff');
+      // the engraved pattern: a little star with a frame
+      R(x + 7, y + 10, 9, 1, '#e9fff8'); R(x + 7, y + 18, 9, 1, '#e9fff8'); R(x + 7, y + 10, 1, 9, '#e9fff8'); R(x + 15, y + 10, 1, 9, '#e9fff8');
+      R(x + 11, y + 12, 1, 5, '#ffffff'); R(x + 9, y + 14, 5, 1, '#ffffff'); R(x + 10, y + 13, 3, 3, '#cff6fa');
+      R(x + 25, y + 1, 4, 21, K); R(x + 26, y + 2, 2, 20, '#c9d0d6');
+      const p = [[8, 10], [15, 10], [15, 18], [8, 18]][(Math.floor(t * 2) % 4 + 4) % 4], tx = x + p[0], ty = y + p[1];
+      R(tx, y + 1, 18 - p[0] + 9, 4, K); R(tx + 1, y + 2, 25 - p[0], 2, '#e0a32e');
+      R(tx, y + 5, 2, ty - y - 5, K); R(tx, y + 5, 1, ty - y - 6, '#e9eef2');
+      if (Math.floor(t * 8) % 2) { R(tx - 1, ty - 1, 1, 1, '#ffffff'); R(tx + 2, ty - 2, 1, 1, '#fff1b0'); R(tx + 2, ty + 1, 1, 1, '#ffffff'); }
+    } else if (type === 'lens') {
+      R(x + 2, y + 24, 28, 6, K); R(x + 3, y + 25, 26, 4, '#6a5a7a'); R(x + 3, y + 25, 26, 1, '#8f7fa3');
+      R(x, y + 9, 7, 9, K); R(x + 1, y + 10, 5, 7, '#9aa3ad'); R(x + 6, y + 11, 1, 5, '#f2c14e'); R(x + 2, y + 18, 3, 6, K);
+      // the light gathers through the lens into a hot spot
+      for (let k = 0; k < 7; k++) { R(x + 7 + k, y + 11 - Math.floor(k / 3), 1, 1, 'rgba(255,225,120,.7)'); R(x + 7 + k, y + 15 + Math.floor(k / 3), 1, 1, 'rgba(255,225,120,.7)'); }
+      for (let k = 0; k < 8; k++) { R(x + 20 + k, y + 10 + Math.floor(k * 0.4), 1, 1, 'rgba(255,225,120,.75)'); R(x + 20 + k, y + 16 - Math.floor(k * 0.4), 1, 1, 'rgba(255,225,120,.75)'); }
+      R(x + 14, y + 2, 7, 21, K); R(x + 15, y + 3, 5, 19, '#c9d0d6'); R(x + 16, y + 4, 3, 17, '#bfeef4'); R(x + 16, y + 5, 1, 4, '#ffffff'); R(x + 18, y + 14, 1, 5, '#7fd6e0');
+      R(x + 16, y + 22, 3, 2, K);
+      const hot = Math.floor(t * 5) % 2; R(x + 27, y + 12, 3, 3, hot ? '#fff1b0' : '#ffb35a'); R(x + 28, y + 13, 1, 1, '#ffffff');
     } else if (type === 'sew') {
       R(x + 1, y + 20, 30, 4, K); R(x + 2, y + 21, 28, 2, '#a8693a'); R(x + 2, y + 21, 28, 1, '#c98a52');
       R(x + 3, y + 24, 3, 6, K); R(x + 26, y + 24, 3, 6, K);
@@ -1424,7 +1480,10 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       const bob = Math.round(Math.abs(Math.sin((t - crate.born) * 4)) * 3);
       const x = crateX(), y = FL - 14 - bob;
       R(x + 1, FL - 2, 12, 2, 'rgba(30,20,40,.25)');
-      R(x, y, 14, 11, K); R(x + 1, y + 1, 12, 9, '#c98a4a'); R(x + 1, y + 1, 12, 1, '#e5a86a'); R(x + 6, y + 1, 2, 9, '#e9c046'); R(x + 1, y + 5, 12, 1, '#a06a36');
+      const CC = crate.kind === 'gold' ? ['#e0a32e', '#f5d66e', '#fff1b0', '#b8801f'] : ['#c98a4a', '#e5a86a', '#e9c046', '#a06a36'];
+      R(x, y, 14, 11, K); R(x + 1, y + 1, 12, 9, CC[0]); R(x + 1, y + 1, 12, 1, CC[1]); R(x + 6, y + 1, 2, 9, CC[2]); R(x + 1, y + 5, 12, 1, CC[3]);
+      // a card crate has a card sticking out of the lid
+      if (crate.kind === 'card') { R(x + 2, y - 6, 7, 8, K); R(x + 3, y - 5, 5, 6, '#9b6bd6'); R(x + 3, y - 5, 5, 1, '#c09af0'); R(x + 4, y - 3, 3, 2, '#f3e9d2'); }
       if (Math.floor(t * 3) % 2) { R(x + 13, y - 4, 1, 3, '#fff1b0'); R(x + 12, y - 3, 3, 1, '#fff1b0'); }
     }
     // locker room (shared by all workshops)
@@ -1905,7 +1964,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     saveTimer += dt; if (saveTimer > 5) { saveTimer = 0; save(); }
     if (toastTimer > 0) { toastTimer -= dt; if (toastTimer <= 0) $toast.hidden = true; }
   }
-  if (BOT) window.PF = { BAL, get state() { return state; }, set state(v) { state = v; }, meta, tick, totalIncome, globals, eligible, finish, unlockLoc, openCrate, cardPrice, skillCost, buyCard, startShift, curQuota, rerollCost, rollNewShop, shopRollCost, rollOffer, quotaTarget, quotaTime, newRun, workerPlace, slotStats, onStrike, rule, get crate() { return crate; }, CARDS, MACH, LOCS, SKILLS, LAYOUTS, WORKERS };
+  if (BOT) window.PF = { BAL, get state() { return state; }, set state(v) { state = v; }, meta, tick, totalIncome, globals, eligible, finish, unlockLoc, openCrate, cardPrice, skillCost, buyCard, startShift, curQuota, rerollCost, rollNewShop, shopRollCost, rollOffer, ICONS, quotaTarget, quotaTime, newRun, workerPlace, slotStats, onStrike, rule, get crate() { return crate; }, CARDS, MACH, LOCS, SKILLS, LAYOUTS, WORKERS };
   else requestAnimationFrame(loop);
 })();
 </script>
