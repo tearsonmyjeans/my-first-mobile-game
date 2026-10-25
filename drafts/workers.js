@@ -1,7 +1,7 @@
 // Черновик новых сотрудников: спрайты. В игру ещё не вставлено, статы, перки и скиллы не выбраны.
 // Список: Сквонч, Канеки, Макаронный монстр, Подсолнух ГВ2, Живой плющ/мухобойка, Медаедь.
 // Спрайты 23×32 (как у остальных), RLE как в game/index.html.
-// Статус: Канеки, Сквонч и Макаронный монстр нарисованы, ждут одобрения (превью drafts/kaneki-preview.png, drafts/squanch-preview.png, drafts/spaghetti-preview.png).
+// Статус: все шестеро нарисованы, ждут одобрения (превью drafts/kaneki-, squanch-, spaghetti-, sunflower-, flytrap-, honeybear-preview.png).
 
 // ===== Канеки: обычный (официант Антейку, повязка) и гуль на время скилла (белые волосы, маска, красные кагуне), как Сильвер → WOLF =====
   const KANEKI = ['7.8k8.', '5.2k8h2k6.', '4.k12hk5.', '3.k3h3=8hk4.', '2.k2h2=7h2=3hk3.', '2.k16hk3.', '2.k16hk3.', '2.k3hs6hs5hk3.', '2.k2h2s2hs2h2s2hs2hk3.', '2.kh2s4k2sD4WDhk3.', '2.khskWAWA2sWDWD3Wk3.', '2.khskWAGA2s5Wshk3.', '2.kh2s4k2sWDWDWshk3.', '2.khsc6sD3WDchk3.', '2.kh6s2m6shk3.', '3.2k12s2k4.', '5.4k4s4k6.', '2.k3W2g2W2%2W2g3Wk3.', '2.kDWk2g2Wm%2W2gkWDk3.', '2.kDWk3gW2mW3gkWDk3.', '2.kDWk4gm%4gkWDk3.', '2.kDWk4g%m4gkWDk3.', '2.kDWk4gGk4gkWDk3.', '2.kDWk4gG5gkWDk3.', '2.kDWk4gGk4gkWDk3.', '2.k2sk10Gk2sk3.', '2.k2sk10bk2sk3.', '5.k4b2k4bk6.', '5.k4b2k4bk6.', '5.kbN2b2k2bNbk6.', '4.k5B2k5Bk5.', '4.6k2.6k5.'];
@@ -14,6 +14,15 @@
 
 // ===== Макаронный монстр: глаза на стебельках с ленивыми веками, две фрикадельки, макаронные щупальца, держит большую вилку =====
   const SPAGHETTI = ['2.4k7.4k6.', '.k4yk5.k4yk5.', '.6k5.6k5.', '.kW2kWk5.kW2kWk5.', '.k4Wk5.k4Wk5.', '2.4k7.5k.k.k.', '2.kyYk7.kyY2kakaka', '3.kyYk5.kyYk.kakaka', '4.kyY4kyYk3.kakaka', '3.kxyY4xyYyk2.kakaka', '2.kx3y3Y4yJk.k5a', '2.ky2Y5y2YyJk2.kAaAk', '.4kyYyJyxJYy4k.kaAk', "k`'2CkyJyYyJyk`'2C2kaAk", "k2'CBkYyJyxJYk2'CB2kaAk", 'k3CBkyJyYyJyk3CB2kaAk', 'k2C2BkYyJyxJYk2C2B2kaAk', '.4k2yJyYyJ2y5kyYAk', 'k5yYyJyxJY7yJAk', 'yk.kJyY2yJ2yYyJ3k.2JAk', 'y3kyJkyJkyJkyJk3.kaAk', 'ykJkyJkyJkyJkyJk3.kaAk', 'kykyJ2kyJ2kyJkyJk2.kaAk', '.2kyJkyJk.kyJkyJk2.kaAk', '2.kyJkyJk.kyJ2kyJk.kaAk', '2.2kyJyJ2kyJk.kyJk.kaAk', '.kJkyJkyJkyJk.kyJk.kaAk', '.kyky2kyJkyJ2ky2Jk.kaAk', '2.kyk.kyJkyJ2kykJk.kaAk', '3.k3.kyJkyJ2kyk2.kaAk', '7.kyJkyJk.k3.kaAk', '8.2k.2k6.4k'];
+
+// ===== Подсолнух ГВ2: жёлтые лепестки, оранжевое лицо с улыбкой, румянцем и веснушками, стебель с листиками, большие листья вместо ног =====
+  const SUNFLOWER = ['8.3k.3k8.', '7.k3yk3yk7.', '4.3k!2y!k!2y!3k4.', '3.k2y!k3!k3!k!2yk3.', '2.k3y!Z7~Z!3yk2.', '3.ky2!~7&~2!yk3.', '.4k!~7&2Q~!4k.', 'k2y2!~2&2k&2Q2k2Q~2!2yk', 'k2y!~3&wB3QwB3Q~!2yk', '.ky!~&2Q2B3Q2B3Q~!yk.', '2.2k~3Q2k3Q2k3Q~2k2.', '.ky!~Q2~7Q2~X~!yk.', 'k2y!~2ck5Q2Xk2c~!2yk', 'k2y2!~2QkQ4Xk2X~2!2yk', '.4k~2QX5k3X~4k.', '3.kyZ~9X~Zyk3.', '2.k3yZ2~5X2~Z3yk2.', '3.k2yZkZ~X:}XZkZ2yk3.', '4.3kZ2yk:}kyZ3k4.', '7.k2yk:}3k7.', '7.4k:}2k2}k5.', '6.k2}2k:}2k:k6.', '7.k:2k:}k9.', '10.k:}k9.', '5.4k.k:}3k7.', '3.2k{3}2k:}k2}{2k4.', '2.k{4}2:k:}k:4}{k2.', '.k{4}3:k:}3:4}{k.', '.k3}4:2k:}k4:3}k.', '2.2k3:2k.k:}3k3:2k2.', '4.3k2.2k:}2k.3k4.', '10.4k9.'];
+
+// ===== Живой плющ/мухобойка: голова-ловушка с зубами и языком, шея-стебель, зубчатые листья, серый горшок, корни-ножки =====
+  const FLYTRAP = ['5.6k12.', '3.2kJ5L3k9.', '2.kJ9L3k7.', '.kJ7Lv3LkJk6.', 'k3Lv5L2v2LkLk6.', 'k9Mv3Lk8.', '.kWkWkWkWkMv2Lk8.', '.k9iM2L2k7.', '2k2i3E5iML3k6.', '2kWkWkWkWkiMLkLvk6.', 'k`k8MkLvk8.', "k`'k7MkLvk8.", '.k`k2O5MvkLvk7.', ".k`'9kLvk7.", '.k`k8.kLvk4.2k.', 'kLk9.kLvk2.kLJk.', 'kJ2L2k5.kLvk2.kMLJk.', '.kJ3L2k2.kLvk.2kM2LJk.', '.k3L2M2L2kLv2kL3M2Lk.', '2.kM2L2MLkLvk2M3LMk3.', '.21k.', '.k17D2^k.', '.kD3^f8^f3^2+k.', '2.4kf8kf5k2.', '.kfkD^F8^F2^+kfk.', '.kfkD13^+kfk.', '2.kfkD11^+kfk2.', '3.2kD11^+2k3.', '5.13k5.', '4.kfk.kfk.kfk.kfk4.', '3.kfk2.kfk.kfk2.kfk3.', '2.k2fk.kfFk.kFfk.k2fk2.'];
+
+// ===== Медаедь: бурый медведь стоит на двух лапах, обнимает горшок с мёдом, мёд на морде =====
+  const HONEYBEAR = ['2.2kC2k9.2kC2k2.', '.k5C9k5Ck.', ".kC2f2Ck4'3Ck2C2fCk.", ".kC2fC4'8C2fCk.", ".k3C3'13Ck.", "2.2k2'13C2k2.", "2.k'2C2k7C2k3Ck2.", '2.k3Cwk7Cwk3Ck2.', '2.k8Cf7CBk2.', '2.k2Cc3Cf3kf3Cc2Bk2.', '2.k5C3fk3f5Bk2.', '3.k4C2fkfk2f4Bk3.', '4.k3C2f&*&2f3Bk4.', '5.k3CBf&f4Bk5.', '6.2k7B2k6.', "2.3k2'9CB3k3.", ".k2'Ck'9CBk2CBk.", ".k2'Ck'9kBk2CBk.", ".k2'C2k*2&*3&*&2k2CBk.", ".k2'C2k&`&3`&2`2k2CBk.", ".k2'3C'k2-&3-k4CBk.", ".k2'4Ck-&*&-k4C2Bk.", "2.2k2'2Ck5-k2CB3k2.", "3.kC'Ck`5-mkC2Bk3.", "3.k2C2'7k4Bk3.", '3.k6C3F6Ck3.', '3.k6CkBk6Ck3.', '3.k6Ck.k6Ck3.', '3.k6Ck.k6Ck3.', '3.k6Ck.k6Ck3.', '3.2k4f2k.2k4f2k3.', '4.6k3.6k4.'];
 
 // ===== drafts/workshops-6-7.js, сцена пиццы: заменяет блок кота (от "// the cat:" до "// flour sacks") =====
 // Пока карта Сквонча не взята, он сидит за столиком; когда он на заводе, стул пустой.
