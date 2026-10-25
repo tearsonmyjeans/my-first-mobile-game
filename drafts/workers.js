@@ -1,7 +1,7 @@
 // Черновик новых сотрудников: спрайты. В игру ещё не вставлено, статы, перки и скиллы не выбраны.
 // Список: Сквонч, Канеки, Макаронный монстр, Подсолнух ГВ2, Живой плющ/мухобойка, Медаедь.
 // Спрайты 23×32 (как у остальных), RLE как в game/index.html.
-// Статус: все шестеро нарисованы, ждут одобрения (превью drafts/kaneki-, squanch-, spaghetti-, sunflower-, flytrap-, honeybear-preview.png).
+// Статус: все шестеро нарисованы; Макаронный монстр, Подсолнух, мухоловка и Медаедь одобрены, Канеки и Сквонч ждут одобрения (превью drafts/kaneki-, squanch-, spaghetti-, sunflower-, flytrap-, honeybear-preview.png).
 
 // ===== Канеки: обычный (официант Антейку, повязка) и гуль на время скилла (белые волосы, маска, красные кагуне), как Сильвер → WOLF =====
   const KANEKI = ['7.8k8.', '5.2k8h2k6.', '4.k12hk5.', '3.k3h3=8hk4.', '2.k2h2=7h2=3hk3.', '2.k16hk3.', '2.k16hk3.', '2.k3hs6hs5hk3.', '2.k2h2s2hs2h2s2hs2hk3.', '2.kh2s4k2sD4WDhk3.', '2.khskWAWA2sWDWD3Wk3.', '2.khskWAGA2s5Wshk3.', '2.kh2s4k2sWDWDWshk3.', '2.khsc6sD3WDchk3.', '2.kh6s2m6shk3.', '3.2k12s2k4.', '5.4k4s4k6.', '2.k3W2g2W2%2W2g3Wk3.', '2.kDWk2g2Wm%2W2gkWDk3.', '2.kDWk3gW2mW3gkWDk3.', '2.kDWk4gm%4gkWDk3.', '2.kDWk4g%m4gkWDk3.', '2.kDWk4gGk4gkWDk3.', '2.kDWk4gG5gkWDk3.', '2.kDWk4gGk4gkWDk3.', '2.k2sk10Gk2sk3.', '2.k2sk10bk2sk3.', '5.k4b2k4bk6.', '5.k4b2k4bk6.', '5.kbN2b2k2bNbk6.', '4.k5B2k5Bk5.', '4.6k2.6k5.'];
