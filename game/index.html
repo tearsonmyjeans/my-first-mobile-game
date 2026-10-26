@@ -443,8 +443,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     code80: { name: 'code80', role: 'Рэпер с макфлури', power: 1.1, speed: 1.2, luck: 0.1, perk: 'Макфлури: с любой едой на нём или на его станке скорость ×1,4.' },
     yeti: { name: 'Йети', role: 'Вяжет шарф', power: 1.5, speed: 0.9, luck: 0.08, perk: 'Вяжет шарф: каждые 20 с смены работникам соседних станков +5% силы, до +25%. В новой смене шарф вяжется заново.' },
     slime: { name: 'Слаймочка', she: true, role: 'Девочка из слизи', power: 0.9, speed: 1.1, luck: 0.1, perk: 'Липкая: карты соседних станков прилипают и действуют на её станок тоже (кроме карт связей и всего цеха).' },
-    moth: { name: 'Молька', she: true, role: 'Шесть рук', power: 0.8, speed: 1.5, luck: 0.05, perk: 'Шесть рук: экипировка на ней действует в полтора раза сильнее (Каска ×1,4 становится ×1,66).' },
-    gastriter: { name: 'Гастритер', role: 'Райдер на самокате', power: 1.3, speed: 1.2, luck: 0.05, perk: 'Гастрит: еда на нём действует вдвое (Медовик ×1,4 становится ×1,96), но каждая еда даёт скорость ×0,9.' },
+    moth: { name: 'Молька', she: true, role: 'Шесть рук', power: 0.8, speed: 1.5, luck: 0.05, perk: 'Шесть рук: экипировка на ней действует в полтора раза сильнее (Каска +40% становится +60%).' },
+    gastriter: { name: 'Гастритер', role: 'Райдер на самокате', power: 1.3, speed: 1.2, luck: 0.05, perk: 'Гастрит: еда на нём действует вдвое (Медовик +40% становится +80%), но каждая еда даёт скорость ×0,9.' },
     palach: { name: 'Палач', role: 'Кадровик', power: 1.4, speed: 1.0, luck: 0.05, perk: 'Предупреждение: в начале смены самый слабый работающий сосед боится увольнения, у него сила ×1,6 до конца смены.' },
     thief: { name: 'Воришка', she: true, role: 'Карманница', power: 1.0, speed: 1.3, luck: 0.15, perk: 'Стащила: в начале смены копирует себе случайную экипировку соседа по шкафчику до конца смены.' },
     raccoons: { name: 'Три енота в плаще', role: 'Совсем не еноты', power: 0.7, speed: 0.9, luck: 0.05, perk: 'Трое в плаще: с шансом 33% вместо одной штуки выходят три.' },
@@ -532,21 +532,21 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     m_wire: { name: 'Волочильный стан', type: 'machine', machine: 'wire', tag: 'Станки', rar: 0, desc: 'Гвоздь стоит 8. Рядом с гвоздильным автоматом: +30% его скорости.' },
     m_nailer: { name: 'Гвоздильный автомат', type: 'machine', machine: 'nailer', tag: 'Станки', rar: 0, desc: 'Гвоздь стоит 5, но очень быстро. Рядом с барабаном: +25% к цене.' },
     m_tumbler: { name: 'Галтовочный барабан', type: 'machine', machine: 'tumbler', tag: 'Станки', rar: 1, desc: 'Гвоздь стоит 25. Медленный, зато блестит.' },
-    s_zinc: { name: 'Оцинковка', type: 'mupg', loc: 2, tag: 'Улучшения', rar: 0, eff: { value: 1.5 }, desc: 'Гвозди с этого станка: цена ×1,5.' },
-    u_nails: { name: 'Ремонт по всей стране', type: 'global', tag: 'Улучшения', rar: 1, loc: 2, eff: { nailPrice: 1.6 }, desc: 'Гвозди: цена ×1,6.' },
-    u_power: { name: 'Тренажёр в подсобке', type: 'global', tag: 'Сотрудники', rar: 0, eff: { power: 1.3 }, desc: 'Все сотрудники: сила ×1,3.' },
-    u_speed: { name: 'Перекур отменён', type: 'global', tag: 'Сотрудники', rar: 0, eff: { speed: 1.3 }, desc: 'Все сотрудники: скорость ×1,3.' },
-    u_price: { name: 'Реклама на радио', type: 'global', tag: 'Улучшения', rar: 1, eff: { price: 1.3 }, desc: 'Всё, что делает завод: цена ×1,3.' },
-    u_bricks: { name: 'Стройка по соседству', type: 'global', tag: 'Улучшения', rar: 1, loc: 1, eff: { brickPrice: 1.6 }, desc: 'Кирпичи: цена ×1,6.' },
-    e_coffee: { name: 'Крепкий кофе', type: 'equip', tag: 'Экипировка', rar: 1, eff: { speed: 1.3 }, desc: 'Скорость ×1,3. Мистер Жопосранчик с кофе работает в полную силу.' },
-    e_helmet: { name: 'Каска', type: 'equip', tag: 'Экипировка', rar: 0, eff: { power: 1.4 }, desc: 'Сила ×1,4.' },
-    e_gloves: { name: 'Перчатки', type: 'equip', tag: 'Экипировка', rar: 0, eff: { power: 1.25, speed: 1.25 }, desc: 'Сила и скорость ×1,25.' },
-    e_mask: { name: 'Респиратор', type: 'equip', tag: 'Экипировка', rar: 0, eff: { power: 1.15, speed: 1.15 }, desc: 'Сила и скорость ×1,15, а во время проверки ×1,6: инспектор доволен.' },
+    s_zinc: { name: 'Оцинковка', type: 'mupg', loc: 2, tag: 'Улучшения', rar: 0, eff: { value: 1.5 }, desc: 'Гвозди с этого станка: цена +50%.' },
+    u_nails: { name: 'Ремонт по всей стране', type: 'global', tag: 'Улучшения', rar: 1, loc: 2, eff: { nailPrice: 1.6 }, desc: 'Гвозди: цена +60%.' },
+    u_power: { name: 'Тренажёр в подсобке', type: 'global', tag: 'Сотрудники', rar: 0, eff: { power: 1.3 }, desc: 'Все сотрудники: сила +30%.' },
+    u_speed: { name: 'Перекур отменён', type: 'global', tag: 'Сотрудники', rar: 0, eff: { speed: 1.3 }, desc: 'Все сотрудники: скорость +30%.' },
+    u_price: { name: 'Реклама на радио', type: 'global', tag: 'Улучшения', rar: 1, eff: { price: 1.3 }, desc: 'Всё, что делает завод: цена +30%.' },
+    u_bricks: { name: 'Стройка по соседству', type: 'global', tag: 'Улучшения', rar: 1, loc: 1, eff: { brickPrice: 1.6 }, desc: 'Кирпичи: цена +60%.' },
+    e_coffee: { name: 'Крепкий кофе', type: 'equip', tag: 'Экипировка', rar: 1, eff: { speed: 1.3 }, desc: 'Скорость +30%. Мистер Жопосранчик с кофе работает в полную силу.' },
+    e_helmet: { name: 'Каска', type: 'equip', tag: 'Экипировка', rar: 0, eff: { power: 1.4 }, desc: 'Сила +40%.' },
+    e_gloves: { name: 'Перчатки', type: 'equip', tag: 'Экипировка', rar: 0, eff: { power: 1.25, speed: 1.25 }, desc: 'Сила и скорость +25%.' },
+    e_mask: { name: 'Респиратор', type: 'equip', tag: 'Экипировка', rar: 0, eff: { power: 1.15, speed: 1.15 }, desc: 'Сила и скорость +15%, а во время проверки +60%: инспектор доволен.' },
     e_horseshoe: { name: 'Подкова на удачу', type: 'equip', tag: 'Экипировка', rar: 1, eff: { luck: 0.30 }, desc: '+30% шанс сделать двойную штуку.' },
-    e_chainsaw: { name: 'Бензопила', type: 'equip', tag: 'Экипировка', rar: 2, eff: { speed: 1.35 }, desc: 'Скорость ×1,35.' },
-    s_blade: { name: 'Острое полотно', type: 'mupg', loc: 0, tag: 'Улучшения', rar: 0, eff: { rate: 1.5 }, desc: 'Станок в цеху досок: скорость ×1,5.' },
-    s_varnish: { name: 'Лак', type: 'mupg', loc: 0, tag: 'Улучшения', rar: 0, eff: { value: 1.5 }, desc: 'Доски с этого станка: цена ×1,5.' },
-    s_glaze: { name: 'Глазурь', type: 'mupg', loc: 1, tag: 'Улучшения', rar: 0, eff: { value: 1.5 }, desc: 'Кирпичи с этого станка: цена ×1,5.' },
+    e_chainsaw: { name: 'Бензопила', type: 'equip', tag: 'Экипировка', rar: 2, eff: { speed: 1.35 }, desc: 'Скорость +35%.' },
+    s_blade: { name: 'Острое полотно', type: 'mupg', loc: 0, tag: 'Улучшения', rar: 0, eff: { rate: 1.5 }, desc: 'Станок в цеху досок: скорость +50%.' },
+    s_varnish: { name: 'Лак', type: 'mupg', loc: 0, tag: 'Улучшения', rar: 0, eff: { value: 1.5 }, desc: 'Доски с этого станка: цена +50%.' },
+    s_glaze: { name: 'Глазурь', type: 'mupg', loc: 1, tag: 'Улучшения', rar: 0, eff: { value: 1.5 }, desc: 'Кирпичи с этого станка: цена +50%.' },
     m_melt: { name: 'Стекловарка', type: 'machine', machine: 'melt', tag: 'Станки', rar: 0, desc: 'Стекло стоит 30. Рядом со стеклодувкой: +30% её скорости.' },
     m_blower: { name: 'Стеклодувка', type: 'machine', machine: 'blower', tag: 'Станки', rar: 1, desc: 'Стекло стоит 70. Рядом с витражом: +25% к его цене.' },
     m_vitrage: { name: 'Витражный стол', type: 'machine', machine: 'vitrage', tag: 'Станки', rar: 1, desc: 'Стекло стоит 180. Медленно, зато красиво.' },
@@ -611,23 +611,23 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     m_airfryer: { name: 'Аэрогриль', type: 'machine', machine: 'airfryer', tag: 'Станки', rar: 1, desc: 'Калибровка стоит 14B. Рядом с унитазом: сила обоих ×2.' },
     m_shorts: { name: 'Студия коротких видео', type: 'machine', machine: 'shorts', tag: 'Станки', rar: 1, desc: 'Калибровка стоит 8B. Соседям +15% к цене.' },
     m_drinks: { name: 'Автомат с пивом и колой', type: 'machine', machine: 'drinks', tag: 'Станки', rar: 1, desc: 'Калибровка стоит 11B. Унитазу рядом +30% скорости.' },
-    s_velour: { name: 'Велюр', type: 'mupg', loc: 4, tag: 'Улучшения', rar: 0, eff: { value: 1.5 }, desc: 'Пуфики с этого станка: цена ×1,5.' },
-    u_poufs: { name: 'Мода на пуфики', type: 'global', tag: 'Улучшения', rar: 1, loc: 4, eff: { poufPrice: 1.6 }, desc: 'Пуфики: цена ×1,6.' },
-    s_tint: { name: 'Цветное стекло', type: 'mupg', loc: 3, tag: 'Улучшения', rar: 0, eff: { value: 1.5 }, desc: 'Стекло с этого станка: цена ×1,5.' },
-    u_glass: { name: 'Витрины в городе', type: 'global', tag: 'Улучшения', rar: 1, loc: 3, eff: { glassPrice: 1.6 }, desc: 'Стекло: цена ×1,6.' },
-    s_grease: { name: 'Смазка', type: 'mupg', tag: 'Улучшения', rar: 1, eff: { rate: 1.4, value: 1.2 }, desc: 'Любой станок: скорость ×1,4 и цена ×1,2.' },
+    s_velour: { name: 'Велюр', type: 'mupg', loc: 4, tag: 'Улучшения', rar: 0, eff: { value: 1.5 }, desc: 'Пуфики с этого станка: цена +50%.' },
+    u_poufs: { name: 'Мода на пуфики', type: 'global', tag: 'Улучшения', rar: 1, loc: 4, eff: { poufPrice: 1.6 }, desc: 'Пуфики: цена +60%.' },
+    s_tint: { name: 'Цветное стекло', type: 'mupg', loc: 3, tag: 'Улучшения', rar: 0, eff: { value: 1.5 }, desc: 'Стекло с этого станка: цена +50%.' },
+    u_glass: { name: 'Витрины в городе', type: 'global', tag: 'Улучшения', rar: 1, loc: 3, eff: { glassPrice: 1.6 }, desc: 'Стекло: цена +60%.' },
+    s_grease: { name: 'Смазка', type: 'mupg', tag: 'Улучшения', rar: 1, eff: { rate: 1.4, value: 1.2 }, desc: 'Любой станок: скорость +40% и цена +20%.' },
     // cards with a minus: the minus line is shown in red on the card
-    u_overtime: { name: 'Сверхурочка', type: 'global', tag: 'Сотрудники', rar: 3, eff: { speed: 1.8, power: 0.8 }, desc: 'Все сотрудники: скорость ×1,8.', minus: 'Сила всех ×0,8.' },
+    u_overtime: { name: 'Сверхурочка', type: 'global', tag: 'Сотрудники', rar: 3, eff: { speed: 1.8, power: 0.8 }, desc: 'Все сотрудники: скорость +80%.', minus: 'Сила всех ×0,8.' },
     u_credit: { name: 'Кредит', type: 'global', tag: 'Улучшения', rar: 1, eff: {}, desc: 'Сразу монеты в размере прошлой квоты.', minus: 'Квота следующей смены ×1,25.' },
     e_loner: { name: 'Одиночка', type: 'equip', tag: 'Экипировка', rar: 2, eff: {}, desc: 'Сила ×2,2, если на соседних станках никто не работает.', minus: 'С работающими соседями сила ×0,6.' },
-    u_hack: { name: 'Халтура', type: 'global', tag: 'Улучшения', rar: 2, eff: { price: 1.6 }, desc: 'Всё, что делает завод: цена ×1,6.', minus: 'Удачи нет: двойных штук не будет.' },
+    u_hack: { name: 'Халтура', type: 'global', tag: 'Улучшения', rar: 2, eff: { price: 1.6 }, desc: 'Всё, что делает завод: цена +60%.', minus: 'Удачи нет: двойных штук не будет.' },
     // legendary engines grow with the run
     u_radio: { name: 'Сарафанное радио', type: 'global', tag: 'Улучшения', rar: 3, eff: {}, desc: 'Цена всего ×1,1 за каждую квоту, пройденную после этой карты.' },
     u_piggy: { name: 'Копилка', type: 'global', tag: 'Улучшения', rar: 3, eff: {}, desc: 'В каждом перерыве приносит 10% монет, заработанных за смену.' },
     s_gold: { name: 'Золотой станок', type: 'mupg', tag: 'Улучшения', rar: 3, eff: {}, desc: 'Любой станок: цена ×1,1 за каждую карту «Станки» в колоде.' },
     u_union: { name: 'Профсоюз', type: 'global', tag: 'Сотрудники', rar: 3, eff: {}, desc: 'Все сотрудники: сила +5% за каждого сотрудника на заводе.' },
     s_hand: { name: 'Рука помощи', type: 'mupg', tag: 'Улучшения', rar: 2, eff: {}, desc: 'Действует на весь цех: самый высокий множитель каждого станка (сила, скорость или цена) ещё ×1,3.' },
-    u_snails: { name: 'Зубастые улитки', type: 'global', tag: 'Улучшения', rar: 1, eff: { price: 1.4 }, desc: 'Всё, что делает завод: цена ×1,4.', minus: 'Скорость всех ×0,85.' },
+    u_snails: { name: 'Зубастые улитки', type: 'global', tag: 'Улучшения', rar: 1, eff: { price: 1.4 }, desc: 'Всё, что делает завод: цена +40%.', minus: 'Скорость всех ×0,85.' },
     // crate cards pay a share of the quota, so each comes once per run: copies would outgrow the quotas
     u_postman: { name: 'Почтальон', type: 'global', tag: 'Улучшения', rar: 0, once: true, eff: {}, desc: 'Посылки приходят вдвое чаще.' },
     u_courier: { name: 'Курьер', type: 'global', tag: 'Улучшения', rar: 1, once: true, eff: {}, desc: 'Если посылку не открыть, курьер откроет её сам за половину монет.' },
@@ -636,30 +636,30 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     u_sub: { name: 'Подписка', type: 'global', tag: 'Улучшения', rar: 3, once: true, eff: {}, desc: 'Каждая открытая посылка: +3% ко всему доходу до конца забега.' },
     // food: true marks food and drinks: Kaneki will refuse them, Crackers like company
     u_scotch: { name: 'Скотч братан', type: 'global', tag: 'Сотрудники', rar: 1, eff: {}, desc: 'Соседи по шкафчику дружат крепче: +15% силы вместо +5%.' },
-    e_thirst: { name: 'Сушняк', type: 'equip', tag: 'Экипировка', rar: 0, food: true, eff: { power: 1.5, speed: 0.8 }, desc: 'Газировка. Сила ×1,5. С Газявой: «Утро после».', minus: 'Скорость ×0,8.' },
+    e_thirst: { name: 'Сушняк', type: 'equip', tag: 'Экипировка', rar: 0, food: true, eff: { power: 1.5, speed: 0.8 }, desc: 'Газировка. Сила +50%. С Газявой: «Утро после».', minus: 'Скорость ×0,8.' },
     // timed: the card changes during a shift, so its gain is judged by the shift's mean income
-    e_soda: { name: 'Газява', type: 'equip', tag: 'Экипировка', rar: 0, food: true, timed: true, eff: {}, desc: 'Скорость ×1,5 первые 30 с смены, потом выдыхается до ×1,1.' },
-    s_plumbus: { name: 'Плюмбус', type: 'mupg', tag: 'Улучшения', rar: 2, eff: { value: 1.3 }, desc: 'Любой станок: цена ×1,3. Для комплектов считается картой всех тегов сразу.' },
+    e_soda: { name: 'Газява', type: 'equip', tag: 'Экипировка', rar: 0, food: true, timed: true, eff: {}, desc: 'Скорость +50% первые 30 с смены, потом выдыхается до +10%.' },
+    s_plumbus: { name: 'Плюмбус', type: 'mupg', tag: 'Улучшения', rar: 2, eff: { value: 1.3 }, desc: 'Любой станок: цена +30%. Для комплектов считается картой всех тегов сразу.' },
     u_squanch: { name: 'Посквончим', type: 'global', tag: 'Улучшения', rar: 1, eff: {}, desc: 'В начале каждой смены случайно сила, скорость или цена всех ×1,3.' },
     u_hyper: { name: 'Гипер гипергамия', type: 'global', tag: 'Сотрудники', rar: 3, eff: {}, desc: 'Сила каждой сотрудницы как у самого сильного сотрудника завода, и ещё ×1,2.' },
     u_triad: { name: 'Друн триад', type: 'global', tag: 'Сотрудники', rar: 2, eff: {}, desc: 'Трое в соседних шкафчиках подряд в одном ряду: у всех троих сила и скорость ×1,3.' },
     s_veins: { name: 'Капилляры', type: 'mupg', tag: 'Улучшения', rar: 2, eff: {}, desc: 'Любой станок: связан и с соседями по диагоналям.' },
     s_banner: { name: 'Знамя', type: 'mupg', tag: 'Улучшения', rar: 1, eff: {}, desc: 'Все сотрудники цеха этого станка: +20% силы.' },
-    s_sponge: { name: 'Губки 44', type: 'mupg', tag: 'Улучшения', rar: 1, eff: { value: 1.44 }, desc: 'Любой станок: цена ×1,44, а каждая 44-я штука ×4,4.' },
+    s_sponge: { name: 'Губки 44', type: 'mupg', tag: 'Улучшения', rar: 1, eff: { value: 1.44 }, desc: 'Любой станок: цена +44%, а каждая 44-я штука ×4,4.' },
     u_zorya: { name: 'Зоря из Зорвеля', type: 'global', tag: 'Улучшения', rar: 2, timed: true, eff: {}, desc: 'Первые 20 с смены цена всего ×2. Пришельцы (Пришелец и Трёхглазик): +30% силы всю смену.' },
-    s_ketchup: { name: 'Кетчуп', type: 'mupg', tag: 'Улучшения', rar: 0, food: true, eff: { value: 1.4 }, desc: 'Любой станок: цена ×1,4.' },
+    s_ketchup: { name: 'Кетчуп', type: 'mupg', tag: 'Улучшения', rar: 0, food: true, eff: { value: 1.4 }, desc: 'Любой станок: цена +40%.' },
     e_mirror: { name: 'Зеркальная броня', type: 'equip', tag: 'Экипировка', rar: 2, eff: {}, desc: 'Минусы карт и проверки на него не действуют. Главная мразь цеха, если крысит у него, сама теряет силу.' },
-    s_spice: { name: 'Хмели-сунели', type: 'mupg', tag: 'Улучшения', rar: 0, food: true, eff: { value: 1.25, luck: 0.1 }, desc: 'Любой станок: цена ×1,25 и +10% удачи.' },
-    s_sauce: { name: 'Кисло-сладкий соус', type: 'mupg', tag: 'Улучшения', rar: 1, food: true, eff: { value: 1.6, rate: 0.9 }, desc: 'Любой станок: цена ×1,6.', minus: 'Скорость станка ×0,9.' },
-    e_crackers: { name: 'Крекеры', type: 'equip', tag: 'Экипировка', rar: 0, food: true, eff: {}, desc: 'Сила ×1,3, а если в шкафчике есть ещё еда, ×1,5.' },
+    s_spice: { name: 'Хмели-сунели', type: 'mupg', tag: 'Улучшения', rar: 0, food: true, eff: { value: 1.25, luck: 0.1 }, desc: 'Любой станок: цена +25% и +10% удачи.' },
+    s_sauce: { name: 'Кисло-сладкий соус', type: 'mupg', tag: 'Улучшения', rar: 1, food: true, eff: { value: 1.6, rate: 0.9 }, desc: 'Любой станок: цена +60%.', minus: 'Скорость станка ×0,9.' },
+    e_crackers: { name: 'Крекеры', type: 'equip', tag: 'Экипировка', rar: 0, food: true, eff: {}, desc: 'Сила +30%, а если в шкафчике есть ещё еда, +50%.' },
     s_glue: { name: 'Супер клей', type: 'mupg', tag: 'Улучшения', rar: 1, eff: {}, desc: 'Остальные карты этого станка действуют и на соседние станки. Забастовка не забирает его сотрудника.' },
     u_fattoad: { name: 'Тучный жаб', type: 'global', tag: 'Улучшения', rar: 1, timed: true, eff: {}, desc: 'Цена всего +3% за каждые 10 с смены, до +27%. В конце смены сдувается.' },
     u_novapost: { name: 'Нова пошта', type: 'global', tag: 'Улучшения', rar: 2, once: true, eff: {}, desc: 'Раз за смену гарантированно приходит посылка с картой.' },
     e_shadow: { name: 'Тень', type: 'equip', tag: 'Экипировка', rar: 2, eff: {}, desc: 'Повторяет перк работающего соседа по станку с самым большим доходом.' },
     u_pizza4: { name: 'Пицца 4 сына', type: 'global', tag: 'Сотрудники', rar: 1, food: true, eff: {}, desc: 'Четыре самых сильных сотрудника завода: сила ×1,4.' },
     e_pillow: { name: 'Подушка-подружка', type: 'equip', tag: 'Экипировка', rar: 0, eff: {}, desc: 'Считается соседом по шкафчику: +5% силы, а без соседей по шкафчику +15%.' },
-    e_honeycake: { name: 'Медовик', type: 'equip', tag: 'Экипировка', rar: 0, food: true, eff: { power: 1.4 }, desc: 'Сила ×1,4.' },
-    e_jelly: { name: 'Желе', type: 'equip', tag: 'Экипировка', rar: 0, food: true, eff: { speed: 1.4 }, desc: 'Скорость ×1,4, у Слаймочки ×2.' },
+    e_honeycake: { name: 'Медовик', type: 'equip', tag: 'Экипировка', rar: 0, food: true, eff: { power: 1.4 }, desc: 'Сила +40%.' },
+    e_jelly: { name: 'Желе', type: 'equip', tag: 'Экипировка', rar: 0, food: true, eff: { speed: 1.4 }, desc: 'Скорость +40%, у Слаймочки +100%.' },
     m_pump: { name: 'Кирпичный насос', type: 'machine', machine: 'pump', tag: 'Станки', rar: 2, desc: 'Кирпич стоит 8. Работает без сотрудника, как сотрудник с силой 0,5 и скоростью 1,0.' },
     e_flipflop: { name: 'Сланец победы', type: 'equip', tag: 'Экипировка', rar: 1, eff: {}, desc: 'Когда квота смены уже выполнена, его доход ×1,5 до конца смены, у Бати ×2.' },
     u_waffle: { name: 'День вафель', type: 'global', tag: 'Улучшения', rar: 2, eff: {}, desc: 'Каждая 5-я смена: весь доход ×2.' },
@@ -1088,7 +1088,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   // xp/shop/quota grow geometrically, every levelEvery-th level gives a card, crates come every crate..2×crate seconds;
   // a crate holds a share of the quota: plain crateQ, gold crateGoldQ (chance crateGold), or a card pick (chance crateCard);
   // crates pay at most crateCap of the quota a shift, so they help but never carry it; from shift skillCoinQ skills are opened only by cards
-  const BAL = { tempo: 2, xp0: 15, xpK: 2.2, levelEvery: 3, shopQ: 0.3, shopRoll: 1, rarPrice: [0.6, 1, 1.6, 2.4], masteryEvery: 9, crate: 40, crateQ: [0.02, 0.06], crateGoldQ: [0.08, 0.12], crateGold: 0.1, crateCard: 0.05, quotaT: 90, quota0: 210, quotaK: 1.8, quotaA: 1.06, crateCap: 0.3, skillCoinQ: 10, cap: 3 };
+  const BAL = { tempo: 2, xp0: 15, xpK: 2.2, levelEvery: 3, shopQ: 0.3, shopRoll: 1, rarPrice: [0.6, 1, 1.6, 2.4], masteryEvery: 9, crate: 40, crateQ: [0.02, 0.06], crateGoldQ: [0.08, 0.12], crateGold: 0.1, crateCard: 0.05, quotaT: 90, quota0: 210, quotaK: 1.9, quotaA: 1.06, crateCap: 0.3, skillCoinQ: 10, cap: 3, trio: 3, add: true };
   const need = l => Math.round(BAL.xp0 * Math.pow(BAL.xpK, l - 1));
   // the showcase is priced off the quota just passed, so a runaway income cannot make cards free
   const shopBase = () => quotaTarget(Math.max(1, state.run.q - 1)) * BAL.shopQ;
@@ -1183,6 +1183,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   };
   const rule = id => !!(state.run.rule && state.run.rule.id === id);
   const hasEq = (w, e) => !!w && state.workers[w].equip.includes(e);
+  // Triple: three copies of one card in a locker or on a machine; its machine earns ×BAL.trio
+  const trioOf = cards => cards.find(c => cards.filter(x => x === c).length >= 3);
   // the thief does not copy equipment that works outside the worker's own numbers
   const STEAL_SKIP = ['e_loner', 'e_salve', 'e_flipflop', 'e_shadow', 'e_mirror'];
   // the strike takes a working worker, but not one in Mirror armour or at a machine with Super glue
@@ -1283,7 +1285,14 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     // tag sets add up, card effects are multipliers (powerX and so on) so every card stays as strong as its number
     const g = { power: pr('Сотрудники') * 0.05, speed: pr('Экипировка') * 0.05, price: pr('Станки') * 0.05, powerX: 1, speedX: 1, priceX: 1, locX: LOCS.map(() => 1), income: 1 + pr('Улучшения') * 0.03, tc, combos: [] };
     const LOC_KEY = { brickPrice: 1, nailPrice: 2, glassPrice: 3, poufPrice: 4 };
-    state.cards.forEach(id => { const cd = CARDS[id]; if (cd.type === 'global') for (const k in cd.eff) { if (k in LOC_KEY) g.locX[LOC_KEY[k]] *= cd.eff[k]; else g[k + 'X'] *= cd.eff[k]; } });
+    // plain bonuses of the same kind add up (two Gyms: +60%), minuses and mastery cards multiply
+    const add = {};
+    state.cards.forEach(id => { const cd = CARDS[id]; if (cd.type === 'global') for (const k in cd.eff) {
+      const v = cd.eff[k], key = k in LOC_KEY ? 'loc' + LOC_KEY[k] : k;
+      if (BAL.add && v > 1 && !cd.mastery) add[key] = (add[key] || 0) + v - 1;
+      else if (k in LOC_KEY) g.locX[LOC_KEY[k]] *= v; else g[k + 'X'] *= v;
+    } });
+    for (const key in add) { if (key.startsWith('loc')) g.locX[+key.slice(3)] *= 1 + add[key]; else g[key + 'X'] *= 1 + add[key]; }
     // Radio grows with every quota passed after it was taken; Union with every worker on the factory
     (state.run.radio || []).forEach(q0 => { g.priceX *= Math.pow(1.1, passedQ() - q0); });
     const crewIds = Object.keys(state.workers).filter(id => state.workers[id].unlocked), crew = crewIds.length;
@@ -1415,7 +1424,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   }
   function workerStats(id, g) {
     const base = WORKERS[id], st = state.workers[id], mirror = hasEq(id, 'e_mirror'), sT = shiftT();
-    let p = 1, s = 1, l = 0;
+    let p = 1, s = 1, l = 0, pA = 0, sA = 0;
     // Mirror armour ignores inspections: coffee still works for it on a Sanepid
     const banned = e => e === 'e_coffee' && rule('sanepid') && !mirror;
     // the thief wears a copy of the equipment she stole this shift
@@ -1430,10 +1439,17 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       if (e === 'e_thirst' && (mirror || morning)) ef = { power: 1.5 };
       if (e === 'e_soda') ef = { speed: sT != null && sT < 30 ? 1.5 : 1.1 };
       if (e === 'e_crackers') ef = { power: food > 1 ? 1.5 : 1.3 };
+      // Medovik is the honey bear's favourite, Jelly is the slime girl's own kind
+      if (e === 'e_honeycake' && id === 'honeybear') ef = { power: 1.8 };
+      if (e === 'e_jelly' && id === 'slime') ef = { speed: 2 };
       // the moth's six arms make equipment ×1,5 as strong, the gastriter's food works twice
       const k = id === 'moth' ? 1.5 : id === 'gastriter' && CARDS[e].food ? 2 : 1;
-      p *= Math.pow(ef.power || 1, k); s *= Math.pow(ef.speed || 1, k); l += (ef.luck || 0) * k;
+      const pw = ef.power || 1, sp = ef.speed || 1;
+      if (BAL.add && pw > 1) pA += (pw - 1) * k; else p *= Math.pow(pw, k);
+      if (BAL.add && sp > 1) sA += (sp - 1) * k; else s *= Math.pow(sp, k);
+      l += (ef.luck || 0) * k;
     });
+    p *= 1 + pA; s *= 1 + sA;
     if (morning) s *= 1.3;
     if (id === 'gastriter') s *= Math.pow(0.9, food);
     // a friendship is +5%, with Scotch bro +15%; Mr P (or a Shadow copying him) gives 5% more; a Pillow buddy is one more friend, a better one for the lonely
@@ -1447,10 +1463,6 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     let power = bp * (1 + g.power + fb) * g.powerX * p;
     if (mirror) power /= g.minusPower;
     if (g.pizza.includes(id) && id !== 'kaneki') power *= Math.pow(1.4, cardN('u_pizza4'));
-    // Medovik is the honey bear's favourite: ×1,8 instead of ×1,4
-    if (id === 'honeybear') power *= Math.pow(1.8 / 1.4, st.equip.filter(e => e === 'e_honeycake').length);
-    // Jelly is the slime girl's own kind: speed ×2 instead of ×1,4
-    if (id === 'slime') speed *= Math.pow(2 / 1.4, st.equip.filter(e => e === 'e_jelly').length);
     // Squanch's roll for the shift; before his first roll it counts at its mean. Drinking buddies: +15% luck to both
     let lx = g.drink && (id === 'squanch' || id === 'batya') ? 0.15 : 0;
     if (id === 'squanch') { const k = state.run.sqK, f = k ? 1 : 1 / 3; if (!k || k === 'power') power *= Math.pow(1.5, f); if (!k || k === 'speed') speed *= Math.pow(1.5, f); if (!k || k === 'luck') lx += 0.15 * f; }
@@ -1478,7 +1490,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     let rb = 0, vb = 0, lb = 0;
     const notes = [];
     linked(l, i, g).forEach(j => { const m2 = sl[j].machine; if (!m2 || s.machine === 'belt') return; const e = effect(m2, s.machine); rb += e.rate; vb += e.value; lb += e.luck || 0; notes.push(e.text); });
-    let rX = 1, vX = 1;
+    let rX = 1, vX = 1, rA = 0, vA = 0;
     // the Horse's gallop makes every card on her machine work twice
     const twice = W === 'horse' && skillOn('horse') ? 2 : 1;
     // food cards of the machine do not work for Kaneki
@@ -1490,9 +1502,14 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       // Mirror armour ignores the speed minus of Sweet and sour sauce; code10 loves Ketchup twice as much
       const ef = CARDS[u].eff, rate = mirror && ef.rate < 1 ? 1 : ef.rate || 1, sticky = W === 'slime' && k >= own.length;
       const tw = twice * (sticky ? stickX : 1) * (W === 'code10' && u === 's_ketchup' ? 2 : 1);
-      rX *= Math.pow(rate, tw); vX *= Math.pow((ef.value || 1) * (u === 's_gold' ? Math.pow(1.1, g.tc['Станки'] || 0) : 1), tw); lb += (ef.luck || 0) * tw;
+      const val = ef.value || 1;
+      if (BAL.add && rate > 1) rA += (rate - 1) * tw; else rX *= Math.pow(rate, tw);
+      if (BAL.add && val > 1) vA += (val - 1) * tw; else vX *= Math.pow(val, tw);
+      if (u === 's_gold') vX *= Math.pow(Math.pow(1.1, g.tc['Станки'] || 0), tw);
+      lb += (ef.luck || 0) * tw;
       notes.push(`${CARDS[u].name}${sticky ? ' (прилипла от соседа)' : s.upg.includes(u) ? '' : ' (Супер клей рядом)'}: ${CARDS[u].desc.toLowerCase()}`);
     });
+    rX *= 1 + rA; vX *= 1 + vA;
     if (stuck.length && stickX > 1) notes.push(`Скилл «${SKILLS.slime.name}»: прилипшие карты действуют дважды`);
     if (W === 'code10' && ups.includes('s_ketchup')) notes.push('Картошечка: Кетчуп действует дважды');
     if (twice > 1 && s.upg.length) notes.push('Галоп: карты станка действуют дважды');
@@ -1692,6 +1709,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (family > 1) notes.push('Семейный подряд в сборе: доход цеха ×2');
     // mult: the income multipliers the simulation applies to every piece's coins on top of value
     if (g.double && g.double.self && g.double.l === l && g.double.i === i) { mult *= 2; notes.push('Двойнику негде встать: доход станка ×2'); }
+    const trioM = trioOf(s.upg), trioW = ws && trioOf(state.workers[W].equip);
+    if (trioM) { mult *= BAL.trio; notes.push(`Тройка на станке: 3 × ${CARDS[trioM].name}, доход ×${fmt(BAL.trio)}`); }
+    if (trioW) { mult *= BAL.trio; notes.push(`Тройка в шкафчике: 3 × ${CARDS[trioW].name}, доход ×${fmt(BAL.trio)}`); }
     mult *= duo * family;
     return { rate, value, mult, kiss, etN, income: rate * value * (1 + luck * extra + rac) * crowM * (1 + kiss / 44) * mult * skM.income * g.income, notes, ws, M, luck, extra };
   }
@@ -3234,6 +3254,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
         else machine(s.machine, x + 36, y + 18);
         if ((s.worker || MACH[s.machine].auto || (allyAt && allyAt.l === l && allyAt.i === i) || noodleAt(l, i)) && s.machine !== 'belt' && !big) pile(x + 52, y + 63, 1 + Math.floor((t * 0.3 + i) % 3), LT.item);
         s.upg.forEach((u, k) => { R(x + 4 + k * 5, y + 4, 4, 6, K); R(x + 5 + k * 5, y + 5, 2, 4, RAR_COL[CARDS[u].rar]); });
+        if (trioOf(s.upg)) R(x + 4, y + 11, 14, 1, '#ffd54a');
       }
       if (dblAt && dblAt.l === l && dblAt.i === i && !s.worker) gx.drawImage(SPR.arcDouble, x + 6, y + 40 - Math.floor(t * 2 + i) % 2);
       else if (allyAt && allyAt.l === l && allyAt.i === i && !s.worker) gx.drawImage(SPR.rebelAlly, x + 6, y + 40 - Math.floor(t * 2 + i) % 2);
@@ -3304,6 +3325,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       R(x + 2, y + 4, 22, 16, w && w.unlocked ? '#f3e9d2' : '#cfc6b6');
       if (w && w.unlocked) {
         gx.drawImage(SPR[id], PORTRAIT_X[id] || 0, PORTRAIT_Y[id], 20, 14, x + 3, y + 5, 20, 14); R(x + 12, y + 3, 2, 2, '#e0533a');
+        if (trioOf(w.equip)) border(x + 3, y + 5, 20, 14, '#ffd54a');
         const wp = workerPlace(id);
         if (w.skill && (!skillOn(id) || Math.floor(t * 4) % 2)) { R(x + 18, y + 35, 3, 3, '#ffd54a'); R(x + 17, y + 38, 3, 3, '#ffd54a'); }
         if (wp) { R(x + 3, y + 34, 13, 7, K); R(x + 4, y + 35, 11, 5, LOCS[wp.l].item); }
@@ -3567,19 +3589,19 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const unit = LOCS[l].unit, unit1 = LOCS[l].unit1;
     const stats = s.machine === 'belt' ? '' : `<div class="stats"><div class="stat"><small>${unit} в сек.</small><b id="live-rate">0</b></div><div class="stat"><small>${unit1}</small><b id="live-value">0</b></div><div class="stat"><small>Доход в сек.</small><b id="live-income">0</b></div></div>`;
     const notes = st.notes.length ? `<h3>Бонусы</h3><ul class="notes">${st.notes.map(n => `<li>${esc(n)}</li>`).join('')}</ul>` : '<h3>Бонусы</h3><p class="muted">Пока нет. Поставь станки рядом или найди карты.</p>';
-    const upg = s.upg.length ? `<h3>Карты станка: ${s.upg.length} из ${BAL.cap}</h3><div class="row">${s.upg.map(chip).join('')}</div>` : '';
+    const upg = s.upg.length ? `<h3>Карты станка: ${s.upg.length} из ${BAL.cap}</h3><div class="row">${s.upg.map(chip).join('')}</div>${trioOf(s.upg) ? '' : `<p class="muted">Три одинаковые карты на станке — Тройка: доход ×${fmt(BAL.trio)}</p>`}` : '';
     return `<h2>${M.name}</h2><p class="muted">${M.desc}</p>${worker}${stats}${notes}${upg}<div class="row"><button class="btn" type="button" data-act="move">Переставить</button>${s.worker ? '<button class="btn" type="button" data-act="unassign">Снять сотрудника</button>' : ''}</div>`;
   }
   function skillHTML(id) {
     const sk = SKILLS[id], has = state.workers[id].skill;
-    return `<h3>Скилл</h3><p><b>${sk.name}</b>: ${esc(sk.desc)}</p>${has ? '<p class="on" id="live-skill"></p>' : skillLocked() ? `<p class="muted">С ${BAL.skillCoinQ}-й квоты скиллы за монеты не продаются: открой его картой «Мастер-класс». Она есть в каждом выборе за квоту.</p>` : `<div class="row"><button class="btn primary" type="button" data-act="skill" ${state.money < skillCost(id) ? 'disabled' : ''}>Открыть за ${fmt(skillCost(id))}</button></div>`}`;
+    return `<h3>Скилл · ${has ? 'открыт' : 'не открыт'}</h3><p class="${has ? '' : 'muted'}"><b>${sk.name}</b>: ${esc(sk.desc)}</p>${has ? '<p class="on" id="live-skill"></p>' : skillLocked() ? `<p class="muted">С ${BAL.skillCoinQ}-й квоты скиллы за монеты не продаются: открой его картой «Мастер-класс». Она есть в каждом выборе за квоту.</p>` : `<div class="row"><button class="btn primary" type="button" data-act="skill" ${state.money < skillCost(id) ? 'disabled' : ''}>Открыть за ${fmt(skillCost(id))}</button></div>`}`;
   }
   function workerHTML(id) {
     const Wd = WORKERS[id], st = state.workers[id], ws = workerStats(id, globals());
     const eq = st.equip.length ? st.equip.map(chip).join('') : '<span class="muted">Пусто</span>';
     const wp = workerPlace(id);
     const fr = ws.fr.length ? ws.fr.map(f => WORKERS[f].name).join(', ') + ` (+${pct(ws.fb)} силы)` : 'нет';
-    return `<h2>${Wd.name}</h2><p class="muted">${Wd.role} · ${wp ? `работает: цех ${wp.l + 1}, ${MACH[slotsOf(wp.l)[wp.i].machine].name}` : 'отдыхает в раздевалке'}</p><div class="stats"><div class="stat"><small>Сила</small><b id="live-power">0</b></div><div class="stat"><small>Скорость</small><b id="live-speed">0</b></div><div class="stat"><small>Удача</small><b id="live-luck">0</b></div></div><p>${esc(Wd.perk)}</p>${skillHTML(id)}<h3>В шкафчике: ${st.equip.length} из ${BAL.cap}</h3><div class="row">${eq}</div><p class="muted">Друзья по шкафчику: ${fr}</p><p class="muted">Нажми на станок в любом цеху, чтобы перевести туда. Нажми на другой шкафчик, чтобы поменяться местами.</p>${wp ? '<div class="row"><button class="btn" type="button" data-act="rest">В раздевалку</button></div>' : ''}`;
+    return `<h2>${Wd.name}</h2><p class="muted">${Wd.role} · ${wp ? `работает: цех ${wp.l + 1}, ${MACH[slotsOf(wp.l)[wp.i].machine].name}` : 'отдыхает в раздевалке'}</p><div class="stats"><div class="stat"><small>Сила</small><b id="live-power">0</b></div><div class="stat"><small>Скорость</small><b id="live-speed">0</b></div><div class="stat"><small>Удача</small><b id="live-luck">0</b></div></div><p>${esc(Wd.perk)}</p>${skillHTML(id)}<h3>В шкафчике: ${st.equip.length} из ${BAL.cap}</h3><div class="row">${eq}</div><p class="${trioOf(st.equip) ? 'on' : 'muted'}">${trioOf(st.equip) ? `Тройка: 3 × ${CARDS[trioOf(st.equip)].name}, доход станка ×${fmt(BAL.trio)}` : `Три одинаковые карты в шкафчике — Тройка: доход станка ×${fmt(BAL.trio)}`}</p><p class="muted">Друзья по шкафчику: ${fr}</p><p class="muted">Нажми на станок в любом цеху, чтобы перевести туда. Нажми на другой шкафчик, чтобы поменяться местами.</p>${wp ? '<div class="row"><button class="btn" type="button" data-act="rest">В раздевалку</button></div>' : ''}`;
   }
   function deckHTML() {
     const g = globals(), counts = {};
@@ -3587,7 +3609,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const sets = Object.keys(TAGS).map(tg => { const n = g.tc[tg] || 0, p = Math.floor(n / 2); return `<dt class="${p ? 'on' : ''}">${tg}: ${n}</dt><dd>${TAGS[tg]}. Комплектов: ${p}</dd>`; }).join('');
     const night = g.combos.includes('night');
     const owned = Object.keys(counts).map(id => chip(id).replace('</span>', counts[id] > 1 ? ` ×${counts[id]}</span>` : '</span>')).join('') || '<span class="muted">Пока нет карт</span>';
-    return `<h2>Колода</h2><h3>Комплекты по тегам</h3><dl class="sets">${sets}</dl><h3>Комбо</h3><dl class="sets"><dt class="${night ? 'on' : ''}">Ночная смена</dt><dd>Крепкий кофе + Конвейер + Бродяга: доход ×1,5</dd><dt class="${g.sawWorking && anySlot(s => s.machine === 'kiln') ? 'on' : ''}">Растопка</dt><dd>Пилорама работает в цеху 1: печи в цеху 2 +25% скорости</dd><dt class="${g.kilnWorking && anySlot(s => s.machine === 'wire') ? 'on' : ''}">Закалка</dt><dd>Печь работает в цеху 2: проволока в цеху 3 +20% к цене</dd><dt class="${g.maidsLoc >= 0 ? 'on' : ''}">Дуэт горничных</dt><dd>V1 и V2 на соседних станках: доход их цеха ×2</dd><dt class="${g.green ? 'on' : ''}">Зелёная сила</dt><dd>Пришелец и Хаба на соседних станках: сила обоих ×1,5</dd><dt class="${g.combos.includes('family') ? 'on' : ''}">Семейный подряд</dt><dd>Хаба, Кастомка и Батя: соседям по станку из этой тройки +20% силы, все трое в одном цеху: доход цеха ×2</dd><dt class="${g.tumblerWorking && anySlot(s => s.machine === 'vitrage') ? 'on' : ''}">Рамы на гвоздях</dt><dd>Барабан работает в цеху 3: витражи в цеху 4 +20% к цене</dd><dt class="${g.cozy ? 'on' : ''}">Уютно</dt><dd>Швейная машинка и набивочный автомат работают: сила обоих сотрудников ×1,5</dd><dt class="${g.dryerWorking && state.locs[4].unlocked ? 'on' : ''}">Каркас</dt><dd>Сушилка работает в цеху 1: пуфики +20% к цене</dd><dt class="${g.vitrageWorking && anySlot(s => s.machine === 'stuff') ? 'on' : ''}">Стеклянные ножки</dt><dd>Витраж работает в цеху 4: набивка +20% скорости</dd><dt class="${g.caseClosed ? 'on' : ''}">Дело закрыто</dt><dd>Кролик-детектив рядом с Главной мразью цеха: мразь не крысит, у кролика сила ×1,5</dd><dt class="${g.combos.includes('robot') ? 'on' : ''}">Робот кормит улиток</dt><dd>Рука помощи + Зубастые улитки: в цеху с Рукой помощи минус улиток не действует</dd><dt class="${g.combos.includes('post') ? 'on' : ''}">Почтовый день</dt><dd>Почтальон + Курьер + Подписка: монеты в посылках ×2</dd><dt class="${g.combos.includes('morning') ? 'on' : ''}">Утро после</dt><dd>Сушняк и Газява у одного сотрудника: минус Сушняка снят, скорость ещё ×1,3</dd><dt class="${g.tape ? 'on' : ''}">Скотч и клей</dt><dd>Скотч братан + Супер клей: сотрудник у станка с клеем дружит со всеми соседями по станкам</dd><dt class="${g.lawn ? 'on' : ''}">Оборона газона</dt><dd>Подсолнух и Мухобойка на соседних станках: солнышки вдвое чаще, у Мухобойки сила ×1,5</dd><dt class="${g.epidemic ? 'on' : ''}">Эпидемия</dt><dd>Зомбачка и Могильщик на соседних станках: каждые 20 с смены укушен ещё один работник её цеха</dd><dt class="${g.rising ? 'on' : ''}">Восстание из мёртвых</dt><dd>Призрак вторника, Зомбачка и Могильщик в одном цеху: раз за забег квота, набранная хотя бы на 70%, засчитывается${state.run.rose ? ' (уже использовано)' : ''}</dd><dt class="${g.scarf ? 'on' : ''}">Тёплый шарф</dt><dd>Йети и Медаедь на соседних станках: шарф Йети готов с начала смены (+25% силы соседям), у Медаедя сила ×1,5</dd><dt class="${g.feat ? 'on' : ''}">Сам с собой фит</dt><dd>code10 и code80 на соседних станках: сила обоих ×1,5</dd><dt class="${g.same ? 'on' : ''}">Это одно и то же</dt><dd>Унитаз и аэрогриль на соседних станках цеха 10: сила обоих сотрудников ×2</dd><dt class="${g.sun ? 'on' : ''}">Лучи чужого солнца</dt><dd>Зоря из Зорвеля и Пришелец с Трёхглазиком на соседних станках: пицца стоит ×2</dd><dt class="${g.drink ? 'on' : ''}">Собутыльники</dt><dd>Сквонч и Батя на соседних станках: удача обоих +15%, монетка Сквонча всегда удачная</dd></dl><h3>Твои карты</h3><div class="row">${owned}</div><div class="row"><button class="btn" type="button" data-act="back">Назад</button></div>`;
+    return `<h2>Колода</h2><p class="muted">Бонусы карт со знаком «+» складываются: две Каски дают силу +80%. Умножают (×) комбо, Тройки, перки и скиллы. Тройка: три одинаковые карты в одном шкафчике или на одном станке, доход станка ×${fmt(BAL.trio)}.</p><h3>Комплекты по тегам</h3><dl class="sets">${sets}</dl><h3>Комбо</h3><dl class="sets"><dt class="${night ? 'on' : ''}">Ночная смена</dt><dd>Крепкий кофе + Конвейер + Бродяга: доход ×1,5</dd><dt class="${g.sawWorking && anySlot(s => s.machine === 'kiln') ? 'on' : ''}">Растопка</dt><dd>Пилорама работает в цеху 1: печи в цеху 2 +25% скорости</dd><dt class="${g.kilnWorking && anySlot(s => s.machine === 'wire') ? 'on' : ''}">Закалка</dt><dd>Печь работает в цеху 2: проволока в цеху 3 +20% к цене</dd><dt class="${g.maidsLoc >= 0 ? 'on' : ''}">Дуэт горничных</dt><dd>V1 и V2 на соседних станках: доход их цеха ×2</dd><dt class="${g.green ? 'on' : ''}">Зелёная сила</dt><dd>Пришелец и Хаба на соседних станках: сила обоих ×1,5</dd><dt class="${g.combos.includes('family') ? 'on' : ''}">Семейный подряд</dt><dd>Хаба, Кастомка и Батя: соседям по станку из этой тройки +20% силы, все трое в одном цеху: доход цеха ×2</dd><dt class="${g.tumblerWorking && anySlot(s => s.machine === 'vitrage') ? 'on' : ''}">Рамы на гвоздях</dt><dd>Барабан работает в цеху 3: витражи в цеху 4 +20% к цене</dd><dt class="${g.cozy ? 'on' : ''}">Уютно</dt><dd>Швейная машинка и набивочный автомат работают: сила обоих сотрудников ×1,5</dd><dt class="${g.dryerWorking && state.locs[4].unlocked ? 'on' : ''}">Каркас</dt><dd>Сушилка работает в цеху 1: пуфики +20% к цене</dd><dt class="${g.vitrageWorking && anySlot(s => s.machine === 'stuff') ? 'on' : ''}">Стеклянные ножки</dt><dd>Витраж работает в цеху 4: набивка +20% скорости</dd><dt class="${g.caseClosed ? 'on' : ''}">Дело закрыто</dt><dd>Кролик-детектив рядом с Главной мразью цеха: мразь не крысит, у кролика сила ×1,5</dd><dt class="${g.combos.includes('robot') ? 'on' : ''}">Робот кормит улиток</dt><dd>Рука помощи + Зубастые улитки: в цеху с Рукой помощи минус улиток не действует</dd><dt class="${g.combos.includes('post') ? 'on' : ''}">Почтовый день</dt><dd>Почтальон + Курьер + Подписка: монеты в посылках ×2</dd><dt class="${g.combos.includes('morning') ? 'on' : ''}">Утро после</dt><dd>Сушняк и Газява у одного сотрудника: минус Сушняка снят, скорость ещё ×1,3</dd><dt class="${g.tape ? 'on' : ''}">Скотч и клей</dt><dd>Скотч братан + Супер клей: сотрудник у станка с клеем дружит со всеми соседями по станкам</dd><dt class="${g.lawn ? 'on' : ''}">Оборона газона</dt><dd>Подсолнух и Мухобойка на соседних станках: солнышки вдвое чаще, у Мухобойки сила ×1,5</dd><dt class="${g.epidemic ? 'on' : ''}">Эпидемия</dt><dd>Зомбачка и Могильщик на соседних станках: каждые 20 с смены укушен ещё один работник её цеха</dd><dt class="${g.rising ? 'on' : ''}">Восстание из мёртвых</dt><dd>Призрак вторника, Зомбачка и Могильщик в одном цеху: раз за забег квота, набранная хотя бы на 70%, засчитывается${state.run.rose ? ' (уже использовано)' : ''}</dd><dt class="${g.scarf ? 'on' : ''}">Тёплый шарф</dt><dd>Йети и Медаедь на соседних станках: шарф Йети готов с начала смены (+25% силы соседям), у Медаедя сила ×1,5</dd><dt class="${g.feat ? 'on' : ''}">Сам с собой фит</dt><dd>code10 и code80 на соседних станках: сила обоих ×1,5</dd><dt class="${g.same ? 'on' : ''}">Это одно и то же</dt><dd>Унитаз и аэрогриль на соседних станках цеха 10: сила обоих сотрудников ×2</dd><dt class="${g.sun ? 'on' : ''}">Лучи чужого солнца</dt><dd>Зоря из Зорвеля и Пришелец с Трёхглазиком на соседних станках: пицца стоит ×2</dd><dt class="${g.drink ? 'on' : ''}">Собутыльники</dt><dd>Сквонч и Батя на соседних станках: удача обоих +15%, монетка Сквонча всегда удачная</dd></dl><h3>Твои карты</h3><div class="row">${owned}</div><div class="row"><button class="btn" type="button" data-act="back">Назад</button></div>`;
   }
   const mmss = sec => `${Math.floor(sec / 60)}:${String(Math.floor(sec % 60)).padStart(2, '0')}`;
   // two columns when comparing with a friend: theirs first, ours second
