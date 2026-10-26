@@ -207,6 +207,11 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   const PIRATE = ['23.', '8.7k8.', '2.2k3.k7bk3.2k2.', '.kbZk.k3b3w3bk.kZbk.', '.k2bZ2k2bwkwkw2b2kZ2bk.', '2.k2b2Z3b3w3b2Z2bk2.', '3.k2b11Z2bk3.', '4.15k4.', '4.kB7s3bsBk4.', '4.kBsk2bk2s3hsBk4.', '4.kBs3b3s2k2sBk4.', '4.kBskbksSswk2sBk4.', '4.kB2sk6фksBZ4.', '4.kBsk7фksBk4.', '4.kBkф2w3ф2wфkBk4.', '4.3kфwk3фkwф3k4.', '3.k,2kч7фч2k,k3.', '3.k2,klkфkфklkфk2,k3.', '3.k2,kфklkфkфklk2,k3.', '3.k2,kфkфklkфkфk2,k3.', '3.k,kф2kфkфkl2kфk,k3.', '3.k2Zk,kl3kфk,k2Zk3.', '4.ZkCkфkZq2kфkC2sk3.', '3.kpk2,2kg.g2k2,2k4.', '2.kp2k2,Zkg.gkZ2,k5.', '2.kpkp2,Zkg.gkZ2,k5.', '3.2p5kgkg5k5.', '3.2k3.k3gk2gk7.', '8.k3g4k7.', '8.k3b2kCk7.', '7.k4b2kCk7.', '7.7kFk7.'];
   const BEEKEEPER = ['23.', '8.7k8.', '6.2k7W2k6.', '5.k10WDk5.', '5.k10WDk3.W.', '2.4k11D4k.p', '.k19WpW', '2.18kp2.', '3.kGgGgGgGgGgGgGgGk.Wp', '.w.kgGgSgSgSgSgSgGgkpW.', 'kqbkGgGg2kSgS2kgGgGk.p.', '3.kgGgSgSgSgSgSgGgk.2k', '3.kGgGgSgSgSgSgGgG2kAk', '3.kgGgSgSgSgSgSgGgkAk.', '3.k14WkpaAk', '4.k13Wk3Ak', '3.k14W5k', '3.k2WD4WD3W4kpaAk', '3.kW2DkW3k3WkCBkAkAk', '.w.k2WDk3WD3WkC-kpaAk', 'kqbk2WDk3WD3WkCBkpaAk', '3.k3Dk3WD2Wk2x-kAkAk', '3.k2xk7Dk2xBkpaAk', '3.k2xk4WD2W.2k-kpaAk', '4.3k4WD3WkCBkAkAk', '6.k4WD3WkC-kpaAk', '6.k3WkDk2W4kpaAk', '6.k3Wk.k3Wk.5k', '6.k3Dk.k3Dk6.', '6.k3Wk.k3Wk6.', '6.k3Wk.k3Wk6.', '5.6k.6k5.'];
   const REBEL = ['23.', '23.', '23.', '23.', '23.', '23.', '23.', '23.', '23.', '23.', '23.', '23.', '23.', '23.', '5.7k11.', '3.2k,6"k10.', '2.k,2K,4"4k8.', '2.k4K,"2kF3x3k5.', '2.k4K,kjF2x5Fk4.', '2.k4Kkj4F5xFk3.', '2.k,2K,k2Fj3xF5k3.', '3.k5K"3F3k2|3k2.', '3.k3K2kK"5k2K2,k2.', '3.k3K"kK"3,5K"k2.', '3.k2K2"kK2",3K4,k2.', '3.k2K2"kK4"6,k2.', '3.k,4K"F2,6K"k2.', '4.kK,2"2j2x2"3,"k3.', '5.3kjF2x4F2jk4.', '8.k2x4k3jk4.', '8.kFk4.kjk5.', '8.2k5.2k6.'];
+  // Squanch: a ginger cat with a paper bag and a bare pink tail; SQUANCH_SIT is him on the pizzeria's bar stool, 26 wide
+  const SQUANCH = ['.k10.k2.k4.k2.', '.2k8.kZ2kZk2.2k2.', '.kQk6.kZQZQZk.kQk2.', '.k2Qk.2kQZ3QZ2k.k2Qk2.', '.kQi14QiQk2.', '.kQ2i12Q2iQk2.', '2.k16Qk3.', '2.k2Q4k4Q4k2Qk3.', '2.kQk4yk2Qk4ykQk3.', '2.kQkyk2yk2Qk2ykykQk3.', '2.kQk4yk2Qk4ykQk3.', '2.k2Q4kQ2_Q4k2Qk3.', '2.kX2Q10x2QXk3.', '2.kXQxkWk4WkWkxQXk3.', '3.kQxk8rkxQk4.', '4.kxkW6kWkxk5.', '5.2k3x2X3x2k6.', '2.k5.kX4QXk7.', '.kCk3.k2Q4x2Qk6.', "kC'Ck.k3Q5x2Qk5.", "kC2'C2kQkQ5xQkQk4.", "kC2'CkQk.kQ3xQk.kQk3.", "kC2'CQk2.kQ3xQk2.kQk2.", "k2C'Ck3.k2Qx2Qk2.kXk2.", '.k2Ck4.k5QkIk5.', '2.2k4.k2Q3k2QkIk4.', '8.kQk3.kQk.kik2.', '8.kQk3.kQk2.kIk.', '8.kQk3.kQk3.kik', '7.k2Qk3.k2Qk.kQXk', '6.kQkQk2.kQkQk2.2k.', '6.5k2.5k5.'];
+  const SQUANCH_SIT = ['.k10.k2.k4.k5.', '.2k8.kZ2kZk2.2k5.', '.kQk6.kZQZQZk.kQk5.', '.k2Qk.2kQZ3QZ2k.k2Qk5.', '.kQi14QiQk5.', '.kQ2i12Q2iQk5.', '2.k16Qk6.', '2.k2Q4k4Q4k2Qk6.', '2.kQk4yk2Qk4ykQk6.', '2.kQkyk2yk2Qk2ykykQk6.', '2.kQk4yk2Qk4ykQk2.2k2.', '2.k2Q4kQ2_Q4k2Qk.k2:k.', '2.kX2Q10x2QXk.k2Ck.', "2.kXQxkWk4WkWkxQX2kC2'Ck", "3.kQxk8rkxQk.kC2'Ck", "4.kxkW6kWkxk2.kC2'Ck", "5.2k3x2X3x2k3.kC2'Ck", "8.kX4QX3k2.kC2'Ck", "7.k2Q4x5Q2k2C'Ck", '6.k2Q6xQ4k.k2Ck.', '6.kQ7xQk5.2k2.', '6.kQ7xQk9.', '6.k2Q5x2Qk9.', '5.k11Qk8.', '5.k3Q5k3Qk8.', '6.kQk4.kQk10.', '6.kQk4.kQk10.', '6.kQk4.kQk10.', '6.kQk4.kQk10.', '6.kQk4.kQk10.', '6.kQk4.kQk10.', '6.kQk4.kQk10.', '5.k2Qk3.k2Qk10.', '4.kQkQk3.kQkQk9.', '4.5k3.5k9.', '26.'];
+  // the Spaghetti monster: eyes on stalks with lazy lids, two meatballs, noodle tentacles, a big fork
+  const SPAGHETTI = ['2.4k7.4k6.', '.k4yk5.k4yk5.', '.6k5.6k5.', '.kW2kWk5.kW2kWk5.', '.k4Wk5.k4Wk5.', '2.4k7.5k.k.k.', '2.kyYk7.kyY2kakaka', '3.kyYk5.kyYk.kakaka', '4.kyY4kyYk3.kakaka', '3.kxyY4xyYyk2.kakaka', '2.kx3y3Y4yJk.k5a', '2.ky2Y5y2YyJk2.kAaAk', '.4kyYyJyxJYy4k.kaAk', "k`'2CkyJyYyJyk`'2C2kaAk", "k2'CBkYyJyxJYk2'CB2kaAk", 'k3CBkyJyYyJyk3CB2kaAk', 'k2C2BkYyJyxJYk2C2B2kaAk', '.4k2yJyYyJ2y5kyYAk', 'k5yYyJyxJY7yJAk', 'yk.kJyY2yJ2yYyJ3k.2JAk', 'y3kyJkyJkyJkyJk3.kaAk', 'ykJkyJkyJkyJkyJk3.kaAk', 'kykyJ2kyJ2kyJkyJk2.kaAk', '.2kyJkyJk.kyJkyJk2.kaAk', '2.kyJkyJk.kyJ2kyJk.kaAk', '2.2kyJyJ2kyJk.kyJk.kaAk', '.kJkyJkyJkyJk.kyJk.kaAk', '.kyky2kyJkyJ2ky2Jk.kaAk', '2.kyk.kyJkyJ2kykJk.kaAk', '3.k3.kyJkyJ2kyk2.kaAk', '7.kyJkyJk.k3.kaAk', '8.2k.2k6.4k'];
   const YETI = ['23.', '9.k3.k9.', '8.kWk.kWk8.', '5.3k3Wk3W3k5.', '4.k13Wk4.', '3.k14WDk3.', '2.k4W9?3WDk2.', '2.k3W?2_5?2_?2WDk2.', '2.k2W2?wk5?wk2?WDk2.', '2.k2W2?2k5?2k2?WDk2.', '2.k2W?2c3?_3?2c?WDk2.', '2.k2W3?k5?k3?WDk2.', '2.k3W3?kwEwk3?2WDk2.', '2.k4W3?3k3?3WDk2.', '.k7W7?4WDk.', '.kW9RB6RBDk.', 'k2W10rB4kBrWDk', 'k4WkRwRk3WkE2Rrk2WDk', 'k2WkWkRwRk3WkRr2R2kWDk', 'k2WkWkRwRk3[2k2r3kWDk', 'k2WkWk3Rk4[4kWkWDk', 'k2Wk2WrWrW5[3Wk2WDk', 'k2Wk6W3[k7WDk', 'k2Wk5W4[kWkWk2W2Dk', 'k2Wk4W6[9k', 'k2Dk4W6[4WD3k.', '.3k5W5[4WDk3.', '3.k14WDk3.', '4.k5W3k4WDk4.', '3.k6Wk.k5WDk3.', '3.k?_?_2?k.k2?_?_?k3.', '4.6k3.6k4.'];
   const RACCOONS = ['23.', '9.5k9.', '6.3k5C3k6.', '5.k2ak5Bk2ak5.', '5.kab7Cbak5.', '6.k9ak6.', '5.k2a2w3a2w2ak5.', '5.k2GwkGaGkw2Gk5.', '6.ka2Gawa2Gak6.', '7.k2awkw2ak7.', '7.3k3a3k7.', '3.4kf2FUaU2Ff4k3.', '.2k4F2fFUkUF2f4F2k.', 'k4FU4fFkF4fU4Fk', 'k4FUF3fFkF3fFU4Fk', 'k4FU2F2fFkF2f2FU4Fk', 'k4FU3FfFZFf3FU4Fk', 'k4FU5FU5FU4Fk', 'k4FU5BZ5BU4Fk', 'k4FU5FU5FU4Fk', 'k4FU5FZ5FU4Fk', 'k4fU5FU5FU4fk', 'k3a2k5FU4FkA3pAk', 'kaGa2k5FZ4Fkgwgwgk', '.3k.k5FU4Fk2pk2pk', '5.k5FU5Fk3pk.', '4.k13U3k2.', '4.k2a2kgwgwg2k2akGak.', '4.k2a2k2pk2p2k2aGaGk.', '4.k2ak.k3pk.k2a3k2.', '3.k3Gk2.3k2.k3Gk3.', '4.3k9.3k4.'];
   const SLIME = ['3.6k14.', '2.k3н3тk13.', '.kн7тk12.', '.k2тм4k2тk11.', '.k2тk4.k3gk9.', '.k2тk.kн8тk6.', '.kтм2kн10тk5.', '.kтмkн[10тмk4.', '.kмk14тмk3.', '2.kт2н12тмтk2.', '2.kтм13тмтk2.', '2.kт3м2п2тм2т2п3мтk2.', '2.k2тм4k3п4kм2тk2.', '2.k2т2пgk5пkg2п2тk2.', '2.k2тп2c7п2cп2тk2.', '2.k2тм5пk5пм2тk2.', '3.k2тм4пm4пм2тk3.', '3.kтk.2k5п2k.kтk3.', '4.k2.kgz3gzgk2.k4.', '2.2k5Wk3gk5W2k2.', '.k2W2g5WD5W2g2Wk.', '.k9WD9Wk.', '.k$R7WD7WR$k.', '.kR$Wk5WD5WkWR$k.', '.k3Wk2Dт5Dт2Dk3Wk.', '.kWDWkн10тkWDWk.', '.k$R$k5тм5тk$R$k.', '3.3k11т3k3.', '5.k5тм5тk5.', '5.k3тмk.k3тмk5.', '2.kн4тм5тм4тмk2.', '3.17k3.'];
@@ -269,6 +274,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     pirate: spriteCanvas(PIRATE),
     beekeeper: spriteCanvas(BEEKEEPER),
     rebel: spriteCanvas(REBEL),
+    squanch: spriteCanvas(SQUANCH),
+    spaghetti: spriteCanvas(SPAGHETTI),
     yeti: spriteCanvas(YETI),
     raccoons: spriteCanvas(RACCOONS),
     slime: spriteCanvas(SLIME),
@@ -288,8 +295,11 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   SPR.arcDouble = washed(SPR.arc, '#7fd0f0');
   // Rebel's ally: her small sprite washed in green
   SPR.rebelAlly = washed(SPR.rebel, '#8fe07a');
-  const PORTRAIT_Y = { crow: 1, mrp: 3, tramp: 2, dog: 4, toad: 1, pink: 3, v1: 0, v2: 0, jeanne: 3, alien: 2, jedi: 1, silver: 3, mrsha: 6, kast: 3, batya: 2, thoth: 1, rat: 3, lin: 6, horse: 1, rabbit: 6, sunflower: 2, flytrap: 0, honeybear: 1, arc: 0, nurse: 1, nemu: 3, tuesday: 3, zombie: 3, digger: 5, kaneki: 3, raven: 4, fairy: 3, pirate: 3, beekeeper: 2, rebel: 15, yeti: 3, raccoons: 1, slime: 2, moth: 3, kisa: 2, toyalien: 4, gastriter: 1, code10: 1, code80: 2, palach: 1, thief: 2 };
-  const PORTRAIT_X = { dog: 0, toad: 1, v1: 1, v2: 1, alien: 1, jedi: 2, kast: 1, batya: 1, thoth: 1, rat: 0, lin: 1, horse: 3, rabbit: 1, sunflower: 1, flytrap: 1, honeybear: 1, arc: 1, nurse: 2, nemu: 1, tuesday: 0, zombie: 1, digger: 1, kaneki: 1, raven: 1, fairy: 1, pirate: 1, beekeeper: 1, rebel: 1, yeti: 1, raccoons: 1, slime: 1, moth: 1, kisa: 1, toyalien: 1, gastriter: 2, code10: 1, code80: 1, palach: 1, thief: 1 };
+  SPR.noodles = washed(SPR.spaghetti, '#f7e08a');
+  // Squanch on the pizzeria's bar stool, 26 wide, till his card is taken
+  const SQ_SIT = (() => { const r = rle(SQUANCH_SIT), cv = document.createElement('canvas'); cv.width = 26; cv.height = r.length; const x = cv.getContext('2d'); r.forEach((row, yy) => [...row].forEach((ch, xx) => { if (ch !== '.') { x.fillStyle = PAL[ch]; x.fillRect(xx, yy, 1, 1); } })); return cv; })();
+  const PORTRAIT_Y = { crow: 1, mrp: 3, tramp: 2, dog: 4, toad: 1, pink: 3, v1: 0, v2: 0, jeanne: 3, alien: 2, jedi: 1, silver: 3, mrsha: 6, kast: 3, batya: 2, thoth: 1, rat: 3, lin: 6, horse: 1, rabbit: 6, sunflower: 2, flytrap: 0, honeybear: 1, arc: 0, nurse: 1, nemu: 3, tuesday: 3, zombie: 3, digger: 5, kaneki: 3, raven: 4, fairy: 3, pirate: 3, beekeeper: 2, rebel: 15, yeti: 3, raccoons: 1, slime: 2, moth: 3, kisa: 2, toyalien: 4, gastriter: 1, code10: 1, code80: 2, palach: 1, thief: 2, squanch: 3, spaghetti: 0 };
+  const PORTRAIT_X = { dog: 0, toad: 1, v1: 1, v2: 1, alien: 1, jedi: 2, kast: 1, batya: 1, thoth: 1, rat: 0, lin: 1, horse: 3, rabbit: 1, sunflower: 1, flytrap: 1, honeybear: 1, arc: 1, nurse: 2, nemu: 1, tuesday: 0, zombie: 1, digger: 1, kaneki: 1, raven: 1, fairy: 1, pirate: 1, beekeeper: 1, rebel: 1, yeti: 1, raccoons: 1, slime: 1, moth: 1, kisa: 1, toyalien: 1, gastriter: 2, code10: 1, code80: 1, palach: 1, thief: 1, squanch: 1, spaghetti: 1 };
 
   /* ================= data ================= */
   const LOCS = [
@@ -299,33 +309,33 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       glass: '#d9cbb8', board: '#5f6168', boardHi: '#8a8c95', goods: 'bricks', unit: 'Кирпичи', unit1: 'Цена кирпича', start: 'mixer',
       desc: 'Новая ветка завода. Здесь месят глину, прессуют и обжигают кирпичи. Кирпичи стоят дороже досок, а печь работает быстрее, если в цеху досок трудится пилорама.',
       opened: 'Цех кирпичей открыт! Поставь к глиномешалке сотрудника' },
-    { name: 'Гвозди', sign: 'ЦЕХ 3 · ГВОЗДИ', cost: 200000, wall: '#55606b', mortar: '#46505a', floor: '#8b9096', grid: '#7f858c', plate: '#7a8086', item: '#c9d0d6',
+    { name: 'Гвозди', sign: 'ЦЕХ 3 · ГВОЗДИ', cost: 150000, wall: '#55606b', mortar: '#46505a', floor: '#8b9096', grid: '#7f858c', plate: '#7a8086', item: '#c9d0d6',
       glass: '#a9c4d6', board: '#3e6a8a', boardHi: '#5f8fb0', goods: 'nails', unit: 'Гвозди', unit1: 'Цена гвоздя', start: 'nailer',
       desc: 'Третья ветка завода. Тянут проволоку, рубят гвозди и полируют их в барабане. Мест шесть: четыре внизу и два сверху. Если в цеху кирпичей горит печь, проволока выходит закалённой и дороже.',
       opened: 'Цех гвоздей открыт! Поставь к гвоздильному автомату сотрудника' },
-    { name: 'Стекло', sign: 'ЦЕХ 4 · СТЕКЛО', cost: 5000000, wall: '#2e2440', mortar: '#1d1629', floor: '#3a3150', grid: '#463c60', item: '#9fe6ef',
+    { name: 'Стекло', sign: 'ЦЕХ 4 · СТЕКЛО', cost: 3000000, wall: '#2e2440', mortar: '#1d1629', floor: '#3a3150', grid: '#463c60', item: '#9fe6ef',
       board: '#6a3f8a', boardHi: '#9a6ac2', goods: 'glass', unit: 'Стекло', unit1: 'Цена стекла', start: 'melt', hot: [1, 3, 4, 5],
       plates: ['#b34f78', '#c7723a', '#b89a2a', '#4f9550', '#4f63bf', '#a8479a'],
       desc: 'Четвёртая ветка завода. Шесть мест стоят подковой вокруг горна, нижние углы пустые. Места посередине сторон касаются горна и работают на 20% быстрее. Если в цеху гвоздей крутится барабан, витражи выходят дороже.',
       opened: 'Цех стекла открыт! Поставь к стекловарке сотрудника' },
-    { name: 'Пуфики', sign: 'ЦЕХ 5 · ПУФИКИ', cost: 300000000, wall: '#6aa2dc', mortar: '#5a90cc', floor: '#94643a', grid: '#94643a', plate: '#a8763f', frame: '#5a3420', item: '#f08cb4',
+    { name: 'Пуфики', sign: 'ЦЕХ 5 · ПУФИКИ', cost: 60000000, wall: '#6aa2dc', mortar: '#5a90cc', floor: '#94643a', grid: '#94643a', plate: '#a8763f', frame: '#5a3420', item: '#f08cb4',
       glass: '#cfe8f2', board: '#2f5e46', boardHi: '#3f7a5a', goods: 'poufs', unit: 'Пуфики', unit1: 'Цена пуфика',
       desc: 'Пятая ветка завода, школьный класс. Шьют чехлы и набивают пуфики. Места два, а станков с собой нет: швейная машинка придёт в ближайшем выборе карт. Если в цеху досок работает сушилка, пуфики дороже, а если в цеху стекла работает витраж, набивка быстрее.',
       opened: 'Цех пуфиков открыт! Швейная машинка ждёт в ближайшем выборе карт' },
     // workshops 6–10; startSlot: where the machine that comes with the workshop stands
-    { name: 'Пицца', sign: 'ЦЕХ 6 · ПИЦЦА', cost: 2e10, wall: '#f1e3c4', mortar: '#e3d0a8', floor: '#e9dcc0', grid: '#e9dcc0', plate: '#c98a52', frame: '#6a3f22', item: '#f2c94c', board: '#3f9a4f', boardHi: '#5fb86a', goods: 'pizza', unit: 'Пицца', unit1: 'Цена пиццы', start: 'dough',
+    { name: 'Пицца', sign: 'ЦЕХ 6 · ПИЦЦА', cost: 6e8, wall: '#f1e3c4', mortar: '#e3d0a8', floor: '#e9dcc0', grid: '#e9dcc0', plate: '#c98a52', frame: '#6a3f22', item: '#f2c94c', board: '#3f9a4f', boardHi: '#5fb86a', goods: 'pizza', unit: 'Пицца', unit1: 'Цена пиццы', start: 'dough',
       desc: 'Шестая ветка завода, пиццерия. Месят тесто, кладут начинку и пекут в дровяной печи. Места идут цепочкой: две пары, нижняя сдвинута вправо. Пока работает печь, у всех сотрудников завода обед: +10% силы.',
       opened: 'Пиццерия открыта! Поставь к тестомесу сотрудника' },
-    { name: 'Голуби', sign: 'ЦЕХ 7 · ГОЛУБИ', cost: 1.5e12, wall: '#8fc4ea', mortar: '#7ab0d8', floor: '#6e6a72', grid: '#6e6a72', plate: '#b08a58', frame: '#5a3f2a', item: '#a9b2c3', board: '#6a4a2c', boardHi: '#8a6a44', goods: 'pigeons', unit: 'Голуби', unit1: 'Цена голубя', start: 'feeder',
+    { name: 'Голуби', sign: 'ЦЕХ 7 · ГОЛУБИ', cost: 2e10, wall: '#8fc4ea', mortar: '#7ab0d8', floor: '#6e6a72', grid: '#6e6a72', plate: '#b08a58', frame: '#5a3f2a', item: '#a9b2c3', board: '#6a4a2c', boardHi: '#8a6a44', goods: 'pigeons', unit: 'Голуби', unit1: 'Цена голубя', start: 'feeder',
       desc: 'Седьмая ветка завода, крыша. Дрессируют почтовых голубей. Пять мест крестом, как голубь с раскрытыми крыльями: центр касается всех. Голубиная почта: каждый работающий станок цеха приносит посылки на 15% чаще.',
       opened: 'Голубятня открыта! Поставь к кормушке сотрудника' },
-    { name: 'Манга', sign: 'ЦЕХ 8 · МАНГА', cost: 1e14, wall: '#efe6cf', mortar: '#9a7650', floor: '#cfc890', grid: '#cfc890', plate: '#fbf8f0', frame: '#2b2135', item: '#fbf8f0', board: '#c8323c', boardHi: '#e05a5a', goods: 'manga', unit: 'Манга', unit1: 'Цена тома', start: 'sketch',
+    { name: 'Манга', sign: 'ЦЕХ 8 · МАНГА', cost: 6e11, wall: '#efe6cf', mortar: '#9a7650', floor: '#cfc890', grid: '#cfc890', plate: '#fbf8f0', frame: '#2b2135', item: '#fbf8f0', board: '#c8323c', boardHi: '#e05a5a', goods: 'manga', unit: 'Манга', unit1: 'Цена тома', start: 'sketch',
       desc: 'Восьмая ветка завода, студия манги. Рисуют наброски, тушуют и печатают тома. Верхнее место стоит отдельно и ни с кем не соседствует. Онгоинг: цена манги +10% за каждую смену подряд, когда цех работал, а смена простоя всё сбрасывает.',
       opened: 'Студия манги открыта! Поставь к столу набросков сотрудника' },
-    { name: 'Пепси', sign: 'ЦЕХ 9 · ЖИВЫЕ БУТЫЛКИ', cost: 8e15, wall: '#cfe3ee', mortar: '#a8c4d4', floor: '#8fa3ae', grid: '#7e929d', plate: '#dfe7ec', frame: '#44505c', item: '#3f7ac2', board: '#13439a', boardHi: '#3f7ac2', goods: 'bottles', unit: 'Бутылки', unit1: 'Цена бутылки', start: 'extract', startSlot: 3,
+    { name: 'Пепси', sign: 'ЦЕХ 9 · ЖИВЫЕ БУТЫЛКИ', cost: 2e13, wall: '#cfe3ee', mortar: '#a8c4d4', floor: '#8fa3ae', grid: '#7e929d', plate: '#dfe7ec', frame: '#44505c', item: '#3f7ac2', board: '#13439a', boardHi: '#3f7ac2', goods: 'bottles', unit: 'Бутылки', unit1: 'Цена бутылки', start: 'extract', startSlot: 3,
       desc: 'Девятая ветка завода, лаборатория. Здесь выращивают живые бутылки пепси. Экстрактор пепси открывается вместе с цехом, занимает место в три ряда и касается всех трёх мест слева.',
       opened: 'Лаборатория открыта! Поставь к экстрактору сотрудника' },
-    { name: 'Калибровка', tab: 'Калибр.', sign: 'ЦЕХ 10 · КАЛИБРОВКА', cost: 5e17, wall: '#f4f7f9', mortar: '#dfe5ea', floor: '#e9eef2', grid: '#dfe5ea', plate: '#ffffff', frame: '#9aa3ad', item: '#5aa9e6', board: '#5aa9e6', boardHi: '#8fd3f0', goods: 'calib', unit: 'Калибровки', unit1: 'Цена калибровки', start: 'etalon', startSlot: 2,
+    { name: 'Калибровка', tab: 'Калибр.', sign: 'ЦЕХ 10 · КАЛИБРОВКА', cost: 8e14, wall: '#f4f7f9', mortar: '#dfe5ea', floor: '#e9eef2', grid: '#dfe5ea', plate: '#ffffff', frame: '#9aa3ad', item: '#5aa9e6', board: '#5aa9e6', boardHi: '#8fd3f0', goods: 'calib', unit: 'Калибровки', unit1: 'Цена калибровки', start: 'etalon', startSlot: 2,
       desc: 'Десятая ветка завода, белая лаборатория: калибруют туалеты и аэрогрили. В центре Эталон, он открывается вместе с цехом и работает без сотрудника: чем больше соседей работает, тем он дороже. Унитаз рядом с аэрогрилем: «Это одно и то же», сила обоих ×2.',
       opened: 'Калибровка открыта! Эталон ждёт работающих соседей' }
   ];
@@ -438,12 +448,16 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     palach: { name: 'Палач', role: 'Кадровик', power: 1.4, speed: 1.0, luck: 0.05, perk: 'Предупреждение: в начале смены самый слабый работающий сосед боится увольнения, у него сила ×1,6 до конца смены.' },
     thief: { name: 'Воришка', she: true, role: 'Карманница', power: 1.0, speed: 1.3, luck: 0.15, perk: 'Стащила: в начале смены копирует себе случайную экипировку соседа по шкафчику до конца смены.' },
     raccoons: { name: 'Три енота в плаще', role: 'Совсем не еноты', power: 0.7, speed: 0.9, luck: 0.05, perk: 'Трое в плаще: с шансом 33% вместо одной штуки выходят три.' },
-    rebel: { name: 'Рейбел', she: true, role: 'Повстанка', power: 1.2, speed: 1.0, luck: 0.1, perk: 'Союзник: первый свободный соседний станок работает с её союзником, как с сотрудником силы 0,6 и скорости 1,0 (без перков и экипировки).' }
+    rebel: { name: 'Рейбел', she: true, role: 'Повстанка', power: 1.2, speed: 1.0, luck: 0.1, perk: 'Союзник: первый свободный соседний станок работает с её союзником, как с сотрудником силы 0,6 и скорости 1,0 (без перков и экипировки).' },
+    squanch: { name: 'Сквонч', role: 'Сквончи из Рика и Морти', power: 1.3, speed: 1.0, luck: 0.15, perk: '«Сквонч!»: в начале каждой смены сквончит случайную характеристику до конца смены: сила или скорость ×1,5, или удача +15%.' },
+    spaghetti: { name: 'Макаронный монстр', role: 'Клубок спагетти', power: 1.2, speed: 0.8, luck: 0.1, perk: 'Макаронные щупальца: соседние станки без сотрудника работают его щупальцами, как с сотрудником с 30% его силы и 50% его скорости (без перков и экипировки).' }
   };
   const FAMILY = ['jedi', 'kast', 'batya'];
   const ALIENS = ['alien', 'toyalien'];
   const SKIN_KINDS = { power: 'сила', speed: 'скорость', value: 'цена' };
   const SQ_KINDS = ['power', 'speed', 'price'];
+  // Squanch's own roll every shift
+  const SQK = ['power', 'speed', 'luck'], SQK_TXT = { power: 'Сила ×1,5', speed: 'Скорость ×1,5', luck: 'Удача +15%' };
   // skills are bought once with coins and then fire on their own while the worker stands at a machine:
   // active for dur seconds at the start of every cd-second cycle. Their price comes from skillCost()
   const SKILLS = {
@@ -497,7 +511,10 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     palach: { name: 'Сокращение штата', kind: 'teamPower', mult: 1.5, dur: 10, cd: 60, desc: 'Раз в минуту на 10 с весь его цех боится сокращения: сила ×1,5.' },
     thief: { name: 'Карманница', kind: 'luck', dur: 8, cd: 50, desc: 'Каждые 50 с на 8 с каждая штука выходит двойной.' },
     raccoons: { name: 'Набег на помойку', kind: 'trash', dur: 8, cd: 50, desc: 'Каждые 50 с на 8 с каждая штука выходит тройной.' },
-    rebel: { name: 'Жертва', kind: 'sacrifice', dur: 10, cd: 60, desc: 'Раз в минуту на 10 с союзник работает с её силой, скоростью и удачей.' }
+    rebel: { name: 'Жертва', kind: 'sacrifice', dur: 10, cd: 60, desc: 'Раз в минуту на 10 с союзник работает с её силой, скоростью и удачей.' },
+    // a coin at the start of every cycle: the machine stands or runs ×2,5; with «Drinking buddies» the coin is always lucky
+    squanch: { name: 'Пьяный уже не мастер', kind: 'drunk', mult: 2.5, dur: 10, cd: 60, desc: 'Раз в минуту на 10 с монетка: либо станок стоит, либо скорость ×2,5.' },
+    spaghetti: { name: 'Болоньезе', kind: 'bolognese', dur: 10, cd: 60, desc: 'Раз в минуту на 10 с щупальца работают в полную силу и скорость монстра.' }
   };
   const CARDS = {
     m_bench: { name: 'Верстак', type: 'machine', machine: 'bench', tag: 'Станки', rar: 0, desc: 'Доска стоит 2,2. Рядом с пилорамой: +25% к цене её досок.' },
@@ -571,6 +588,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     w_thief: { name: 'Новый сотрудник', type: 'worker', worker: 'thief', tag: 'Сотрудники', rar: 2, loc: 3, desc: 'Приходит Воришка. Таскает экипировку у соседей по шкафчику.' },
     w_raccoons: { name: 'Новый сотрудник', type: 'worker', worker: 'raccoons', tag: 'Сотрудники', rar: 2, loc: 3, desc: 'Приходят три енота в плаще. Иногда три штуки вместо одной.' },
     w_rebel: { name: 'Новый сотрудник', type: 'worker', worker: 'rebel', tag: 'Сотрудники', rar: 3, loc: 4, desc: 'Приходит Рейбел. Союзник работает на соседнем станке.' },
+    w_squanch: { name: 'Новый сотрудник', type: 'worker', worker: 'squanch', tag: 'Сотрудники', rar: 2, loc: 5, desc: 'Приходит Сквонч. Каждую смену сквончит себе силу, скорость или удачу.' },
+    w_spaghetti: { name: 'Новый сотрудник', type: 'worker', worker: 'spaghetti', tag: 'Сотрудники', rar: 3, loc: 5, desc: 'Приходит Макаронный монстр. Щупальца работают на соседних пустых станках.' },
     w_kaneki: { name: 'Новый сотрудник', type: 'worker', worker: 'kaneki', tag: 'Сотрудники', rar: 3, loc: 4, desc: 'Приходит Канеки. С кофе очень силён, еду не ест.' },
     // afterQ: the card drops only from this shift on
     w_digger: { name: 'Новый сотрудник', type: 'worker', worker: 'digger', tag: 'Сотрудники', rar: 2, afterQ: 5, desc: 'Приходит Могильщик. Сторожит нежить и выкапывает посылки.' },
@@ -640,7 +659,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     u_pizza4: { name: 'Пицца 4 сына', type: 'global', tag: 'Сотрудники', rar: 1, food: true, eff: {}, desc: 'Четыре самых сильных сотрудника завода: сила ×1,4.' },
     e_pillow: { name: 'Подушка-подружка', type: 'equip', tag: 'Экипировка', rar: 0, eff: {}, desc: 'Считается соседом по шкафчику: +5% силы, а без соседей по шкафчику +15%.' },
     e_honeycake: { name: 'Медовик', type: 'equip', tag: 'Экипировка', rar: 0, food: true, eff: { power: 1.4 }, desc: 'Сила ×1,4.' },
-    e_jelly: { name: 'Желе', type: 'equip', tag: 'Экипировка', rar: 0, food: true, eff: { speed: 1.4 }, desc: 'Скорость ×1,4.' },
+    e_jelly: { name: 'Желе', type: 'equip', tag: 'Экипировка', rar: 0, food: true, eff: { speed: 1.4 }, desc: 'Скорость ×1,4, у Слаймочки ×2.' },
     m_pump: { name: 'Кирпичный насос', type: 'machine', machine: 'pump', tag: 'Станки', rar: 2, desc: 'Кирпич стоит 8. Работает без сотрудника, как сотрудник с силой 0,5 и скоростью 1,0.' },
     e_flipflop: { name: 'Сланец победы', type: 'equip', tag: 'Экипировка', rar: 1, eff: {}, desc: 'Когда квота смены уже выполнена, его доход ×1,5 до конца смены, у Бати ×2.' },
     u_waffle: { name: 'День вафель', type: 'global', tag: 'Улучшения', rar: 2, eff: {}, desc: 'Каждая 5-я смена: весь доход ×2.' },
@@ -834,6 +853,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     thief: (r, d, x) => { x.drawImage(SPR.thief, 2, 0, 19, 19, 0, 0, 16, 16); },
     raccoons: (r, d, x) => { x.drawImage(SPR.raccoons, 2, 1, 19, 19, 0, 0, 16, 16); },
     rebel: (r, d, x) => { x.drawImage(SPR.rebel, 2, 13, 19, 19, 0, 0, 16, 16); },
+    squanch: (r, d, x) => { x.drawImage(SPR.squanch, 2, 1, 19, 19, 0, 0, 16, 16); },
+    spaghetti: (r, d, x) => { x.drawImage(SPR.spaghetti, 2, 0, 19, 19, 0, 0, 16, 16); },
     // Master class: a chalkboard with a yellow lightning, the same lightning as on a locker with an opened skill
     masterclass: r => { r(0, 1, 16, 12, K); r(1, 2, 14, 10, '#8a5a32'); r(2, 3, 12, 8, '#2f5d4a'); r(2, 3, 12, 1, '#3f7a60'); r(8, 3, 3, 1, '#ffd54a'); r(7, 4, 3, 1, '#ffd54a'); r(6, 5, 3, 1, '#ffd54a'); r(5, 6, 5, 1, '#ffd54a'); r(7, 7, 2, 1, '#ffd54a'); r(6, 8, 2, 1, '#ffd54a'); r(5, 9, 2, 1, '#ffd54a'); r(10, 9, 3, 1, '#e9eef2'); r(3, 13, 2, 3, K); r(11, 13, 2, 3, K); r(4, 13, 1, 2, '#8a5a32'); r(12, 13, 1, 2, '#8a5a32'); },
     grease: r => { r(4, 3, 5, 1, K); r(4, 3, 1, 4, K); r(8, 3, 1, 4, K); r(1, 7, 10, 9, K); r(2, 8, 8, 7, '#5a6270'); r(3, 9, 2, 2, '#9aa3ad'); r(10, 5, 5, 2, K); r(14, 3, 2, 3, K); r(14, 8, 1, 2, '#f2c14e'); },
@@ -897,7 +918,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     u_postman: 'postman', u_courier: 'courier', u_customs: 'customs', u_sub: 'sub', x_logistics: 'mLogistics', u_snailpost: 'snailpost',
     s_hand: 'hand', u_snails: 'snails', w_thoth: 'thoth', w_rat: 'rat', w_lin: 'lin', w_horse: 'horse', w_rabbit: 'rabbit', k_skill: 'masterclass',
     w_sunflower: 'sunflower', w_flytrap: 'flytrap', w_honeybear: 'honeybear', w_arc: 'arc', w_nurse: 'nurse', w_nemu: 'nemu', w_tuesday: 'tuesday', w_zombie: 'zombie', w_digger: 'digger', w_kaneki: 'kaneki', w_raven: 'raven',
-    w_fairy: 'fairy', w_pirate: 'pirate', w_beekeeper: 'beekeeper', w_kisa: 'kisa', w_toyalien: 'toyalien', w_code10: 'code10', w_code80: 'code80', w_yeti: 'yeti', w_slime: 'slime', w_moth: 'moth', w_gastriter: 'gastriter', w_palach: 'palach', w_thief: 'thief', w_raccoons: 'raccoons', w_rebel: 'rebel',
+    w_fairy: 'fairy', w_pirate: 'pirate', w_beekeeper: 'beekeeper', w_kisa: 'kisa', w_toyalien: 'toyalien', w_code10: 'code10', w_code80: 'code80', w_yeti: 'yeti', w_slime: 'slime', w_moth: 'moth', w_gastriter: 'gastriter', w_palach: 'palach', w_thief: 'thief', w_raccoons: 'raccoons', w_rebel: 'rebel', w_squanch: 'squanch', w_spaghetti: 'spaghetti',
     u_scotch: 'scotch', e_thirst: 'thirst', e_soda: 'soda', s_plumbus: 'plumbus', u_squanch: 'squanch', u_hyper: 'hyper', u_triad: 'triad', s_veins: 'veins', s_banner: 'banner', s_sponge: 'sponge',
     u_zorya: 'zorya', s_ketchup: 'ketchup', e_mirror: 'mirror', s_spice: 'spice', s_sauce: 'sauce', e_crackers: 'crackers', s_glue: 'glue', u_fattoad: 'fattoad', u_novapost: 'novapost', e_shadow: 'shadow',
     u_pizza4: 'pizza4', e_pillow: 'pillow', e_honeycake: 'honeycake', e_jelly: 'jelly', m_pump: 'brickpump', e_flipflop: 'flipflop', u_waffle: 'waffle', s_queen: 'clayqueen', e_salve: 'burnsalve',
@@ -914,7 +935,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   const NEW_LOC_SLOTS = [4, 5, 6, 4, 5];
   const emptySlots = n => Array.from({ length: n }, () => ({ machine: null, worker: null, upg: [], acc: 0, kiss: 0 }));
   const fresh = () => ({
-    v: 14, money: 0, xp: 0, level: 1, planks: 0, bricks: 0, nails: 0, glass: 0, poufs: 0, pizza: 0, pigeons: 0, manga: 0, bottles: 0, calib: 0, earned: 0, cur: 0,
+    v: 15, money: 0, xp: 0, level: 1, planks: 0, bricks: 0, nails: 0, glass: 0, poufs: 0, pizza: 0, pigeons: 0, manga: 0, bottles: 0, calib: 0, earned: 0, cur: 0,
     locs: [
       { unlocked: true, slots: [{ machine: null, worker: null, upg: [], acc: 0, kiss: 0 }, { machine: 'saw', worker: 'crow', upg: [], acc: 0, kiss: 0 }, { machine: null, worker: null, upg: [], acc: 0, kiss: 0 }] },
       { unlocked: false, slots: emptySlots(4) },
@@ -926,18 +947,18 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     workers: { crow: { unlocked: true, equip: [] }, mrp: { unlocked: true, equip: [] }, tramp: { unlocked: false, equip: [] }, dog: { unlocked: false, equip: [] }, toad: { unlocked: false, equip: [] }, pink: { unlocked: false, equip: [] }, v1: { unlocked: false, equip: [] }, v2: { unlocked: false, equip: [] }, jeanne: { unlocked: false, equip: [] }, alien: { unlocked: false, equip: [] }, jedi: { unlocked: false, equip: [] }, silver: { unlocked: false, equip: [] }, mrsha: { unlocked: false, equip: [] }, kast: { unlocked: false, equip: [] }, batya: { unlocked: false, equip: [] },
       thoth: { unlocked: false, equip: [] }, rat: { unlocked: false, equip: [] }, lin: { unlocked: false, equip: [] }, horse: { unlocked: false, equip: [] }, rabbit: { unlocked: false, equip: [] },
       sunflower: { unlocked: false, equip: [] }, flytrap: { unlocked: false, equip: [] }, honeybear: { unlocked: false, equip: [] }, arc: { unlocked: false, equip: [] }, nurse: { unlocked: false, equip: [] }, nemu: { unlocked: false, equip: [] }, tuesday: { unlocked: false, equip: [] }, zombie: { unlocked: false, equip: [] }, digger: { unlocked: false, equip: [] }, kaneki: { unlocked: false, equip: [] }, raven: { unlocked: false, equip: [] },
-      fairy: { unlocked: false, equip: [] }, pirate: { unlocked: false, equip: [] }, beekeeper: { unlocked: false, equip: [] }, kisa: { unlocked: false, equip: [] }, toyalien: { unlocked: false, equip: [] }, code10: { unlocked: false, equip: [] }, code80: { unlocked: false, equip: [] }, yeti: { unlocked: false, equip: [] }, slime: { unlocked: false, equip: [] }, moth: { unlocked: false, equip: [] }, gastriter: { unlocked: false, equip: [] }, palach: { unlocked: false, equip: [] }, thief: { unlocked: false, equip: [] }, raccoons: { unlocked: false, equip: [] }, rebel: { unlocked: false, equip: [] } },
+      fairy: { unlocked: false, equip: [] }, pirate: { unlocked: false, equip: [] }, beekeeper: { unlocked: false, equip: [] }, kisa: { unlocked: false, equip: [] }, toyalien: { unlocked: false, equip: [] }, code10: { unlocked: false, equip: [] }, code80: { unlocked: false, equip: [] }, yeti: { unlocked: false, equip: [] }, slime: { unlocked: false, equip: [] }, moth: { unlocked: false, equip: [] }, gastriter: { unlocked: false, equip: [] }, palach: { unlocked: false, equip: [] }, thief: { unlocked: false, equip: [] }, raccoons: { unlocked: false, equip: [] }, rebel: { unlocked: false, equip: [] }, squanch: { unlocked: false, equip: [] }, spaghetti: { unlocked: false, equip: [] } },
     lockers: ['crow', 'mrp', 'tramp', 'dog', 'toad', 'pink', 'v1', 'v2', 'jeanne', 'alien', 'jedi', 'silver', 'mrsha', 'kast', 'batya', 'thoth', 'rat', 'lin', 'horse', 'rabbit',
       'sunflower', 'flytrap', 'honeybear', 'arc', 'nurse', 'nemu', 'tuesday', 'zombie', 'digger', 'kaneki', 'raven',
-      'fairy', 'pirate', 'beekeeper', 'kisa', 'toyalien', 'code10', 'code80', 'yeti', 'slime', 'moth', 'gastriter', 'palach', 'thief', 'raccoons', 'rebel'],
+      'fairy', 'pirate', 'beekeeper', 'kisa', 'toyalien', 'code10', 'code80', 'yeti', 'slime', 'moth', 'gastriter', 'palach', 'thief', 'raccoons', 'rebel', 'squanch', 'spaghetti'],
     cards: [], offers: [], shopBuys: 0, crowCount: 0, silverCount: 0, firstOffer: false, crateIn: 20,
     // t: run time, q: current quota, qT/qEarned: time and coins inside it, opened: run time each workshop opened at;
     // brk: a break between shifts, time stands still; shop: the break's showcase as [{ id, bought }];
-    // sq: this shift's Squanch rolls, nova: Nova poshta's card crate already came this shift; this shift's spark of Arc Warden,
+    // sq: this shift's Posquonchim rolls, sqK: the stat Squanch himself squanched, nova: Nova poshta's card crate already came this shift; this shift's spark of Arc Warden,
     // workers bitten by the zombie girl, the Tuesday ghost's rollback done; rose: «Rising from the dead» used up this run
     // ongoing: shifts in a row the manga studio worked, mangaOn: it worked this shift;
     // claw: the worker the toy alien's claw chose this shift, warned: the neighbour the executioner warned, stolen: the equipment card the thief copied
-    run: { t: 0, q: 1, qT: 0, qEarned: 0, brk: true, shop: [], rule: null, sq: [], nova: false, spark: null, bitten: [], rolled: false, rose: false, claw: null, warned: null, stolen: null, over: false, rep: 0, passed: [], hired: 0, skills: 0, bestRate: 0, opened: [0, null, null, null, null, null, null, null, null, null], ongoing: 0, mangaOn: false }
+    run: { t: 0, q: 1, qT: 0, qEarned: 0, brk: true, shop: [], rule: null, sq: [], sqK: null, nova: false, spark: null, bitten: [], rolled: false, rose: false, claw: null, warned: null, stolen: null, over: false, rep: 0, passed: [], hired: 0, skills: 0, bestRate: 0, opened: [0, null, null, null, null, null, null, null, null, null], ongoing: 0, mangaOn: false }
   });
   const NEW_WORKERS = ['sunflower', 'flytrap', 'honeybear', 'arc', 'nurse', 'nemu', 'tuesday', 'zombie', 'digger', 'kaneki', 'raven'];
   const NEW_WORKERS_13 = ['fairy', 'pirate', 'beekeeper', 'kisa', 'toyalien', 'code10', 'code80', 'yeti', 'slime', 'moth', 'gastriter', 'palach', 'thief', 'raccoons', 'rebel'];
@@ -1016,7 +1037,16 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       if (s.run) { while (s.run.opened.length < 10) s.run.opened.push(null); Object.assign(s.run, { ongoing: 0, mangaOn: false }); }
       s.v = 14;
     }
-    return s.v === 8 || s.v === 14 ? s : null;
+    if (s.v === 14) {
+      // build 15: Squanch and the Spaghetti monster joined; a locker and a machine hold 3 cards (BAL.cap), the extra ones (the latest taken) leave the deck
+      for (const id of ['squanch', 'spaghetti']) { s.workers[id] = { unlocked: false, equip: [] }; s.lockers.push(id); }
+      const trim = list => list.splice(3).forEach(c => s.cards.splice(s.cards.indexOf(c), 1));
+      Object.values(s.workers).forEach(w => trim(w.equip));
+      s.locs.forEach(L => L.slots.forEach(z => trim(z.upg)));
+      if (s.run) s.run.sqK = null;
+      s.v = 15;
+    }
+    return s.v === 8 || s.v === 15 ? s : null;
   }
   // meta lives across runs: reputation, its unlocks, achievements and records
   const META_KEY = 'pixel-factory-meta-v1';
@@ -1058,7 +1088,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   // xp/shop/quota grow geometrically, every levelEvery-th level gives a card, crates come every crate..2×crate seconds;
   // a crate holds a share of the quota: plain crateQ, gold crateGoldQ (chance crateGold), or a card pick (chance crateCard);
   // crates pay at most crateCap of the quota a shift, so they help but never carry it; from shift skillCoinQ skills are opened only by cards
-  const BAL = { tempo: 2, xp0: 15, xpK: 2.2, levelEvery: 3, shopQ: 0.3, shopRoll: 1, rarPrice: [0.6, 1, 1.6, 2.4], masteryEvery: 9, crate: 40, crateQ: [0.02, 0.06], crateGoldQ: [0.08, 0.12], crateGold: 0.1, crateCard: 0.05, quotaT: 90, quota0: 210, quotaK: 1.9, quotaA: 1.2, crateCap: 0.3, skillCoinQ: 10 };
+  const BAL = { tempo: 2, xp0: 15, xpK: 2.2, levelEvery: 3, shopQ: 0.3, shopRoll: 1, rarPrice: [0.6, 1, 1.6, 2.4], masteryEvery: 9, crate: 40, crateQ: [0.02, 0.06], crateGoldQ: [0.08, 0.12], crateGold: 0.1, crateCard: 0.05, quotaT: 90, quota0: 210, quotaK: 1.8, quotaA: 1.04, crateCap: 0.3, skillCoinQ: 10, cap: 3 };
   const need = l => Math.round(BAL.xp0 * Math.pow(BAL.xpK, l - 1));
   // the showcase is priced off the quota just passed, so a runaway income cannot make cards free
   const shopBase = () => quotaTarget(Math.max(1, state.run.q - 1)) * BAL.shopQ;
@@ -1109,9 +1139,12 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     }
     const pz = workerPlace('zombie');
     if (pz && !rule('sanepid')) { const nb = neigh(pz.l, pz.i).map(j => slotsOf(pz.l)[j].worker).filter(Boolean); if (nb.length) run.bitten.push(nb[Math.floor(Math.random() * nb.length)]); }
-    // Squanch: every copy squanches power, speed or price of everyone for the shift
-    run.sq = Array.from({ length: cardN('u_squanch') }, () => SQ_KINDS[Math.floor(Math.random() * 3)]);
+    // Posquonchim: every copy squanches power, speed or price of everyone for the shift
+    run.sq = Array.from({ length: sqRolls() }, () => SQ_KINDS[Math.floor(Math.random() * 3)]);
     if (run.sq.length) toast(`Посквончим: ${run.sq.map(k => SKIN_KINDS[k === 'price' ? 'value' : k]).join(' и ')} всех ×1,3`);
+    // Squanch squanches one of his own stats for the shift
+    run.sqK = state.workers.squanch.unlocked ? SQK[Math.floor(Math.random() * 3)] : null;
+    if (run.sqK) toast(`Сквонч! ${SQK_TXT[run.sqK]}`);
     return true;
   }
   // quotas speed up: quota q grows quotaK × quotaA^(q−2) times over the previous one, so a stack of multipliers still hits a wall
@@ -1125,6 +1158,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   const shiftT = () => state.run.brk || state.run.over ? null : state.run.qT;
   const newCrate = () => BAL.crate * (1 + Math.random());
   const cardN = id => state.cards.filter(x => x === id).length;
+  // every copy of Posquonchim rolls twice while Squanch is on the factory
+  const sqRolls = () => cardN('u_squanch') * (state.workers.squanch.unlocked ? 2 : 1);
   // how fast the crate timer runs: Postman doubles it, a working Rabbit detective (or a Shadow copying him) adds 25%, every working machine of the pigeon roof 15%
   const crateFreq = g => Math.pow(2, cardN('u_postman') - cardN('u_snailpost')) * (workerPlace('rabbit') || Object.values(g.shadow).includes('rabbit') ? 1.25 : 1) * (1 + 0.15 * g.pigeonPost);
   // a working Pirate makes crates ×1,5 richer and lifts their limit ×1,5
@@ -1255,9 +1290,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     state.cards.forEach(id => { if (id === 'u_union') g.powerX *= 1 + 0.05 * crew; });
     // Overtime's minus is kept apart, so Mirror armour can shake it off
     g.minusPower = Math.pow(0.8, cardN('u_overtime'));
-    // Squanch: this shift's rolls; a copy not rolled yet (in a break) counts at its mean, ×1,3 spread over the three
+    // Posquonchim: this shift's rolls; a copy not rolled yet (in a break) counts at its mean, ×1,3 spread over the three
     const sq = state.run.sq || [];
-    for (let k = 0; k < cardN('u_squanch'); k++) { if (sq[k]) g[sq[k] + 'X'] *= 1.3; else SQ_KINDS.forEach(kd => { g[kd + 'X'] *= Math.pow(1.3, 1 / 3); }); }
+    for (let k = 0; k < sqRolls(); k++) { if (sq[k]) g[sq[k] + 'X'] *= 1.3; else SQ_KINDS.forEach(kd => { g[kd + 'X'] *= Math.pow(1.3, 1 / 3); }); }
     // Zorya's dawn doubles prices for the first 20 s of a shift, the Fat toad swells 3% every 10 s; Waffle day doubles every 5th shift
     const sT = shiftT();
     if (sT != null && sT < 20) g.priceX *= Math.pow(2, cardN('u_zorya'));
@@ -1328,6 +1363,13 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const pArc = skillOn('arc') && workerPlace('arc');
     g.double = null;
     if (pArc) { const j = neigh(pArc.l, pArc.i).find(k => free(pArc.l, k) && !(g.ally && g.ally.l === pArc.l && g.ally.i === k)); g.double = j != null ? { l: pArc.l, i: j } : { l: pArc.l, i: pArc.i, self: true }; }
+    // the Spaghetti monster's tentacles take every free machine next to him that the ally and the double left (not the self-running pump)
+    const pSp = workerPlace('spaghetti'), taken = (p, l, k) => p && !p.self && p.l === l && p.i === k;
+    g.noodles = pSp && !onStrike('spaghetti') ? neigh(pSp.l, pSp.i).filter(k => free(pSp.l, k) && !MACH[slotsOf(pSp.l)[k].machine].auto && !taken(g.ally, pSp.l, k) && !taken(g.double, pSp.l, k)).map(i => ({ l: pSp.l, i })) : [];
+    // Drinking buddies: Squanch next to Batya
+    const pSq = workerPlace('squanch'), pBa = workerPlace('batya');
+    g.drink = !!(pSq && pBa && pSq.l === pBa.l && adjacent(pSq.l, pSq.i, pBa.i));
+    if (g.drink) g.combos.push('drink');
     // the graveyard: the gravedigger with the zombie girl spreads the bite, all three of the crew in one workshop can rise from the dead
     const pZ = workerPlace('zombie'), pD = workerPlace('digger'), pT = workerPlace('tuesday');
     g.epidemic = !!(pZ && pD && pZ.l === pD.l && adjacent(pZ.l, pZ.i, pD.i));
@@ -1407,9 +1449,14 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (g.pizza.includes(id) && id !== 'kaneki') power *= Math.pow(1.4, cardN('u_pizza4'));
     // Medovik is the honey bear's favourite: ×1,8 instead of ×1,4
     if (id === 'honeybear') power *= Math.pow(1.8 / 1.4, st.equip.filter(e => e === 'e_honeycake').length);
+    // Jelly is the slime girl's own kind: speed ×2 instead of ×1,4
+    if (id === 'slime') speed *= Math.pow(2 / 1.4, st.equip.filter(e => e === 'e_jelly').length);
+    // Squanch's roll for the shift; before his first roll it counts at its mean. Drinking buddies: +15% luck to both
+    let lx = g.drink && (id === 'squanch' || id === 'batya') ? 0.15 : 0;
+    if (id === 'squanch') { const k = state.run.sqK, f = k ? 1 : 1 / 3; if (!k || k === 'power') power *= Math.pow(1.5, f); if (!k || k === 'speed') speed *= Math.pow(1.5, f); if (!k || k === 'luck') lx += 0.15 * f; }
     if (g.trio.has(id)) { const k = Math.pow(1.3, cardN('u_triad')); power *= k; speed *= k; }
     if (g.lunch) power *= 1.1;
-    return { power, speed, luck: g.noLuck && !mirror ? 0 : Math.min(0.9, base.luck + l + g.luck), fb, fr, hasCoffee, mirror, food };
+    return { power, speed, luck: g.noLuck && !mirror ? 0 : Math.min(0.9, base.luck + l + g.luck + lx), fb, fr, hasCoffee, mirror, food };
   }
   function workerPlace(id) {
     for (let l = 0; l < state.locs.length; l++) { const i = slotsOf(l).findIndex(s => s.worker === id); if (i >= 0) return { l, i }; }
@@ -1465,7 +1512,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const baseV = s.machine === 'etalon' ? M.value * etN * etN : M.value;
     const dbl = !W && g.double && !g.double.self && g.double.l === l && g.double.i === i;
     const ally = !W && !dbl && g.ally && g.ally.l === l && g.ally.i === i;
-    const auto = !W && (M.auto || dbl || ally);
+    const noodle = !W && !dbl && !ally && g.noodles.some(n => n.l === l && n.i === i);
+    const auto = !W && (M.auto || dbl || ally || noodle);
     if ((!W && !auto) || M.rate === 0 || onStrike(W)) return { rate: 0, value: 0, income: 0, notes, ws: null, M, etN };
     const skM = { speed: g.team[l] || 1, power: 1, value: 1, income: 1 };
     if (g.teamV[l]) { skM.value *= g.teamV[l]; notes.push(`Пришелец, «${SKILLS.alien.name}»: цена ×${fmt(SKILLS.alien.mult)}`); }
@@ -1492,6 +1540,13 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       power = B * (1 + g.power) * g.powerX; speed = (1 + g.speed) * g.speedX;
       luck = spark ? 1 : g.noLuck ? 0 : Math.min(0.9, g.luck + lb);
       notes.push('Союзник Рейбел: сила 0,6, скорость 1,0');
+    } else if (noodle) {
+      // the tentacles work like a plain worker with 30% of the monster's power and 50% of his speed, in «Bolognese» with all of it
+      const full = skillOn('spaghetti');
+      B = WORKERS.spaghetti.power * (full ? 1 : 0.3); skM.speed = 1;
+      power = B * (1 + g.power) * g.powerX; speed = WORKERS.spaghetti.speed * (full ? 1 : 0.5) * (1 + g.speed) * g.speedX;
+      luck = spark ? 1 : g.noLuck ? 0 : Math.min(0.9, g.luck + lb);
+      notes.push(`${full ? `Щупальца, «${SKILLS.spaghetti.name}»` : 'Щупальца Макаронного монстра'}: сила ${fmt(power)}, скорость ${fmt(speed)}`);
     } else if (auto) {
       // the brick pump works alone like a plain worker: global cards reach it, perks, equipment and the dog's skill do not
       B = M.auto.power; skM.speed = 1;
@@ -1508,6 +1563,12 @@ textarea{height:84px;resize:vertical;word-break:break-all}
         power = Math.max(power, ...nb.map(o => o.power)); speed = Math.max(speed, ...nb.map(o => o.speed)); ws = { ...ws, luck: Math.max(ws.luck, ...nb.map(o => o.luck)) };
         notes.push('Искусственное тело: не слабее лучшего соседа');
       }
+      if (W === 'squanch' && skillOn('squanch')) {
+        if (state.workers.squanch.skKind === 'stop' && !g.drink) { notes.push(`Скилл «${SKILLS.squanch.name}»: монетка не та, станок стоит`); return { rate: 0, value: 0, income: 0, notes, ws, M, etN }; }
+        speedM *= SKILLS.squanch.mult; notes.push(`Скилл «${SKILLS.squanch.name}»: скорость ×2,5`);
+      }
+      if (W === 'squanch') notes.push(state.run.sqK ? `Сквонч! ${SQK_TXT[state.run.sqK]} до конца смены` : 'Сквонч! В смене выпадет сила, скорость или удача');
+      if (g.drink && (W === 'squanch' || W === 'batya')) notes.push('Собутыльники: удача +15%');
       if (W === 'nurse') { power *= 1.25; notes.push('Без лица: соседей не видит, сила ×1,25'); }
       if (W === 'nurse' && skillOn('nurse')) { speedM *= 2; notes.push('Сирена: дёргается, скорость ×2'); }
       if (g.shadow[W]) notes.push(`Тень повторяет перк: ${WORKERS[g.shadow[W]].name}`);
@@ -1695,8 +1756,17 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     selSlot = null; selWorker = null;
     renderSheet(); renderTabs();
   }
-  function finish(id, target) {
-    const cd = CARDS[id], before = globals().combos;
+  // a locker holds BAL.cap pieces of equipment and a machine BAL.cap cards: one worker or one machine cannot soak up the whole deck.
+  // A card for a full one replaces a card of the player's choice (drop), and the dropped card leaves the deck
+  const holder = (id, target) => CARDS[id].type === 'equip' ? state.workers[target].equip : CARDS[id].type === 'mupg' ? slotsOf(target.l)[target.i].upg : null;
+  const isFull = (id, target) => { const h = holder(id, target); return !!h && h.length >= BAL.cap; };
+  function finish(id, target, drop) {
+    const cd = CARDS[id], before = globals().combos, h = holder(id, target);
+    if (h && h.length >= BAL.cap) {
+      if (drop == null) { mode = { kind: 'replace', card: id, offer: mode && mode.offer, target }; renderSheet(); return; }
+      const [old] = h.splice(drop, 1);
+      state.cards.splice(state.cards.indexOf(old), 1);
+    }
     state.cards.push(id);
     if (cd.type === 'worker') { state.workers[cd.worker].unlocked = true; state.run.hired++; lockerPage = Math.floor(state.lockers.indexOf(cd.worker) / NL); toast(`${WORKERS[cd.worker].name} ${WORKERS[cd.worker].she ? 'пришла' : 'пришёл'} на завод!`); }
     if (cd.type === 'machine') slotsOf(target.l)[target.i].machine = cd.machine;
@@ -1736,8 +1806,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (cd.type === 'global') tg.push(null);
     let best = 0;
     try {
-      for (const t of tg) {
+      for (const t of tg) for (const d of isFull(id, t) ? [...holder(id, t).keys()] : [null]) {
         state = JSON.parse(JSON.stringify(saved));
+        if (d != null) { const [old] = holder(id, t).splice(d, 1); state.cards.splice(state.cards.indexOf(old), 1); }
         state.cards.push(id);
         if (cd.type === 'worker') { state.workers[cd.worker].unlocked = true; slotsOf(t.l)[t.i].worker = cd.worker; }
         if (cd.type === 'machine') slotsOf(t.l)[t.i].machine = cd.machine;
@@ -1767,6 +1838,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     else if (got('scarf')) toast('Комбо «Тёплый шарф»: шарф готов, Медаедь ×1,5!');
     else if (got('feat')) toast('Комбо «Сам с собой фит»: code10 и code80 ×1,5!');
     else if (got('sun')) toast('Комбо «Лучи чужого солнца»: пицца ×2!');
+    else if (got('drink')) toast('Комбо «Собутыльники»: удача +15%, монетка Сквонча всегда удачная!');
     else if (got('same')) toast('Комбо «Это одно и то же»: унитаз и аэрогриль, сила ×2!');
   }
   function unlockLoc(l) {
@@ -1786,7 +1858,10 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   let achTimer = 0;
   const openSkill = id => { const w = state.workers[id]; w.skill = true; w.skT = 0; state.run.skills++; rollSkin(id); };
   const skillShare = id => Math.min(1, skDur(id) / (SKILLS[id].shift ? quotaTime() : SKILLS[id].cd));
-  const rollSkin = id => { if (SKILLS[id].kind === 'random') state.workers[id].skKind = Object.keys(SKIN_KINDS)[Math.floor(Math.random() * 3)]; };
+  const rollSkin = id => {
+    if (SKILLS[id].kind === 'random') state.workers[id].skKind = Object.keys(SKIN_KINDS)[Math.floor(Math.random() * 3)];
+    if (SKILLS[id].kind === 'drunk') state.workers[id].skKind = Math.random() < 0.5 ? 'stop' : 'fast';
+  };
   function tick(dt) {
     // the Horse's strength (and a Shadow's, for when it copies her) builds up at a machine and is lost in the locker room
     const tiring = w => w === 'horse' || hasEq(w, 'e_shadow');
@@ -2795,27 +2870,23 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       const fl = Math.floor(t * 9) % 3; R(qx + 12, qy - 19 - (fl === 1 ? 1 : 0), 1, 3, '#ff7a2a'); R(qx + 12 + (fl === 2 ? 1 : 0), qy - 21 - (fl === 1 ? 1 : 0), 1, 2, '#f7c948');
       ell(qx + 36, qy + 4, 13, 5, K); ell(qx + 36, qy + 4, 12, 4, '#f4f8fb'); ell(qx + 36, qy + 3, 9, 3, '#e5a65a'); ell(qx + 36, qy + 3, 8, 2, '#f7d36a');
       R(qx + 32, qy + 2, 2, 1, '#b8322a'); R(qx + 38, qy + 3, 2, 1, '#b8322a'); R(qx + 35, qy + 4, 1, 1, '#57b04f'); R(qx + 40, qy + 1, 6, 4, '#f4f8fb');
-      // the cat: a fat ginger tabby with a white chest and a crooked chef hat, sits on a stool
+      // Squanchy sits on a bar stool, drags the slice with one paw and holds his paper bag with the other; once hired he leaves the stool
       const pull = (Math.sin(t * 1.4) + 1) / 2, kx = qx + 74 + Math.round(pull * 2), ky = qy + 6;
-      R(qx + 62, qy + 32, 24, 4, K); R(qx + 63, qy + 33, 22, 2, '#a8693a'); R(qx + 65, qy + 36, 2, 16, K); R(qx + 80, qy + 36, 2, 16, K); R(qx + 66, qy + 44, 15, 2, K);
-      const tl = Math.sin(t * 2.2); for (let k = 0; k < 8; k++) R(kx + 10 + k, ky + 22 - Math.round(Math.sin(k / 3 + tl) * 3) - k, 3, 3, K);
-      for (let k = 0; k < 8; k++) R(kx + 11 + k, ky + 23 - Math.round(Math.sin(k / 3 + tl) * 3) - k, 1, 1, k % 3 ? '#e8954a' : '#b8622a');
-      ell(kx + 2, ky + 18, 11, 10, K); ell(kx + 2, ky + 18, 10, 9, '#e8954a'); ell(kx, ky + 19, 5, 7, '#fbf3e4');
-      for (let k = 0; k < 3; k++) { R(kx + 8, ky + 13 + k * 4, 4, 1, '#b8622a'); R(kx - 8, ky + 14 + k * 4, 3, 1, '#b8622a'); }
-      R(kx - 4, ky + 26, 4, 3, K); R(kx - 3, ky + 27, 2, 1, '#fbf3e4'); R(kx + 3, ky + 26, 4, 3, K); R(kx + 4, ky + 27, 2, 1, '#fbf3e4');
-      ell(kx, ky + 4, 8, 6, K); ell(kx, ky + 4, 7, 5, '#e8954a'); ell(kx - 1, ky + 7, 4, 2, '#fbf3e4');
-      R(kx - 7, ky - 4, 4, 5, K); R(kx - 6, ky - 3, 2, 3, '#f2a0a8'); R(kx + 4, ky - 4, 4, 5, K); R(kx + 5, ky - 3, 2, 3, '#f2a0a8');
-      R(kx - 1, ky - 1, 2, 3, '#b8622a'); R(kx - 5, ky + 1, 1, 1, '#b8622a'); R(kx + 4, ky + 1, 1, 1, '#b8622a');
-      R(kx - 5, ky + 3, 3, 1, K); R(kx + 2, ky + 3, 3, 1, K); R(kx - 1, ky + 5, 2, 1, '#e8737a'); R(kx - 2, ky + 7, 1, 1, K); R(kx + 1, ky + 7, 1, 1, K);
-      R(kx - 9, ky + 5, 3, 1, '#fbf3e4'); R(kx + 7, ky + 5, 3, 1, '#fbf3e4');
-      // chef hat, tilted
-      R(kx - 6, ky - 2, 10, 3, K); R(kx - 5, ky - 1, 8, 1, '#ffffff');
-      ell(kx - 1, ky - 6, 6, 4, K); ell(kx - 1, ky - 6, 5, 3, '#ffffff'); ell(kx - 4, ky - 7, 2, 2, '#e9eef2');
-      // paw holding the slice, cheese strings back to the plate
-      const sx2 = kx - 16 + Math.round(pull * 2), sy2 = ky + 4;
-      R(qx + 44, sy2 + 3, sx2 - qx - 44, 1, '#f7e08a'); if (pull > 0.4) R(qx + 45, sy2 + 5, sx2 - qx - 47, 1, '#f7e08a');
-      R(sx2, sy2, 9, 6, K); R(sx2 + 1, sy2 + 1, 7, 4, '#f7d36a'); R(sx2 + 1, sy2 + 1, 7, 1, '#e5a65a'); R(sx2 + 3, sy2 + 2, 2, 2, '#b8322a'); R(sx2 + 6, sy2 + 3, 1, 1, '#57b04f');
-      R(sx2 + 7, sy2 + 1, kx - sx2 - 11, 4, K); R(sx2 + 7, sy2 + 2, kx - sx2 - 12, 2, '#e8954a'); R(sx2 + 7, sy2 + 2, 2, 2, '#fbf3e4');
+      R(qx + 62, qy + 18, 24, 4, K); R(qx + 63, qy + 19, 22, 2, '#a8693a'); R(qx + 65, qy + 22, 2, 30, K); R(qx + 80, qy + 22, 2, 30, K); R(qx + 66, qy + 40, 15, 2, K);
+      if (!state.workers.squanch.unlocked) {
+        const x0 = kx - 10, y0 = qy - 7, tl = Math.sin(t * 2.2);
+        // pink rat tail with rings and an orange tuft, swishes behind the stool
+        const tail = k => [x0 + 15 + k, y0 + 22 + Math.round(k * 1.3) + Math.round(Math.sin(k / 3 + tl) * 2)];
+        for (let k = 0; k < 10; k++) { const [tx, ty] = tail(k); R(tx - 1, ty - 1, 4, 4, K); }
+        for (let k = 0; k < 10; k++) { const [tx, ty] = tail(k); R(tx, ty, 2, 2, k % 3 ? '#ecd3d0' : '#d9aeb0'); }
+        const [ex, ey] = tail(10); R(ex - 1, ey - 2, 5, 6, K); R(ex, ey - 1, 3, 4, '#e0a040'); R(ex, ey + 1, 3, 2, '#d9971f'); R(ex + 3, ey - 3, 1, 2, K);
+        gx.drawImage(SQ_SIT, x0, y0);
+        // paw holding the slice, cheese strings back to the plate
+        const sx2 = kx - 18 + Math.round(pull * 2), sy2 = ky + 4;
+        R(qx + 44, sy2 + 3, sx2 - qx - 44, 1, '#f7e08a'); if (pull > 0.4) R(qx + 45, sy2 + 5, sx2 - qx - 47, 1, '#f7e08a');
+        R(sx2, sy2, 9, 6, K); R(sx2 + 1, sy2 + 1, 7, 4, '#f7d36a'); R(sx2 + 1, sy2 + 1, 7, 1, '#e5a65a'); R(sx2 + 3, sy2 + 2, 2, 2, '#b8322a'); R(sx2 + 6, sy2 + 3, 1, 1, '#57b04f');
+        R(sx2 + 7, sy2 + 1, x0 + 7 - sx2 - 7, 4, K); R(sx2 + 7, sy2 + 2, x0 + 7 - sx2 - 8, 2, '#e0a040'); R(sx2 + 7, sy2 + 2, 2, 2, '#d9971f');
+      }
       // flour sacks and a fallen slice
       for (const [ax, ay] of [[2, 0], [20, 5]]) { R(qx + ax, qy + 62 + ay, 18, 22, K); R(qx + ax + 1, qy + 63 + ay, 16, 20, '#f4efe6'); R(qx + ax + 1, qy + 63 + ay, 16, 3, '#d8cfc0'); R(qx + ax + 5, qy + 72 + ay, 8, 5, '#3f9a4f'); R(qx + ax + 7, qy + 73 + ay, 4, 3, '#f4efe6'); }
       for (let k = 0; k < 8; k++) R(qx + 40 + k * 4, qy + 84 + (k % 3), 2, 1, '#f4efe6');
@@ -3148,7 +3219,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       furnace(colX(1) + SW / 2, rowY(1) + SH / 2);
     }
     // slots
-    const linkedSel = selSlot != null ? linked(l, selSlot) : [], gg = globals(), dblAt = skillOn('arc') ? gg.double : null, allyAt = gg.ally;
+    const linkedSel = selSlot != null ? linked(l, selSlot) : [], gg = globals(), dblAt = skillOn('arc') ? gg.double : null, allyAt = gg.ally, noodleAt = (l, i) => gg.noodles.some(n => n.l === l && n.i === i);
     sl.forEach((s, i) => {
       const x = SX(i), y = SY(i), ww = SLOT_W(l, i), hh = SLOT_H(l, i), big = ww !== SW || hh !== SH;
       if (LT.plates) { R(x, y, ww, hh, K); R(x + 1, y + 1, ww - 2, hh - 2, LT.plates[i]); R(x + 1, y + 1, ww - 2, 1, 'rgba(255,255,255,.3)'); for (let k = 0; k < 5; k++) R(x + 6 + k * 14, y + 1 + (k % 2) * 30, 1, 1, 'rgba(255,255,255,.5)'); }
@@ -3161,11 +3232,12 @@ textarea{height:84px;resize:vertical;word-break:break-all}
         if (s.machine === 'extract' && hh !== SH) extractor(x, y, hh);
         else if (s.machine === 'etalon' && ww !== SW) etalon(x, y, ww, hh, slotStats(l, i, gg).etN);
         else machine(s.machine, x + 36, y + 18);
-        if ((s.worker || MACH[s.machine].auto || (allyAt && allyAt.l === l && allyAt.i === i)) && s.machine !== 'belt' && !big) pile(x + 52, y + 63, 1 + Math.floor((t * 0.3 + i) % 3), LT.item);
+        if ((s.worker || MACH[s.machine].auto || (allyAt && allyAt.l === l && allyAt.i === i) || noodleAt(l, i)) && s.machine !== 'belt' && !big) pile(x + 52, y + 63, 1 + Math.floor((t * 0.3 + i) % 3), LT.item);
         s.upg.forEach((u, k) => { R(x + 4 + k * 5, y + 4, 4, 6, K); R(x + 5 + k * 5, y + 5, 2, 4, RAR_COL[CARDS[u].rar]); });
       }
       if (dblAt && dblAt.l === l && dblAt.i === i && !s.worker) gx.drawImage(SPR.arcDouble, x + 6, y + 40 - Math.floor(t * 2 + i) % 2);
       else if (allyAt && allyAt.l === l && allyAt.i === i && !s.worker) gx.drawImage(SPR.rebelAlly, x + 6, y + 40 - Math.floor(t * 2 + i) % 2);
+      else if (noodleAt(l, i) && !s.worker) gx.drawImage(SPR.noodles, x + 6, y + 40 - Math.floor(t * 2 + i) % 2);
       const spk = state.run.spark;
       if (spk && spk.l === l && spk.i === i && !state.run.brk && state.run.qT < spk.until) for (let k = 0; k < 4; k++) { const a = t * 6 + k * Math.PI / 2; R(x + 52 + Math.round(Math.cos(a) * 9), y + 34 + Math.round(Math.sin(a) * 9), 2, 2, k % 2 ? '#7fd0f0' : '#e9fff8'); }
       // a worker stands at the bottom of a tall slot; the etalon takes nobody
@@ -3436,8 +3508,11 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     else if (view === 'ach') h = achHTML();
     else if (view === 'friends') h = friendsHTML();
     else if (state.run.over && !guest && selSlot == null && !selWorker) h = endHTML();
-    else if (mode) {
-      const txt = { place: 'Нажми на пустое место, куда поставить станок', equip: 'Нажми на сотрудника или его шкафчик', skill: 'Нажми на сотрудника без скилла или его шкафчик', upgrade: 'Нажми на станок, который улучшить', move: 'Нажми на место, куда переставить станок' }[mode.kind];
+    else if (mode && mode.kind === 'replace') {
+      const t = mode.target, who = typeof t === 'string' ? `${WORKERS[t].name}: в шкафчике` : `Станок «${MACH[slotsOf(t.l)[t.i].machine].name}»: на нём`;
+      h = `<div class="row">${chip(mode.card)}</div><div class="prompt">${who} уже ${BAL.cap} карты. Какую выбросить? Она уйдёт из колоды.</div><div class="row">${holder(mode.card, t).map((c, k) => `<button class="btn" type="button" data-act="drop" data-i="${k}">${chip(c)}</button>`).join('')}</div><div class="row"><button class="btn" type="button" data-act="cancel">Отмена</button></div>`;
+    } else if (mode) {
+      const txt = { place: 'Нажми на пустое место, куда поставить станок', equip: `Нажми на сотрудника или его шкафчик. В шкафчике помещается ${BAL.cap} карты`, skill: 'Нажми на сотрудника без скилла или его шкафчик', upgrade: `Нажми на станок, который улучшить. На станок помещается ${BAL.cap} карты`, move: 'Нажми на место, куда переставить станок' }[mode.kind];
       const extra = mode.card && CARDS[mode.card].machine === 'belt' ? '<p class="muted">Конвейер можно поставить в любой открытый цех, переключай цеха вкладками.</p>' : '';
       h = `${mode.card ? `<div class="row">${chip(mode.card)}</div>` : ''}<div class="prompt">${txt}</div>${extra}<div class="row"><button class="btn" type="button" data-act="cancel">Отмена</button></div>`;
     } else if (state.offers.length && !offersHidden && !guest && !state.run.over) {
@@ -3492,7 +3567,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const unit = LOCS[l].unit, unit1 = LOCS[l].unit1;
     const stats = s.machine === 'belt' ? '' : `<div class="stats"><div class="stat"><small>${unit} в сек.</small><b id="live-rate">0</b></div><div class="stat"><small>${unit1}</small><b id="live-value">0</b></div><div class="stat"><small>Доход в сек.</small><b id="live-income">0</b></div></div>`;
     const notes = st.notes.length ? `<h3>Бонусы</h3><ul class="notes">${st.notes.map(n => `<li>${esc(n)}</li>`).join('')}</ul>` : '<h3>Бонусы</h3><p class="muted">Пока нет. Поставь станки рядом или найди карты.</p>';
-    const upg = s.upg.length ? `<h3>Карты станка</h3><div class="row">${s.upg.map(chip).join('')}</div>` : '';
+    const upg = s.upg.length ? `<h3>Карты станка: ${s.upg.length} из ${BAL.cap}</h3><div class="row">${s.upg.map(chip).join('')}</div>` : '';
     return `<h2>${M.name}</h2><p class="muted">${M.desc}</p>${worker}${stats}${notes}${upg}<div class="row"><button class="btn" type="button" data-act="move">Переставить</button>${s.worker ? '<button class="btn" type="button" data-act="unassign">Снять сотрудника</button>' : ''}</div>`;
   }
   function skillHTML(id) {
@@ -3504,7 +3579,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const eq = st.equip.length ? st.equip.map(chip).join('') : '<span class="muted">Пусто</span>';
     const wp = workerPlace(id);
     const fr = ws.fr.length ? ws.fr.map(f => WORKERS[f].name).join(', ') + ` (+${pct(ws.fb)} силы)` : 'нет';
-    return `<h2>${Wd.name}</h2><p class="muted">${Wd.role} · ${wp ? `работает: цех ${wp.l + 1}, ${MACH[slotsOf(wp.l)[wp.i].machine].name}` : 'отдыхает в раздевалке'}</p><div class="stats"><div class="stat"><small>Сила</small><b id="live-power">0</b></div><div class="stat"><small>Скорость</small><b id="live-speed">0</b></div><div class="stat"><small>Удача</small><b id="live-luck">0</b></div></div><p>${esc(Wd.perk)}</p>${skillHTML(id)}<h3>В шкафчике</h3><div class="row">${eq}</div><p class="muted">Друзья по шкафчику: ${fr}</p><p class="muted">Нажми на станок в любом цеху, чтобы перевести туда. Нажми на другой шкафчик, чтобы поменяться местами.</p>${wp ? '<div class="row"><button class="btn" type="button" data-act="rest">В раздевалку</button></div>' : ''}`;
+    return `<h2>${Wd.name}</h2><p class="muted">${Wd.role} · ${wp ? `работает: цех ${wp.l + 1}, ${MACH[slotsOf(wp.l)[wp.i].machine].name}` : 'отдыхает в раздевалке'}</p><div class="stats"><div class="stat"><small>Сила</small><b id="live-power">0</b></div><div class="stat"><small>Скорость</small><b id="live-speed">0</b></div><div class="stat"><small>Удача</small><b id="live-luck">0</b></div></div><p>${esc(Wd.perk)}</p>${skillHTML(id)}<h3>В шкафчике: ${st.equip.length} из ${BAL.cap}</h3><div class="row">${eq}</div><p class="muted">Друзья по шкафчику: ${fr}</p><p class="muted">Нажми на станок в любом цеху, чтобы перевести туда. Нажми на другой шкафчик, чтобы поменяться местами.</p>${wp ? '<div class="row"><button class="btn" type="button" data-act="rest">В раздевалку</button></div>' : ''}`;
   }
   function deckHTML() {
     const g = globals(), counts = {};
@@ -3512,7 +3587,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const sets = Object.keys(TAGS).map(tg => { const n = g.tc[tg] || 0, p = Math.floor(n / 2); return `<dt class="${p ? 'on' : ''}">${tg}: ${n}</dt><dd>${TAGS[tg]}. Комплектов: ${p}</dd>`; }).join('');
     const night = g.combos.includes('night');
     const owned = Object.keys(counts).map(id => chip(id).replace('</span>', counts[id] > 1 ? ` ×${counts[id]}</span>` : '</span>')).join('') || '<span class="muted">Пока нет карт</span>';
-    return `<h2>Колода</h2><h3>Комплекты по тегам</h3><dl class="sets">${sets}</dl><h3>Комбо</h3><dl class="sets"><dt class="${night ? 'on' : ''}">Ночная смена</dt><dd>Крепкий кофе + Конвейер + Бродяга: доход ×1,5</dd><dt class="${g.sawWorking && anySlot(s => s.machine === 'kiln') ? 'on' : ''}">Растопка</dt><dd>Пилорама работает в цеху 1: печи в цеху 2 +25% скорости</dd><dt class="${g.kilnWorking && anySlot(s => s.machine === 'wire') ? 'on' : ''}">Закалка</dt><dd>Печь работает в цеху 2: проволока в цеху 3 +20% к цене</dd><dt class="${g.maidsLoc >= 0 ? 'on' : ''}">Дуэт горничных</dt><dd>V1 и V2 на соседних станках: доход их цеха ×2</dd><dt class="${g.green ? 'on' : ''}">Зелёная сила</dt><dd>Пришелец и Хаба на соседних станках: сила обоих ×1,5</dd><dt class="${g.combos.includes('family') ? 'on' : ''}">Семейный подряд</dt><dd>Хаба, Кастомка и Батя: соседям по станку из этой тройки +20% силы, все трое в одном цеху: доход цеха ×2</dd><dt class="${g.tumblerWorking && anySlot(s => s.machine === 'vitrage') ? 'on' : ''}">Рамы на гвоздях</dt><dd>Барабан работает в цеху 3: витражи в цеху 4 +20% к цене</dd><dt class="${g.cozy ? 'on' : ''}">Уютно</dt><dd>Швейная машинка и набивочный автомат работают: сила обоих сотрудников ×1,5</dd><dt class="${g.dryerWorking && state.locs[4].unlocked ? 'on' : ''}">Каркас</dt><dd>Сушилка работает в цеху 1: пуфики +20% к цене</dd><dt class="${g.vitrageWorking && anySlot(s => s.machine === 'stuff') ? 'on' : ''}">Стеклянные ножки</dt><dd>Витраж работает в цеху 4: набивка +20% скорости</dd><dt class="${g.caseClosed ? 'on' : ''}">Дело закрыто</dt><dd>Кролик-детектив рядом с Главной мразью цеха: мразь не крысит, у кролика сила ×1,5</dd><dt class="${g.combos.includes('robot') ? 'on' : ''}">Робот кормит улиток</dt><dd>Рука помощи + Зубастые улитки: в цеху с Рукой помощи минус улиток не действует</dd><dt class="${g.combos.includes('post') ? 'on' : ''}">Почтовый день</dt><dd>Почтальон + Курьер + Подписка: монеты в посылках ×2</dd><dt class="${g.combos.includes('morning') ? 'on' : ''}">Утро после</dt><dd>Сушняк и Газява у одного сотрудника: минус Сушняка снят, скорость ещё ×1,3</dd><dt class="${g.tape ? 'on' : ''}">Скотч и клей</dt><dd>Скотч братан + Супер клей: сотрудник у станка с клеем дружит со всеми соседями по станкам</dd><dt class="${g.lawn ? 'on' : ''}">Оборона газона</dt><dd>Подсолнух и Мухобойка на соседних станках: солнышки вдвое чаще, у Мухобойки сила ×1,5</dd><dt class="${g.epidemic ? 'on' : ''}">Эпидемия</dt><dd>Зомбачка и Могильщик на соседних станках: каждые 20 с смены укушен ещё один работник её цеха</dd><dt class="${g.rising ? 'on' : ''}">Восстание из мёртвых</dt><dd>Призрак вторника, Зомбачка и Могильщик в одном цеху: раз за забег квота, набранная хотя бы на 70%, засчитывается${state.run.rose ? ' (уже использовано)' : ''}</dd><dt class="${g.scarf ? 'on' : ''}">Тёплый шарф</dt><dd>Йети и Медаедь на соседних станках: шарф Йети готов с начала смены (+25% силы соседям), у Медаедя сила ×1,5</dd><dt class="${g.feat ? 'on' : ''}">Сам с собой фит</dt><dd>code10 и code80 на соседних станках: сила обоих ×1,5</dd><dt class="${g.same ? 'on' : ''}">Это одно и то же</dt><dd>Унитаз и аэрогриль на соседних станках цеха 10: сила обоих сотрудников ×2</dd><dt class="${g.sun ? 'on' : ''}">Лучи чужого солнца</dt><dd>Зоря из Зорвеля и Пришелец с Трёхглазиком на соседних станках: пицца стоит ×2</dd></dl><h3>Твои карты</h3><div class="row">${owned}</div><div class="row"><button class="btn" type="button" data-act="back">Назад</button></div>`;
+    return `<h2>Колода</h2><h3>Комплекты по тегам</h3><dl class="sets">${sets}</dl><h3>Комбо</h3><dl class="sets"><dt class="${night ? 'on' : ''}">Ночная смена</dt><dd>Крепкий кофе + Конвейер + Бродяга: доход ×1,5</dd><dt class="${g.sawWorking && anySlot(s => s.machine === 'kiln') ? 'on' : ''}">Растопка</dt><dd>Пилорама работает в цеху 1: печи в цеху 2 +25% скорости</dd><dt class="${g.kilnWorking && anySlot(s => s.machine === 'wire') ? 'on' : ''}">Закалка</dt><dd>Печь работает в цеху 2: проволока в цеху 3 +20% к цене</dd><dt class="${g.maidsLoc >= 0 ? 'on' : ''}">Дуэт горничных</dt><dd>V1 и V2 на соседних станках: доход их цеха ×2</dd><dt class="${g.green ? 'on' : ''}">Зелёная сила</dt><dd>Пришелец и Хаба на соседних станках: сила обоих ×1,5</dd><dt class="${g.combos.includes('family') ? 'on' : ''}">Семейный подряд</dt><dd>Хаба, Кастомка и Батя: соседям по станку из этой тройки +20% силы, все трое в одном цеху: доход цеха ×2</dd><dt class="${g.tumblerWorking && anySlot(s => s.machine === 'vitrage') ? 'on' : ''}">Рамы на гвоздях</dt><dd>Барабан работает в цеху 3: витражи в цеху 4 +20% к цене</dd><dt class="${g.cozy ? 'on' : ''}">Уютно</dt><dd>Швейная машинка и набивочный автомат работают: сила обоих сотрудников ×1,5</dd><dt class="${g.dryerWorking && state.locs[4].unlocked ? 'on' : ''}">Каркас</dt><dd>Сушилка работает в цеху 1: пуфики +20% к цене</dd><dt class="${g.vitrageWorking && anySlot(s => s.machine === 'stuff') ? 'on' : ''}">Стеклянные ножки</dt><dd>Витраж работает в цеху 4: набивка +20% скорости</dd><dt class="${g.caseClosed ? 'on' : ''}">Дело закрыто</dt><dd>Кролик-детектив рядом с Главной мразью цеха: мразь не крысит, у кролика сила ×1,5</dd><dt class="${g.combos.includes('robot') ? 'on' : ''}">Робот кормит улиток</dt><dd>Рука помощи + Зубастые улитки: в цеху с Рукой помощи минус улиток не действует</dd><dt class="${g.combos.includes('post') ? 'on' : ''}">Почтовый день</dt><dd>Почтальон + Курьер + Подписка: монеты в посылках ×2</dd><dt class="${g.combos.includes('morning') ? 'on' : ''}">Утро после</dt><dd>Сушняк и Газява у одного сотрудника: минус Сушняка снят, скорость ещё ×1,3</dd><dt class="${g.tape ? 'on' : ''}">Скотч и клей</dt><dd>Скотч братан + Супер клей: сотрудник у станка с клеем дружит со всеми соседями по станкам</dd><dt class="${g.lawn ? 'on' : ''}">Оборона газона</dt><dd>Подсолнух и Мухобойка на соседних станках: солнышки вдвое чаще, у Мухобойки сила ×1,5</dd><dt class="${g.epidemic ? 'on' : ''}">Эпидемия</dt><dd>Зомбачка и Могильщик на соседних станках: каждые 20 с смены укушен ещё один работник её цеха</dd><dt class="${g.rising ? 'on' : ''}">Восстание из мёртвых</dt><dd>Призрак вторника, Зомбачка и Могильщик в одном цеху: раз за забег квота, набранная хотя бы на 70%, засчитывается${state.run.rose ? ' (уже использовано)' : ''}</dd><dt class="${g.scarf ? 'on' : ''}">Тёплый шарф</dt><dd>Йети и Медаедь на соседних станках: шарф Йети готов с начала смены (+25% силы соседям), у Медаедя сила ×1,5</dd><dt class="${g.feat ? 'on' : ''}">Сам с собой фит</dt><dd>code10 и code80 на соседних станках: сила обоих ×1,5</dd><dt class="${g.same ? 'on' : ''}">Это одно и то же</dt><dd>Унитаз и аэрогриль на соседних станках цеха 10: сила обоих сотрудников ×2</dd><dt class="${g.sun ? 'on' : ''}">Лучи чужого солнца</dt><dd>Зоря из Зорвеля и Пришелец с Трёхглазиком на соседних станках: пицца стоит ×2</dd><dt class="${g.drink ? 'on' : ''}">Собутыльники</dt><dd>Сквонч и Батя на соседних станках: удача обоих +15%, монетка Сквонча всегда удачная</dd></dl><h3>Твои карты</h3><div class="row">${owned}</div><div class="row"><button class="btn" type="button" data-act="back">Назад</button></div>`;
   }
   const mmss = sec => `${Math.floor(sec / 60)}:${String(Math.floor(sec % 60)).padStart(2, '0')}`;
   // two columns when comparing with a friend: theirs first, ours second
@@ -3556,9 +3631,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     let bytes = Uint8Array.from(atob(m[2]), ch => ch.charCodeAt(0));
     if (m[1] === '1') bytes = await pipe(bytes, new DecompressionStream('deflate-raw'));
     // a code from the previous build is brought up to date like a save
-    const d = JSON.parse(new TextDecoder().decode(bytes)), st = d.s && d.s.v >= 9 && d.s.v <= 13 ? migrate(d.s) : d.s;
+    const d = JSON.parse(new TextDecoder().decode(bytes)), st = d.s && d.s.v >= 9 && d.s.v <= 14 ? migrate(d.s) : d.s;
     // a friend's code is drawn with our code, so only known ids may pass
-    const ok = st && st.v === 14 && st.run && (!st.run.stolen || CARDS[st.run.stolen]) && Array.isArray(st.locs) && st.locs.length === LOCS.length && st.locs.every((L, l) => Array.isArray(L.slots) && L.slots.length === LAYOUTS[l].length && L.slots.every(z => (!z.machine || MACH[z.machine]) && (!z.worker || WORKERS[z.worker]) && Array.isArray(z.upg) && z.upg.every(u => CARDS[u])))
+    const ok = st && st.v === 15 && st.run && (!st.run.stolen || CARDS[st.run.stolen]) && Array.isArray(st.locs) && st.locs.length === LOCS.length && st.locs.every((L, l) => Array.isArray(L.slots) && L.slots.length === LAYOUTS[l].length && L.slots.every(z => (!z.machine || MACH[z.machine]) && (!z.worker || WORKERS[z.worker]) && Array.isArray(z.upg) && z.upg.every(u => CARDS[u])))
       && Array.isArray(st.cards) && st.cards.every(id => CARDS[id]) && Object.keys(WORKERS).every(id => st.workers[id] && st.workers[id].equip.every(e => CARDS[e]))
       && Array.isArray(st.lockers) && st.lockers.every(id => WORKERS[id]) && d.r && Array.isArray(d.a);
     if (!ok) throw new Error('bad state');
@@ -3620,6 +3695,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     }
     else if (act === 'later') { offersHidden = true; renderSheet(); }
     else if (act === 'showOffers') { offersHidden = false; view = 'main'; selSlot = null; selWorker = null; renderSheet(); }
+    else if (act === 'drop') finish(mode.card, mode.target, +b.dataset.i);
     else if (act === 'cancel') { if (mode.offer) state.offers.unshift(mode.offer); mode = null; renderSheet(); }
     else if (act === 'move') { mode = { kind: 'move', from: selSlot }; renderSheet(); }
     else if (act === 'unassign') { slotsOf(state.cur)[selSlot].worker = null; save(); renderSheet(); }
@@ -3716,7 +3792,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     saveTimer += dt; if (saveTimer > 5) { saveTimer = 0; save(); }
     if (toastTimer > 0) { toastTimer -= dt; if (toastTimer <= 0) $toast.hidden = true; }
   }
-  if (BOT) window.PF = { BAL, get state() { return state; }, set state(v) { state = v; }, meta, tick, totalIncome, avgIncome, globals, eligible, finish, unlockLoc, openCrate, cardPrice, skillCost, skillLocked, skillShare, buyCard, startShift, curQuota, rerollCost, rollNewShop, shopRollCost, rollOffer, ICONS, quotaTarget, quotaTime, newRun, workerPlace, slotStats, onStrike, rule, get crate() { return crate; }, CARDS, MACH, LOCS, SKILLS, LAYOUTS, WORKERS };
+  if (BOT) window.PF = { BAL, get state() { return state; }, set state(v) { state = v; }, meta, tick, totalIncome, avgIncome, globals, eligible, finish, holder, isFull, unlockLoc, openCrate, cardPrice, skillCost, skillLocked, skillShare, buyCard, startShift, curQuota, rerollCost, rollNewShop, shopRollCost, rollOffer, ICONS, quotaTarget, quotaTime, newRun, workerPlace, slotStats, onStrike, rule, get crate() { return crate; }, CARDS, MACH, LOCS, SKILLS, LAYOUTS, WORKERS };
   else requestAnimationFrame(loop);
 })();
 </script>

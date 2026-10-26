@@ -1,7 +1,7 @@
-// Черновик новых сотрудников: спрайты. Вставлены в игру все, кроме Сквонча и Макаронного монстра (ждут цеха 6). Статы, перки и скиллы в docs/employees.md, раздел «План: новые сотрудники».
+// Черновик новых сотрудников: спрайты. Все десять вставлены в игру, Сквонч и Макаронный монстр последними, вместе со сценой Сквонча в пиццерии. Статы, перки и скиллы в docs/employees.md.
 // Список: Сквонч, Канеки, Макаронный монстр, Подсолнух ГВ2, Живой плющ/мухобойка, Медаедь, Рейвен, Арк Варден, Медсестра, Нему.
 // Спрайты 23×32 (как у остальных), RLE как в game/index.html.
-// Статус: все десять нарисованы; Макаронный монстр, Подсолнух, мухоловка, Медаедь, Медсестра, Арк Варден и Нему Куроцучи одобрены, Канеки, Сквонч и Рейвен ждут одобрения (drafts/arc-nurse-nemu-preview.png, превью drafts/raven-preview.png, drafts/kaneki-, squanch-, spaghetti-, sunflower-, flytrap-, honeybear-preview.png).
+// Статус: все одобрены и вставлены (превью drafts/arc-nurse-nemu-preview.png, drafts/raven-preview.png, drafts/kaneki-, squanch-, spaghetti-, sunflower-, flytrap-, honeybear-preview.png).
 
 // ===== Канеки: обычный (официант Антейку, повязка) и гуль на время скилла (белые волосы, маска, красные кагуне), как Сильвер → WOLF =====
   const KANEKI = ['7.8k8.', '5.2k8h2k6.', '4.k12hk5.', '3.k3h3=8hk4.', '2.k2h2=7h2=3hk3.', '2.k16hk3.', '2.k16hk3.', '2.k3hs6hs5hk3.', '2.k2h2s2hs2h2s2hs2hk3.', '2.kh2s4k2sD4WDhk3.', '2.khskWAWA2sWDWD3Wk3.', '2.khskWAGA2s5Wshk3.', '2.kh2s4k2sWDWDWshk3.', '2.khsc6sD3WDchk3.', '2.kh6s2m6shk3.', '3.2k12s2k4.', '5.4k4s4k6.', '2.k3W2g2W2%2W2g3Wk3.', '2.kDWk2g2Wm%2W2gkWDk3.', '2.kDWk3gW2mW3gkWDk3.', '2.kDWk4gm%4gkWDk3.', '2.kDWk4g%m4gkWDk3.', '2.kDWk4gGk4gkWDk3.', '2.kDWk4gG5gkWDk3.', '2.kDWk4gGk4gkWDk3.', '2.k2sk10Gk2sk3.', '2.k2sk10bk2sk3.', '5.k4b2k4bk6.', '5.k4b2k4bk6.', '5.kbN2b2k2bNbk6.', '4.k5B2k5Bk5.', '4.6k2.6k5.'];
