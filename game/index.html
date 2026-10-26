@@ -35,12 +35,14 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
 .xpbar{height:8px;background:#110d17;border:2px solid var(--line);border-radius:3px;overflow:hidden}
 .xpbar i{display:block;height:100%;width:0;background:var(--green)}
 #xptext{font:400 11px var(--pixel);color:var(--muted);white-space:nowrap}
-.tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}
+.tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr)) 26px;gap:5px;touch-action:pan-y}
 .tab{font:400 13px/1.1 var(--pixel);color:var(--ink);background:var(--panel);border:2px solid var(--line);border-radius:8px;padding:8px 6px;cursor:pointer;white-space:pre-line}
 .tab[aria-pressed="true"]{background:var(--gold);border-color:#a8781a;color:var(--paper-ink)}
 .tab.locked{color:var(--muted);border-style:dashed}
 .tab.locked.ready{color:var(--gold);border-color:var(--gold)}
-.tab:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.tab:focus-visible,.tabpg:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.tabpg{font:400 15px/1 var(--pixel);color:var(--gold);background:var(--panel2);border:2px solid var(--line);border-radius:8px;padding:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
+.tabpg small{font:400 9px/1 var(--pixel);color:var(--muted)}
 .stage{position:relative}
 #game{display:block;width:100%;max-width:100%;aspect-ratio:240/270;height:auto;image-rendering:pixelated;border-radius:10px;touch-action:manipulation;cursor:pointer}
 #toast{position:absolute;left:50%;top:8px;transform:translateX(-50%);background:rgba(27,22,36,.92);border:2px solid var(--gold);color:var(--ink);font:400 14px/1.2 var(--pixel);padding:8px 12px;border-radius:6px;max-width:86%;text-align:center;pointer-events:none;transition:opacity .25s}
@@ -116,11 +118,12 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   </header>
   <div class="quota" id="quota"><div class="qtop"><b id="qname">Квота 1</b><span id="qtime">3:00</span></div><div class="qbar"><i id="qbar"></i></div><span id="qtext"></span></div>
   <nav class="tabs" aria-label="Цеха">
-    <button class="tab" id="tab0" type="button" data-loc="0">Цех 1 · Доски</button>
-    <button class="tab" id="tab1" type="button" data-loc="1">Цех 2 · Кирпичи</button>
-    <button class="tab" id="tab2" type="button" data-loc="2">Цех 3 · Гвозди</button>
-    <button class="tab" id="tab3" type="button" data-loc="3">Цех 4 · Стекло</button>
-    <button class="tab" id="tab4" type="button" data-loc="4">Цех 5 · Пуфики</button>
+    <button class="tab" id="tab0" type="button"></button>
+    <button class="tab" id="tab1" type="button"></button>
+    <button class="tab" id="tab2" type="button"></button>
+    <button class="tab" id="tab3" type="button"></button>
+    <button class="tab" id="tab4" type="button"></button>
+    <button class="tabpg" id="tabPg" type="button" aria-label="Другая страница цехов"></button>
   </nav>
   <div class="stage">
     <canvas id="game" role="img" aria-label="Цех завода: места под станки и раздевалка с сотрудниками"></canvas>
@@ -301,23 +304,49 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       desc: 'Третья ветка завода. Тянут проволоку, рубят гвозди и полируют их в барабане. Мест шесть: четыре внизу и два сверху. Если в цеху кирпичей горит печь, проволока выходит закалённой и дороже.',
       opened: 'Цех гвоздей открыт! Поставь к гвоздильному автомату сотрудника' },
     { name: 'Стекло', sign: 'ЦЕХ 4 · СТЕКЛО', cost: 5000000, wall: '#2e2440', mortar: '#1d1629', floor: '#3a3150', grid: '#463c60', item: '#9fe6ef',
-      board: '#6a3f8a', boardHi: '#9a6ac2', goods: 'glass', unit: 'Стекло', unit1: 'Цена стекла', start: 'melt', hot: [1, 3, 5, 7],
-      plates: ['#b34f78', '#c7723a', '#b89a2a', '#4f9550', '#3a87a0', '#4f63bf', '#7f52b8', '#a8479a'],
-      desc: 'Четвёртая ветка завода. Восемь мест стоят кольцом вокруг горна. Места посередине сторон касаются горна и работают на 20% быстрее. Если в цеху гвоздей крутится барабан, витражи выходят дороже.',
+      board: '#6a3f8a', boardHi: '#9a6ac2', goods: 'glass', unit: 'Стекло', unit1: 'Цена стекла', start: 'melt', hot: [1, 3, 4, 5],
+      plates: ['#b34f78', '#c7723a', '#b89a2a', '#4f9550', '#4f63bf', '#a8479a'],
+      desc: 'Четвёртая ветка завода. Шесть мест стоят подковой вокруг горна, нижние углы пустые. Места посередине сторон касаются горна и работают на 20% быстрее. Если в цеху гвоздей крутится барабан, витражи выходят дороже.',
       opened: 'Цех стекла открыт! Поставь к стекловарке сотрудника' },
     { name: 'Пуфики', sign: 'ЦЕХ 5 · ПУФИКИ', cost: 300000000, wall: '#6aa2dc', mortar: '#5a90cc', floor: '#94643a', grid: '#94643a', plate: '#a8763f', frame: '#5a3420', item: '#f08cb4',
       glass: '#cfe8f2', board: '#2f5e46', boardHi: '#3f7a5a', goods: 'poufs', unit: 'Пуфики', unit1: 'Цена пуфика',
       desc: 'Пятая ветка завода, школьный класс. Шьют чехлы и набивают пуфики. Места два, а станков с собой нет: швейная машинка придёт в ближайшем выборе карт. Если в цеху досок работает сушилка, пуфики дороже, а если в цеху стекла работает витраж, набивка быстрее.',
-      opened: 'Цех пуфиков открыт! Швейная машинка ждёт в ближайшем выборе карт' }
+      opened: 'Цех пуфиков открыт! Швейная машинка ждёт в ближайшем выборе карт' },
+    // workshops 6–10; startSlot: where the machine that comes with the workshop stands
+    { name: 'Пицца', sign: 'ЦЕХ 6 · ПИЦЦА', cost: 2e10, wall: '#f1e3c4', mortar: '#e3d0a8', floor: '#e9dcc0', grid: '#e9dcc0', plate: '#c98a52', frame: '#6a3f22', item: '#f2c94c', board: '#3f9a4f', boardHi: '#5fb86a', goods: 'pizza', unit: 'Пицца', unit1: 'Цена пиццы', start: 'dough',
+      desc: 'Шестая ветка завода, пиццерия. Месят тесто, кладут начинку и пекут в дровяной печи. Места идут цепочкой: две пары, нижняя сдвинута вправо. Пока работает печь, у всех сотрудников завода обед: +10% силы.',
+      opened: 'Пиццерия открыта! Поставь к тестомесу сотрудника' },
+    { name: 'Голуби', sign: 'ЦЕХ 7 · ГОЛУБИ', cost: 1.5e12, wall: '#8fc4ea', mortar: '#7ab0d8', floor: '#6e6a72', grid: '#6e6a72', plate: '#b08a58', frame: '#5a3f2a', item: '#a9b2c3', board: '#6a4a2c', boardHi: '#8a6a44', goods: 'pigeons', unit: 'Голуби', unit1: 'Цена голубя', start: 'feeder',
+      desc: 'Седьмая ветка завода, крыша. Дрессируют почтовых голубей. Пять мест крестом, как голубь с раскрытыми крыльями: центр касается всех. Голубиная почта: каждый работающий станок цеха приносит посылки на 15% чаще.',
+      opened: 'Голубятня открыта! Поставь к кормушке сотрудника' },
+    { name: 'Манга', sign: 'ЦЕХ 8 · МАНГА', cost: 1e14, wall: '#efe6cf', mortar: '#9a7650', floor: '#cfc890', grid: '#cfc890', plate: '#fbf8f0', frame: '#2b2135', item: '#fbf8f0', board: '#c8323c', boardHi: '#e05a5a', goods: 'manga', unit: 'Манга', unit1: 'Цена тома', start: 'sketch',
+      desc: 'Восьмая ветка завода, студия манги. Рисуют наброски, тушуют и печатают тома. Верхнее место стоит отдельно и ни с кем не соседствует. Онгоинг: цена манги +10% за каждую смену подряд, когда цех работал, а смена простоя всё сбрасывает.',
+      opened: 'Студия манги открыта! Поставь к столу набросков сотрудника' },
+    { name: 'Пепси', sign: 'ЦЕХ 9 · ЖИВЫЕ БУТЫЛКИ', cost: 8e15, wall: '#cfe3ee', mortar: '#a8c4d4', floor: '#8fa3ae', grid: '#7e929d', plate: '#dfe7ec', frame: '#44505c', item: '#3f7ac2', board: '#13439a', boardHi: '#3f7ac2', goods: 'bottles', unit: 'Бутылки', unit1: 'Цена бутылки', start: 'extract', startSlot: 3,
+      desc: 'Девятая ветка завода, лаборатория. Здесь выращивают живые бутылки пепси. Экстрактор пепси открывается вместе с цехом, занимает место в три ряда и касается всех трёх мест слева.',
+      opened: 'Лаборатория открыта! Поставь к экстрактору сотрудника' },
+    { name: 'Калибровка', tab: 'Калибр.', sign: 'ЦЕХ 10 · КАЛИБРОВКА', cost: 5e17, wall: '#f4f7f9', mortar: '#dfe5ea', floor: '#e9eef2', grid: '#dfe5ea', plate: '#ffffff', frame: '#9aa3ad', item: '#5aa9e6', board: '#5aa9e6', boardHi: '#8fd3f0', goods: 'calib', unit: 'Калибровки', unit1: 'Цена калибровки', start: 'etalon', startSlot: 2,
+      desc: 'Десятая ветка завода, белая лаборатория: калибруют туалеты и аэрогрили. В центре Эталон, он открывается вместе с цехом и работает без сотрудника: чем больше соседей работает, тем он дороже. Унитаз рядом с аэрогрилем: «Это одно и то же», сила обоих ×2.',
+      opened: 'Калибровка открыта! Эталон ждёт работающих соседей' }
   ];
   // slot i sits at [column, row] of its workshop's grid; slot indexes never move, so saves stay valid
   const LAYOUTS = [
     [[0, 0], [1, 0], [2, 0]],
     [[0, 1], [1, 1], [2, 1], [1, 0]],
     [[0, 1], [1, 1], [2, 1], [3, 1], [1, 0], [2, 0]],
-    // a ring around the furnace in the middle cell: slots go clockwise from the top left corner
-    [[0, 0], [1, 0], [2, 0], [2, 1], [2, 2], [1, 2], [0, 2], [0, 1]],
-    [[0, 0], [1, 0]]
+    // a horseshoe around the furnace in the middle cell: slots go clockwise from the top left corner, the bottom corners stay empty
+    [[0, 0], [1, 0], [2, 0], [2, 1], [1, 2], [0, 1]],
+    [[0, 0], [1, 0]],
+    // two stacked pairs, the lower one shifted right by nine tenths of a slot: a chain 1–2–3–4
+    [[0, 0], [0, 1], [0.9, 2], [0.9, 3]],
+    // a pigeon with spread wings: head, two wings, body in the middle, tail
+    [[1, 0], [0, 1], [1, 1], [2, 1], [1, 2]],
+    // a cross of manga panels: a row of four, one below the second; the top one sits apart and touches nobody
+    [[1.5, 0], [0, 1.25], [1, 1.25], [2, 1.25], [3, 1.25], [1, 2.25]],
+    // a column of three on the left, the extractor on the right: its slot is three rows tall, anchored at row 0
+    [[0, 0], [0, 1], [0, 2], [1, 0]],
+    // a pair on top, the etalon across both columns in the middle (anchored at column 0), a pair below
+    [[0, 0], [1, 0], [0, 1], [0, 2], [1, 2]]
   ];
   const gridSize = l => LAYOUTS[l].reduce(([c, r], [x, y]) => [Math.max(c, x + 1), Math.max(r, y + 1)], [0, 0]);
   // max: how many machines of a type the factory may own; the maxes of a workshop add up to its slot count (the brick pump is one extra).
@@ -332,8 +361,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     wire: { loc: 2, name: 'Волочильный стан', short: 'ВОЛОЧЕНИЕ', rate: 0.7, value: 8, max: 2, desc: 'Тянет стальную проволоку для гвоздей.' },
     nailer: { loc: 2, name: 'Гвоздильный автомат', short: 'ГВОЗДИЛКА', rate: 1.5, value: 5, max: 2, desc: 'Рубит проволоку и штампует шляпки. Очень быстрый.' },
     tumbler: { loc: 2, name: 'Галтовочный барабан', short: 'ГАЛТОВКА', rate: 0.4, value: 25, max: 2, desc: 'Полирует гвозди до блеска. Медленно, но очень дорого.' },
-    melt: { loc: 3, name: 'Стекловарка', short: 'ВАРКА', rate: 0.9, value: 30, max: 2, desc: 'Варит песок в жидкое стекло.' },
-    blower: { loc: 3, name: 'Стеклодувка', short: 'ВЫДУВКА', rate: 0.5, value: 70, max: 2, desc: 'Выдувает бутылки и вазы.' },
+    melt: { loc: 3, name: 'Стекловарка', short: 'ВАРКА', rate: 0.9, value: 30, max: 1, desc: 'Варит песок в жидкое стекло.' },
+    blower: { loc: 3, name: 'Стеклодувка', short: 'ВЫДУВКА', rate: 0.5, value: 70, max: 1, desc: 'Выдувает бутылки и вазы.' },
     vitrage: { loc: 3, name: 'Витражный стол', short: 'ВИТРАЖ', rate: 0.25, value: 180, max: 2, desc: 'Собирает цветные витражи. Медленно, но очень дорого.' },
     engraver: { loc: 3, name: 'Гравёр', short: 'ГРАВЁР', rate: 0.6, value: 60, max: 1, desc: 'Гравирует узоры на стекле. Рядом с витражом ускоряет его на 25%.' },
     lens: { loc: 3, name: 'Линзовый станок', short: 'ЛИНЗЫ', rate: 0.15, value: 450, max: 1, desc: 'Шлифует линзы. Очень медленно, но очень дорого. Соседям +10% удачи.' },
@@ -341,6 +370,26 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     stuff: { loc: 4, name: 'Набивочный автомат', short: 'НАБИВКА', rate: 0.3, value: 3500, max: 1, desc: 'Набивает пуфики мягкими шариками. Медленно, но дорого.' },
     // works on its own like a worker with power 0,5 and speed 1,0; a worker at it works it as usual
     pump: { loc: 1, name: 'Кирпичный насос', short: 'НАСОС', rate: 0.6, value: 8, max: 1, auto: { power: 0.5, speed: 1 }, desc: 'Качает кирпичи сам: работает без сотрудника, как сотрудник с силой 0,5 и скоростью 1,0.' },
+    dough: { loc: 5, name: 'Тестомес', short: 'ТЕСТОМЕС', rate: 0.9, value: 2e4, max: 2, desc: 'Месит тесто для пиццы.' },
+    topping: { loc: 5, name: 'Стол начинки', short: 'НАЧИНКА', rate: 0.5, value: 5.5e4, max: 1, desc: 'Кладёт соус, сыр и пепперони.' },
+    pizzaoven: { loc: 5, name: 'Дровяная печь', short: 'ПЕЧЬ', rate: 0.3, value: 1.2e5, max: 1, desc: 'Печёт пиццу на дровах. Пока работает, у всех сотрудников завода обед: +10% силы.' },
+    feeder: { loc: 6, name: 'Кормушка', short: 'КОРМУШКА', rate: 0.8, value: 5e5, max: 2, desc: 'Кормит голубей зерном.' },
+    course: { loc: 6, name: 'Полоса препятствий', short: 'ПОЛОСА', rate: 0.5, value: 1.3e6, max: 2, desc: 'Голуби учатся летать сквозь кольца.' },
+    loft: { loc: 6, name: 'Почтовая голубятня', short: 'ГОЛУБЯТНЯ', rate: 0.3, value: 3e6, max: 1, desc: 'Выпускает дипломированных почтовых голубей. Медленно, но дорого.' },
+    sketch: { loc: 7, name: 'Стол набросков', short: 'НАБРОСКИ', rate: 0.9, value: 1.2e7, max: 3, desc: 'Рисует наброски глазастых героев.' },
+    ink: { loc: 7, name: 'Тушевальня', short: 'ТУШЬ', rate: 0.5, value: 3e7, max: 2, desc: 'Обводит страницы тушью.' },
+    printer: { loc: 7, name: 'Печатный пресс', short: 'ПРЕСС', rate: 0.3, value: 7e7, max: 1, desc: 'Печатает тома. Медленно, но дорого.' },
+    // the extractor and the etalon come with their workshops and have no cards
+    extract: { loc: 8, name: 'Экстрактор пепси', short: 'ЭКСТРАКТОР', rate: 0.4, value: 1e9, max: 1, desc: 'Высокий станок на три ряда: качает пепси во все три места слева, им +20% скорости.' },
+    vat: { loc: 8, name: 'Чан брожения', short: 'ЧАН', rate: 0.9, value: 3e8, max: 1, desc: 'Здесь бродит пепси и плавают молодые бутылки.' },
+    fizz: { loc: 8, name: 'Газировочная помпа', short: 'ПОМПА', rate: 0.6, value: 5.5e8, max: 1, desc: 'Газирует бутылки.' },
+    hatch: { loc: 8, name: 'Инкубатор', short: 'ИНКУБАТОР', rate: 0.35, value: 1.1e9, max: 1, desc: 'Из яиц вылупляются живые бутылки. Медленно, но дорого.' },
+    // the etalon works on its own; its price is value × the working neighbours squared
+    etalon: { loc: 9, name: 'Эталон', short: 'ЭТАЛОН', rate: 0.5, value: 4e9, max: 1, auto: { power: 1, speed: 1 }, desc: 'Работает без сотрудника. Цена растёт с квадратом числа работающих соседей: 1, 4, 9, 16.' },
+    toilet: { loc: 9, name: 'Унитаз', short: 'УНИТАЗ', rate: 0.5, value: 1.4e10, max: 1, desc: 'Калибрует унитазы. Рядом с аэрогрилем: «Это одно и то же».' },
+    airfryer: { loc: 9, name: 'Аэрогриль', short: 'АЭРОГРИЛЬ', rate: 0.5, value: 1.4e10, max: 1, desc: 'Калибрует аэрогрили. Рядом с унитазом: «Это одно и то же».' },
+    shorts: { loc: 9, name: 'Студия коротких видео', short: 'ШОРТСЫ', rate: 0.8, value: 8e9, max: 1, desc: 'Снимает шортсы про калибровку. Соседям +15% к цене.' },
+    drinks: { loc: 9, name: 'Автомат с пивом и колой', short: 'ПИВО-КОЛА', rate: 0.6, value: 1.1e10, max: 1, desc: 'Поит калибровщиков. Унитазу рядом +30% скорости.' },
     belt: { loc: -1, name: 'Конвейер', short: 'КОНВЕЙЕР', rate: 0, value: 0, desc: 'Сам ничего не делает. Связан со всем рядом и ускоряет каждый станок на 30%. Сотрудник ему не нужен.' }
   };
   const WORKERS = {
@@ -526,6 +575,22 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     w_digger: { name: 'Новый сотрудник', type: 'worker', worker: 'digger', tag: 'Сотрудники', rar: 2, afterQ: 5, desc: 'Приходит Могильщик. Сторожит нежить и выкапывает посылки.' },
     m_sew: { name: 'Швейная машинка', type: 'machine', machine: 'sew', tag: 'Станки', rar: 0, desc: 'Пуфик стоит 1500. Вместе с набивкой: «Уютно», сила обоих ×1,5.' },
     m_stuff: { name: 'Набивочный автомат', type: 'machine', machine: 'stuff', tag: 'Станки', rar: 1, desc: 'Пуфик стоит 3500. Если в цеху стекла работает витраж: +20% скорости.' },
+    m_dough: { name: 'Тестомес', type: 'machine', machine: 'dough', tag: 'Станки', rar: 0, desc: 'Пицца стоит 20K. Рядом со столом начинки: +30% его скорости.' },
+    m_topping: { name: 'Стол начинки', type: 'machine', machine: 'topping', tag: 'Станки', rar: 1, desc: 'Пицца стоит 55K. Рядом с печью: +25% к её цене.' },
+    m_pizzaoven: { name: 'Дровяная печь', type: 'machine', machine: 'pizzaoven', tag: 'Станки', rar: 1, desc: 'Пицца стоит 120K. Пока работает, у всех сотрудников обед: +10% силы.' },
+    m_feeder: { name: 'Кормушка', type: 'machine', machine: 'feeder', tag: 'Станки', rar: 0, desc: 'Голубь стоит 500K. Рядом с полосой: +30% её скорости.' },
+    m_course: { name: 'Полоса препятствий', type: 'machine', machine: 'course', tag: 'Станки', rar: 1, desc: 'Голубь стоит 1,3M. Рядом с голубятней: +25% к её цене.' },
+    m_loft: { name: 'Почтовая голубятня', type: 'machine', machine: 'loft', tag: 'Станки', rar: 1, desc: 'Голубь стоит 3M. Медленно, зато почтовый.' },
+    m_sketch: { name: 'Стол набросков', type: 'machine', machine: 'sketch', tag: 'Станки', rar: 0, desc: 'Том стоит 12M. Рядом с тушевальней: +30% её скорости.' },
+    m_ink: { name: 'Тушевальня', type: 'machine', machine: 'ink', tag: 'Станки', rar: 1, desc: 'Том стоит 30M. Рядом с прессом: +25% к его цене.' },
+    m_printer: { name: 'Печатный пресс', type: 'machine', machine: 'printer', tag: 'Станки', rar: 1, desc: 'Том стоит 70M. Рядом с набросками: +15% их скорости.' },
+    m_vat: { name: 'Чан брожения', type: 'machine', machine: 'vat', tag: 'Станки', rar: 0, desc: 'Бутылка стоит 300M. Рядом с помпой: +30% её скорости.' },
+    m_fizz: { name: 'Газировочная помпа', type: 'machine', machine: 'fizz', tag: 'Станки', rar: 1, desc: 'Бутылка стоит 550M. Рядом с инкубатором: +25% к его цене.' },
+    m_hatch: { name: 'Инкубатор', type: 'machine', machine: 'hatch', tag: 'Станки', rar: 1, desc: 'Бутылка стоит 1,1B. Медленно, зато живая.' },
+    m_toilet: { name: 'Унитаз', type: 'machine', machine: 'toilet', tag: 'Станки', rar: 1, desc: 'Калибровка стоит 14B. Рядом с аэрогрилем: сила обоих ×2.' },
+    m_airfryer: { name: 'Аэрогриль', type: 'machine', machine: 'airfryer', tag: 'Станки', rar: 1, desc: 'Калибровка стоит 14B. Рядом с унитазом: сила обоих ×2.' },
+    m_shorts: { name: 'Студия коротких видео', type: 'machine', machine: 'shorts', tag: 'Станки', rar: 1, desc: 'Калибровка стоит 8B. Соседям +15% к цене.' },
+    m_drinks: { name: 'Автомат с пивом и колой', type: 'machine', machine: 'drinks', tag: 'Станки', rar: 1, desc: 'Калибровка стоит 11B. Унитазу рядом +30% скорости.' },
     s_velour: { name: 'Велюр', type: 'mupg', loc: 4, tag: 'Улучшения', rar: 0, eff: { value: 1.5 }, desc: 'Пуфики с этого станка: цена ×1,5.' },
     u_poufs: { name: 'Мода на пуфики', type: 'global', tag: 'Улучшения', rar: 1, loc: 4, eff: { poufPrice: 1.6 }, desc: 'Пуфики: цена ×1,6.' },
     s_tint: { name: 'Цветное стекло', type: 'mupg', loc: 3, tag: 'Улучшения', rar: 0, eff: { value: 1.5 }, desc: 'Стекло с этого станка: цена ×1,5.' },
@@ -604,6 +669,21 @@ textarea{height:84px;resize:vertical;word-break:break-all}
 
   function effect(src, dst) {
     if (src === 'belt') return { rate: 0.30, value: 0, text: 'Конвейер: +30% скорости' };
+    if (src === 'dough' && dst === 'topping') return { rate: 0.30, value: 0, text: 'Свежее тесто: +30% скорости' };
+    if (src === 'topping' && dst === 'pizzaoven') return { rate: 0, value: 0.25, text: 'Щедрая начинка: +25% к цене' };
+    if (src === 'pizzaoven' && dst === 'dough') return { rate: 0.15, value: 0, text: 'Тёплая печь, тесто подходит: +15% скорости' };
+    if (src === 'feeder' && dst === 'course') return { rate: 0.30, value: 0, text: 'Сытые голуби: +30% скорости' };
+    if (src === 'course' && dst === 'loft') return { rate: 0, value: 0.25, text: 'Обученные голуби: +25% к цене' };
+    if (src === 'loft' && dst === 'feeder') return { rate: 0.15, value: 0, text: 'Голубятня рядом: +15% скорости' };
+    if (src === 'sketch' && dst === 'ink') return { rate: 0.30, value: 0, text: 'Готовые наброски: +30% скорости' };
+    if (src === 'ink' && dst === 'printer') return { rate: 0, value: 0.25, text: 'Чистая тушь: +25% к цене' };
+    if (src === 'printer' && dst === 'sketch') return { rate: 0.15, value: 0, text: 'Дедлайн у пресса: +15% скорости' };
+    if (src === 'extract') return { rate: 0.20, value: 0, text: 'Экстрактор качает пепси: +20% скорости' };
+    if (src === 'vat' && dst === 'fizz') return { rate: 0.30, value: 0, text: 'Свежее брожение: +30% скорости' };
+    if (src === 'fizz' && dst === 'hatch') return { rate: 0, value: 0.25, text: 'Газированные яйца: +25% к цене' };
+    if (src === 'shorts') return { rate: 0, value: 0.15, text: 'Шортсы про станок: +15% к цене' };
+    if (src === 'drinks' && dst === 'toilet') return { rate: 0.30, value: 0, text: 'Пиво и кола рядом: +30% скорости' };
+    if (src === 'etalon') return { rate: 0, value: 0, text: 'Эталон рядом: сверяется с этим станком' };
     if (src === 'dryer') return { rate: 0, value: 0.20, text: 'Сушилка рядом: +20% к цене' };
     if (src === 'saw' && dst !== 'saw') return { rate: 0.15, value: 0, text: 'Пилорама рядом: +15% скорости' };
     if (src === 'bench' && dst === 'saw') return { rate: 0, value: 0.25, text: 'Верстак строгает: +25% к цене' };
@@ -785,7 +865,24 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     flipflop: r => { r(5, 1, 6, 1, K); r(4, 2, 8, 13, K); r(5, 15, 6, 1, K); r(5, 2, 6, 13, '#3f6fd1'); r(5, 2, 1, 13, '#5b8fd6'); r(7, 4, 2, 2, '#f4efe6'); r(5, 6, 2, 2, '#f4efe6'); r(9, 6, 2, 2, '#f4efe6'); r(12, 0, 3, 3, '#f2c94c'); r(13, 0, 1, 3, '#ffd76a'); r(11, 1, 5, 1, '#ffd76a'); },
     waffle: r => { r(1, 1, 14, 14, K); r(2, 2, 12, 12, '#f2c94c'); for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) r(3 + i * 3, 3 + j * 3, 2, 2, '#d9971f'); r(6, 6, 4, 3, '#f5d66e'); r(6, 6, 4, 1, '#fff1b0'); r(10, 9, 1, 5, '#b0743f'); r(10, 14, 1, 1, '#b0743f'); r(5, 9, 1, 3, '#b0743f'); },
     clayqueen: (r, d, x, sh) => { sh([[3, 1, 2, 2], [7, 0, 2, 2], [11, 1, 2, 2], [3, 3, 10, 2], [5, 5, 6, 1], [6, 6, 4, 4], [5, 10, 6, 1], [4, 11, 8, 2], [3, 13, 10, 2]], '#b0743f'); r(6, 6, 1, 4, '#d99a62'); r(4, 11, 1, 2, '#d99a62'); r(3, 13, 2, 2, '#d99a62'); r(3, 3, 10, 1, '#d99a62'); r(4, 1, 1, 1, '#d99a62'); r(8, 0, 1, 1, '#d99a62'); r(12, 1, 1, 1, '#d99a62'); r(9, 7, 1, 1, '#9c4a4a'); },
-    burnsalve: r => { r(3, 0, 2, 1, '#f2c94c'); r(2, 1, 4, 3, '#ff7a2a'); r(3, 2, 2, 2, '#f2c94c'); r(1, 5, 11, 7, K); r(0, 5, 1, 7, K); r(2, 6, 9, 5, '#f4efe6'); r(2, 6, 9, 1, '#ffffff'); r(1, 5, 1, 7, '#aab4bd'); r(7, 7, 1, 3, '#57b04f'); r(6, 8, 3, 1, '#57b04f'); r(12, 6, 3, 5, K); r(13, 7, 1, 3, '#5b8fd6'); r(15, 8, 1, 1, '#f4efe6'); }
+    burnsalve: r => { r(3, 0, 2, 1, '#f2c94c'); r(2, 1, 4, 3, '#ff7a2a'); r(3, 2, 2, 2, '#f2c94c'); r(1, 5, 11, 7, K); r(0, 5, 1, 7, K); r(2, 6, 9, 5, '#f4efe6'); r(2, 6, 9, 1, '#ffffff'); r(1, 5, 1, 7, '#aab4bd'); r(7, 7, 1, 3, '#57b04f'); r(6, 8, 3, 1, '#57b04f'); r(12, 6, 3, 5, K); r(13, 7, 1, 3, '#5b8fd6'); r(15, 8, 1, 1, '#f4efe6'); },
+    // pizza and pigeon machines: drawn after their workshop sprites
+    dough: (r, d) => { r(1, 13, 14, 3, K); r(2, 14, 12, 1, '#d9535a'); r(11, 1, 3, 12, K); r(12, 2, 1, 10, '#e8e2d6'); r(5, 0, 9, 3, K); r(6, 1, 7, 1, '#e8e2d6'); r(7, 3, 1, 4, '#9aa3ad'); r(1, 6, 10, 7, K); r(2, 7, 8, 5, '#c9d0d6'); r(2, 7, 1, 5, '#e9eef2'); d(6, 7, 3, '#f2dca8'); r(4, 5, 5, 1, '#f8ebc6'); },
+    topping: (r, d) => { d(8, 8, 7, K); d(8, 8, 6, '#e5a65a'); d(8, 8, 5, '#d9452f'); d(8, 8, 4, '#f7d36a'); for (const [a, b] of [[5, 6], [9, 5], [7, 9], [10, 9], [4, 9]]) r(a, b, 2, 2, '#b8322a'); r(8, 4, 1, 1, '#57b04f'); r(6, 8, 1, 1, '#57b04f'); r(11, 7, 1, 1, '#57b04f'); },
+    pizzaoven: (r, d) => { r(11, 0, 3, 4, K); r(12, 1, 1, 3, '#8a5a32'); d(8, 9, 7, K); d(8, 9, 6, '#c4553a'); r(1, 9, 14, 7, K); r(2, 9, 12, 6, '#c4553a'); r(2, 11, 12, 1, '#94402c'); r(5, 8, 6, 7, K); r(6, 9, 4, 6, '#1d1629'); r(6, 12, 2, 3, '#ff7a2a'); r(8, 11, 2, 4, '#f7c948'); r(7, 13, 2, 2, '#fff1b0'); },
+    feeder: r => { r(7, 6, 2, 10, K); r(1, 6, 14, 3, K); r(2, 7, 12, 1, '#c98a52'); for (let dy = 0; dy < 5; dy++) r(2 + dy, 5 - dy, 12 - dy * 2, 1, K); for (let dy = 0; dy < 4; dy++) r(3 + dy, 5 - dy, 10 - dy * 2, 1, '#b8423b'); for (let k = 0; k < 5; k++) r(3 + k * 2, 5 + (k % 2), 1, 1, '#e5c56a'); r(2, 12, 5, 3, K); r(3, 13, 3, 1, '#a9b2c3'); r(6, 11, 2, 2, K); r(7, 11, 1, 1, '#ff7a2a'); },
+    course: (r, d) => { r(7, 9, 1, 7, K); r(1, 15, 14, 1, K); for (let a = 0; a < 40; a++) { const an = a / 40 * Math.PI * 2; r(7 + Math.round(Math.cos(an) * 5), 6 + Math.round(Math.sin(an) * 5), 1, 1, K); } for (let a = 0; a < 32; a++) { const an = a / 32 * Math.PI * 2; r(7 + Math.round(Math.cos(an) * 4), 6 + Math.round(Math.sin(an) * 4), 1, 1, a % 8 < 4 ? '#f2c94c' : '#d9535a'); } r(10, 4, 5, 3, K); r(11, 5, 3, 1, '#a9b2c3'); r(14, 3, 2, 2, K); r(15, 3, 1, 1, '#6fbf9a'); },
+    loft: r => { for (let dy = 0; dy < 6; dy++) r(7 - dy, dy, 2 + dy * 2, 1, K); for (let dy = 1; dy < 6; dy++) r(8 - dy, dy, dy * 2, 1, '#5b7f8a'); r(1, 6, 14, 8, K); r(2, 6, 12, 7, '#e3d6b8'); r(3, 8, 4, 3, K); r(9, 8, 4, 3, K); r(4, 9, 2, 1, '#7f889a'); r(10, 9, 1, 1, '#ff7a2a'); r(3, 14, 2, 2, K); r(11, 14, 2, 2, K); },
+    sketch: r => { r(1, 1, 13, 12, K); r(2, 2, 11, 10, '#fbf8f0'); r(3, 3, 9, 1, '#8f8aa0'); r(4, 5, 2, 3, K); r(8, 5, 2, 3, K); r(4, 5, 1, 1, '#ffffff'); r(8, 5, 1, 1, '#ffffff'); r(6, 9, 2, 1, '#e8737a'); r(2, 13, 2, 3, K); r(11, 13, 2, 3, K); for (let k = 0; k < 6; k++) { r(9 + k, 11 - k, 1, 1, k ? '#f2c94c' : K); r(10 + k, 11 - k, 1, 1, '#c98a2a'); } },
+    ink: r => { r(3, 7, 10, 9, K); r(4, 8, 8, 7, '#1d1629'); r(4, 10, 8, 3, '#e9e2d0'); r(6, 11, 4, 1, '#c8323c'); r(5, 5, 6, 3, K); r(6, 6, 4, 1, '#3a3346'); r(5, 8, 1, 2, '#6a6280'); r(8, 4, 1, 2, '#9aa3ad'); for (let k = 2; k < 8; k++) { r(8 + (k >> 1), 6 - k, 1, 1, '#c98a52'); r(9 + (k >> 1), 6 - k, 1, 1, '#8a5a32'); } },
+    printer: (r, d) => { r(0, 13, 16, 3, K); r(7, 2, 8, 12, K); r(8, 3, 6, 10, '#4a6a6a'); d(11, 6, 2, '#c9d0d6'); d(11, 10, 2, '#3a3346'); d(5, 8, 5, K); d(5, 8, 4, '#c8323c'); d(5, 8, 1, K); r(1, 7, 1, 1, '#f2c94c'); r(12, 7, 4, 3, K); r(13, 8, 3, 1, '#fbf8f0'); },
+    vat: (r, d) => { r(3, 2, 10, 14, K); r(4, 3, 8, 12, '#cfe8f2'); r(4, 7, 8, 8, '#3a2a2a'); r(4, 7, 8, 1, '#6a4a3a'); r(6, 9, 4, 6, K); r(7, 10, 2, 4, '#1d4a9a'); r(7, 11, 2, 1, '#f4efe6'); r(7, 9, 1, 1, '#ffffff'); r(2, 0, 12, 3, K); r(3, 1, 10, 1, '#9aa3ad'); r(6, 4, 1, 1, '#c9a26a'); r(9, 5, 1, 1, '#c9a26a'); },
+    fizz: (r, d) => { r(1, 3, 6, 13, K); r(2, 4, 4, 11, '#3f7ac2'); r(2, 7, 4, 2, '#f4efe6'); r(8, 6, 8, 10, K); r(9, 7, 6, 8, '#c9963a'); r(10, 1, 3, 6, K); r(11, 2, 1, 5, '#c9d0d6'); d(12, 11, 3, '#f4efe6'); r(12, 9, 1, 3, K); r(0, 1, 2, 2, '#e9eef2'); },
+    hatch: (r, d) => { r(0, 4, 16, 12, K); r(1, 5, 14, 10, '#9aa3ad'); r(3, 7, 10, 7, '#2a3a46'); r(6, 0, 4, 4, K); r(7, 1, 2, 2, '#ffd54a'); r(6, 8, 5, 6, K); r(7, 9, 3, 4, '#f4efe6'); r(7, 10, 3, 1, '#d9453f'); r(7, 9, 1, 1, '#2b2135'); r(9, 9, 1, 1, '#2b2135'); r(12, 9, 2, 1, '#7ee081'); },
+    toilet: (r, d) => { r(3, 0, 10, 7, K); r(4, 1, 8, 5, '#f4f7f9'); r(10, 1, 2, 5, '#d8dee4'); r(1, 2, 2, 2, K); r(1, 7, 14, 4, K); r(2, 8, 12, 2, '#ffffff'); r(4, 8, 8, 1, '#5aa9e6'); r(4, 11, 8, 5, K); r(5, 11, 6, 4, '#e9eef2'); r(9, 11, 2, 4, '#c9d0d6'); r(14, 0, 2, 9, '#f2c94c'); r(14, 4, 2, 1, '#d9453f'); },
+    airfryer: (r, d) => { r(2, 0, 12, 16, K); r(3, 1, 10, 14, '#2e2e38'); r(3, 1, 1, 14, '#4a4a58'); r(5, 2, 6, 3, '#141419'); r(6, 3, 1, 1, '#ff8a3a'); r(8, 3, 1, 1, '#ff8a3a'); r(3, 9, 10, 1, K); r(0, 10, 3, 3, K); r(1, 11, 1, 1, '#55556a'); for (let k = 0; k < 4; k++) r(5 + k * 2, 6 + (k % 2), 1, 3, '#f2c94c'); },
+    shorts: (r, d) => { d(8, 7, 7, K); d(8, 7, 6, '#fff1b0'); d(8, 7, 5, K); r(5, 1, 7, 13, K); r(6, 2, 5, 11, '#ff6fa8'); r(7, 5, 3, 4, '#ffd6e6'); r(8, 6, 1, 2, K); r(6, 12, 3, 1, '#ffffff'); r(7, 14, 3, 2, K); r(12, 1, 1, 1, '#ff5f87'); r(14, 1, 1, 1, '#ff5f87'); r(12, 2, 3, 1, '#ff5f87'); r(13, 3, 1, 1, '#ff5f87'); },
+    drinks: (r, d) => { r(2, 0, 12, 16, K); r(3, 1, 10, 14, '#e9eef2'); r(3, 1, 5, 3, '#d9453f'); r(4, 2, 3, 1, '#ffffff'); r(8, 1, 5, 3, '#e0a32e'); r(8, 1, 5, 1, '#fff6e0'); r(4, 5, 8, 8, '#1b2230'); r(5, 7, 1, 1, '#5a3410'); r(5, 6, 1, 1, '#f2c94c'); r(4, 8, 3, 3, '#7a4a1a'); r(4, 9, 3, 1, '#f2c94c'); r(8, 7, 3, 1, '#c9d0d6'); r(8, 8, 3, 3, '#d9453f'); r(8, 9, 3, 1, '#ffffff'); r(4, 11, 8, 1, '#44505c'); r(12, 6, 1, 1, '#7ee081'); r(4, 13, 8, 2, '#1b2230'); }
   };
   const CARD_ICON = {
     m_bench: 'bench', m_dryer: 'dryer', m_mixer: 'mixer', m_press: 'press', m_kiln: 'kiln', m_belt: 'belt',
@@ -802,7 +899,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     w_fairy: 'fairy', w_pirate: 'pirate', w_beekeeper: 'beekeeper', w_kisa: 'kisa', w_toyalien: 'toyalien', w_code10: 'code10', w_code80: 'code80', w_yeti: 'yeti', w_slime: 'slime', w_moth: 'moth', w_gastriter: 'gastriter', w_palach: 'palach', w_thief: 'thief', w_raccoons: 'raccoons', w_rebel: 'rebel',
     u_scotch: 'scotch', e_thirst: 'thirst', e_soda: 'soda', s_plumbus: 'plumbus', u_squanch: 'squanch', u_hyper: 'hyper', u_triad: 'triad', s_veins: 'veins', s_banner: 'banner', s_sponge: 'sponge',
     u_zorya: 'zorya', s_ketchup: 'ketchup', e_mirror: 'mirror', s_spice: 'spice', s_sauce: 'sauce', e_crackers: 'crackers', s_glue: 'glue', u_fattoad: 'fattoad', u_novapost: 'novapost', e_shadow: 'shadow',
-    u_pizza4: 'pizza4', e_pillow: 'pillow', e_honeycake: 'honeycake', e_jelly: 'jelly', m_pump: 'brickpump', e_flipflop: 'flipflop', u_waffle: 'waffle', s_queen: 'clayqueen', e_salve: 'burnsalve'
+    u_pizza4: 'pizza4', e_pillow: 'pillow', e_honeycake: 'honeycake', e_jelly: 'jelly', m_pump: 'brickpump', e_flipflop: 'flipflop', u_waffle: 'waffle', s_queen: 'clayqueen', e_salve: 'burnsalve',
+    m_dough: 'dough', m_topping: 'topping', m_pizzaoven: 'pizzaoven', m_feeder: 'feeder', m_course: 'course', m_loft: 'loft', m_sketch: 'sketch', m_ink: 'ink', m_printer: 'printer', m_vat: 'vat', m_fizz: 'fizz', m_hatch: 'hatch', m_toilet: 'toilet', m_airfryer: 'airfryer', m_shorts: 'shorts', m_drinks: 'drinks'
   };
   const ICONS = {};
   for (const id in CARD_ICON) ICONS[id] = makeIcon(ICON_DRAW[CARD_ICON[id]]);
@@ -811,15 +909,18 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   /* ================= state ================= */
   const KEY = 'pixel-factory-save-v1';
   // kiss: pieces made, for the 44th piece of Sponges 44
+  // slot counts of workshops 6–10
+  const NEW_LOC_SLOTS = [4, 5, 6, 4, 5];
   const emptySlots = n => Array.from({ length: n }, () => ({ machine: null, worker: null, upg: [], acc: 0, kiss: 0 }));
   const fresh = () => ({
-    v: 13, money: 0, xp: 0, level: 1, planks: 0, bricks: 0, nails: 0, glass: 0, poufs: 0, earned: 0, cur: 0,
+    v: 14, money: 0, xp: 0, level: 1, planks: 0, bricks: 0, nails: 0, glass: 0, poufs: 0, pizza: 0, pigeons: 0, manga: 0, bottles: 0, calib: 0, earned: 0, cur: 0,
     locs: [
       { unlocked: true, slots: [{ machine: null, worker: null, upg: [], acc: 0, kiss: 0 }, { machine: 'saw', worker: 'crow', upg: [], acc: 0, kiss: 0 }, { machine: null, worker: null, upg: [], acc: 0, kiss: 0 }] },
       { unlocked: false, slots: emptySlots(4) },
       { unlocked: false, slots: emptySlots(6) },
-      { unlocked: false, slots: emptySlots(8) },
-      { unlocked: false, slots: emptySlots(2) }
+      { unlocked: false, slots: emptySlots(6) },
+      { unlocked: false, slots: emptySlots(2) },
+      ...NEW_LOC_SLOTS.map(n => ({ unlocked: false, slots: emptySlots(n) }))
     ],
     workers: { crow: { unlocked: true, equip: [] }, mrp: { unlocked: true, equip: [] }, tramp: { unlocked: false, equip: [] }, dog: { unlocked: false, equip: [] }, toad: { unlocked: false, equip: [] }, pink: { unlocked: false, equip: [] }, v1: { unlocked: false, equip: [] }, v2: { unlocked: false, equip: [] }, jeanne: { unlocked: false, equip: [] }, alien: { unlocked: false, equip: [] }, jedi: { unlocked: false, equip: [] }, silver: { unlocked: false, equip: [] }, mrsha: { unlocked: false, equip: [] }, kast: { unlocked: false, equip: [] }, batya: { unlocked: false, equip: [] },
       thoth: { unlocked: false, equip: [] }, rat: { unlocked: false, equip: [] }, lin: { unlocked: false, equip: [] }, horse: { unlocked: false, equip: [] }, rabbit: { unlocked: false, equip: [] },
@@ -833,8 +934,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     // brk: a break between shifts, time stands still; shop: the break's showcase as [{ id, bought }];
     // sq: this shift's Squanch rolls, nova: Nova poshta's card crate already came this shift; this shift's spark of Arc Warden,
     // workers bitten by the zombie girl, the Tuesday ghost's rollback done; rose: «Rising from the dead» used up this run
+    // ongoing: shifts in a row the manga studio worked, mangaOn: it worked this shift;
     // claw: the worker the toy alien's claw chose this shift, warned: the neighbour the executioner warned, stolen: the equipment card the thief copied
-    run: { t: 0, q: 1, qT: 0, qEarned: 0, brk: true, shop: [], rule: null, sq: [], nova: false, spark: null, bitten: [], rolled: false, rose: false, claw: null, warned: null, stolen: null, over: false, rep: 0, passed: [], hired: 0, skills: 0, bestRate: 0, opened: [0, null, null, null, null] }
+    run: { t: 0, q: 1, qT: 0, qEarned: 0, brk: true, shop: [], rule: null, sq: [], nova: false, spark: null, bitten: [], rolled: false, rose: false, claw: null, warned: null, stolen: null, over: false, rep: 0, passed: [], hired: 0, skills: 0, bestRate: 0, opened: [0, null, null, null, null, null, null, null, null, null], ongoing: 0, mangaOn: false }
   });
   const NEW_WORKERS = ['sunflower', 'flytrap', 'honeybear', 'arc', 'nurse', 'nemu', 'tuesday', 'zombie', 'digger', 'kaneki', 'raven'];
   const NEW_WORKERS_13 = ['fairy', 'pirate', 'beekeeper', 'kisa', 'toyalien', 'code10', 'code80', 'yeti', 'slime', 'moth', 'gastriter', 'palach', 'thief', 'raccoons', 'rebel'];
@@ -903,7 +1005,17 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       Object.assign(s.run, { claw: null, warned: null, stolen: null });
       s.v = 13;
     }
-    return s.v === 8 || s.v === 13 ? s : null;
+    if (s.v === 13) {
+      // build 14: workshops 6–10 joined, with their goods and the manga studio's ongoing streak
+      NEW_LOC_SLOTS.forEach(n => s.locs.push({ unlocked: false, slots: emptySlots(n) }));
+      // and the glass ring lost its bottom corners (slots 4 and 6): their machines leave, as do melters and blowers over the new limit of 1
+      const gl = s.locs[3].slots, seen = {};
+      s.locs[3].slots = gl.filter((_, i) => i !== 4 && i !== 6).map(z => (z.machine === 'melt' || z.machine === 'blower') && (seen[z.machine] = (seen[z.machine] || 0) + 1) > 1 ? { machine: null, worker: null, upg: [], acc: 0, kiss: 0 } : z);
+      Object.assign(s, { pizza: 0, pigeons: 0, manga: 0, bottles: 0, calib: 0 });
+      if (s.run) { while (s.run.opened.length < 10) s.run.opened.push(null); Object.assign(s.run, { ongoing: 0, mangaOn: false }); }
+      s.v = 14;
+    }
+    return s.v === 8 || s.v === 14 ? s : null;
   }
   // meta lives across runs: reputation, its unlocks, achievements and records
   const META_KEY = 'pixel-factory-meta-v1';
@@ -1004,14 +1116,16 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   // quotas speed up: quota q grows quotaK × quotaA^(q−2) times over the previous one, so a stack of multipliers still hits a wall
   const quotaTarget = q => Math.round(BAL.quota0 * Math.pow(BAL.quotaK, q - 1) * Math.pow(BAL.quotaA, (q - 1) * (q - 2) / 2));
   // the quota actually asked this shift: every Credit taken for it makes it ×1,25
-  const curQuota = () => quotaTarget(state.run.q) * Math.pow(1.25, (state.run.credit || {})[state.run.q] || 0);
-  const quotaTime = () => BAL.quotaT + (hasUnlock('time') ? 15 : 0);
+  // the first shift is half as long, so its quota is half too
+  const curQuota = () => quotaTarget(state.run.q) * Math.pow(1.25, (state.run.credit || {})[state.run.q] || 0) / (state.run.q === 1 ? 2 : 1);
+  // the first shift is half as long
+  const quotaTime = () => (BAL.quotaT + (hasUnlock('time') ? 15 : 0)) / (state.run.q === 1 ? 2 : 1);
   // seconds into the shift, null in a break: the cards that change during a shift read it
   const shiftT = () => state.run.brk || state.run.over ? null : state.run.qT;
   const newCrate = () => BAL.crate * (1 + Math.random());
   const cardN = id => state.cards.filter(x => x === id).length;
-  // how fast the crate timer runs: Postman doubles it, a working Rabbit detective (or a Shadow copying him) adds 25%
-  const crateFreq = g => Math.pow(2, cardN('u_postman') - cardN('u_snailpost')) * (workerPlace('rabbit') || Object.values(g.shadow).includes('rabbit') ? 1.25 : 1);
+  // how fast the crate timer runs: Postman doubles it, a working Rabbit detective (or a Shadow copying him) adds 25%, every working machine of the pigeon roof 15%
+  const crateFreq = g => Math.pow(2, cardN('u_postman') - cardN('u_snailpost')) * (workerPlace('rabbit') || Object.values(g.shadow).includes('rabbit') ? 1.25 : 1) * (1 + 0.15 * g.pigeonPost);
   // a working Pirate makes crates ×1,5 richer and lifts their limit ×1,5
   const pirateK = () => workerPlace('pirate') ? 1.5 : 1;
   const crateFull = () => (state.run.qCrate || 0) >= curQuota() * BAL.crateCap * pirateK();
@@ -1083,7 +1197,15 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   const pct = v => Math.round(v * 100) + '%';
 
   /* ================= rules ================= */
-  const adjacent = (l, i, j) => { const [a, b] = [LAYOUTS[l][i], LAYOUTS[l][j]]; return Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]) === 1; };
+  // slots touch by a side: in one row a step apart, or a row apart and overlapping (the pizzeria's shifted pair);
+  // the pepsi extractor is three rows tall and the etalon two columns wide, so each touches every slot of its workshop
+  const TALL = { 8: 3 }, WIDE = { 9: 2 };
+  const adjacent = (l, i, j) => {
+    if (i === j) return false;
+    if (TALL[l] === i || TALL[l] === j || WIDE[l] === i || WIDE[l] === j) return true;
+    const [a, b] = [LAYOUTS[l][i], LAYOUTS[l][j]], dx = Math.abs(a[0] - b[0]), dy = Math.abs(a[1] - b[1]);
+    return (dy === 0 && dx === 1) || (dy === 1 && dx < 1);
+  };
   const neigh = (l, i) => LAYOUTS[l].map((_, j) => j).filter(j => adjacent(l, i, j));
   // has: the worker has this perk, being that worker or wearing a Shadow that copies them
   const has = (w, p, g) => w === p || (!!w && !!g && !!g.shadow && g.shadow[w] === p);
@@ -1199,7 +1321,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (g.lawn) g.combos.push('lawn');
     // Arc Warden's double takes the first free machine next to him; with none free his own machine earns ×2
     // Rebel's ally takes the first free machine next to her for good, so the double looks for another one
-    const free = (l, i) => slotsOf(l)[i].machine && slotsOf(l)[i].machine !== 'belt' && !slotsOf(l)[i].worker;
+    const free = (l, i) => slotsOf(l)[i].machine && !['belt', 'etalon'].includes(slotsOf(l)[i].machine) && !slotsOf(l)[i].worker;
     const pReb = workerPlace('rebel'), ja = pReb && neigh(pReb.l, pReb.i).find(k => free(pReb.l, k));
     g.ally = ja != null && pReb ? { l: pReb.l, i: ja } : null;
     const pArc = skillOn('arc') && workerPlace('arc');
@@ -1217,6 +1339,13 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (g.scarf) g.combos.push('scarf');
     g.feat = !!(pC10 && pC80 && pC10.l === pC80.l && adjacent(pC10.l, pC10.i, pC80.i));
     if (g.feat) g.combos.push('feat');
+    // workshops 6–10: lunch while the pizza oven works, pigeon post from every working machine of the roof;
+    // «It's the same thing»: the toilet and the air fryer side by side, both at work
+    g.lunch = slotsOf(5).some(z => z.machine === 'pizzaoven' && z.worker);
+    g.pigeonPost = slotsOf(6).filter(z => z.machine && z.machine !== 'belt' && z.worker).length;
+    const wsl = slotsOf(9), pt = wsl.findIndex(z => z.machine === 'toilet' && z.worker), pf = wsl.findIndex(z => z.machine === 'airfryer' && z.worker);
+    g.same = pt >= 0 && pf >= 0 && adjacent(9, pt, pf);
+    if (g.same) g.combos.push('same');
     // Shadow copies the perk of its working neighbour with the biggest income
     g.shadow = {};
     for (const w of crewIds) {
@@ -1274,6 +1403,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     // Medovik is the honey bear's favourite: ×1,8 instead of ×1,4
     if (id === 'honeybear') power *= Math.pow(1.8 / 1.4, st.equip.filter(e => e === 'e_honeycake').length);
     if (g.trio.has(id)) { const k = Math.pow(1.3, cardN('u_triad')); power *= k; speed *= k; }
+    if (g.lunch) power *= 1.1;
     return { power, speed, luck: g.noLuck && !mirror ? 0 : Math.min(0.9, base.luck + l + g.luck), fb, fr, hasCoffee, mirror, food };
   }
   function workerPlace(id) {
@@ -1291,7 +1421,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   function slotStats(l, i, g) {
     const sl = slotsOf(l), s = sl[i];
     if (!s.machine) return null;
-    const M = MACH[s.machine], W = s.worker, mirror = hasEq(W, 'e_mirror');
+    // the etalon works on its own: a worker put there by hand is ignored
+    const M = MACH[s.machine], W = s.machine === 'etalon' ? null : s.worker, mirror = hasEq(W, 'e_mirror');
     let rb = 0, vb = 0, lb = 0;
     const notes = [];
     linked(l, i, g).forEach(j => { const m2 = sl[j].machine; if (!m2 || s.machine === 'belt') return; const e = effect(m2, s.machine); rb += e.rate; vb += e.value; lb += e.luck || 0; notes.push(e.text); });
@@ -1322,10 +1453,15 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (l === 4 && g.couture) { vb += 0.25; notes.push('Мисис Ха шьёт чехлы: +25% к цене'); }
     if (s.machine === 'stuff' && g.vitrageWorking) { rb += 0.2; notes.push('Стеклянные ножки из цеха 4: +20% скорости'); }
     if (s.machine !== 'belt' && LOCS[l].hot && LOCS[l].hot.includes(i)) { rb += 0.2; notes.push('Жар горна: +20% скорости'); }
+    if (l === 7 && state.run.ongoing) { vb += 0.1 * state.run.ongoing; notes.push(`Онгоинг, ${state.run.ongoing} смен подряд: +${state.run.ongoing * 10}% к цене`); }
+    // the etalon's price grows with the square of its working neighbours
+    const etN = s.machine === 'etalon' ? neigh(l, i).filter(j => sl[j].machine && !['belt', 'etalon'].includes(sl[j].machine) && (sl[j].worker || MACH[sl[j].machine].auto)).length : 0;
+    if (s.machine === 'etalon') notes.push(etN ? `Работающих соседей: ${etN}, цена ×${etN * etN}` : 'Без работающих соседей Эталон спит');
+    const baseV = s.machine === 'etalon' ? M.value * etN * etN : M.value;
     const dbl = !W && g.double && !g.double.self && g.double.l === l && g.double.i === i;
     const ally = !W && !dbl && g.ally && g.ally.l === l && g.ally.i === i;
     const auto = !W && (M.auto || dbl || ally);
-    if ((!W && !auto) || M.rate === 0 || onStrike(W)) return { rate: 0, value: 0, income: 0, notes, ws: null, M };
+    if ((!W && !auto) || M.rate === 0 || onStrike(W)) return { rate: 0, value: 0, income: 0, notes, ws: null, M, etN };
     const skM = { speed: g.team[l] || 1, power: 1, value: 1, income: 1 };
     if (g.teamV[l]) { skM.value *= g.teamV[l]; notes.push(`Пришелец, «${SKILLS.alien.name}»: цена ×${fmt(SKILLS.alien.mult)}`); }
     if (g.siren === l) { skM.value *= SKILLS.nurse.mult; notes.push(`Медсестра, «${SKILLS.nurse.name}»: цена ×2 в Потустороннем мире`); }
@@ -1356,7 +1492,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       B = M.auto.power; skM.speed = 1;
       power = B * (1 + g.power) * g.powerX; speed = M.auto.speed * (1 + g.speed) * g.speedX;
       luck = spark ? 1 : g.noLuck ? 0 : Math.min(0.9, g.luck + lb);
-      notes.push(`Качает сам: сила ${fmt(B)}, скорость ${fmt(M.auto.speed)}`);
+      notes.push(s.machine === 'etalon' ? 'Работает сам, сотрудник не нужен' : `Качает сам: сила ${fmt(B)}, скорость ${fmt(M.auto.speed)}`);
     } else {
       ws = workerStats(W, g); power = ws.power; speed = ws.speed;
       // the Nurse has no face: she does not see her neighbours, and their bonuses and penalties pass her by
@@ -1385,6 +1521,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       // the yeti knits a stripe of the scarf every 20 s of the shift; with the honey bear next to him it is ready at once
       if (nearW('yeti')) { const k = g.scarf ? 5 : Math.min(5, Math.floor((shiftT() || 0) / 20)); if (k) { power *= 1 + 0.05 * k; notes.push(`Йети вяжет шарф: +${k * 5}% силы`); } }
       if (W === 'honeybear' && g.scarf) { power *= 1.5; notes.push('Тёплый шарф: сила ×1,5'); }
+      if (g.same && (s.machine === 'toilet' || s.machine === 'airfryer')) { power *= 2; notes.push('Это одно и то же: сила ×2'); }
+      if (g.lunch) notes.push('Обед из дровяной печи: +10% силы');
       if (W === 'code10' || W === 'code80') {
         const food = ws.food || allUps.some(u => CARDS[u].food) || g.pizza.includes(W);
         if (food && W === 'code10') { power *= 1.4; notes.push('Картошечка: с едой сила ×1,4'); }
@@ -1465,7 +1603,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     }
     power *= skM.power;
     let rate = M.rate * BAL.tempo * speed * speedM * skM.speed * (1 + rb) * rX;
-    let value = M.value * power * skM.value * (1 + vb) * vX * (1 + g.price) * g.priceX * g.locX[l];
+    let value = baseV * power * skM.value * (1 + vb) * vX * (1 + g.price) * g.priceX * g.locX[l];
     // Toothy snails slow everyone down, but not in a workshop where the Helping hand feeds them, and not Mirror armour
     const hands = slotsOf(l).reduce((n, z) => n + z.upg.filter(u => u === 's_hand').length, 0), flytrap = slotsOf(l).some(z => z.worker === 'flytrap');
     if (g.snails && !hands && !mirror && !flytrap) { rate *= Math.pow(0.85, g.snails); notes.push('Зубастые улитки: скорость ×0,85'); }
@@ -1473,7 +1611,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (g.snails && hands) notes.push('Робот кормит улиток: улитки не тормозят');
     // the Helping hand lifts the biggest of this machine's multipliers: power, speed or price
     if (hands) {
-      const f = { power: power / B, speed: rate / (M.rate * BAL.tempo), price: value / (M.value * power) }, top = Object.keys(f).reduce((a, b) => f[b] > f[a] ? b : a), hx = Math.pow(1.3, hands);
+      const f = { power: power / B, speed: rate / (M.rate * BAL.tempo), price: value / ((baseV || 1) * power) }, top = Object.keys(f).reduce((a, b) => f[b] > f[a] ? b : a), hx = Math.pow(1.3, hands);
       if (top === 'speed') rate *= hx; else value *= hx;
       notes.push(`Рука помощи: ${{ power: 'сила', speed: 'скорость', price: 'цена' }[top]} ×${fmt(hx)}`);
     }
@@ -1489,7 +1627,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     // mult: the income multipliers the simulation applies to every piece's coins on top of value
     if (g.double && g.double.self && g.double.l === l && g.double.i === i) { mult *= 2; notes.push('Двойнику негде встать: доход станка ×2'); }
     mult *= duo * family;
-    return { rate, value, mult, kiss, income: rate * value * (1 + luck * extra + rac) * crowM * (1 + kiss / 44) * mult * skM.income * g.income, notes, ws, M, luck, extra };
+    return { rate, value, mult, kiss, etN, income: rate * value * (1 + luck * extra + rac) * crowM * (1 + kiss / 44) * mult * skM.income * g.income, notes, ws, M, luck, extra };
   }
   function totalIncome() {
     const g = globals();
@@ -1623,13 +1761,14 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     else if (got('rising')) toast('Комбо «Восстание из мёртвых»: раз за забег завод не обанкротится!');
     else if (got('scarf')) toast('Комбо «Тёплый шарф»: шарф готов, Медаедь ×1,5!');
     else if (got('feat')) toast('Комбо «Сам с собой фит»: code10 и code80 ×1,5!');
+    else if (got('same')) toast('Комбо «Это одно и то же»: унитаз и аэрогриль, сила ×2!');
   }
   function unlockLoc(l) {
     const L = state.locs[l], cost = LOCS[l].cost;
     if (L.unlocked) return;
     if (state.money < cost) { toast(`Чтобы открыть цех, нужно ${fmt(cost)} монет`); return; }
     state.money -= cost; L.unlocked = true; state.run.opened[l] = state.run.t;
-    if (LOCS[l].start) L.slots[1].machine = LOCS[l].start;
+    if (LOCS[l].start) L.slots[LOCS[l].startSlot ?? 1].machine = LOCS[l].start;
     // the poufs workshop starts empty: its sewing machine is promised in the next card pick, a waiting one if there is one
     if (l === 4) { const o = state.offers.find(x => ['level', 'quota', 'crate'].includes(x.src)); if (o) addSew(o); else state.run.sewDue = true; }
     state.cur = l; selSlot = null; selWorker = null;
@@ -1693,6 +1832,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       L.slots.forEach((s, i) => {
         const st = slotStats(l, i, g);
         if (!st || st.rate <= 0) return;
+        if (l === 7) state.run.mangaOn = true;
         total += st.income;
         s.acc = (s.acc || 0) + st.rate * dt;
         const n = Math.floor(s.acc);
@@ -1769,6 +1909,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     run.rep += wasRule ? 2 : 1;
     const piggy = state.cards.filter(id => id === 'u_piggy').length;
     if (piggy) { state.money += run.qEarned * 0.1 * piggy; toast(`Копилка: +${fmt(run.qEarned * 0.1 * piggy)} монет`); }
+    // the manga ongoing grows with every shift the studio worked and breaks on an idle one
+    run.ongoing = run.mangaOn ? (run.ongoing || 0) + 1 : 0; run.mangaOn = false;
     run.q++; run.qT = 0; run.qEarned = 0; run.qCrate = 0; run.rule = null; run.sq = []; run.nova = false; run.bitten = []; run.spark = null; run.rolled = false; run.claw = null; run.warned = null; run.stolen = null;
     run.brk = true; run.shopClosed = !!(wasRule && wasRule.id === 'audit'); run.shop = run.shopClosed ? [] : rollShop(); run.shopLocked = false; run.shopRolls = 0;
     if (run.q % 3 === 0) {
@@ -1813,7 +1955,10 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   let S = 2;
   const SW = 72, SH = 74;
   let OX = 6;
-  const colX = c => OX + c * 78, rowY = r => 36 + r * 78;
+  // rounded so the fractional rows of the manga studio and the pizzeria's shifted pair sit on whole pixels
+  const colX = c => OX + Math.round(c * 78), rowY = r => 36 + Math.round(r * 78);
+  // the pepsi extractor owns a slot three rows tall, the etalon one two columns wide
+  const SLOT_W = (l, i) => WIDE[l] === i ? SW + 78 : SW, SLOT_H = (l, i) => TALL[l] === i ? SH + 156 : SH;
   const SX = i => colX(LAYOUTS[state.cur][i][0]), SY = i => rowY(LAYOUTS[state.cur][i][1]);
   // lockers: pages of NL, each page two rows of LROW, each row 60 px tall so a resting worker fits under its locker
   const NL = 16, LROW = 8, LW = 26, LH = 44;
@@ -1963,6 +2108,238 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       R(x + 14, y + 2, 7, 21, K); R(x + 15, y + 3, 5, 19, '#c9d0d6'); R(x + 16, y + 4, 3, 17, '#bfeef4'); R(x + 16, y + 5, 1, 4, '#ffffff'); R(x + 18, y + 14, 1, 5, '#7fd6e0');
       R(x + 16, y + 22, 3, 2, K);
       const hot = Math.floor(t * 5) % 2; R(x + 27, y + 12, 3, 3, hot ? '#fff1b0' : '#ffb35a'); R(x + 28, y + 13, 1, 1, '#ffffff');
+    } else if (type === 'dough') {
+      R(x + 4, y + 25, 24, 5, K); R(x + 5, y + 26, 22, 3, '#d9535a'); R(x + 5, y + 26, 22, 1, '#ef8a8a');
+      R(x + 22, y + 6, 6, 20, K); R(x + 23, y + 7, 4, 19, '#e8e2d6'); R(x + 23, y + 7, 1, 19, '#ffffff');
+      R(x + 8, y + 3, 20, 7, K); R(x + 9, y + 4, 18, 5, '#e8e2d6'); R(x + 9, y + 4, 18, 1, '#ffffff'); R(x + 11, y + 6, 4, 1, '#d9535a');
+      R(x + 15, y + 9, 3, 5, K); R(x + 16, y + 9, 1, 5, '#9aa3ad');
+      // bowl with dough
+      R(x + 5, y + 13, 18, 12, K); R(x + 6, y + 14, 16, 10, '#c9d0d6'); R(x + 6, y + 14, 2, 10, '#e9eef2'); R(x + 19, y + 15, 2, 8, '#9aa3ad');
+      disc(x + 14, y + 15, 5, '#f2dca8'); R(x + 10, y + 12, 9, 2, '#f8ebc6');
+      const k = Math.floor(t * 6) % 3; R(x + 12 + k * 2, y + 12, 2, 2, '#e0c27c');
+      R(x + 15, y + 11, 1, 4, '#9aa3ad');
+    } else if (type === 'topping') {
+      R(x + 3, y + 22, 3, 8, K); R(x + 26, y + 22, 3, 8, K);
+      R(x + 1, y + 18, 30, 5, K); R(x + 2, y + 19, 28, 3, '#a8693a'); R(x + 2, y + 19, 28, 1, '#c98a52');
+      // pizza
+      disc(x + 14, y + 13, 8, K); disc(x + 14, y + 13, 7, '#e5a65a'); disc(x + 14, y + 13, 6, '#d9452f'); disc(x + 14, y + 13, 5, '#f7d36a');
+      for (const [a, b] of [[11, 10], [16, 11], [13, 15], [17, 15], [10, 14]]) R(x + a, y + b, 2, 2, '#b8322a');
+      R(x + 14, y + 9, 1, 1, '#57b04f'); R(x + 12, y + 13, 1, 1, '#57b04f'); R(x + 18, y + 13, 1, 1, '#57b04f');
+      // jars
+      R(x + 23, y + 10, 5, 9, K); R(x + 24, y + 11, 3, 7, '#d9452f'); R(x + 24, y + 11, 3, 2, '#e9e2d0'); R(x + 27, y + 13, 4, 6, K); R(x + 28, y + 14, 2, 4, '#f7d36a'); R(x + 28, y + 14, 2, 1, '#e9e2d0');
+      R(x + 1, y + 12, 4, 6, K); R(x + 2, y + 13, 2, 5, '#57b04f'); R(x + 2, y + 11, 2, 2, '#8fe07a');
+    } else if (type === 'pizzaoven') {
+      R(x + 21, y, 5, 8, K); R(x + 22, y + 1, 3, 7, '#8a5a32');
+      disc(x + 24, y - 2, 2, 'rgba(200,200,210,.7)');
+      // dome
+      for (let dy = 0; dy <= 13; dy++) { const w = Math.round(Math.sqrt(169 - dy * dy) * 1.15); R(x + 16 - w, y + 18 - dy, w * 2, 1, K); }
+      for (let dy = 0; dy <= 12; dy++) { const w = Math.round(Math.sqrt(144 - dy * dy) * 1.15); R(x + 16 - w + 1, y + 18 - dy, w * 2 - 2, 1, '#c4553a'); }
+      for (let r = 0; r < 4; r++) { const dy = 10 - r * 3, w = Math.round(Math.sqrt(144 - dy * dy) * 1.15) - 2; R(x + 16 - w, y + 8 + r * 3 + 2, w * 2, 1, '#94402c'); for (let i = -3; i <= 3; i++) { const bx = 16 + i * 4 + (r % 2) * 2; if (Math.abs(bx - 16) < w) R(x + bx, y + 8 + r * 3, 1, 2, '#94402c'); } }
+      R(x + 3, y + 18, 26, 12, K); R(x + 4, y + 18, 24, 11, '#c4553a');
+      for (let r = 0; r < 3; r++) R(x + 4, y + 21 + r * 3, 24, 1, '#94402c');
+      // arch with fire
+      R(x + 10, y + 15, 12, 13, K); R(x + 11, y + 14, 10, 1, K);
+      R(x + 11, y + 16, 10, 12, '#1d1629');
+      const f = Math.floor(t * 8) % 2;
+      R(x + 12, y + 23 - f, 3, 5 + f, '#ff7a2a'); R(x + 15, y + 21 + f, 3, 7 - f, '#f7c948'); R(x + 18, y + 23, 2, 5, '#ff5040'); R(x + 14, y + 25, 5, 3, '#fff1b0');
+      R(x + 9, y + 28, 14, 2, K); R(x + 10, y + 28, 12, 1, '#d8c8a0');
+    } else if (type === 'feeder' || type === 'course' || type === 'loft') {
+      // a tiny pigeon: grey body, dark head, green-violet neck, the head bobs while it pecks
+      const pig = (px, py, dir, peck) => {
+        R(px - 3, py, 7, 4, K); R(px - 2, py + 1, 5, 2, '#a9b2c3'); R(px - 2 * dir - 1, py + 1, 2, 2, '#7f889a');
+        const hx = px + dir * 3, hy = py - 2 + (peck ? 2 : 0);
+        R(hx - 1, hy, 3, 3, K); R(hx, hy + 1, 1, 1, '#6a7286'); R(px + dir, py, 1, 1, '#6fbf9a'); R(px + dir * 2, py, 1, 1, '#9a6ac2');
+        R(hx + dir * 2, hy + 1, 1, 1, '#e8a0a0'); R(hx + (dir > 0 ? 1 : -1), hy, 1, 1, '#ff7a2a');
+        R(px - 1, py + 4, 1, 1, '#e8737a'); R(px + 1, py + 4, 1, 1, '#e8737a');
+      };
+      if (type === 'feeder') {
+        R(x + 14, y + 12, 4, 18, K); R(x + 15, y + 12, 2, 18, '#8a5a32');
+        R(x + 3, y + 12, 26, 4, K); R(x + 4, y + 13, 24, 2, '#c98a52');
+        for (let k = 0; k < 9; k++) R(x + 5 + k * 3 - (k % 2), y + 11 - (k % 2), 1, 1, '#e5c56a');
+        for (let dy = 0; dy < 7; dy++) R(x + 6 + dy - 1, y + 4 - dy, 22 - dy * 2 + 2, 1, K);
+        for (let dy = 0; dy < 6; dy++) R(x + 7 + dy - 1, y + 4 - dy, 20 - dy * 2 + 2, 1, '#b8423b');
+        R(x + 6, y + 4, 1, 8, K); R(x + 25, y + 4, 1, 8, K);
+        const p = Math.floor(t * 3) % 2;
+        pig(x + 11, y + 8, -1, p); pig(x + 21, y + 8, 1, 1 - p);
+        for (const [a, b] of [[4, 29], [9, 30], [24, 29], [27, 30], [20, 31]]) R(x + a, y + b, 1, 1, '#e5c56a');
+        pig(x + 6, y + 26, 1, Math.floor(t * 4 + 1) % 2);
+      } else if (type === 'course') {
+        // a hurdle, two hoops on stands, a pigeon flies through
+        R(x + 1, y + 28, 30, 2, K); R(x + 2, y + 28, 28, 1, '#7aa35a');
+        R(x + 2, y + 21, 1, 8, K); R(x + 9, y + 21, 1, 8, K); R(x + 2, y + 21, 8, 2, K); for (let k = 0; k < 4; k++) R(x + 2 + k * 2, y + 21, 1, 1, k % 2 ? '#e9e2d0' : '#d9535a');
+        for (const [cx, cy] of [[15, 13], [26, 11]]) {
+          R(x + cx, y + cy + 6, 1, 28 - cy - 6, K);
+          for (let a = 0; a < 40; a++) { const an = a / 40 * Math.PI * 2; R(x + cx + Math.round(Math.cos(an) * 5), y + cy + Math.round(Math.sin(an) * 6), 1, 1, K); }
+          for (let a = 0; a < 32; a++) { const an = a / 32 * Math.PI * 2; R(x + cx + Math.round(Math.cos(an) * 4), y + cy + Math.round(Math.sin(an) * 5), 1, 1, a % 8 < 4 ? '#f2c94c' : '#d9535a'); }
+        }
+        const f = (t * 0.5) % 1, fx = x + 4 + f * 26, fy = y + 14 - Math.round(Math.sin(f * Math.PI) * 4), wing = Math.floor(t * 8) % 2;
+        R(fx - 3, fy, 8, 4, K); R(fx - 2, fy + 1, 6, 2, '#a9b2c3'); R(fx + 4, fy - 1, 3, 3, K); R(fx + 5, fy, 1, 1, '#6fbf9a'); R(fx + 7, fy, 1, 1, '#e8a0a0'); R(fx - 5, fy + 1, 2, 2, K);
+        R(fx - 2, fy - (wing ? 3 : -2), 4, 2, K); R(fx - 1, fy - (wing ? 2 : -2), 2, 1, '#cfd5e0');
+        R(x + 28, y + 19, 1, 9, K); R(x + 29, y + 19, 3, 2, '#57b04f');
+      } else {
+        // the mail loft: a little house on legs, pigeons peek out, a letter waits on the landing board
+        R(x + 6, y + 25, 2, 5, K); R(x + 24, y + 25, 2, 5, K);
+        for (let dy = 0; dy < 8; dy++) R(x + 15 - dy * 2, y + 1 + dy, 2 + dy * 4, 1, K);
+        for (let dy = 1; dy < 8; dy++) R(x + 16 - dy * 2, y + 1 + dy, dy * 4, 1, '#5b7f8a');
+        R(x + 3, y + 9, 26, 17, K); R(x + 4, y + 9, 24, 15, '#e3d6b8'); R(x + 4, y + 9, 24, 1, '#f4ecd8');
+        for (const [hx, hy] of [[7, 11], [18, 11], [7, 18], [18, 18]]) { R(hx + x, hy + y, 7, 5, K); R(hx + x + 1, hy + y + 1, 5, 3, '#2a2433'); R(hx + x - 1, hy + y + 5, 9, 1, '#8a5a32'); }
+        const pk = Math.floor(t * 2) % 2;
+        R(x + 9, y + 12 + pk, 3, 3, '#7f889a'); R(x + 10, y + 13 + pk, 1, 1, '#ff7a2a');
+        R(x + 20, y + 19 + (1 - pk), 3, 3, '#7f889a'); R(x + 21, y + 20 + (1 - pk), 1, 1, '#ff7a2a');
+        R(x + 25, y + 21, 7, 5, K); R(x + 26, y + 22, 5, 3, '#f4efe6'); R(x + 26, y + 22, 1, 1, '#c9c9d6'); R(x + 30, y + 22, 1, 1, '#c9c9d6'); R(x + 28, y + 23, 1, 1, '#d9535a');
+        R(x + 14, y - 1, 3, 3, K); R(x + 15, y, 1, 1, '#f2c94c');
+      }
+    } else if (type === 'sketch') {
+      // a drawing board on a desk, the pencil scribbles a big-eyed face, a red lamp leans over
+      R(x + 3, y + 22, 2, 8, K); R(x + 25, y + 22, 2, 8, K); R(x + 3, y + 26, 24, 1, K);
+      R(x, y + 20, 31, 3, K); R(x + 1, y + 21, 29, 1, '#c98a52');
+      R(x + 2, y + 5, 22, 16, K); R(x + 3, y + 6, 20, 14, '#8a5a32'); R(x + 5, y + 7, 16, 12, '#fbf8f0');
+      // the face: spiky hair, round head, huge eyes with shines, the chin is still a dashed guess
+      const G = '#8f8aa0';
+      R(x + 9, y + 9, 8, 1, G); R(x + 8, y + 10, 1, 4, G); R(x + 17, y + 10, 1, 4, G); R(x + 9, y + 14, 1, 2, G); R(x + 16, y + 14, 1, 2, G);
+      R(x + 10, y + 16, 1, 1, G); R(x + 12, y + 17, 2, 1, G); R(x + 15, y + 16, 1, 1, G);
+      R(x + 7, y + 8, 2, 1, G); R(x + 11, y + 8, 1, 1, G); R(x + 15, y + 8, 2, 1, G); R(x + 18, y + 9, 1, 1, G);
+      R(x + 10, y + 11, 2, 3, K); R(x + 14, y + 11, 2, 3, K); R(x + 10, y + 11, 1, 1, '#ffffff'); R(x + 14, y + 11, 1, 1, '#ffffff'); R(x + 12, y + 15, 2, 1, '#e8737a');
+      // the pencil circles over the chin
+      const px = x + 15 + Math.round(Math.cos(t * 7) * 2), py = y + 16 + Math.round(Math.sin(t * 7));
+      R(px, py, 1, 1, K); for (let k = 1; k < 7; k++) { R(px + k, py - k, 1, 1, '#f2c94c'); R(px + k + 1, py - k, 1, 1, '#c98a2a'); } R(px + 7, py - 8, 2, 2, '#e8a0a0');
+      R(x + 4, y + 20, 1, 1, '#e8a0a0'); R(x + 8, y + 20, 1, 1, '#e8a0a0'); R(x + 20, y + 20, 1, 1, '#e8a0a0');
+      R(x + 25, y + 18, 6, 2, K); R(x + 27, y + 6, 2, 12, K); R(x + 21, y + 4, 7, 2, K);
+      R(x + 17, y + 1, 7, 5, K); R(x + 18, y + 2, 5, 3, '#d9535a'); R(x + 18, y + 2, 5, 1, '#ef8a8a'); R(x + 18, y + 6, 5, 1, 'rgba(255,241,176,.8)');
+    } else if (type === 'ink') {
+      // an inking stand: the page fills with speed lines one by one, a G-pen dips into a big ink pot, blots on the floor
+      R(x + 3, y + 29, 5, 2, K); R(x + 1, y + 30, 2, 1, K); R(x + 20, y + 30, 3, 1, K);
+      R(x + 4, y + 21, 2, 9, K); R(x + 16, y + 21, 2, 9, K); R(x + 5, y + 26, 12, 1, K);
+      R(x + 1, y + 1, 21, 22, K); R(x + 2, y + 2, 19, 20, '#fbf8f0');
+      R(x + 2, y + 10, 19, 1, K); R(x + 11, y + 2, 1, 8, K);
+      for (let i = 0; i < 4; i++) for (let j = 0; j < 3; j++) R(x + 3 + i * 2 + (j % 2), y + 4 + j * 2, 1, 1, '#9a9aa8');
+      R(x + 13, y + 3, 7, 5, K); R(x + 14, y + 4, 5, 3, '#fbf8f0'); R(x + 15, y + 5, 3, 1, '#9a9aa8'); R(x + 14, y + 8, 1, 1, K);
+      const n = Math.floor(t * 3) % 7;
+      [15, 9, 13, 6, 17].forEach((len, k) => { if (k < n) R(x + 20 - len, y + 12 + k * 2, len, 1, K); });
+      R(x + 24, y + 16, 6, 3, K); R(x + 25, y + 17, 4, 2, '#3a3346');
+      R(x + 22, y + 19, 10, 11, K); R(x + 23, y + 20, 8, 9, '#1d1629'); R(x + 23, y + 23, 8, 4, '#e9e2d0'); R(x + 25, y + 24, 4, 2, '#c8323c'); R(x + 24, y + 20, 1, 2, '#6a6280');
+      const dip = Math.floor(t * 2) % 2 * 2;
+      R(x + 26, y + 15 + dip, 1, 2, '#9aa3ad'); for (let k = 2; k < 13; k++) { R(x + 26 + Math.floor(k / 3), y + 15 - k + dip, 1, 1, '#c98a52'); R(x + 27 + Math.floor(k / 3), y + 15 - k + dip, 1, 1, '#8a5a32'); }
+    } else if (type === 'printer') {
+      // a cast iron press: the red flywheel turns, the rollers spin, printed pages slide onto the stack of volumes
+      R(x, y + 22, 26, 8, K); R(x + 1, y + 23, 24, 6, '#3f5a5a'); R(x + 1, y + 23, 24, 1, '#5f7a7a'); R(x + 3, y + 26, 3, 2, '#2a3a3a'); R(x + 19, y + 26, 3, 2, '#2a3a3a');
+      R(x + 7, y + 3, 16, 20, K); R(x + 8, y + 4, 14, 18, '#4a6a6a'); R(x + 8, y + 4, 14, 1, '#6f8f8f');
+      const a = t * 6;
+      disc(x + 15, y + 9, 4, K); disc(x + 15, y + 9, 3, '#c9d0d6'); R(x + 15 + Math.round(Math.cos(a) * 2), y + 9 + Math.round(Math.sin(a) * 2), 1, 1, K);
+      disc(x + 15, y + 17, 4, K); disc(x + 15, y + 17, 3, '#3a3346'); R(x + 15 + Math.round(Math.cos(-a) * 2), y + 17 + Math.round(Math.sin(-a) * 2), 1, 1, '#9aa3ad');
+      disc(x + 5, y + 13, 6, K); disc(x + 5, y + 13, 5, '#c8323c'); disc(x + 5, y + 13, 2, K);
+      for (let k = 0; k < 4; k++) { const b = a * 0.5 + k * Math.PI / 2; for (let r = 2; r < 5; r++) R(x + 5 + Math.round(Math.cos(b) * r), y + 13 + Math.round(Math.sin(b) * r), 1, 1, K); }
+      R(x + 5 + Math.round(Math.cos(a * 0.5) * 5) - 1, y + 13 + Math.round(Math.sin(a * 0.5) * 5) - 1, 2, 2, '#f2c94c');
+      // the stack of volumes on the right, a fresh page slides out between the rollers
+      R(x + 23, y + 18, 9, 12, K);
+      ['#c8323c', '#f4efe6', '#3f7ac2', '#f2c94c', '#f4efe6'].forEach((c, k) => { R(x + 24, y + 19 + k * 2, 7, 2, c); R(x + 24, y + 19 + k * 2, 7, 1, 'rgba(255,255,255,.35)'); });
+      const p = (t * 0.8) % 1, sx = x + 17 + Math.round(p * 8);
+      R(sx, y + 11, 9, 5, K); R(sx + 1, y + 12, 7, 3, '#fbf8f0'); R(sx + 2, y + 12, 2, 2, K); R(sx + 5, y + 13, 2, 1, K);
+    } else if (type === 'vat') {
+      // a glass fermenter: dark cola turns, bubbles climb, a half-grown bottle paddles about inside
+      R(x + 2, y + 27, 28, 4, K); R(x + 3, y + 28, 26, 2, '#5f6878');
+      R(x + 4, y + 5, 24, 23, K); R(x + 5, y + 6, 22, 21, '#cfe8f2'); R(x + 5, y + 6, 3, 21, '#eaf6fb');
+      R(x + 5, y + 12, 22, 15, '#3a2a28'); R(x + 5, y + 12, 22, 1, '#6a4a3a');
+      for (let k = 0; k < 7; k++) { const by = 26 - ((k * 5 + Math.floor(t * 13)) % 14); R(x + 7 + ((k * 7) % 19), y + by, 1, 1, '#c9a26a'); }
+      // the young bottle: blue label, white band, big eyes, it paddles with one arm
+      const bb = Math.round(Math.sin(t * 2) * 2), pad = Math.floor(t * 4) % 2;
+      R(x + 13 + bb, y + 15, 7, 10, K); R(x + 14 + bb, y + 16, 5, 8, '#1d4a9a'); R(x + 14 + bb, y + 19, 5, 3, '#f4efe6'); R(x + 15 + bb, y + 20, 3, 1, '#d9453f');
+      R(x + 15 + bb, y + 12, 3, 3, K); R(x + 16 + bb, y + 13, 1, 2, '#2f5fc4'); R(x + 15 + bb, y + 11, 3, 1, '#d9453f');
+      R(x + 15 + bb, y + 17, 1, 1, '#ffffff'); R(x + 17 + bb, y + 17, 1, 1, '#ffffff');
+      R(x + 12 + bb - pad, y + 18 + pad, 2, 2, K); R(x + 19 + bb + pad, y + 18 - pad, 2, 2, K);
+      R(x + 2, y + 2, 28, 4, K); R(x + 3, y + 3, 26, 2, '#9aa3ad'); R(x + 3, y + 3, 26, 1, '#c9d0d6');
+      R(x + 22, y - 3, 4, 5, K); R(x + 23, y - 2, 2, 4, '#c9d0d6'); R(x + 20, y - 5, 8, 3, K); R(x + 21, y - 4, 6, 1, '#e9eef2');
+      disc(x + 9, y + 3, 3, K); disc(x + 9, y + 3, 2, '#f4efe6'); R(x + 9, y + 2, 1, 2, Math.floor(t * 3) % 2 ? '#d9453f' : '#2b2135');
+    } else if (type === 'fizz') {
+      // a brass carbonator: the piston pumps, the needle swings, the hose hisses gas into a waiting bottle
+      R(x + 1, y + 24, 30, 6, K); R(x + 2, y + 25, 28, 4, '#5f6878'); R(x + 2, y + 25, 28, 1, '#7f8a94');
+      R(x + 2, y + 5, 11, 19, K); R(x + 3, y + 6, 9, 17, '#3f7ac2'); R(x + 3, y + 6, 2, 17, '#7fb0e8'); R(x + 3, y + 11, 9, 4, '#f4efe6'); R(x + 5, y + 12, 5, 2, '#d9453f');
+      R(x + 4, y + 2, 7, 4, K); R(x + 5, y + 3, 5, 2, '#9aa3ad');
+      R(x + 15, y + 9, 15, 15, K); R(x + 16, y + 10, 13, 13, '#c9963a'); R(x + 16, y + 10, 13, 1, '#e8bc62'); R(x + 16, y + 20, 13, 1, '#a87a2a');
+      const pp = Math.floor(t * 7) % 2 * 4;
+      R(x + 20, y + 1 + pp, 5, 9, K); R(x + 21, y + 2 + pp, 3, 8, '#c9d0d6'); R(x + 19, y, 7, 3, K); R(x + 20, y + 1, 5, 1, '#e9eef2');
+      disc(x + 23, y + 16, 5, K); disc(x + 23, y + 16, 4, '#f4efe6');
+      const ang = -2.2 + (Math.sin(t * 5) + 1) * 1.1; R(x + 23 + Math.round(Math.cos(ang) * 3), y + 16 + Math.round(Math.sin(ang) * 3), 1, 1, '#d9453f'); R(x + 23, y + 16, 1, 1, K);
+      for (let k = 0; k < 6; k++) R(x + 15 - k * 2, y + 24 + Math.round(Math.sin(k * 0.9) * 2), 2, 2, K);
+      const hs = Math.floor(t * 6) % 3;
+      for (let k = 0; k < 3; k++) if (k <= hs) R(x + 1 - k * 2, y + 22 - k, 2, 1, `rgba(220,240,255,${(0.8 - k * 0.2).toFixed(2)})`);
+    } else if (type === 'hatch') {
+      // the incubator: the lamp glows, the bottle egg rocks, a hatchling peeks through the crack and blinks
+      R(x + 1, y + 10, 30, 20, K); R(x + 2, y + 11, 28, 18, '#9aa3ad'); R(x + 2, y + 11, 28, 1, '#c9d0d6');
+      R(x + 4, y + 13, 24, 14, K); R(x + 5, y + 14, 22, 12, '#2a3a46');
+      const warm = Math.floor(t * 2) % 2 ? '#ffd54a' : '#ffb35a';
+      R(x + 5, y + 14, 22, 3, `rgba(255,190,90,.35)`);
+      R(x + 12, y + 2, 8, 6, K); R(x + 13, y + 3, 6, 4, warm); R(x + 15, y + 8, 2, 2, K); R(x + 10, y + 8, 12, 1, 'rgba(255,200,110,.45)');
+      // the egg: a fat bottle shape that rocks, cracks grow, a hatchling looks out of the top
+      const rk = Math.round(Math.sin(t * 3) * 1.5), op = Math.floor(t * 2.5) % 4 === 0;
+      R(x + 11 + rk, y + 17, 10, 9, K); R(x + 12 + rk, y + 18, 8, 7, '#f4efe6'); R(x + 12 + rk, y + 21, 8, 2, '#d9453f'); R(x + 12 + rk, y + 18, 2, 7, '#ffffff');
+      R(x + 14 + rk, y + 14, 4, 3, K); R(x + 15 + rk, y + 15, 2, 2, '#e9e2d0');
+      for (const [a, b] of [[3, 2], [4, 3], [5, 2], [6, 3]]) R(x + 11 + rk + a, y + 17 + b, 1, 1, '#9aa3ad');
+      if (op) { R(x + 15 + rk, y + 13, 1, 1, '#2b2135'); R(x + 17 + rk, y + 13, 1, 1, '#2b2135'); R(x + 13 + rk, y + 12, 2, 2, '#d9453f'); }
+      R(x + 25, y + 16, 4, 9, K); R(x + 26, y + 17, 2, 7, '#1b2230'); R(x + 26, y + 17 + (Math.floor(t * 4) % 3), 2, 1, '#7ee081');
+      R(x + 4, y + 28, 24, 2, K); for (let k = 0; k < 4; k++) R(x + 6 + k * 6, y + 28, 3, 1, k === Math.floor(t * 2) % 4 ? '#7ee081' : '#4a5560');
+    } else if (type === 'toilet') {
+      // a toilet on the calibration stand: the flush lever kicks, the water swirls, a gauge and a ruler check the level
+      const ell = (ex, ey, rx, ry, col) => { for (let dy = -ry; dy <= ry; dy++) { const w = Math.round(rx * Math.sqrt(1 - (dy / ry) ** 2)); R(ex - w, ey + dy, w * 2 + 1, 1, col); } };
+      R(x + 4, y + 27, 24, 4, K); R(x + 5, y + 28, 22, 2, '#5f6878');
+      R(x + 10, y + 20, 12, 8, K); R(x + 11, y + 20, 10, 8, '#e9eef2'); R(x + 18, y + 20, 3, 8, '#c9d0d6');
+      R(x + 7, y + 1, 18, 3, K); R(x + 8, y + 2, 16, 1, '#ffffff');
+      R(x + 8, y + 3, 16, 11, K); R(x + 9, y + 4, 14, 9, '#f4f7f9'); R(x + 20, y + 4, 3, 9, '#d8dee4');
+      disc(x + 16, y + 8, 3, K); disc(x + 16, y + 8, 2, '#fff6d8');
+      const ga = -2.4 + (Math.sin(t * 3) + 1) * 0.9; R(x + 16 + Math.round(Math.cos(ga) * 2), y + 8 + Math.round(Math.sin(ga) * 2), 1, 1, '#d9453f');
+      const fl = Math.floor(t * 2) % 4 === 0;
+      R(x + 5, y + 5 + (fl ? 2 : 0), 4, 2, K); R(x + 6, y + 5 + (fl ? 2 : 0), 2, 1, '#c9d0d6');
+      ell(x + 16, y + 17, 12, 5, K); ell(x + 16, y + 17, 11, 4, '#ffffff'); ell(x + 16, y + 18, 11, 3, '#e9eef2');
+      ell(x + 16, y + 17, 7, 2, '#5aa9e6');
+      for (let k = 0; k < 5; k++) { const a = t * (fl ? 9 : 3) + k * 1.26; R(x + 16 + Math.round(Math.cos(a) * 5), y + 17 + Math.round(Math.sin(a) * 1.5), 1, 1, '#d8f0ff'); }
+      R(x + 28, y + 2, 3, 21, K); R(x + 29, y + 3, 1, 19, '#f2c94c'); for (let k = 0; k < 6; k++) R(x + 28, y + 4 + k * 3, 2, 1, K);
+      R(x + 27, y + 16 - Math.round((Math.sin(t * 3) + 1) * 2), 4, 1, '#d9453f');
+    } else if (type === 'airfryer') {
+      // a black air fryer: the display counts down, the basket slides out with fries and slides back, steam leaves the vent
+      R(x + 6, y + 3, 21, 27, K); R(x + 7, y + 4, 19, 25, '#2e2e38'); R(x + 7, y + 4, 2, 25, '#4a4a58'); R(x + 7, y + 4, 19, 1, '#55556a');
+      R(x + 10, y + 6, 13, 6, K); R(x + 11, y + 7, 11, 4, '#141419');
+      const dg = Math.floor(t * 2) % 10;
+      for (let k = 0; k < 3; k++) R(x + 12 + k * 3, y + 8, 2, 2, (k === 2 && dg % 2) ? '#7a3a1a' : '#ff8a3a');
+      disc(x + 16, y + 15, 2, K); R(x + 16, y + 14, 1, 1, '#c9d0d6');
+      const out = Math.max(0, Math.min(1, Math.sin(t * 0.8) * 2 - 0.6)), ox = Math.round(out * 7);
+      R(x + 7 - ox, y + 18, 19, 10, K); R(x + 8 - ox, y + 19, 17, 8, '#26262e'); R(x + 8 - ox, y + 19, 17, 1, '#55556a');
+      R(x + 1 - ox, y + 21, 7, 4, K); R(x + 2 - ox, y + 22, 5, 2, '#55556a');
+      if (ox > 3) for (let k = 0; k < 5; k++) R(x + 9 - ox + k * 2, y + 16 - (k % 2), 1, 3, k % 2 ? '#f2c94c' : '#e0a32e');
+      for (let k = 0; k < 2; k++) { const s = (t * 0.6 + k / 2) % 1; R(x + 21 + Math.round(Math.sin(s * 7) * 2), y + 1 - Math.round(s * 7), 2 + Math.round(s * 2), 2, `rgba(225,232,240,${(0.7 * (1 - s)).toFixed(2)})`); }
+      R(x + 19, y + 2, 5, 2, K);
+    } else if (type === 'shorts') {
+      // short videos: a phone on a tripod in a ring light, clips swipe every second and hearts float up
+      R(x + 15, y + 22, 3, 6, K); R(x + 16, y + 22, 1, 6, '#9aa3ad');
+      for (const [a, b] of [[-1, 0], [1, 0]]) for (let k = 0; k < 7; k++) R(x + 16 + a * (k + 1), y + 24 + k, 2, 1, K);
+      R(x + 15, y + 30, 3, 1, K);
+      disc(x + 16, y + 12, 12, K); disc(x + 16, y + 12, 11, Math.floor(t * 2) % 2 ? '#fff6d8' : '#fff1b0'); disc(x + 16, y + 12, 9, K); disc(x + 16, y + 12, 8, 'rgba(255,246,216,.35)');
+      R(x + 11, y + 2, 11, 20, K); R(x + 12, y + 3, 9, 18, '#141419');
+      const clip = Math.floor(t * 1.2), sw = (t * 1.2) % 1, cols = [['#ff6fa8', '#ffd6e6'], ['#5aa9e6', '#d8f0ff'], ['#7ee081', '#e6ffd8'], ['#f2c94c', '#fff6d8']], [c1, c2] = cols[clip % 4];
+      const so = sw > 0.85 ? Math.round((sw - 0.85) / 0.15 * 16) : 0;
+      R(x + 12, y + 4 - so, 9, 16, c1); R(x + 13, y + 9 - so, 7, 6, c2); R(x + 15, y + 11 - so, 3, 2, K);
+      if (so) { const [d1, d2] = cols[(clip + 1) % 4]; R(x + 12, y + 20 - so, 9, so, d1); R(x + 13, y + 25 - so, 7, Math.max(0, so - 5), d2); }
+      R(x + 12, y + 3, 9, 1, '#141419'); R(x + 12, y + 20, 9, 1, '#141419'); R(x + 12, y + 19, Math.round(sw * 9), 1, '#ffffff');
+      for (let k = 0; k < 3; k++) { const s = (t * 0.7 + k / 3) % 1, hx = x + 24 + Math.round(Math.sin(s * 6 + k) * 2), hy = y + 18 - Math.round(s * 18); R(hx, hy, 1, 1, '#ff5f87'); R(hx + 2, hy, 1, 1, '#ff5f87'); R(hx, hy + 1, 3, 1, '#ff5f87'); R(hx + 1, hy + 2, 1, 1, '#ff5f87'); }
+      R(x + 13, y + 1, 7, 2, K); R(x + 15, y + 1, 3, 1, '#2e2e38');
+    } else if (type === 'drinks') {
+      // a fridge of beer and cola: the sign is half cola red, half beer gold with foam, a drink drops into the tray
+      R(x + 5, y + 1, 23, 29, K); R(x + 6, y + 2, 21, 27, '#e9eef2'); R(x + 6, y + 2, 2, 27, '#ffffff'); R(x + 25, y + 2, 2, 27, '#c9d0d6');
+      const buzz = (t % 2.3) < 0.12;
+      R(x + 7, y + 3, 9, 5, buzz ? '#9a3a3a' : '#d9453f'); R(x + 8, y + 5, 7, 1, '#ffffff'); R(x + 9, y + 6, 4, 1, '#ffffff');
+      R(x + 16, y + 3, 10, 5, buzz ? '#a87a2a' : '#e0a32e'); R(x + 16, y + 3, 10, 2, '#fff6e0'); R(x + 18, y + 5, 1, 1, '#fff6e0'); R(x + 22, y + 5, 1, 1, '#fff6e0');
+      R(x + 8, y + 9, 14, 14, K); R(x + 9, y + 10, 12, 12, '#1b2230');
+      // b is the bottom row of the drink: a beer is a brown bottle with a gold label, a cola a red can with a white band
+      const beer = (bx, b) => { R(bx + 1, b - 4, 1, 1, '#f2c94c'); R(bx + 1, b - 3, 1, 1, '#5a3410'); R(bx, b - 2, 3, 3, '#7a4a1a'); R(bx, b - 1, 3, 1, '#f2c94c'); };
+      const cola = (bx, b) => { R(bx, b - 3, 3, 1, '#c9d0d6'); R(bx, b - 2, 3, 3, '#d9453f'); R(bx, b - 1, 3, 1, '#ffffff'); };
+      for (let r = 0; r < 2; r++) { for (let k = 0; k < 3; k++) ((r + k) % 2 ? cola : beer)(x + 10 + k * 4, y + 15 + r * 5); R(x + 9, y + 16 + r * 5, 12, 1, '#44505c'); }
+      R(x + 9, y + 10, 1, 11, 'rgba(255,255,255,.25)');
+      for (let k = 0; k < 3; k++) R(x + 23, y + 11 + k * 4, 2, 2, k === Math.floor(t * 3) % 3 ? '#7ee081' : '#9aa3ad');
+      R(x + 23, y + 23, 2, 1, '#9aa3ad');
+      R(x + 8, y + 24, 17, 4, K); R(x + 9, y + 25, 15, 2, '#1b2230');
+      const dr = (t * 0.7) % 1, which = Math.floor(t * 0.7) % 2 ? cola : beer, fy = y + 13 + Math.round(dr / 0.4 * 12);
+      if (dr < 0.4 && fy < y + 22) which(x + 14, fy);
+      else { R(x + 12, y + 25, 5, 2, which === cola ? '#d9453f' : '#7a4a1a'); R(x + 12, y + 25, 5, 1, which === cola ? '#ffffff' : '#f2c94c'); }
+      R(x + 5, y + 29, 23, 2, K);
     } else if (type === 'sew') {
       R(x + 1, y + 20, 30, 4, K); R(x + 2, y + 21, 28, 2, '#a8693a'); R(x + 2, y + 21, 28, 1, '#c98a52');
       R(x + 3, y + 24, 3, 6, K); R(x + 26, y + 24, 3, 6, K);
@@ -2013,6 +2390,199 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       R(fx, fy, 4, 6, K); R(fx + 1, fy + 1 + h, 2, 4 - h, '#ffb35a'); R(fx + 1, fy + 4, 2, 1, '#fff1b0');
     });
   }
+  // the pepsi extractor fills a slot three rows tall: a tower of blue and red casing with a cola column
+  // inside, three nozzle arms that feed the slots on its left, and a hatch where the live bottles come out
+  function extractor(x, y, h) {
+    const ell = (cx, cy, rx, ry, col) => { for (let dy = -ry; dy <= ry; dy++) { const w = Math.round(rx * Math.sqrt(1 - (dy / ry) ** 2)); R(cx - w, cy + dy, w * 2 + 1, 1, col); } };
+    const bot = y + h;
+    R(x + 2, bot - 4, 68, 4, 'rgba(30,20,40,.3)');
+    // the intake pipe and funnel on top, steam puffs out of the vent beside it
+    R(x + 28, y + 18, 18, 5, K); R(x + 29, y + 19, 16, 3, '#7f8a94'); R(x + 29, y + 19, 16, 1, '#a9b2bc');
+    for (let dy = 0; dy < 7; dy++) R(x + 30 + dy, y + 23 + dy, 14 - dy * 2, 1, dy % 2 ? '#9aa3ad' : '#c9d0d6');
+    R(x + 40, y + 12, 5, 8, K); R(x + 41, y + 13, 3, 7, '#5f6878');
+    for (let k = 0; k < 3; k++) { const s2 = (t * 0.5 + k / 3) % 1; ell(x + 42 + Math.round(Math.sin(s2 * 6) * 3), y + 8 - s2 * 10, 2 + Math.round(s2 * 2), 1 + Math.round(s2 * 2), `rgba(210,225,235,${(0.65 * (1 - s2)).toFixed(2)})`); }
+    // plinth with vents
+    R(x + 4, bot - 28, 64, 28, K); R(x + 5, bot - 27, 62, 26, '#4a5560'); R(x + 5, bot - 27, 62, 2, '#6a7580');
+    for (let k = 0; k < 5; k++) R(x + 10 + k * 11, bot - 22, 7, 12, '#374049');
+    // the tower: white casing, a blue shoulder and a red foot, rivets and a cooling coil down the right side
+    R(x + 12, y + 32, 48, h - 60, K); R(x + 13, y + 33, 46, h - 62, '#d8dee4'); R(x + 13, y + 33, 3, h - 62, '#f2f6f8'); R(x + 56, y + 33, 3, h - 62, '#b8c2ca');
+    R(x + 13, y + 33, 46, 15, '#13439a'); R(x + 13, y + 33, 46, 2, '#3f7ac2'); R(x + 13, bot - 44, 46, 16, '#d9453f'); R(x + 13, bot - 44, 46, 2, '#ef8a8a');
+    for (let yy = y + 54; yy < bot - 46; yy += 14) { R(x + 15, yy, 2, 2, '#9aa3ad'); R(x + 55, yy, 2, 2, '#9aa3ad'); }
+    for (let yy = y + 56; yy < bot - 48; yy += 8) { R(x + 50, yy, 7, 3, K); R(x + 51, yy + 1, 5, 1, '#9aa3ad'); }
+    // the glass column: the cola stays high, bubbles stream up, a bottle silhouette drifts past the sprayer
+    const gy = y + 52, gh = h - 114;
+    R(x + 21, gy - 3, 26, 3, '#9aa3ad'); R(x + 21, gy + gh, 26, 3, '#9aa3ad');
+    R(x + 22, gy, 24, gh, K); R(x + 23, gy + 1, 22, gh - 2, '#101722');
+    R(x + 26, gy + 1, 16, 4, K); R(x + 27, gy + 2, 14, 2, '#7f8a94');
+    for (let k = 0; k < 5; k++) { const sp = Math.floor(t * 9 + k) % 3; R(x + 28 + k * 3, gy + 5 + sp, 1, 3 - sp, 'rgba(160,120,90,.8)'); }
+    const lvl = Math.round((0.82 + 0.08 * Math.sin(t * 0.8)) * (gh - 10));
+    R(x + 23, gy + gh - 1 - lvl, 22, lvl, '#3a2820'); R(x + 23, gy + gh - 1 - lvl, 22, 2, '#6a4a34'); R(x + 23, gy + gh - 1 - lvl, 4, lvl, '#4a362c');
+    for (let k = 0; k < 16; k++) { const bx2 = x + 25 + (k * 7) % 19, by2 = gy + gh - 3 - ((k * 11 + Math.floor(t * 22)) % Math.max(10, lvl)); R(bx2, by2, 1, 1, k % 3 ? '#9a7a56' : '#c9a26a'); }
+    const dft = (t * 0.25) % 1, dy2 = gy + gh - 14 - Math.round(dft * (gh - 26));
+    R(x + 32, dy2, 6, 9, 'rgba(70,130,215,.55)'); R(x + 33, dy2 - 3, 4, 3, 'rgba(70,130,215,.55)'); R(x + 33, dy2 + 3, 4, 2, 'rgba(240,245,250,.5)');
+    for (let k = 0; k < 4; k++) R(x + 24, gy + 8 + k * 9, 1, 4, 'rgba(255,255,255,.35)');
+    // the three arms: one per slot on the left, each ends in a nozzle that drips
+    for (const dy of [37, 115, 193]) {
+      const ay = y + dy;
+      R(x + 2, ay - 4, 12, 9, K); R(x + 3, ay - 3, 10, 7, '#7f8a94'); R(x + 3, ay - 3, 10, 1, '#a9b2bc');
+      R(x - 4, ay - 3, 6, 7, K); R(x - 3, ay - 2, 4, 5, '#5f6878'); R(x - 3, ay - 2, 4, 1, '#9aa3ad');
+      for (let k = 0; k < 4; k++) R(x + 4 + k * 3, ay - 5, 2, 1, '#9aa3ad');
+      const dp = (t * 0.9 + dy / 90) % 1; R(x - 5, ay + 4 + Math.round(dp * 7), 1, 2, '#6a4a3a');
+      disc(x + 16, ay, 3, K); disc(x + 16, ay, 2, Math.floor(t * 3 + dy) % 2 ? '#7ee081' : '#3f8a4f');
+    }
+    // the gauge cluster on the blue shoulder and the name plate on the red foot
+    for (let k = 0; k < 3; k++) { const cx2 = x + 21 + k * 11; disc(cx2, y + 42, 4, K); disc(cx2, y + 42, 3, '#e9eef2'); const a2 = t * (2 + k) + k; R(cx2 + Math.round(Math.cos(a2) * 2), y + 42 + Math.round(Math.sin(a2) * 2), 1, 1, '#d9453f'); }
+    R(x + 48, y + 38, 8, 8, K); R(x + 49, y + 39, 6, 6, '#f2c94c'); R(x + 51, y + 40, 2, 3, K); R(x + 51, y + 44, 2, 1, K);
+    R(x + 17, bot - 41, 38, 10, K); R(x + 18, bot - 40, 36, 8, '#f4efe6'); R(x + 18, bot - 40, 36, 3, '#13439a');
+    for (let k = 0; k < 6; k++) R(x + 21 + k * 6, bot - 36, 4, 2, '#d9453f'); R(x + 21, bot - 34, 30, 1, '#9aa3ad');
+    // the hatch at the foot: a live bottle pops up, looks around and ducks back in
+    const up = Math.max(0, Math.min(1, Math.sin(t * 0.9) * 2.5 - 0.9)), pk = Math.round(up * 13);
+    R(x + 28, bot - 24, 26, 20, K); R(x + 29, bot - 23, 24, 18, '#1b2230'); R(x + 29, bot - 7, 24, 2, '#2f3a46');
+    if (pk > 2) {
+      const bx3 = x + 41, by3 = bot - 6 - pk, st = Math.floor(t * 7) % 2;
+      R(bx3 - 4, by3, 9, pk, K); R(bx3 - 3, by3 + 1, 7, pk - 1, '#1d4a9a');
+      if (pk > 7) { R(bx3 - 3, by3 + 4, 7, 3, '#f4efe6'); R(bx3 - 2, by3 + 5, 5, 1, '#d9453f'); }
+      R(bx3 - 2, by3 - 4, 5, 4, K); R(bx3 - 1, by3 - 3, 3, 3, '#2f5fc4'); R(bx3 - 2, by3 - 5, 5, 1, '#d9453f');
+      R(bx3 - 2 + st, by3 + 2, 1, 1, '#ffffff'); R(bx3 + 1 + st, by3 + 2, 1, 1, '#ffffff');
+      if (pk > 9) { R(bx3 - 7, by3 + 3 + st, 3, 2, K); R(bx3 + 4, by3 + 3 - st, 3, 2, K); }
+    }
+    R(x + 24, bot - 24, 3, 20, K); R(x + 55, bot - 24, 3, 20, K);
+  }
+  // the etalon fills a slot two columns wide and runs with no worker: a test subject strapped to a board,
+  // wired to screens on the left and a drip on the right. n is how many neighbours work (0..4):
+  // every working neighbour switches on one more gadget, at 4 the whole rig hums
+  function etalon(x, y, w, h, n) {
+    const HAIR = '#4a3426', HAIRD = '#2e2018', HAIRL = '#6e5039', SKIN = '#f2c7a5', SKIND = '#d9a07f', STRAP = '#2a333c';
+    const cx = x + 75, tw = Math.floor(t * 8) % 2, on1 = n >= 1, on2 = n >= 2, on3 = n >= 3, on4 = n >= 4;
+    // a cable or tube along a quadratic curve; a lit one carries a bright pulse toward the subject
+    const curve = (x0, y0, qx, qy, x1, y1, col, lit, off) => {
+      const at = s => [Math.round((1 - s) * (1 - s) * x0 + 2 * (1 - s) * s * qx + s * s * x1), Math.round((1 - s) * (1 - s) * y0 + 2 * (1 - s) * s * qy + s * s * y1)];
+      for (let k = 0; k <= 40; k++) { const [a, b] = at(k / 40); R(a - 1, b - 1, 3, 3, K); }
+      for (let k = 0; k <= 40; k++) { const [a, b] = at(k / 40); R(a, b, 1, 1, col); }
+      if (lit) for (let k = 0; k < 2; k++) { const [a, b] = at((t * 0.7 + off + k / 2) % 1); R(a - 1, b - 1, 3, 3, '#fff1b0'); }
+    };
+    R(x + 4, y + h - 5, w - 8, 3, 'rgba(30,20,40,.22)');
+
+    // left stack, top: the anime generator, a pink-haired girl blinks on the screen
+    R(x + 7, y + 5, 36, 20, K); R(x + 8, y + 6, 34, 18, '#5f6878'); R(x + 8, y + 6, 34, 1, '#8a949e');
+    R(x + 10, y + 8, 30, 13, K); R(x + 11, y + 9, 28, 11, on1 ? '#ffe3ee' : '#1b2230');
+    if (on1) {
+      R(x + 17, y + 9, 16, 11, '#ff9ab3'); R(x + 19, y + 11, 12, 9, SKIN); R(x + 19, y + 11, 12, 2, '#ff9ab3'); R(x + 22, y + 11, 2, 3, '#ff9ab3');
+      if ((t % 2.8) > 0.15) { R(x + 20, y + 14, 3, 3, '#3a6fb0'); R(x + 27, y + 14, 3, 3, '#3a6fb0'); R(x + 20, y + 14, 1, 1, '#ffffff'); R(x + 27, y + 14, 1, 1, '#ffffff'); }
+      else { R(x + 20, y + 16, 3, 1, K); R(x + 27, y + 16, 3, 1, K); }
+      R(x + 19, y + 17, 2, 1, '#ff8fa8'); R(x + 29, y + 17, 2, 1, '#ff8fa8'); R(x + 24, y + 18, 2, 1, '#d9453f');
+      for (let k = 0; k < 3; k++) R(x + 12 + ((k * 9 + Math.floor(t * 5)) % 25), y + 10 + k * 3, 1, 1, '#ffffff');
+      R(x + 11, y + 9 + Math.floor(t * 9) % 11, 28, 1, 'rgba(255,255,255,.35)');
+    }
+    R(x + 11, y + 22, 3, 1, on1 ? '#7ee081' : '#3a4450'); R(x + 21, y + 24, 8, 2, K);
+
+    // middle: bugs into food, a cockroach crawls in on the left and a burger comes out on the right
+    R(x + 5, y + 26, 40, 19, K); R(x + 6, y + 27, 38, 17, '#e9eef2'); R(x + 6, y + 27, 38, 1, '#ffffff');
+    R(x + 8, y + 29, 34, 13, K); R(x + 9, y + 30, 32, 11, on2 ? '#f4efe6' : '#1b2230');
+    if (on2) {
+      const bx = x + 10 + Math.floor(t * 3) % 3;
+      R(bx + 1, y + 33, 6, 4, '#7a4a2a'); R(bx + 2, y + 33, 3, 1, '#a8693a'); R(bx + 7, y + 34, 2, 2, '#4e2e1a');
+      for (let k = 0; k < 3; k++) { R(bx + 2 + k * 2, y + 37, 1, 1 + (k + tw) % 2, K); R(bx + 2 + k * 2, y + 32, 1, 1, K); }
+      R(bx + 9, y + 32, 2, 1, K); R(bx + 10, y + 31, 1, 1, K);
+      if (Math.floor(t * 3) % 2) { R(x + 22, y + 35, 5, 1, K); R(x + 25, y + 34, 1, 3, K); }
+      R(x + 30, y + 32, 9, 3, '#e0a32e'); R(x + 31, y + 31, 7, 1, '#e0a32e'); R(x + 32, y + 32, 1, 1, '#fff1b0'); R(x + 35, y + 32, 1, 1, '#fff1b0');
+      R(x + 29, y + 35, 11, 1, '#7ee081'); R(x + 30, y + 36, 9, 2, '#6a3a2a'); R(x + 30, y + 38, 9, 2, '#e0a32e');
+    }
+
+    // bottom: the mind altering machine, its spiral spins, the knobs blink
+    R(x + 5, y + 46, 40, 24, K); R(x + 6, y + 47, 38, 22, '#5f6878'); R(x + 6, y + 47, 38, 1, '#8a949e');
+    disc(x + 17, y + 58, 8, K); disc(x + 17, y + 58, 7, '#1b2230');
+    if (on3) for (let k = 0; k < 22; k++) { const a = -t * 5 + k * 0.62, rr = k * 0.3; R(x + 17 + Math.round(Math.cos(a) * rr), y + 58 + Math.round(Math.sin(a) * rr), 1, 1, k % 2 ? '#c47ae8' : '#7ee081'); }
+    disc(x + 32, y + 52, 2, K); disc(x + 32, y + 52, 1, '#c9d0d6'); disc(x + 39, y + 52, 2, K); disc(x + 39, y + 52, 1, '#c9d0d6');
+    R(x + 28, y + 58, 14, 8, K);
+    for (let k = 0; k < 3; k++) R(x + 29 + k * 5, y + 59, 3, 6, on3 && (Math.floor(t * 4) + k) % 3 ? ['#d9453f', '#f2c94c', '#7ee081'][k] : '#3a4450');
+
+    // right: the drip stand, a bag of cola and a bag of something green; it drips once all four work
+    R(x + 120, y + 18, 3, 50, K); R(x + 121, y + 19, 1, 48, '#c9d0d6');
+    R(x + 103, y + 18, 38, 3, K); R(x + 104, y + 19, 36, 1, '#c9d0d6');
+    const bag = (bx, by, bw, bh, liq, hi) => {
+      R(bx + bw / 2 - 1, by - 3, 2, 3, K);
+      R(bx, by, bw, bh, K); R(bx + 1, by + 1, bw - 2, bh - 2, '#eef3f6');
+      R(bx + 1, by + 5, bw - 2, bh - 6, liq); R(bx + 1, by + 5, 2, bh - 6, hi);
+      R(bx + bw / 2 - 2, by + bh, 4, 5, K); R(bx + bw / 2 - 1, by + bh + 1, 2, 3, '#eef3f6');
+      if (on4) R(bx + bw / 2 - 1, by + bh + 1 + Math.floor(t * 4 + bx) % 3, 2, 1, liq);
+    };
+    bag(x + 104, y + 22, 14, 17, '#3a2820', '#6a4a34'); R(x + 105, y + 30, 12, 3, '#1d4a9a'); R(x + 107, y + 31, 8, 1, '#d9453f');
+    bag(x + 125, y + 22, 16, 19, on4 ? '#7ee081' : '#3f8a4f', on4 ? '#c8f7c9' : '#5faa6f');
+
+    // the sealed crate under the drip: its four lamps count the working neighbours
+    R(x + 100, y + 46, 46, 24, K); R(x + 101, y + 47, 44, 22, '#f4efe6'); R(x + 101, y + 47, 44, 1, '#ffffff');
+    for (let k = 0; k < 4; k++) R(x + 105, y + 50 + k * 3, 24 - (k % 2) * 6, 1, '#9aa3ad');
+    R(x + 133, y + 49, 8, 8, K); R(x + 134, y + 50, 6, 6, '#f2c94c'); R(x + 136, y + 51, 2, 3, K); R(x + 136, y + 55, 2, 1, K);
+    for (let k = 0; k < 4; k++) { R(x + 105 + k * 9, y + 62, 7, 5, K); R(x + 106 + k * 9, y + 63, 5, 3, k < n ? (k === n - 1 && tw ? '#c8f7c9' : '#7ee081') : '#4a5560'); }
+
+    // the board the subject is strapped to
+    R(x + 57, y + 3, 36, 68, K); R(x + 58, y + 4, 34, 66, '#4a5560'); R(x + 58, y + 4, 1, 66, '#6a7580');
+    for (let k = 0; k < 9; k++) R(x + 60, y + 26 + k * 4, 2, 2, '#6a7580');
+    for (let k = 0; k < 7; k++) R(x + 89, y + 30 + k * 4, 2, 2, '#6a7580');
+
+    // cables from the screens to the head, a mask hose, chest pads; the drip and crate feed the right arm
+    curve(x + 43, y + 12, x + 54, y + 2, cx - 7, y + 13, '#9aa3ad', on1, 0);
+    curve(x + 43, y + 19, x + 55, y + 22, cx - 7, y + 16, '#9aa3ad', on1, 0.5);
+    curve(x + 45, y + 52, x + 54, y + 34, cx - 5, y + 28, '#c47ae8', on3, 0.4);
+    curve(x + 45, y + 62, x + 60, y + 50, cx + 3, y + 28, '#9aa3ad', on3, 0.7);
+    curve(x + 111, y + 44, x + 98, y + 40, cx + 10, y + 30, '#b59a86', on4, 0.1);
+    curve(x + 133, y + 46, x + 112, y + 34, cx + 10, y + 33, on4 ? '#9fe6a8' : '#8fb59a', on4, 0.6);
+    curve(x + 100, y + 50, x + 92, y + 46, cx + 10, y + 39, '#e9eef2', on4, 0.3);
+
+    // the subject: skinny, in hospital shorts, curtain haircut parted in the middle, a VR visor and a mask
+    const sh = on3 ? tw : 0;
+    R(cx - 12, y + 25, 5, 20, K); R(cx - 11, y + 26, 3, 18, SKIN); R(cx - 9, y + 26, 1, 18, SKIND);
+    R(cx + 7, y + 25, 5, 20, K); R(cx + 8, y + 26, 3, 18, SKIN); R(cx + 8, y + 26, 1, 18, SKIND);
+    R(cx - 13, y + 33, 7, 3, STRAP); R(cx + 6, y + 33, 7, 3, STRAP); R(cx - 10, y + 34, 1, 1, '#c9d0d6'); R(cx + 9, y + 34, 1, 1, '#c9d0d6');
+    R(cx + 8, y + 29, 3, 2, '#f4efe6');
+    R(cx - 8, y + 24, 16, 21, K); R(cx - 7, y + 25, 14, 19, SKIN);
+    for (let k = 0; k < 4; k++) { R(cx - 6, y + 28 + k * 3, 4 - (k > 2), 1, SKIND); R(cx + 2 + (k > 2), y + 28 + k * 3, 4 - (k > 2), 1, SKIND); }
+    R(cx, y + 26, 1, 9, SKIND); R(cx, y + 40, 1, 1, SKIND);
+    R(cx - 6, y + 27, 2, 2, '#e9eef2'); R(cx + 3, y + 27, 2, 2, '#e9eef2');
+    R(cx - 8, y + 44, 16, 8, K); R(cx - 7, y + 45, 14, 6, '#9ec5dd'); for (let k = 0; k < 4; k++) R(cx - 6 + k * 4, y + 45, 1, 6, '#7fa9c4');
+    R(cx - 7, y + 51, 6, 17, K); R(cx - 6, y + 51, 4, 16, SKIN); R(cx - 3, y + 51, 1, 16, SKIND);
+    R(cx + 1, y + 51, 6, 17, K); R(cx + 2, y + 51, 4, 16, SKIN); R(cx + 2, y + 51, 1, 16, SKIND);
+    R(cx - 8, y + 59, 16, 3, STRAP); R(cx - 1, y + 60, 2, 1, '#c9d0d6');
+    R(cx - 7 - sh, y + 67, 6, 3, K); R(cx - 6 - sh, y + 67, 4, 2, SKIN); R(cx + 1 + sh, y + 67, 6, 3, K); R(cx + 2 + sh, y + 67, 4, 2, SKIN);
+    R(cx - 2, y + 21, 4, 3, K); R(cx - 1, y + 22, 2, 2, SKIND);
+    // head and hair: a shaggy dark mop, a heavy fringe down to the visor, sides past the ears to the jaw, a few flyaways
+    R(cx - 6, y + 6, 12, 16, K); R(cx - 5, y + 7, 10, 14, SKIN);
+    const glow = on1 ? (tw ? '#7fd0ff' : '#b8e8ff') : '#2f3a46';
+    R(cx - 7, y + 12, 14, 6, K); R(cx - 6, y + 13, 12, 4, '#5f6878'); R(cx - 6, y + 13, 12, 1, '#8a949e');
+    R(cx - 5, y + 15, 3, 1, glow); R(cx + 2, y + 15, 3, 1, glow); R(cx - 1, y + 14, 2, 1, '#e9eef2');
+    const hp = [], row = (b, a0, a1) => { for (let a = a0; a <= a1; a++) hp.push([a, b]); };
+    row(3, -4, 3); row(4, -6, 5); for (let b = 5; b <= 11; b++) row(b, -7, 6);
+    for (const a of [-7, -6, -5, -2, -1, 2, 5, 6]) hp.push([a, 12]);
+    for (let b = 12; b <= 15; b++) { row(b, -8, -6); row(b, 5, 7); }
+    hp.push([-8, 16], [-7, 16], [6, 16], [7, 16]);
+    for (const [a, b] of hp) R(cx + a - 1, y + b - 1, 3, 3, K);
+    for (const [a, b] of hp) {
+      const dark = (b >= 12 && (a === -6 || a === 5)) || (a === -3 && b >= 7 && b <= 11) || (a === 1 && b >= 6 && b <= 11) || (a === 4 && b >= 8 && b <= 11) || (a === -6 && b >= 12) || (a === 6 && b >= 12);
+      const lite = (b === 5 && a >= -5 && a <= -3) || (b === 6 && a >= -6 && a <= -5) || (b === 5 && a >= 2 && a <= 3) || (b === 6 && a === 2) || (a === -8 && b >= 12 && b <= 15);
+      R(cx + a, y + b, 1, 1, dark ? HAIRD : lite ? HAIRL : HAIR);
+    }
+    R(cx - 2, y + 1, 1, 1, HAIRD); R(cx - 1, y, 1, 1, HAIRD); R(cx + 1, y + 1, 1, 1, HAIRD); R(cx + 2, y, 1, 1, HAIRD);
+    // the feeding tube: a fat clear hose from the bugs-to-food screen into the mask, fast food rides it to the mouth
+    const fq = s => [Math.round((1 - s) * (1 - s) * (x + 47) + 2 * (1 - s) * s * (x + 58) + s * s * (cx - 2)), Math.round((1 - s) * (1 - s) * (y + 37) + 2 * (1 - s) * s * (y + 42) + s * s * (y + 21))];
+    for (let k = 0; k <= 60; k++) { const [a, b] = fq(k / 60); R(a - 3, b - 3, 7, 7, K); }
+    for (let k = 0; k <= 60; k++) { const [a, b] = fq(k / 60); R(a - 2, b - 2, 5, 5, '#dff0f5'); R(a - 2, b - 2, 2, 1, '#ffffff'); }
+    for (let k = 0; k < 5; k++) {
+      const [a, b] = fq(on2 ? (t * 0.4 + k / 5) % 1 : 0.06 + k * 0.05), f = k % 3;
+      if (f === 0) { R(a - 2, b - 2, 5, 2, '#e0a32e'); R(a - 1, b - 2, 1, 1, '#fff1b0'); R(a - 2, b, 5, 1, '#7ee081'); R(a - 2, b + 1, 5, 1, '#6a3a2a'); R(a - 2, b + 2, 5, 1, '#e0a32e'); }
+      else if (f === 1) { R(a - 2, b - 2, 5, 2, '#f2c94c'); R(a - 1, b - 2, 1, 1, '#fff1b0'); R(a - 2, b, 5, 3, '#d9453f'); R(a, b + 1, 1, 1, '#f2c94c'); }
+      else { R(a - 2, b - 1, 5, 3, '#c9853a'); R(a - 1, b - 2, 3, 1, '#c9853a'); R(a - 1, b - 1, 2, 1, '#e8b062'); }
+    }
+    R(x + 43, y + 31, 7, 12, K); R(x + 44, y + 32, 5, 10, '#d9453f'); R(x + 44, y + 35, 5, 2, '#f2c94c');
+    disc(cx, y + 20, 2, K); R(cx - 1, y + 19, 3, 3, '#e9eef2'); R(cx, y + 20, 1, 1, on2 && tw ? '#9aa3ad' : '#c9d0d6');
+    // the auto fap: it came with the rig and nobody plugged it in, the plug lies on the floor and the lamp stays dark
+    const ell = (ex, ey, rx, ry, col) => { for (let dy = -ry; dy <= ry; dy++) { const w = Math.round(rx * Math.sqrt(1 - (dy / ry) ** 2)); R(ex - w, ey + dy, w * 2 + 1, 1, col); } };
+    ell(x + 92, y + 62, 7, 6, K); ell(x + 92, y + 62, 6, 5, '#f4efe6'); ell(x + 91, y + 60, 3, 2, '#ffffff'); R(x + 88, y + 66, 9, 1, '#c9d0d6');
+    R(x + 88, y + 62, 8, 1, '#7e929d'); R(x + 89, y + 64, 6, 1, '#7e929d'); R(x + 96, y + 59, 1, 1, '#7a2a2a'); R(x + 87, y + 68, 3, 2, K); R(x + 94, y + 68, 3, 2, K);
+    R(x + 92, y + 68, 1, 2, K); R(x + 92, y + 70, 5, 1, K); R(x + 96, y + 69, 3, 3, K); R(x + 97, y + 70, 1, 1, '#7e929d'); R(x + 99, y + 69, 1, 1, '#c9d0d6'); R(x + 99, y + 71, 1, 1, '#c9d0d6');
+    if (n === 0) for (let k = 0; k < 2; k++) { const s = (t * 0.6 + k / 2) % 1, zx = cx + 9 + Math.round(s * 6), zy = y + 8 - Math.round(s * 6); R(zx, zy, 3, 1, '#c9d0d6'); R(zx + 1, zy + 1, 1, 1, '#c9d0d6'); R(zx, zy + 2, 3, 1, '#c9d0d6'); }
+    if (on4) for (let k = 0; k < 6; k++) { const a = t * 3 + k * Math.PI / 3; R(cx + Math.round(Math.cos(a) * 18), y + 36 + Math.round(Math.sin(a) * 30), 2, 2, k % 2 ? '#ffd54a' : '#7ee081'); }
+  }
   function drawWorld() {
     const l = state.cur, LT = LOCS[l], L = state.locs[l], sl = L.slots;
     const pulse = (0.55 + 0.45 * Math.sin(t * 6)).toFixed(2);
@@ -2028,19 +2598,104 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       // classroom: light blue paint, a darker painted band below
       R(0, 0, W, 3, '#8cbcea'); R(0, 19, W, 9, '#4f86c4'); R(0, 19, W, 1, '#3f6fa8');
     }
+    else if (l === 6) {
+      // rooftop under the open sky: clouds, a TV antenna and a wire full of pigeons
+      R(0, 0, W, 29, '#8fc4ea'); R(0, 18, W, 11, '#a9d3f0');
+      for (const [cx, cy] of [[24, 8], [W - 40, 5], [W / 2 + 70, 14]]) { R(cx, cy, 18, 4, '#f4f8fb'); R(cx + 4, cy - 3, 9, 3, '#f4f8fb'); R(cx + 2, cy + 3, 15, 1, '#d8e8f4'); }
+      R(10, 2, 1, 27, K); R(4, 5, 13, 1, K); R(6, 9, 9, 1, K); R(7, 13, 7, 1, K);
+      for (let xx = 0; xx < W; xx++) R(xx, 22 + Math.round(Math.sin(xx / W * Math.PI) * 3), 1, 1, '#3a3346');
+      for (let k = 0; k < 7; k++) {
+        const px = 16 + k * (W - 32) / 6; if (Math.abs(px - W / 2) < 48) continue;
+        const py = 18 + Math.round(Math.sin(px / W * Math.PI) * 3), bob = Math.floor(t * 2 + k) % 2;
+        R(px - 2, py, 5, 4, K); R(px - 1, py + 1, 3, 2, '#a9b2c3'); R(px + (k % 2 ? 2 : -3), py - 2 + bob, 3, 3, K); R(px + (k % 2 ? 3 : -2), py - 1 + bob, 1, 1, '#6fbf9a');
+      }
+    }
+    else if (l === 5) {
+      // pizzeria: cream plaster, an Italian stripe, a shelf of tomato cans with garlic, a chalk menu
+      R(0, 0, W, 29, '#f1e3c4'); R(0, 0, W, 2, '#e3d0a8');
+      for (let k = 0; k < 30; k++) R((k * 37) % W, 3 + (k * 13) % 17, 2, 1, '#e6d4ae');
+      R(0, 21, W, 2, '#3f9a4f'); R(0, 23, W, 2, '#f4efe6'); R(0, 25, W, 2, '#d0453a');
+      const sx = 10; R(sx, 13, 40, 2, K); R(sx + 1, 13, 38, 1, '#a8693a');
+      for (let k = 0; k < 4; k++) { R(sx + 2 + k * 7, 6, 6, 7, K); R(sx + 3 + k * 7, 7, 4, 5, '#d64545'); R(sx + 3 + k * 7, 8, 4, 2, '#f4efe6'); R(sx + 4 + k * 7, 8, 2, 1, '#57b04f'); }
+      R(sx + 31, 3, 4, 10, K); R(sx + 32, 6, 2, 6, '#b8c24a'); R(sx + 32, 3, 2, 3, '#3f9a4f');
+      for (let k = 0; k < 3; k++) { R(sx + 2 + k * 4, 15 + k, 2, 4, '#d64545'); R(sx + 2 + k * 4, 15 + k, 1, 1, '#57b04f'); }
+      const mx = W - 52; R(mx, 3, 42, 17, '#8a5a32'); R(mx + 1, 4, 40, 15, '#2f3a34');
+      R(mx + 3, 6, 7, 7, '#f4efe6'); R(mx + 4, 7, 5, 5, '#f2c94c'); R(mx + 5, 8, 1, 1, '#d64545'); R(mx + 7, 10, 1, 1, '#d64545');
+      for (let k = 0; k < 3; k++) { R(mx + 13, 6 + k * 4, 16 - k * 3, 1, '#d8e0da'); R(mx + 33, 6 + k * 4, 5, 1, '#f2c94c'); }
+      R(mx + 3, 15, 25, 1, '#d8e0da');
+    }
+    else if (l === 7) {
+      // a manga studio behind shoji: paper panels in a wooden lattice, a round window with Fuji and sakura, a cork board of storyboards
+      R(0, 0, W, 29, '#efe6cf'); for (let xx = 0; xx < W; xx += 16) R(xx, 0, 1, 28, '#9a7650'); for (const yy of [9, 19]) R(0, yy, W, 1, '#9a7650'); R(0, 0, W, 2, '#6a4a30');
+      disc(30, 14, 13, '#6a4a30'); disc(30, 14, 12, K);
+      for (let yy = 3; yy <= 25; yy++) for (let xx = 19; xx <= 41; xx++) {
+        if ((xx - 30) ** 2 + (yy - 14) ** 2 > 121) continue;
+        const fuji = yy >= 9 && Math.abs(xx - 34) <= (yy - 9) * 1.3;
+        R(xx, yy, 1, 1, fuji ? (yy < 13 ? '#ffffff' : '#5b6fa8') : yy > 21 ? '#c9d9a8' : yy < 12 ? '#f6c9c4' : '#fbe3d6');
+      }
+      for (let k = 0; k < 12; k++) R(19 + k, 6 + Math.round(k * 0.6), 1, 1, '#5a3420');
+      for (const [a, b] of [[21, 6], [25, 8], [28, 9], [23, 10]]) { R(a, b, 2, 2, '#f19ab2'); R(a, b, 1, 1, '#ffd6e2'); }
+      const bx = W - 66; R(bx, 3, 54, 20, '#6a4a30'); R(bx + 1, 4, 52, 18, '#c9965a');
+      for (let k = 0; k < 14; k++) R(bx + 2 + (k * 17) % 50, 5 + (k * 7) % 16, 1, 1, '#b5824a');
+      for (let k = 0; k < 3; k++) { const px = bx + 3 + k * 12, py = 6 + (k % 2); R(px, py, 10, 13, '#fbf8f0'); R(px, py + 6, 10, 1, K); R(px + 5, py, 1, 6, K); R(px + 1, py + 8, 3, 3, '#9a9aa8'); R(px + 4, py - 1, 2, 2, '#d9535a'); }
+      R(bx + 40, 5, 10, 14, '#fbf8f0'); R(bx + 40, 5, 10, 3, '#c8323c');
+      for (let k = 0; k < 9; k++) R(bx + 41 + (k % 3) * 3, 10 + Math.floor(k / 3) * 3, 1, 1, k < 5 ? '#c8323c' : '#9a9aa8');
+      R(bx + 46, 15, 3, 1, '#c8323c'); R(bx + 46, 17, 3, 1, '#c8323c'); R(bx + 45, 16, 1, 1, '#c8323c'); R(bx + 49, 16, 1, 1, '#c8323c');
+    }
+    else if (l === 8) {
+      // a sealed lab: pale tiles, a pipe run along the top, a round tank window where a bottle floats, a hazard plate
+      R(0, 0, W, 29, '#cfe3ee');
+      for (let yy = 0; yy < 29; yy += 7) R(0, yy, W, 1, '#a8c4d4');
+      for (let xx = 0; xx < W; xx += 14) R(xx, 0, 1, 29, '#a8c4d4');
+      R(0, 0, W, 5, K); R(0, 1, W, 3, '#7f8a94'); R(0, 1, W, 1, '#a9b2bc');
+      for (let xx = 6; xx < W; xx += 34) { R(xx, 0, 3, 5, '#5f6878'); R(xx + 1, 5, 1, 3, '#5f6878'); }
+      // the tank window: green brine, bubbles, a bottle hangs in it and watches the room
+      disc(36, 15, 14, '#44505c'); disc(36, 15, 12, K); disc(36, 15, 11, '#1f4a44');
+      for (let k = 0; k < 8; k++) { const a = (k * 97 + t * 40) % 360 * Math.PI / 180, rr = 3 + (k % 4) * 2; R(36 + Math.round(Math.cos(a) * rr), 15 + Math.round(Math.sin(a) * rr), 1, 1, '#6fbf9a'); }
+      const fl2 = Math.round(Math.sin(t * 1.3) * 2), blink = (t % 3.4) < 0.18;
+      R(33, 11 + fl2, 7, 10, K); R(34, 12 + fl2, 5, 8, '#1d4a9a'); R(34, 15 + fl2, 5, 2, '#f4efe6'); R(35, 16 + fl2, 3, 1, '#d9453f');
+      R(35, 8 + fl2, 3, 3, K); R(36, 9 + fl2, 1, 2, '#2f5fc4');
+      if (!blink) { R(35, 13 + fl2, 1, 1, '#ffffff'); R(37, 13 + fl2, 1, 1, '#ffffff'); } else R(35, 13 + fl2, 3, 1, K);
+      for (let k = 0; k < 4; k++) R(40, 20 - ((k * 5 + Math.floor(t * 11)) % 12), 1, 1, '#9fe6c4');
+      R(24, 8, 3, 1, 'rgba(255,255,255,.5)'); R(22, 10, 1, 4, 'rgba(255,255,255,.5)');
+      // the hazard plate and a shelf of sample bottles on the right
+      R(W - 48, 7, 16, 14, K); R(W - 47, 8, 14, 12, '#f2c94c'); R(W - 41, 10, 2, 6, K); R(W - 41, 17, 2, 2, K);
+      R(W - 28, 18, 24, 2, K); R(W - 27, 18, 22, 1, '#9aa3ad');
+      for (let k = 0; k < 4; k++) { const sx2 = W - 26 + k * 6, sh2 = 9 + (k % 2) * 2; R(sx2, 18 - sh2, 4, sh2, K); R(sx2 + 1, 19 - sh2, 2, sh2 - 1, ['#2f5fc4', '#d9453f', '#6fbf9a', '#9a6ac2'][k]); R(sx2 + 1, 16 - sh2, 2, 1, '#e9eef2'); }
+    }
+    else if (l === 9) {
+      // a white calibration lab: glossy tiles, a pale blue band, a wall clock and a chart that proves a toilet is an air fryer
+      R(0, 0, W, 29, '#f4f7f9');
+      for (let yy = 0; yy < 29; yy += 8) R(0, yy, W, 1, '#dfe5ea');
+      for (let yy = 0, r = 0; yy < 29; yy += 8, r++) for (let xx = (r % 2) * 6; xx < W; xx += 12) R(xx, yy, 1, 8, '#dfe5ea');
+      R(0, 22, W, 3, '#8fd3f0'); R(0, 25, W, 1, '#5aa9e6');
+      disc(24, 12, 8, '#9aa3ad'); disc(24, 12, 7, K); disc(24, 12, 6, '#ffffff');
+      for (let k = 0; k < 12; k++) { const a = k * Math.PI / 6; R(24 + Math.round(Math.cos(a) * 5), 12 + Math.round(Math.sin(a) * 5), 1, 1, '#9aa3ad'); }
+      const ha = t * 0.2, ma = t * 2.4;
+      R(24 + Math.round(Math.cos(ha) * 2), 12 + Math.round(Math.sin(ha) * 2), 1, 1, K); R(24 + Math.round(Math.cos(ma) * 4), 12 + Math.round(Math.sin(ma) * 4), 1, 1, '#d9453f'); R(24, 12, 1, 1, K);
+      const cx = W - 52; R(cx, 3, 40, 18, '#9aa3ad'); R(cx + 1, 4, 38, 16, '#ffffff');
+      R(cx + 4, 7, 7, 5, '#e9eef2'); R(cx + 5, 6, 5, 2, '#f4f7f9'); R(cx + 6, 12, 3, 3, '#e9eef2');
+      R(cx + 15, 9, 2, 1, '#5aa9e6'); R(cx + 15, 11, 2, 1, '#5aa9e6');
+      R(cx + 22, 6, 7, 9, '#2e2e38'); R(cx + 23, 7, 5, 2, '#ff8a3a');
+      for (let k = 0; k < 4; k++) R(cx + 4 + k * 8, 17, 5, 1, k % 2 ? '#7ee081' : '#9aa3ad');
+    }
     else { for (let xx = 0; xx < W; xx += 30) R(xx, 0, 1, 29, LT.mortar); R(0, 14, W, 1, LT.mortar); R(0, 22, W, 3, '#5f6168'); R(0, 22, W, 1, '#9a9ca5'); for (let xx = 8; xx < W; xx += 40) R(xx, 21, 4, 5, '#4a4c53'); }
     if (l === 4) for (const wx of [14, W - 54]) {
       R(wx, 3, 40, 2, '#c9d0d6'); for (let i = 0; i < 10; i++) { R(wx + 1 + i * 4, 5, 3, 15, '#a8dcf4'); R(wx + 4 + i * 4, 5, 1, 15, '#6fb4dc'); }
       R(wx + 4, 21, 32, 7, K); R(wx + 5, 22, 30, 5, '#e9eef2'); for (let i = 0; i < 7; i++) R(wx + 7 + i * 4, 22, 1, 5, '#b8c0c8');
     }
     if (l === 4) R(W / 2 - 46, 3, 92, 19, '#b8c0c8');
-    if (l !== 3 && l !== 4) for (const wx of [14, W - 54]) { R(wx, 4, 40, 17, K); R(wx + 1, 5, 38, 15, LT.glass); R(wx + 4, 7, 6, 1, '#f4f0e6'); R(wx + 20, 5, 1, 15, K); R(wx + 1, 12, 38, 1, K); }
-    R(W / 2 - 44, 5, 88, 15, K); R(W / 2 - 43, 6, 86, 13, LT.board); R(W / 2 - 43, 6, 86, 1, LT.boardHi);
+    if (l < 3) for (const wx of [14, W - 54]) { R(wx, 4, 40, 17, K); R(wx + 1, 5, 38, 15, LT.glass); R(wx + 4, 7, 6, 1, '#f4f0e6'); R(wx + 20, 5, 1, 15, K); R(wx + 1, 12, 38, 1, K); }
+    // the sign board grows with the longer names of workshops 9 and 10
+    const bw = Math.max(88, Math.round(LT.sign.length * 5.5 + 12));
+    R(W / 2 - bw / 2, 5, bw, 15, K); R(W / 2 - bw / 2 + 1, 6, bw - 2, 13, LT.board); R(W / 2 - bw / 2 + 1, 6, bw - 2, 1, LT.boardHi);
     R(0, 28, W, 3, '#5a3f36');
     // floor
     R(0, 31, W, FL - 31, LT.floor);
-    for (let yy = 31; yy < FL; yy += 20) R(0, yy, W, 1, LT.grid);
-    for (let xx = 0; xx < W; xx += 20) R(xx, 31, 1, FL - 31, LT.grid);
+    if (l < 5) {
+      for (let yy = 31; yy < FL; yy += 20) R(0, yy, W, 1, LT.grid);
+      for (let xx = 0; xx < W; xx += 20) R(xx, 31, 1, FL - 31, LT.grid);
+    }
     if (l === 4) {
       // star parquet: light strips make octagons, dark wooden stars sit where they meet
       const TS = 24, LS = '#d9bc84', LD = '#bf9f68';
@@ -2059,6 +2714,428 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       const dx = W - 36, dy = FL - 34; R(dx + 2, dy + 28, 28, 2, 'rgba(30,20,40,.3)'); R(dx, dy, 30, 5, K); R(dx + 1, dy + 1, 28, 3, '#d9a66a'); R(dx + 1, dy + 1, 28, 1, '#ecc48f'); R(dx + 6, dy + 5, 18, 5, K); R(dx + 7, dy + 5, 16, 4, '#c98a52');
       R(dx + 3, dy + 5, 2, 22, '#c9d0d6'); R(dx + 25, dy + 5, 2, 22, '#c9d0d6'); R(dx + 1, dy + 26, 6, 2, '#9aa3ad'); R(dx + 23, dy + 26, 6, 2, '#9aa3ad');
     }
+    if (l === 5) {
+      // big red and cream checker tiles, soft enough to read the slots over them
+      for (let ty = 31; ty < FL; ty += 24) for (let tx = 0; tx < W; tx += 24) { const red = ((tx + ty - 31) / 24) % 2 === 0; R(tx, ty, 24, 24, red ? '#c9796b' : '#efe6d2'); R(tx, ty, 24, 1, red ? '#d48d80' : '#f7f0e2'); R(tx, ty + 23, 24, 1, red ? '#b86a5d' : '#e2d7c0'); }
+      const ell = (cx, cy, rx, ry, col) => { for (let dy = -ry; dy <= ry; dy++) { const w = Math.round(rx * Math.sqrt(1 - (dy / ry) ** 2)); R(cx - w, cy + dy, w * 2 + 1, 1, col); } };
+      const shadow = (x, y, w) => R(x, y, w, 3, 'rgba(30,20,40,.28)');
+      const L0 = colX(0), R0 = colX(0) + SW, B0 = colX(0.9), B1 = colX(0.9) + SW;
+
+      // left of the top pair: a potted olive tree, below it firewood for the oven
+      const ox = Math.round(L0 / 2), oy = rowY(0) + 8;
+      shadow(ox - 12, oy + 62, 24);
+      R(ox - 10, oy + 44, 20, 18, K); R(ox - 9, oy + 45, 18, 16, '#c8643c'); R(ox - 11, oy + 42, 22, 5, K); R(ox - 10, oy + 43, 20, 3, '#d97a50'); R(ox - 7, oy + 48, 2, 10, '#e08a60');
+      R(ox - 1, oy + 22, 3, 21, K); R(ox, oy + 22, 1, 21, '#8a5a32'); R(ox - 6, oy + 28, 6, 2, K); R(ox + 2, oy + 25, 6, 2, K);
+      const lf = Math.round(Math.sin(t * 1.2));
+      for (const [a, b, r] of [[0, 8, 9], [-8, 16, 7], [8, 15, 7], [-4, 4, 6], [5, 2, 6]]) ell(ox + a + lf, oy + b, r, r - 2, K);
+      for (const [a, b, r] of [[0, 8, 8], [-8, 16, 6], [8, 15, 6], [-4, 4, 5], [5, 2, 5]]) ell(ox + a + lf, oy + b, r, r - 2, '#6f8a3e');
+      for (const [a, b] of [[-3, 6], [4, 10], [-9, 15], [9, 14], [1, 1], [-5, 12]]) R(ox + a + lf, oy + b, 2, 2, a % 2 ? '#3a2a4a' : '#98b15a');
+      const fx = ox, fy = rowY(1) + 30;
+      shadow(fx - 18, fy + 30, 36);
+      for (let r = 0; r < 4; r++) for (let c = 0; c < 4 - r; c++) { const lx = fx - 15 + c * 8 + r * 4, ly = fy + 22 - r * 7; disc(lx + 3, ly + 3, 4, K); disc(lx + 3, ly + 3, 3, '#a8693a'); disc(lx + 3, ly + 3, 1, '#d9a066'); }
+      R(fx + 8, fy - 8, 2, 16, K); R(fx + 9, fy - 7, 1, 14, '#a8693a'); R(fx + 5, fy - 10, 7, 5, K); R(fx + 6, fy - 9, 5, 3, '#c9d0d6'); R(fx + 6, fy - 9, 1, 3, '#ffffff');
+
+      // top right: tomato crate, a basket of mushrooms and a tower of boxes
+      const cx = R0 + 8, cy = rowY(0) + 14;
+      shadow(cx, cy + 22, 32);
+      R(cx, cy + 6, 32, 16, K); R(cx + 1, cy + 7, 30, 14, '#c98a52'); R(cx + 1, cy + 12, 30, 1, '#a8693a'); R(cx + 1, cy + 17, 30, 1, '#a8693a');
+      for (let k = 0; k < 6; k++) { const tx = cx + 3 + k * 5, ty = cy + 3 - (k % 2); disc(tx + 2, ty + 2, 3, K); disc(tx + 2, ty + 2, 2, '#e04a3a'); R(tx + 1, ty + 1, 1, 1, '#ff9a8a'); R(tx + 2, ty - 1, 1, 1, '#3f9a4f'); }
+      const mx = cx + 40, my = cy + 10;
+      shadow(mx - 2, my + 13, 24); ell(mx + 10, my + 6, 11, 7, K); ell(mx + 10, my + 6, 10, 6, '#c9a26a'); for (let k = 0; k < 5; k++) R(mx + 2 + k * 4, my + 2, 1, 10, '#a8824f');
+      for (const [a, b] of [[4, 0], [10, -2], [16, 0]]) { ell(mx + a, my + b, 4, 3, K); ell(mx + a, my + b, 3, 2, '#f1e3c4'); R(mx + a - 2, my + b - 1, 2, 1, '#ffffff'); }
+      const bx = W - 28, by = rowY(0) + 6, sway = Math.sin(t * 1.5);
+      shadow(bx, by + 60, 26);
+      for (let k = 0; k < 7; k++) { const sx = Math.round(sway * k * k / 30) + (k % 3 === 1 ? 1 : 0), yy = by + 52 - k * 7; R(bx + sx, yy, 24, 8, K); R(bx + sx + 1, yy + 1, 22, 6, '#e3c48c'); R(bx + sx + 1, yy + 1, 22, 1, '#f2dcae'); R(bx + sx + 9, yy + 3, 6, 2, '#d64545'); }
+      const tx2 = bx + Math.round(sway * 36 / 30), ty2 = by + 3;
+      for (let k = 0; k < 3; k++) { const s = (t * 0.6 + k / 3) % 1; R(tx2 + 7 + k * 4 + Math.round(Math.sin(s * 7 + k) * 2), ty2 - 4 - s * 14, 1, 3, `rgba(255,255,255,${(0.9 * (1 - s)).toFixed(2)})`); }
+
+      // the delivery scooter: a cream and red vespa with chrome, a pennant on the antenna, a pizza box with a logo
+      const vx = R0 + 12, vy = rowY(1) + 6, g = W - vx;
+      const sx = Math.min(1, g / 100);
+      shadow(vx, vy + 62, 92);
+      const wheel = (wx, wy) => { disc(wx, wy, 8, K); disc(wx, wy, 6, '#3a3346'); disc(wx, wy, 4, '#c9d0d6'); disc(wx, wy, 2, '#7f8a94'); const a = t * 9; for (let k = 0; k < 3; k++) R(wx + Math.round(Math.cos(a + k * 2.1) * 3), wy + Math.round(Math.sin(a + k * 2.1) * 3), 1, 1, K); };
+      wheel(vx + 16, vy + 54); wheel(vx + 78, vy + 54);
+      // rear cowl
+      ell(vx + 22, vy + 40, 20, 12, K); ell(vx + 22, vy + 40, 19, 11, '#f1e3c4'); ell(vx + 18, vy + 36, 12, 5, '#ffffff');
+      R(vx + 6, vy + 46, 34, 3, '#d64545'); R(vx + 4, vy + 44, 4, 3, K); R(vx + 2, vy + 42, 4, 3, '#ff5040');
+      R(vx + 10, vy + 38, 3, 2, '#3f9a4f'); R(vx + 13, vy + 38, 3, 2, '#f4efe6'); R(vx + 16, vy + 38, 3, 2, '#d64545');
+      // floor board and front shield
+      R(vx + 38, vy + 46, 30, 6, K); R(vx + 39, vy + 47, 28, 4, '#3a3346'); R(vx + 39, vy + 47, 28, 1, '#5a5662');
+      R(vx + 64, vy + 18, 12, 34, K); R(vx + 65, vy + 19, 10, 32, '#d64545'); R(vx + 65, vy + 19, 2, 32, '#ff8a80');
+      for (let dy = -11; dy <= -6; dy++) { const w = Math.round(11 * Math.sqrt(1 - (dy / 11.5) ** 2)); R(vx + 78 - w, vy + 54 + dy, w * 2 + 1, 1, K); if (dy > -11) R(vx + 79 - w, vy + 54 + dy, w * 2 - 1, 1, dy === -10 ? '#ff8a80' : '#d64545'); } R(vx + 67, vy + 48, 3, 4, K); R(vx + 87, vy + 48, 3, 4, K);
+      // handlebar, headlight that blinks, mirror
+      R(vx + 66, vy + 6, 3, 13, K); R(vx + 58, vy + 6, 18, 3, K); R(vx + 59, vy + 7, 16, 1, '#c9d0d6');
+      R(vx + 72, vy + 10, 7, 7, K); const hl = Math.floor(t * 1.5) % 4 ? '#fff1b0' : '#ffffff'; R(vx + 73, vy + 11, 5, 5, hl); R(vx + 74, vy + 12, 2, 2, '#ffffff');
+      if (hl === '#ffffff') { R(vx + 80, vy + 12, 4, 1, '#fff1b0'); R(vx + 80, vy + 15, 3, 1, '#fff1b0'); }
+      R(vx + 61, vy + 1, 1, 5, K); R(vx + 59, vy - 2, 5, 4, K); R(vx + 60, vy - 1, 3, 2, '#bfe3f4');
+      // seat
+      R(vx + 10, vy + 25, 26, 5, K); R(vx + 11, vy + 26, 24, 3, '#5a3a2c'); R(vx + 11, vy + 26, 24, 1, '#7a5a44');
+      // rack and the pizza box with a logo, an antenna with a little flag
+      R(vx + 2, vy + 24, 12, 2, K);
+      R(vx - 2, vy + 2, 20, 23, K); R(vx - 1, vy + 3, 18, 21, '#d64545'); R(vx - 1, vy + 3, 18, 2, '#ff8a80');
+      disc(vx + 8, vy + 13, 6, K); disc(vx + 8, vy + 13, 5, '#f4efe6'); for (const [a, b] of [[0, -3], [-2, 1], [3, 1]]) R(vx + 8 + a, vy + 13 + b, 2, 2, '#e5a65a'); R(vx + 7, vy + 12, 2, 2, '#d64545'); R(vx + 9, vy + 15, 1, 1, '#d64545');
+      R(vx + 14, vy - 16, 1, 18, K);
+      const wv = Math.floor(t * 6) % 2; R(vx + 15, vy - 16, 3, 5, '#3f9a4f'); R(vx + 18, vy - 16 + wv, 3, 5, '#f4efe6'); R(vx + 21, vy - 16, 3, 5, '#d64545');
+      for (let k = 0; k < 3; k++) { const s = (t * 0.8 + k / 3) % 1; ell(vx - 2 - s * 12, vy + 44 - s * 5, 1 + Math.round(s * 3), 1 + Math.round(s * 2), `rgba(210,205,215,${(0.7 * (1 - s)).toFixed(2)})`); }
+
+      // bottom left: a bistro table with a Chianti candle, a chef cat drags a slice off the plate, the cheese stretches
+      const qx = 4, qy = rowY(2) + 32;
+      shadow(qx + 4, qy + 50, 72);
+      R(qx + 34, qy + 22, 4, 28, K); R(qx + 24, qy + 48, 24, 3, K);
+      R(qx + 2, qy + 8, 66, 16, K); for (let i = 0; i < 16; i++) for (let j = 0; j < 4; j++) R(qx + 3 + i * 4, qy + 9 + j * 4 - (j === 3 ? 1 : 0), 4, 4, (i + j) % 2 ? '#f4efe6' : '#d0453a');
+      R(qx + 3, qy + 9, 64, 1, 'rgba(255,255,255,.4)');
+      R(qx + 8, qy - 10, 9, 18, K); ell(qx + 12, qy + 3, 5, 5, K); ell(qx + 12, qy + 3, 4, 4, '#c9a26a'); for (let k = -3; k <= 3; k += 2) R(qx + 12 + k, qy, 1, 6, '#a8824f');
+      R(qx + 9, qy - 9, 7, 9, '#3f6a3a'); R(qx + 10, qy - 9, 1, 8, '#6a9a5a'); R(qx + 10, qy - 16, 5, 7, K); R(qx + 11, qy - 15, 3, 6, '#f4efe6'); R(qx + 10, qy - 10, 5, 2, '#f4efe6');
+      const fl = Math.floor(t * 9) % 3; R(qx + 12, qy - 19 - (fl === 1 ? 1 : 0), 1, 3, '#ff7a2a'); R(qx + 12 + (fl === 2 ? 1 : 0), qy - 21 - (fl === 1 ? 1 : 0), 1, 2, '#f7c948');
+      ell(qx + 36, qy + 4, 13, 5, K); ell(qx + 36, qy + 4, 12, 4, '#f4f8fb'); ell(qx + 36, qy + 3, 9, 3, '#e5a65a'); ell(qx + 36, qy + 3, 8, 2, '#f7d36a');
+      R(qx + 32, qy + 2, 2, 1, '#b8322a'); R(qx + 38, qy + 3, 2, 1, '#b8322a'); R(qx + 35, qy + 4, 1, 1, '#57b04f'); R(qx + 40, qy + 1, 6, 4, '#f4f8fb');
+      // the cat: a fat ginger tabby with a white chest and a crooked chef hat, sits on a stool
+      const pull = (Math.sin(t * 1.4) + 1) / 2, kx = qx + 74 + Math.round(pull * 2), ky = qy + 6;
+      R(qx + 62, qy + 32, 24, 4, K); R(qx + 63, qy + 33, 22, 2, '#a8693a'); R(qx + 65, qy + 36, 2, 16, K); R(qx + 80, qy + 36, 2, 16, K); R(qx + 66, qy + 44, 15, 2, K);
+      const tl = Math.sin(t * 2.2); for (let k = 0; k < 8; k++) R(kx + 10 + k, ky + 22 - Math.round(Math.sin(k / 3 + tl) * 3) - k, 3, 3, K);
+      for (let k = 0; k < 8; k++) R(kx + 11 + k, ky + 23 - Math.round(Math.sin(k / 3 + tl) * 3) - k, 1, 1, k % 3 ? '#e8954a' : '#b8622a');
+      ell(kx + 2, ky + 18, 11, 10, K); ell(kx + 2, ky + 18, 10, 9, '#e8954a'); ell(kx, ky + 19, 5, 7, '#fbf3e4');
+      for (let k = 0; k < 3; k++) { R(kx + 8, ky + 13 + k * 4, 4, 1, '#b8622a'); R(kx - 8, ky + 14 + k * 4, 3, 1, '#b8622a'); }
+      R(kx - 4, ky + 26, 4, 3, K); R(kx - 3, ky + 27, 2, 1, '#fbf3e4'); R(kx + 3, ky + 26, 4, 3, K); R(kx + 4, ky + 27, 2, 1, '#fbf3e4');
+      ell(kx, ky + 4, 8, 6, K); ell(kx, ky + 4, 7, 5, '#e8954a'); ell(kx - 1, ky + 7, 4, 2, '#fbf3e4');
+      R(kx - 7, ky - 4, 4, 5, K); R(kx - 6, ky - 3, 2, 3, '#f2a0a8'); R(kx + 4, ky - 4, 4, 5, K); R(kx + 5, ky - 3, 2, 3, '#f2a0a8');
+      R(kx - 1, ky - 1, 2, 3, '#b8622a'); R(kx - 5, ky + 1, 1, 1, '#b8622a'); R(kx + 4, ky + 1, 1, 1, '#b8622a');
+      R(kx - 5, ky + 3, 3, 1, K); R(kx + 2, ky + 3, 3, 1, K); R(kx - 1, ky + 5, 2, 1, '#e8737a'); R(kx - 2, ky + 7, 1, 1, K); R(kx + 1, ky + 7, 1, 1, K);
+      R(kx - 9, ky + 5, 3, 1, '#fbf3e4'); R(kx + 7, ky + 5, 3, 1, '#fbf3e4');
+      // chef hat, tilted
+      R(kx - 6, ky - 2, 10, 3, K); R(kx - 5, ky - 1, 8, 1, '#ffffff');
+      ell(kx - 1, ky - 6, 6, 4, K); ell(kx - 1, ky - 6, 5, 3, '#ffffff'); ell(kx - 4, ky - 7, 2, 2, '#e9eef2');
+      // paw holding the slice, cheese strings back to the plate
+      const sx2 = kx - 16 + Math.round(pull * 2), sy2 = ky + 4;
+      R(qx + 44, sy2 + 3, sx2 - qx - 44, 1, '#f7e08a'); if (pull > 0.4) R(qx + 45, sy2 + 5, sx2 - qx - 47, 1, '#f7e08a');
+      R(sx2, sy2, 9, 6, K); R(sx2 + 1, sy2 + 1, 7, 4, '#f7d36a'); R(sx2 + 1, sy2 + 1, 7, 1, '#e5a65a'); R(sx2 + 3, sy2 + 2, 2, 2, '#b8322a'); R(sx2 + 6, sy2 + 3, 1, 1, '#57b04f');
+      R(sx2 + 7, sy2 + 1, kx - sx2 - 11, 4, K); R(sx2 + 7, sy2 + 2, kx - sx2 - 12, 2, '#e8954a'); R(sx2 + 7, sy2 + 2, 2, 2, '#fbf3e4');
+      // flour sacks and a fallen slice
+      for (const [ax, ay] of [[2, 0], [20, 5]]) { R(qx + ax, qy + 62 + ay, 18, 22, K); R(qx + ax + 1, qy + 63 + ay, 16, 20, '#f4efe6'); R(qx + ax + 1, qy + 63 + ay, 16, 3, '#d8cfc0'); R(qx + ax + 5, qy + 72 + ay, 8, 5, '#3f9a4f'); R(qx + ax + 7, qy + 73 + ay, 4, 3, '#f4efe6'); }
+      for (let k = 0; k < 8; k++) R(qx + 40 + k * 4, qy + 84 + (k % 3), 2, 1, '#f4efe6');
+
+      // right of the bottom pair: a jukebox plays, notes float up; below, a mop bucket and a wet floor sign
+      const jx = B1 + Math.round((W - B1 - 34) / 2), jy = rowY(2) + 6;
+      shadow(jx, jy + 58, 34);
+      R(jx, jy + 12, 34, 46, K); ell(jx + 17, jy + 12, 17, 12, K);
+      ell(jx + 17, jy + 12, 16, 11, '#a8471f'); R(jx + 1, jy + 12, 32, 45, '#a8471f');
+      ell(jx + 17, jy + 14, 12, 8, K); const glow = ['#f7c948', '#ff7a2a', '#d64545', '#9a6ac2'][Math.floor(t * 3) % 4];
+      ell(jx + 17, jy + 14, 11, 7, glow); ell(jx + 17, jy + 15, 8, 5, '#3a2a1a'); disc(jx + 17, jy + 16, 3, '#1a1622'); R(jx + 17 + (Math.floor(t * 8) % 2 ? 1 : -1), jy + 15, 1, 1, '#f4efe6');
+      R(jx + 4, jy + 26, 26, 14, K); R(jx + 5, jy + 27, 24, 12, '#f4efe6'); for (let k = 0; k < 4; k++) R(jx + 7, jy + 29 + k * 3, 20 - (k % 2) * 6, 1, '#9aa3ad');
+      for (let k = 0; k < 4; k++) R(jx + 4 + k * 7, jy + 44, 5, 12, k % 2 ? glow : '#f2c94c');
+      R(jx + 2, jy + 42, 30, 1, K);
+      for (let k = 0; k < 3; k++) { const s = (t * 0.5 + k / 3) % 1, nx = jx + 6 + k * 10 + Math.round(Math.sin(s * 6 + k) * 3), ny = jy - 2 - s * 26; const c = `rgba(43,33,53,${(1 - s).toFixed(2)})`; R(nx, ny, 3, 2, c); R(nx + 2, ny - 6, 1, 6, c); R(nx + 3, ny - 6, 2, 1, c); }
+      const wx = jx - 4, wy = rowY(3) + 14;
+      shadow(wx, wy + 42, 40);
+      R(wx + 2, wy + 22, 20, 18, K); R(wx + 3, wy + 23, 18, 16, '#5b8fd6'); R(wx + 3, wy + 23, 18, 2, '#8fb8ea'); R(wx + 4, wy + 25, 16, 2, '#9cd4f2');
+      R(wx + 14, wy - 4, 2, 28, K); R(wx + 15, wy - 3, 1, 26, '#c98a52'); ell(wx + 14, wy + 25, 4, 2, '#e9e2d0');
+      R(wx + 24, wy + 8, 1, 32, K); R(wx + 38, wy + 8, 1, 32, K); for (let dy = 0; dy < 26; dy++) R(wx + 31 - Math.floor(dy / 4), wy + 8 + dy, 1 + Math.floor(dy / 4) * 2, 1, K);
+      for (let dy = 1; dy < 25; dy++) R(wx + 32 - Math.floor(dy / 4), wy + 8 + dy, Math.floor(dy / 4) * 2 - 1, 1, '#f7c948');
+      R(wx + 30, wy + 18, 2, 6, K); R(wx + 30, wy + 26, 2, 2, K);
+      ell(wx + 10, wy + 44, 10, 2, 'rgba(156,212,242,.6)'); R(wx + 8, wy + 43, 3, 1, '#ffffff');
+    }
+    if (l === 6) {
+      // tar roof with gravel, feathers drift, seeds lie about, a water trough and seed sacks fill the empty corners
+      for (let k = 0; k < 160; k++) R((k * 53) % W, 32 + (k * 37) % (FL - 33), 1, 1, k % 3 ? '#8a8590' : '#5a5560');
+      const ell = (cx, cy, rx, ry, col) => { for (let dy = -ry; dy <= ry; dy++) { const w = Math.round(rx * Math.sqrt(1 - (dy / ry) ** 2)); R(cx - w, cy + dy, w * 2 + 1, 1, col); } };
+      // corners: top left trough, top right chimney, bottom left sacks, bottom right nest
+      // top left: an old clawfoot bathtub turned pigeon bath, one pigeon splashes, a rubber duck floats, the tap drips
+      const tx = colX(0) + 10, ty = rowY(0) + 30;
+      R(tx + 2, ty + 24, 50, 3, 'rgba(30,20,40,.3)');
+      for (const fx of [5, 43]) { R(tx + fx, ty + 19, 5, 6, K); R(tx + fx + 1, ty + 20, 3, 3, '#e9c046'); R(tx + fx - 1, ty + 23, 3, 2, K); R(tx + fx + 3, ty + 23, 3, 2, K); }
+      ell(tx + 26, ty + 10, 27, 11, K); ell(tx + 26, ty + 10, 26, 10, '#f4f1ec'); R(tx - 1, ty, 55, 10, '#2a2135');
+      R(tx, ty + 1, 53, 9, '#f4f1ec'); R(tx, ty + 1, 53, 2, '#ffffff'); ell(tx + 26, ty + 14, 22, 5, '#d8d2c8');
+      R(tx + 3, ty + 3, 47, 5, '#5fa8d8'); R(tx + 3, ty + 3, 47, 1, '#9cd4f2');
+      for (let k = 0; k < 5; k++) R(tx + 6 + ((k * 11 + Math.floor(t * 8)) % 42), ty + 5 + (k % 2), 3, 1, '#bfe6f8');
+      // the tap and its drip
+      R(tx + 46, ty - 9, 3, 10, K); R(tx + 47, ty - 8, 1, 9, '#c9d0d6'); R(tx + 41, ty - 10, 8, 3, K); R(tx + 42, ty - 9, 6, 1, '#e9eef2'); R(tx + 46, ty - 13, 3, 3, K); R(tx + 47, ty - 12, 1, 1, '#d64545');
+      const dr = (t * 1.2) % 1; R(tx + 42, ty - 7 + Math.floor(dr * 10), 1, 2, '#9cd4f2');
+      // a rubber duck drifts
+      const dx = tx + 30 + Math.round(Math.sin(t * 0.8) * 8);
+      R(dx - 3, ty + 1, 7, 4, K); R(dx - 2, ty + 2, 5, 2, '#f7d84a'); R(dx + 1, ty - 3, 4, 4, K); R(dx + 2, ty - 2, 2, 2, '#f7d84a'); R(dx + 3, ty - 2, 1, 1, K); R(dx + 5, ty - 1, 2, 1, '#ff7a2a');
+      // the bather flaps and throws drops
+      const sp = Math.floor(t * 6) % 2, bx2 = tx + 13;
+      R(bx2 - 6, ty - 3, 13, 7, K); R(bx2 - 5, ty - 2, 11, 5, '#a9b2c3'); R(bx2 - 4, ty - 1, 6, 2, '#7f889a'); R(bx2 - 9, ty - 4, 4, 3, K);
+      R(bx2 + 4, ty - 6, 4, 4, K); R(bx2 + 5, ty - 5, 2, 2, '#6fbf9a'); R(bx2 + 5, ty - 11, 6, 6, K); R(bx2 + 6, ty - 10, 4, 4, '#7f889a'); R(bx2 + 8, ty - 9, 1, 1, '#ff7a2a'); R(bx2 + 11, ty - 9, 2, 2, K); R(bx2 + 11, ty - 8, 1, 1, '#e8a0a0');
+      if (sp) { R(bx2 - 7, ty - 9, 8, 6, K); R(bx2 - 6, ty - 8, 6, 4, '#cfd5e0'); } else { R(bx2 - 8, ty - 3, 9, 3, K); R(bx2 - 7, ty - 2, 7, 1, '#cfd5e0'); }
+      R(tx + 3, ty + 3, 22, 1, '#9cd4f2');
+      for (let k = 0; k < 6; k++) { const ph = (t * 1.5 + k / 6) % 1, ox = (k % 2 ? 1 : -1) * (4 + Math.round(ph * 11)), oy = Math.round(-14 * ph + 18 * ph * ph); R(bx2 + ox, ty - 2 + oy, 1, 2, '#9cd4f2'); }
+      // top right: a chimney with a soot-black pigeon popping out, a satellite dish with a sitter, grass in a crack
+      const cx = colX(2) + 20, cy = rowY(0) + 16;
+      R(cx - 2, cy + 46, 40, 3, 'rgba(30,20,40,.3)');
+      R(cx, cy, 34, 46, K); R(cx + 1, cy + 1, 32, 44, '#b0654c');
+      for (let yy = cy + 6; yy < cy + 45; yy += 6) { R(cx + 1, yy, 32, 1, '#94523d'); for (let xx = cx + ((yy - cy) / 6 % 2) * 6 + 6; xx < cx + 33; xx += 12) R(xx, yy - 5, 1, 5, '#94523d'); }
+      R(cx + 1, cy + 1, 3, 44, '#c9785c');
+      R(cx + 21, cy + 25, 6, 5, '#7a3a2a'); R(cx + 22, cy + 26, 4, 3, '#4a2a22'); R(cx + 21, cy + 24, 1, 1, '#57b04f'); R(cx + 23, cy + 22, 1, 3, '#57b04f'); R(cx + 25, cy + 23, 1, 2, '#8fe07a'); R(cx + 26, cy + 21, 2, 1, '#f2c94c');
+      R(cx - 3, cy - 4, 40, 6, K); R(cx - 2, cy - 3, 38, 4, '#7d7f88'); R(cx - 2, cy - 3, 38, 1, '#a9abb4');
+      // a soot pigeon pops out every few seconds
+      const up = Math.max(0, Math.min(1, Math.sin(t * 1.3) * 3 - 1.5)), ph2 = cy - 4 - Math.round(up * 7);
+      if (up > 0) {
+        R(cx + 8, ph2 - 2, 12, 10, K); R(cx + 9, ph2 - 1, 10, 8, '#3a3346'); R(cx + 10, ph2 + 1, 3, 3, '#ffffff'); R(cx + 15, ph2 + 1, 3, 3, '#ffffff'); R(cx + 11, ph2 + 2, 1, 1, K); R(cx + 16, ph2 + 2, 1, 1, K);
+        R(cx + 13, ph2 + 4, 2, 2, '#e8a0a0'); R(cx + 12, ph2 - 3, 1, 2, K); R(cx + 15, ph2 - 4, 1, 3, K);
+        for (let k = 0; k < 5; k++) R(cx + 6 + k * 5, ph2 - 6 - (k % 2) * 3 + Math.round(up * 2), 2, 2, 'rgba(40,34,50,.55)');
+      }
+      // the smoke comes in puffs, darker after the soot pigeon
+      for (let k = 0; k < 3; k++) { const s = (t * 0.4 + k / 3) % 1; ell(cx + 24 + Math.round(Math.sin(s * 6) * 3), cy - 8 - s * 22, 3 + Math.round(s * 3), 2 + Math.round(s * 2), `rgba(200,200,210,${(0.75 * (1 - s)).toFixed(2)})`); }
+      // a satellite dish bolted on the side, a pigeon rides it
+      R(cx - 5, cy + 14, 6, 3, K); R(cx - 4, cy + 15, 4, 1, '#9aa3ad');
+      ell(cx - 10, cy + 15, 5, 10, K); ell(cx - 10, cy + 15, 4, 9, '#e9eef2'); ell(cx - 9, cy + 16, 2, 6, '#c9d0d6'); R(cx - 12, cy + 7, 2, 4, '#ffffff');
+      R(cx - 22, cy + 15, 12, 1, K); R(cx - 25, cy + 13, 4, 5, K); R(cx - 24, cy + 14, 2, 3, '#7d7f88');
+      // a white paint heart on the bricks and grass in a crack
+      R(cx + 6, cy + 10, 2, 1, '#f4f1ec'); R(cx + 10, cy + 10, 2, 1, '#f4f1ec'); R(cx + 5, cy + 11, 8, 2, '#f4f1ec'); R(cx + 6, cy + 13, 6, 1, '#f4f1ec'); R(cx + 7, cy + 14, 4, 1, '#f4f1ec'); R(cx + 8, cy + 15, 2, 1, '#f4f1ec');
+      const hb = Math.floor(t * 1.7) % 2;
+      const rx2 = cx - 13, ry2 = cy - 1; R(rx2 - 3, ry2, 8, 5, K); R(rx2 - 2, ry2 + 1, 6, 3, '#a9b2c3'); R(rx2 + 4, ry2 + 1, 3, 2, K); R(rx2 - 5, ry2 - 3 + hb, 4, 4, K); R(rx2 - 4, ry2 - 2 + hb, 2, 2, '#7f889a'); R(rx2 - 4, ry2 - 2 + hb, 1, 1, '#ff7a2a'); R(rx2 - 6, ry2 - 1 + hb, 1, 1, '#e8a0a0'); R(rx2 - 2, ry2, 1, 1, '#6fbf9a'); R(rx2, ry2 + 5, 1, 1, '#e8737a'); R(rx2 + 2, ry2 + 5, 1, 1, '#e8737a');
+      const bx = colX(0) + 10, by = rowY(2) + 18;
+      for (const [ox, oy] of [[0, 8], [22, 10], [10, 0]]) { R(bx + ox, by + oy + 34, 26, 2, 'rgba(30,20,40,.3)'); R(bx + ox, by + oy, 24, 34, K); R(bx + ox + 1, by + oy + 1, 22, 32, '#d8c8a0'); R(bx + ox + 1, by + oy + 1, 22, 5, '#b5a47a'); R(bx + ox + 7, by + oy + 14, 10, 8, '#b8423b'); R(bx + ox + 10, by + oy + 16, 4, 4, '#f4efe6'); }
+      for (let k = 0; k < 8; k++) R(bx + 30 + k * 3, by + 46 + (k % 3), 1, 1, '#e5c56a');
+      // the nest: a mother pigeon broods, one egg hatches and the chick peeps, the treasures she dragged in lie around
+      const nx = colX(2) + 36, ny = rowY(2) + 48;
+      const half = (cx, cy, rx, ry, col, from) => { for (let dy = from; dy <= ry; dy++) { const w = Math.round(rx * Math.sqrt(1 - (dy / ry) ** 2)); R(cx - w, cy + dy, w * 2 + 1, 1, col); } };
+      R(nx - 27, ny + 9, 54, 3, 'rgba(30,20,40,.3)');
+      ell(nx, ny - 2, 26, 9, K); ell(nx, ny - 2, 25, 8, '#a8824f'); ell(nx, ny - 2, 20, 5, '#4a321c');
+      // mother pigeon sits in the hollow, turns her head and blinks
+      const mx = nx - 8, my = ny - 8, look = Math.floor(t * 0.7) % 2, blink = (t % 3) < 0.15;
+      R(mx - 17, my - 5, 6, 5, K); R(mx - 16, my - 4, 4, 3, '#5f6878'); R(mx - 16, my - 2, 4, 1, '#3a3346');
+      ell(mx, my, 13, 8, K); ell(mx, my, 12, 7, '#b3bccb'); ell(mx - 3, my + 1, 8, 5, '#8a93a6');
+      for (let k = 0; k < 3; k++) R(mx - 9 + k * 4, my + 2 - (k % 2), 4, 1, '#5f6878');
+      const hx = mx + 9 + look;
+      R(hx - 2, my - 7, 7, 7, K); R(hx - 1, my - 5, 5, 4, '#6fbf9a'); R(hx, my - 3, 3, 2, '#9a6ac2');
+      R(hx - 1, my - 14, 9, 8, K); R(hx, my - 13, 7, 6, '#7f889a'); R(hx, my - 13, 7, 1, '#9aa3b5');
+      if (blink) R(hx + 3, my - 11, 3, 1, K); else { R(hx + 3, my - 12, 3, 3, '#ffb35a'); R(hx + 4, my - 11, 1, 1, K); }
+      R(hx + 7, my - 11, 3, 2, K); R(hx + 7, my - 11, 1, 1, '#f4efe6'); R(hx + 8, my - 10, 2, 1, '#e8a0a0');
+      // eggs: one whole, one hatched with a peeping chick
+      ell(nx + 9, ny - 5, 4, 5, K); ell(nx + 9, ny - 5, 3, 4, '#f4efe6'); R(nx + 8, ny - 8, 1, 2, '#ffffff'); R(nx + 10, ny - 4, 1, 1, '#d8cfc0');
+      const kx = nx + 18, pop = Math.floor(t * 2.5) % 3 === 0 ? 0 : 3, open = Math.floor(t * 5) % 2;
+      ell(kx, ny - 9 + pop, 5, 5, K); ell(kx, ny - 9 + pop, 4, 4, '#f7d84a'); R(kx - 3, ny - 12 + pop, 2, 1, '#fff1a0'); R(kx - 1, ny - 15 + pop, 1, 2, K); R(kx + 1, ny - 16 + pop, 1, 3, K);
+      R(kx - 3, ny - 10 + pop, 1, 2, K); R(kx + 2, ny - 10 + pop, 1, 2, K); R(kx - 1, ny - 8 + pop, 3, 1 + open, '#ff7a2a'); if (open) R(kx, ny - 8 + pop, 1, 1, '#b8423b');
+      ell(kx, ny - 3, 5, 4, K); ell(kx, ny - 3, 4, 3, '#f4efe6'); for (let k = -4; k <= 4; k += 2) R(kx + k, ny - 7 + (k & 2 ? 2 : 0), 1, 2, K);
+      if (!pop && open) for (const [a, b] of [[7, 20], [11, 23]]) { R(kx + a, ny - b, 1, 4, '#f4f8fb'); R(kx + a, ny - b + 5, 1, 1, '#f4f8fb'); }
+      // the front rim of twigs hides everyone's lower half
+      half(nx, ny - 2, 26, 9, K, 1); half(nx, ny - 2, 25, 8, '#a8824f', 1); half(nx, ny - 1, 22, 6, '#c9a26a', 3);
+      for (let k = 0; k < 12; k++) { const a = Math.PI * (0.06 + k * 0.08), rx = nx + Math.round(Math.cos(a) * 22), ry = ny + 1 + Math.round(Math.sin(a) * 5); R(rx - 3, ry, 7, 1, k % 2 ? '#7a5a34' : '#8a6438'); R(rx + (k % 3) - 1, ry - 1, 1, 3, '#5a3f22'); }
+      R(nx - 32, ny - 1, 9, 1, '#a8824f'); R(nx + 24, ny + 3, 9, 1, '#c9a26a'); R(nx + 26, ny - 8, 1, 6, '#a8824f'); R(nx - 25, ny - 9, 1, 5, '#7a5a34');
+      // treasures she dragged in: a bottle cap, a lost key, a shiny button
+      R(nx - 30, ny + 6, 6, 3, K); R(nx - 29, ny + 6, 4, 2, '#d64545'); R(nx - 29, ny + 6, 1, 1, '#ff9a9a');
+      R(nx + 20, ny + 7, 6, 2, K); R(nx + 21, ny + 7, 4, 1, '#f2c94c'); R(nx + 25, ny + 6, 4, 4, K); R(nx + 26, ny + 7, 2, 2, '#f2c94c'); R(nx + 27, ny + 8, 1, 1, K);
+      const sh = Math.floor(t * 1.5) % 4 === 0; R(nx - 3, ny + 8, 4, 3, K); R(nx - 2, ny + 9, 2, 1, sh ? '#ffffff' : '#8fd3f0'); if (sh) { R(nx - 1, ny + 4, 1, 3, '#ffffff'); R(nx + 2, ny + 9, 3, 1, '#ffffff'); }
+      for (let k = 0; k < 4; k++) { const fx = (k * 71 + t * 9 * (k % 2 ? 1 : -1)) % W, fy = 40 + ((k * 97 + t * 6) % (FL - 50)); const xx = fx < 0 ? fx + W : fx; R(xx, fy, 4, 1, '#f4f8fb'); R(xx + 1, fy + 1, 2, 1, '#cfd5e0'); }
+    }
+    if (l === 7) {
+      // tatami: 40×20 mats laid like bricks, a dark green cloth edge along the long side, a faint weave
+      for (let ty = 31, r = 0; ty < FL; ty += 20, r++) for (let tx = (r % 2) * -20; tx < W; tx += 40) {
+        R(tx, ty, 40, 20, '#cfc890'); for (let k = 2; k < 40; k += 3) R(tx + k, ty + 2, 1, 17, '#c4bd84');
+        R(tx, ty, 40, 2, '#4f6a42'); R(tx, ty, 1, 20, '#b5ae74');
+      }
+      const ell = (cx, cy, rx, ry, col) => { for (let dy = -ry; dy <= ry; dy++) { const w = Math.round(rx * Math.sqrt(1 - (dy / ry) ** 2)); R(cx - w, cy + dy, w * 2 + 1, 1, col); } };
+      const shadow = (x, y, w) => R(x, y, w, 3, 'rgba(30,20,40,.28)');
+
+      // top left: a kotatsu with mikans, cup ramen and energy cans; the mangaka sleeps half under the quilt in a hachimaki, a snot bubble swells
+      const kx = 42, ky = 68;
+      shadow(kx - 34, ky + 38, 116);
+      R(kx - 5, ky + 6, 82, 32, K); R(kx - 4, ky + 7, 80, 30, '#d9734a');
+      for (let i = 0; i < 10; i++) for (let j = 0; j < 4; j++) if ((i + j) % 2) { R(kx - 2 + i * 8, ky + 10 + j * 7, 3, 3, '#e8956a'); R(kx - 1 + i * 8, ky + 11 + j * 7, 1, 1, '#fbe3d6'); }
+      R(kx - 4, ky + 7, 80, 2, '#e8956a');
+      R(kx - 2, ky, 76, 8, K); R(kx - 1, ky + 1, 74, 6, '#a8693a'); R(kx - 1, ky + 1, 74, 1, '#c98a52');
+      R(kx + 3, ky - 5, 15, 5, K); R(kx + 4, ky - 4, 13, 3, '#5b7fa8'); R(kx + 4, ky - 4, 13, 1, '#8fb8ea');
+      for (const [a, b] of [[7, -7], [11, -9], [15, -7]]) { disc(kx + a, ky + b, 3, K); disc(kx + a, ky + b, 2, '#f29a3a'); R(kx + a - 1, ky + b - 1, 1, 1, '#ffc27a'); R(kx + a, ky + b - 3, 2, 1, '#57b04f'); }
+      R(kx + 23, ky - 12, 11, 12, K); R(kx + 24, ky - 11, 9, 10, '#f4efe6'); R(kx + 24, ky - 8, 9, 3, '#c8323c'); R(kx + 23, ky - 13, 11, 2, K);
+      R(kx + 30, ky - 19, 1, 7, '#c98a52'); R(kx + 32, ky - 18, 1, 6, '#c98a52');
+      for (let k = 0; k < 3; k++) { const s = (t * 0.6 + k / 3) % 1; R(kx + 25 + k * 3 + Math.round(Math.sin(s * 7 + k) * 2), ky - 16 - s * 14, 1, 3, `rgba(255,255,255,${(0.9 * (1 - s)).toFixed(2)})`); }
+      R(kx + 38, ky - 9, 5, 9, K); R(kx + 39, ky - 8, 3, 7, '#57b04f'); R(kx + 39, ky - 6, 3, 2, '#f2c94c');
+      R(kx + 44, ky - 4, 8, 4, K); R(kx + 45, ky - 3, 6, 2, '#3fb6b0'); R(kx + 46, ky - 3, 1, 2, '#9a9aa8');
+      R(kx + 54, ky - 8, 18, 8, K); for (let k = 0; k < 3; k++) R(kx + 55, ky - 7 + k * 2, 16, 1, k ? '#e9e2d0' : '#fbf8f0'); R(kx + 57, ky - 11, 13, 4, K); R(kx + 58, ky - 10, 11, 3, '#fbf8f0'); R(kx + 60, ky - 10, 3, 2, '#9a9aa8');
+      // the mangaka: the hoodie goes under the quilt, the head lies on the tatami
+      R(kx - 20, ky + 20, 17, 15, K); R(kx - 19, ky + 21, 16, 13, '#5b6fa8'); R(kx - 19, ky + 25, 16, 2, '#7f94c8');
+      R(kx - 24, ky + 31, 10, 4, K); R(kx - 23, ky + 32, 8, 2, '#f2c7a5'); R(kx - 34, ky + 33, 9, 1, K); R(kx - 26, ky + 33, 2, 1, '#9aa3ad');
+      const hx = kx - 33, hy = ky + 16;
+      R(hx, hy, 14, 14, K); R(hx + 1, hy + 2, 12, 11, '#f2c7a5');
+      R(hx - 1, hy - 3, 16, 7, K); R(hx - 3, hy - 1, 4, 3, K); R(hx + 3, hy - 6, 3, 4, K); R(hx + 9, hy - 5, 3, 3, K); R(hx + 13, hy - 4, 3, 3, K);
+      R(hx + 1, hy + 4, 12, 2, '#f4efe6'); R(hx + 6, hy + 4, 2, 2, '#c8323c');
+      R(hx + 3, hy + 8, 3, 1, K); R(hx + 8, hy + 8, 3, 1, K); R(hx + 6, hy + 11, 2, 1, '#9c4a4a'); R(hx + 2, hy + 10, 1, 1, '#e8968a'); R(hx + 11, hy + 10, 1, 1, '#e8968a');
+      const bub = (t * 0.7) % 1, br = 1 + Math.floor(bub * 4);
+      if (bub < 0.9) { disc(hx + 5, hy + 12 + br, br, K); disc(hx + 5, hy + 12 + br, br - 1, '#cfe8f2'); R(hx + 4, hy + 11 + br, 1, 1, '#ffffff'); }
+      else for (const [a, b] of [[-3, 0], [3, -1], [0, 3], [5, 3]]) R(hx + 5 + a, hy + 15 + b, 1, 1, '#cfe8f2');
+      for (let k = 0; k < 3; k++) {
+        const s = (t * 0.5 + k / 3) % 1, zx = hx + 14 + Math.round(s * 12), zy = ky - 4 - Math.round(s * 18), c = `rgba(43,33,53,${(1 - s).toFixed(2)})`;
+        R(zx, zy, 3, 1, c); R(zx + 1, zy + 1, 1, 1, c); R(zx, zy + 2, 3, 1, c);
+      }
+
+      // top right: a shelf of tankobon with a waving maneki-neko on top, a red phone on a stool rings with the deadline
+      const sx = W - 72, sy = 56;
+      shadow(sx, sy + 62, 66);
+      R(sx, sy, 66, 63, K); R(sx + 1, sy + 1, 64, 61, '#8a5a32'); R(sx + 1, sy + 1, 2, 61, '#a8693a');
+      const BC = ['#c8323c', '#f2c94c', '#3f7ac2', '#57b04f', '#f4efe6', '#9a6ac2', '#ff8a3a', '#3a3346'];
+      for (let r = 0; r < 3; r++) {
+        const by = sy + 20 + r * 21; R(sx + 1, by, 64, 2, K);
+        for (let xx = sx + 4, k = r * 5; xx < sx + 60; k++) {
+          const w = 4 + (k * 7) % 3, h = 14 + (k * 5) % 5, c = BC[(k * 3 + r) % BC.length];
+          if (r === 1 && k === 9) { for (let d = 0; d < h; d++) R(xx + Math.floor(d / 3), by - 1 - d, w, 1, d ? c : K); xx += w + 6; continue; }
+          R(xx, by - h, w, h, K); R(xx + 1, by - h + 1, w - 2, h - 1, c); R(xx + 1, by - h + 3, w - 2, 1, '#fbf8f0'); xx += w;
+        }
+      }
+      const mx = sx + 40, my = sy - 16, wave = Math.floor(t * 3) % 2;
+      R(mx, my + 6, 15, 10, K); R(mx + 1, my + 7, 13, 8, '#fbf8f0');
+      R(mx + 1, my, 13, 8, K); R(mx + 2, my + 1, 11, 6, '#fbf8f0'); R(mx + 1, my - 2, 3, 3, K); R(mx + 11, my - 2, 3, 3, K); R(mx + 2, my - 1, 1, 1, '#f2a0a8'); R(mx + 12, my - 1, 1, 1, '#f2a0a8');
+      R(mx + 9, my + 1, 3, 2, '#e8954a'); R(mx + 2, my + 9, 3, 3, '#3a3346');
+      R(mx + 4, my + 3, 2, 1, K); R(mx + 9, my + 3, 2, 1, K); R(mx + 7, my + 5, 1, 1, '#e8737a');
+      R(mx + 2, my + 7, 11, 1, '#c8323c'); R(mx + 6, my + 8, 3, 2, '#f2c94c');
+      R(mx + 5, my + 11, 7, 4, K); R(mx + 6, my + 12, 5, 2, '#f2c94c');
+      R(mx - 3, my + 1 + wave * 2, 4, 6, K); R(mx - 2, my + 2 + wave * 2, 2, 4, '#fbf8f0'); R(mx - 2, my + 2 + wave * 2, 2, 1, '#f2a0a8');
+      // the phone: a red rotary set, the handset jumps on its cradle while it rings, the coiled cord hangs off the stool
+      const px = W - 112, py = 90, ring = t % 4 < 1.2, sh = ring ? (Math.floor(t * 20) % 2 ? 1 : -1) : 0, lift = ring ? 2 : 0;
+      shadow(px, py + 30, 30);
+      R(px, py + 12, 30, 4, K); R(px + 1, py + 13, 28, 2, '#a8693a'); R(px + 3, py + 16, 2, 15, K); R(px + 25, py + 16, 2, 15, K); R(px + 4, py + 24, 22, 1, K);
+      for (let k = 0; k < 6; k++) R(px + 26 + (k % 2), py + 14 + k * 2, 2, 1, '#c8323c');
+      R(px + 6 + sh, py + 4, 18, 9, K); R(px + 5 + sh, py + 8, 20, 5, K); R(px + 7 + sh, py + 5, 16, 7, '#d9453f'); R(px + 6 + sh, py + 9, 18, 3, '#d9453f'); R(px + 7 + sh, py + 5, 16, 1, '#ef8a8a');
+      disc(px + 15 + sh, py + 8, 3, K); disc(px + 15 + sh, py + 8, 2, '#f4efe6'); R(px + 15 + sh, py + 8, 1, 1, K);
+      for (const [a, b] of [[-2, -1], [0, -2], [2, -1], [-2, 1]]) R(px + 15 + sh + a, py + 8 + b, 1, 1, '#9aa3ad');
+      R(px + 8 + sh, py + 1 - lift, 14, 3, K); R(px + 9 + sh, py + 2 - lift, 12, 1, '#d9453f');
+      for (const ex of [3, 21]) { R(px + ex + sh, py + 1 - lift, 6, 5, K); R(px + ex + 1 + sh, py + 2 - lift, 4, 3, '#d9453f'); R(px + ex + 1 + sh, py + 2 - lift, 4, 1, '#ef8a8a'); }
+      if (ring) for (const [a, b, w, h] of [[-3, -2, 1, 4], [-5, -1, 1, 2], [33, -2, 1, 4], [35, -1, 1, 2]]) R(px + a, py + b, w, h, K);
+
+      // bottom left: a glowing vending machine, now and then a can drops into the tray
+      const vx = 16, vy = rowY(2.25) + 4, flick = Math.floor(t * 7) % 23 === 0;
+      R(vx - 6, vy + 74, 56, 4, 'rgba(160,210,255,.3)');
+      R(vx, vy, 44, 74, K); R(vx + 1, vy + 1, 42, 72, '#e9eef2'); R(vx + 1, vy + 1, 2, 72, '#ffffff'); R(vx + 41, vy + 1, 2, 72, '#c9d0d6');
+      R(vx + 3, vy + 3, 38, 6, K); R(vx + 4, vy + 4, 36, 4, flick ? '#5b7fa8' : '#8fd3f0'); R(vx + 6, vy + 5, 14, 2, '#ffffff'); R(vx + 24, vy + 5, 14, 2, '#c8323c');
+      R(vx + 3, vy + 11, 28, 34, K); R(vx + 4, vy + 12, 26, 32, flick ? '#3a4a5a' : '#cfeaf6');
+      const CAN = ['#c8323c', '#3f7ac2', '#f2c94c', '#57b04f', '#f4efe6', '#ff8a3a', '#9a6ac2', '#3a3346'];
+      for (let r = 0; r < 3; r++) for (let c = 0; c < 4; c++) {
+        const cx = vx + 6 + c * 6, cy = vy + 13 + r * 10, col = CAN[(r * 4 + c * 3) % CAN.length];
+        R(cx, cy, 4, 7, K); R(cx + 1, cy + 1, 2, 5, col); R(cx + 1, cy + 2, 2, 1, '#ffffff');
+        R(cx + 1, cy + 8, 2, 1, (r + c) % 5 ? '#7ee081' : '#ff5040');
+      }
+      R(vx + 33, vy + 12, 8, 24, K); R(vx + 34, vy + 13, 6, 22, '#c9d0d6'); R(vx + 36, vy + 15, 2, 5, K);
+      R(vx + 35, vy + 23, 4, 3, '#1d1629'); R(vx + 35, vy + 24, 1, 1, '#ff5040'); R(vx + 37, vy + 24, 1, 1, '#ff5040'); R(vx + 36, vy + 29, 2, 4, K);
+      R(vx + 5, vy + 52, 34, 14, K); R(vx + 6, vy + 53, 32, 12, '#3a3346');
+      const drop = (t * 0.25) % 1;
+      if (drop > 0.1 && drop < 0.7) { R(vx + 15, vy + 59, 10, 5, K); R(vx + 16, vy + 60, 8, 3, '#c8323c'); R(vx + 17, vy + 60, 6, 1, '#ff8a80'); }
+      R(vx + 6, vy + 53, 32, 4, '#5a5662'); R(vx + 6, vy + 53, 32, 1, '#7a7682');
+
+      // bottom right: a shiba sleeps on a purple zabuton, a cardboard standee of the magical girl heroine, crumpled drafts fly into the bin
+      const dx = 176, dy = rowY(2.25) + 44, br2 = Math.round(Math.sin(t * 2));
+      shadow(dx - 6, dy + 27, 54);
+      R(dx - 6, dy + 14, 52, 13, K); R(dx - 5, dy + 15, 50, 11, '#7a3a8a'); R(dx - 5, dy + 15, 50, 2, '#9a5aaa'); for (const a of [-7, 45]) { R(dx + a, dy + 13, 2, 2, '#f2c94c'); R(dx + a, dy + 26, 2, 2, '#f2c94c'); }
+      ell(dx + 22, dy + 12 - br2, 17, 9 + br2, K); ell(dx + 22, dy + 12 - br2, 16, 8 + br2, '#d98a3a'); ell(dx + 20, dy + 16, 10, 4, '#fbf3e4');
+      ell(dx + 33, dy + 6 - br2, 6, 5, K); ell(dx + 33, dy + 6 - br2, 5, 4, '#d98a3a'); ell(dx + 33, dy + 6 - br2, 2, 2, '#fbf3e4');
+      ell(dx + 6, dy + 14, 9, 7, K); ell(dx + 6, dy + 14, 8, 6, '#d98a3a'); ell(dx + 3, dy + 17, 5, 3, '#fbf3e4');
+      const twitch = Math.floor(t * 0.8) % 5 === 0 ? 1 : 0;
+      R(dx + 2, dy + 4 + twitch, 4, 5, K); R(dx + 3, dy + 5 + twitch, 2, 3, '#d98a3a'); R(dx + 9, dy + 4, 4, 5, K); R(dx + 10, dy + 5, 2, 3, '#d98a3a');
+      R(dx + 3, dy + 13, 3, 1, K); R(dx + 9, dy + 13, 3, 1, K); R(dx - 2, dy + 16, 3, 2, K); R(dx + 1, dy + 19, 2, 1, K);
+      // the standee: pink twin tails, huge blue eyes, a star wand that sparkles
+      const gx0 = 226, gy0 = rowY(2.25) + 8;
+      shadow(gx0, gy0 + 64, 34);
+      R(gx0 + 3, gy0 + 60, 28, 4, K); R(gx0 + 4, gy0 + 61, 26, 2, '#c9a26a');
+      ell(gx0 + 4, gy0 + 24, 5, 14, K); ell(gx0 + 30, gy0 + 24, 5, 14, K); ell(gx0 + 4, gy0 + 24, 4, 13, '#f58bb8'); ell(gx0 + 30, gy0 + 24, 4, 13, '#f58bb8');
+      ell(gx0 + 17, gy0 + 13, 13, 12, K); ell(gx0 + 17, gy0 + 13, 12, 11, '#f58bb8');
+      R(gx0 + 8, gy0 + 12, 18, 14, K); R(gx0 + 9, gy0 + 13, 16, 12, '#fbe3d6'); R(gx0 + 9, gy0 + 12, 16, 3, '#f58bb8'); R(gx0 + 12, gy0 + 15, 3, 1, '#f58bb8');
+      for (const ex of [10, 19]) { R(gx0 + ex, gy0 + 16, 5, 6, K); R(gx0 + ex + 1, gy0 + 17, 3, 4, '#3f7ac2'); R(gx0 + ex + 1, gy0 + 19, 3, 2, '#8fd3f0'); R(gx0 + ex + 1, gy0 + 17, 1, 1, '#ffffff'); }
+      R(gx0 + 16, gy0 + 23, 2, 1, '#e8737a'); R(gx0 + 10, gy0 + 22, 2, 1, '#f2a0a8'); R(gx0 + 23, gy0 + 22, 2, 1, '#f2a0a8');
+      R(gx0 + 14, gy0 + 1, 6, 3, K); R(gx0 + 15, gy0 + 2, 4, 1, '#c8323c');
+      for (let d = 0; d < 20; d++) { const w = 3 + Math.floor(d * 0.6); R(gx0 + 17 - w, gy0 + 26 + d, w * 2 + 1, 1, d === 19 ? K : d % 6 === 5 ? '#f58bb8' : '#fbf8f0'); R(gx0 + 16 - w, gy0 + 26 + d, 1, 1, K); R(gx0 + 18 + w, gy0 + 26 + d, 1, 1, K); }
+      R(gx0 + 15, gy0 + 26, 5, 3, '#c8323c'); R(gx0 + 12, gy0 + 46, 3, 14, K); R(gx0 + 20, gy0 + 46, 3, 14, K); R(gx0 + 13, gy0 + 46, 1, 10, '#fbe3d6'); R(gx0 + 21, gy0 + 46, 1, 10, '#fbe3d6');
+      R(gx0 + 29, gy0 + 22, 1, 18, K); R(gx0 + 27, gy0 + 15, 5, 5, K); R(gx0 + 28, gy0 + 14, 3, 7, K); R(gx0 + 28, gy0 + 16, 3, 3, '#f2c94c'); R(gx0 + 29, gy0 + 15, 1, 5, '#f2c94c');
+      for (let k = 0; k < 4; k++) { const a = t * 3 + k * Math.PI / 2, sx2 = gx0 + 29 + Math.round(Math.cos(a) * 7), sy2 = gy0 + 17 + Math.round(Math.sin(a) * 7); R(sx2, sy2 - 1, 1, 3, k % 2 ? '#ffd54a' : '#fff1b0'); R(sx2 - 1, sy2, 3, 1, k % 2 ? '#ffd54a' : '#fff1b0'); }
+      const pb = (cx, cy, r) => { disc(cx, cy, r + 1, K); disc(cx, cy, r, '#fbf8f0'); R(cx - 1, cy - 1, 2, 1, '#c9c2b4'); R(cx, cy + 1, 1, 1, '#c9c2b4'); };
+      const tb = W - 40, tby = rowY(2.25) + 30;
+      shadow(tb - 2, tby + 40, 30);
+      R(tb, tby + 10, 26, 32, K); R(tb + 1, tby + 11, 24, 30, '#9aa3ad'); R(tb + 1, tby + 11, 3, 30, '#c9d0d6'); for (let k = 0; k < 4; k++) R(tb + 7 + k * 5, tby + 13, 1, 27, '#7f8a94');
+      for (const [a, b, r] of [[6, 6, 4], [14, 4, 4], [21, 7, 3], [10, 0, 3]]) pb(tb + a, tby + b, r);
+      R(tb - 1, tby + 8, 28, 4, K); R(tb, tby + 9, 26, 2, '#c9d0d6');
+      for (const [a, b] of [[-8, 42], [-16, 46], [12, 52]]) pb(tb + a, tby + b, 2);
+      const f = (t * 0.45) % 1, fx = 170 + (tb + 12 - 170) * f, fy = tby - 22 + 20 * f - Math.sin(f * Math.PI) * 26;
+      pb(Math.round(fx), Math.round(fy), 2);
+
+      // sakura petals drift across the tatami
+      for (let k = 0; k < 6; k++) { const px2 = (k * 61 + t * 10) % W, py2 = 40 + (k * 47 + Math.round(Math.sin(t + k) * 6)) % (FL - 50); R(px2, py2, 2, 1, '#f6b8c8'); R(px2 + 1, py2 + 1, 1, 1, '#f19ab2'); }
+    }
+    if (l === 8) {
+      // sealed lab floor: big grey plates with a drain, cola puddles fizz, the side strips hold the lab kit
+      for (let ty = 31; ty < FL; ty += 26) for (let tx = 0; tx < W; tx += 26) { R(tx, ty, 26, 26, '#8fa3ae'); R(tx, ty, 26, 1, '#9eb1bb'); R(tx, ty + 25, 26, 1, '#7e929d'); R(tx + 25, ty, 1, 26, '#7e929d'); }
+      const ell = (cx, cy, rx, ry, col) => { for (let dy = -ry; dy <= ry; dy++) { const w = Math.round(rx * Math.sqrt(1 - (dy / ry) ** 2)); R(cx - w, cy + dy, w * 2 + 1, 1, col); } };
+      const shadow = (x, y, w) => R(x, y, w, 3, 'rgba(30,20,40,.28)');
+      // a live bottle, used for the ones loose on the floor
+      const bottle = (bx, by, dir, blink) => {
+        R(bx - 4, by, 9, 12, K); R(bx - 3, by + 1, 7, 10, '#1d4a9a'); R(bx - 3, by + 4, 7, 3, '#f4efe6'); R(bx - 2, by + 5, 5, 1, '#d9453f');
+        R(bx - 2, by - 4, 5, 4, K); R(bx - 1, by - 3, 3, 3, '#2f5fc4'); R(bx - 2, by - 5, 5, 1, '#d9453f');
+        if (blink) R(bx - 2, by + 2, 4, 1, K); else { R(bx - 2, by + 2, 1, 1, '#ffffff'); R(bx + 1, by + 2, 1, 1, '#ffffff'); }
+        R(bx - 4 + dir, by + 12, 2, 2, K); R(bx + 2 + dir, by + 12, 2, 2, K);
+      };
+      // the drain in the middle of the floor, a puddle of cola creeps out of it and fizzes
+      const dx = Math.round(W / 2), dy = FL - 12;
+      ell(dx, dy, 14, 5, '#7e929d'); ell(dx, dy, 10, 3, '#44505c');
+      for (let k = -2; k <= 2; k++) R(dx + k * 3, dy - 3, 1, 7, '#2a333c');
+      ell(dx - 22, dy - 2, 11, 4, 'rgba(60,35,30,.55)'); for (let k = 0; k < 5; k++) R(dx - 30 + (k * 7 + Math.floor(t * 6)) % 18, dy - 4 - (k % 2), 1, 1, '#c9a26a');
+
+      // left strip: a gas cylinder rack and a tall specimen tube where a bottle floats upside down and waves
+      const gx2 = 6, gy2 = 44;
+      shadow(gx2 - 2, gy2 + 52, 38);
+      R(gx2 - 2, gy2 + 46, 38, 5, K); R(gx2 - 1, gy2 + 47, 36, 3, '#5f6878');
+      for (let k = 0; k < 3; k++) {
+        const cx2 = gx2 + 2 + k * 12, col = ['#3f7ac2', '#d9453f', '#6fbf9a'][k];
+        R(cx2, gy2 + 8, 9, 38, K); R(cx2 + 1, gy2 + 9, 7, 36, col); R(cx2 + 1, gy2 + 9, 2, 36, 'rgba(255,255,255,.35)');
+        R(cx2 + 1, gy2 + 22, 7, 4, '#f4efe6'); R(cx2 + 3, gy2 + 3, 3, 6, K); R(cx2 + 4, gy2 + 4, 1, 5, '#c9d0d6'); R(cx2 + 2, gy2, 5, 4, K); R(cx2 + 3, gy2 + 1, 3, 2, '#9aa3ad');
+      }
+      R(gx2 - 1, gy2 + 16, 38, 2, K); R(gx2, gy2 + 16, 36, 1, '#9aa3ad');
+      const tx2 = 14, ty2 = FL - 92;
+      shadow(tx2 - 10, ty2 + 74, 26);
+      R(tx2 - 10, ty2 + 66, 26, 8, K); R(tx2 - 9, ty2 + 67, 24, 6, '#44505c'); R(tx2 - 9, ty2 + 67, 24, 1, '#6a7580');
+      R(tx2 - 7, ty2, 20, 68, K); R(tx2 - 6, ty2 + 1, 18, 66, '#cfe8f2'); R(tx2 - 6, ty2 + 1, 3, 66, '#eaf6fb');
+      R(tx2 - 6, ty2 + 8, 18, 59, 'rgba(60,140,120,.5)');
+      for (let k = 0; k < 9; k++) R(tx2 - 4 + (k * 5) % 15, ty2 + 62 - ((k * 9 + Math.floor(t * 14)) % 52), 1, 1, '#9fe6c4');
+      const fb = Math.round(Math.sin(t * 1.1) * 3), wv = Math.floor(t * 4) % 2;
+      R(tx2 - 2, ty2 + 26 + fb, 9, 13, K); R(tx2 - 1, ty2 + 27 + fb, 7, 11, '#1d4a9a'); R(tx2 - 1, ty2 + 31 + fb, 7, 3, '#f4efe6'); R(tx2, ty2 + 32 + fb, 5, 1, '#d9453f');
+      R(tx2, ty2 + 39 + fb, 5, 4, K); R(tx2 + 1, ty2 + 39 + fb, 3, 3, '#2f5fc4');
+      R(tx2, ty2 + 29 + fb, 1, 1, '#ffffff'); R(tx2 + 3, ty2 + 29 + fb, 1, 1, '#ffffff'); R(tx2, ty2 + 35 + fb, 3, 1, '#f4efe6');
+      R(tx2 - 5, ty2 + 24 + fb + wv, 3, 2, K); R(tx2 + 6, ty2 + 24 + fb - wv, 3, 2, K);
+      R(tx2 - 9, ty2 - 4, 24, 5, K); R(tx2 - 8, ty2 - 3, 22, 3, '#7f8a94'); R(tx2 - 1, ty2 - 9, 6, 5, K); R(tx2, ty2 - 8, 4, 4, '#5f6878');
+
+      // right strip: a cage of caught bottles, one rattles the bars, a clipboard of escapes and a mop in a bucket
+      const cx3 = W - 40, cy3 = 48;
+      shadow(cx3 - 2, cy3 + 62, 38);
+      R(cx3 - 2, cy3 + 56, 38, 6, K); R(cx3 - 1, cy3 + 57, 36, 4, '#44505c');
+      R(cx3, cy3, 34, 56, K); R(cx3 + 1, cy3 + 1, 32, 54, '#2a333c');
+      for (let k = 0; k < 7; k++) R(cx3 + 2 + k * 5, cy3 + 1, 2, 54, '#8a949e');
+      for (const yy of [cy3 + 1, cy3 + 27, cy3 + 53]) R(cx3 + 1, yy, 32, 2, '#8a949e');
+      const sh3 = Math.floor(t * 9) % 2;
+      bottle(cx3 + 10 + sh3, cy3 + 10, Math.floor(t * 6) % 2, (t % 2.6) < 0.16);
+      bottle(cx3 + 24, cy3 + 36, 1 - sh3, (t % 3.9) < 0.16);
+      R(cx3 + 4, cy3 + 40, 7, 10, K); R(cx3 + 5, cy3 + 41, 5, 8, '#9a3a3a'); R(cx3 + 5, cy3 + 44, 5, 2, '#f4efe6');
+      R(cx3 + 12, cy3 - 6, 10, 7, K); R(cx3 + 13, cy3 - 5, 8, 5, '#f2c94c'); R(cx3 + 15, cy3 - 4, 4, 1, K); R(cx3 + 15, cy3 - 2, 4, 1, K);
+      const px2 = W - 30, py2 = FL - 78;
+      shadow(px2 - 6, py2 + 44, 26);
+      R(px2 - 4, py2, 20, 26, K); R(px2 - 3, py2 + 1, 18, 24, '#e9eef2'); R(px2 - 3, py2 + 1, 18, 4, '#9aa3ad');
+      for (let k = 0; k < 5; k++) { R(px2 - 1, py2 + 8 + k * 4, 11 - (k % 3) * 2, 1, '#7e929d'); R(px2 + 12, py2 + 8 + k * 4, 2, 1, k < 2 ? '#d9453f' : '#7ee081'); }
+      R(px2 + 1, py2 - 3, 8, 4, K); R(px2 + 2, py2 - 2, 6, 2, '#c9d0d6');
+      const bx3 = W - 34, by3 = FL - 40;
+      shadow(bx3 - 2, by3 + 22, 26);
+      R(bx3, by3 + 6, 22, 16, K); R(bx3 + 1, by3 + 7, 20, 14, '#3f7ac2'); R(bx3 + 1, by3 + 7, 20, 2, '#7fb0e8'); R(bx3 + 2, by3 + 9, 18, 2, '#2b1f22');
+      R(bx3 + 12, by3 - 22, 2, 28, K); R(bx3 + 13, by3 - 21, 1, 26, '#c98a52');
+      for (let k = 0; k < 7; k++) R(bx3 + 8 + k * 2, by3 + 2 + (k % 3), 1, 5, '#d8cfc0');
+      // a bottle that got out sneaks along the bottom of the room
+      const esc = (t * 0.22) % 1, ex = Math.round(40 + esc * (W - 110)), ey = FL - 18;
+      bottle(ex, ey, Math.floor(t * 7) % 2, (t % 4.3) < 0.16);
+      for (let k = 0; k < 3; k++) { const s = (esc * 3 + k / 3) % 1; R(ex - 10 - k * 5, ey + 12, 2, 1, `rgba(60,35,30,${(0.4 * (1 - s)).toFixed(2)})`); }
+    }
+    if (l === 9) {
+      // white floor tiles with pale grout; a water cooler on the left, a cabinet of calibration weights on the right
+      for (let ty = 31; ty < FL; ty += 24) for (let tx = 0; tx < W; tx += 24) { R(tx, ty, 24, 24, '#eef2f5'); R(tx, ty, 24, 1, '#ffffff'); R(tx, ty + 23, 24, 1, '#dfe5ea'); R(tx + 23, ty, 1, 24, '#dfe5ea'); }
+      const shadow = (x, y, w) => R(x, y, w, 3, 'rgba(30,20,40,.18)');
+      const wx = Math.round(colX(0) / 2) - 10, wy = rowY(0) + 40;
+      shadow(wx - 2, wy + 62, 24);
+      R(wx, wy + 22, 20, 40, K); R(wx + 1, wy + 23, 18, 38, '#e9eef2'); R(wx + 1, wy + 23, 3, 38, '#ffffff'); R(wx + 4, wy + 34, 12, 6, K); R(wx + 5, wy + 35, 10, 4, '#5f6878');
+      R(wx + 6, wy + 30, 3, 3, '#5aa9e6'); R(wx + 11, wy + 30, 3, 3, '#d9453f');
+      R(wx + 2, wy, 16, 22, K); R(wx + 3, wy + 1, 14, 20, '#bfe6f8'); R(wx + 3, wy + 1, 3, 20, '#e2f4fc'); R(wx + 6, wy - 3, 8, 3, K);
+      const bub = (t * 0.6) % 1; R(wx + 9, wy + 18 - Math.round(bub * 14), 2, 2, '#ffffff');
+      const kx = W - Math.round((W - colX(1) - SW) / 2) - 13, ky = rowY(1) + 6;
+      shadow(kx - 2, ky + 72, 30);
+      R(kx, ky, 26, 72, K); R(kx + 1, ky + 1, 24, 70, '#dfe5ea'); R(kx + 1, ky + 1, 24, 2, '#ffffff');
+      for (let r = 0; r < 4; r++) {
+        const sy = ky + 16 + r * 16; R(kx + 1, sy, 24, 2, '#9aa3ad');
+        for (let k = 0; k < 3; k++) { const h = 4 + ((r + k) % 3) * 2; R(kx + 4 + k * 7, sy - h, 5, h, K); R(kx + 5 + k * 7, sy - h + 1, 3, h - 1, '#c9d0d6'); R(kx + 5 + k * 7, sy - h + 1, 1, h - 1, '#ffffff'); }
+      }
+      R(kx + 8, ky + 4, 10, 6, K); R(kx + 9, ky + 5, 8, 4, Math.floor(t * 2) % 2 ? '#7ee081' : '#3f8a4f');
+    }
     if (l === 3) {
       // coloured light falls through the stained glass onto the floor
       for (let k = 0; k < 6; k++) for (let yy = 31; yy < FL; yy += 2) R(k * 44 - 20 + (yy - 31) * 0.35, yy, 16, 2, VCOL_A[k]);
@@ -2067,35 +3144,38 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     // slots
     const linkedSel = selSlot != null ? linked(l, selSlot) : [], gg = globals(), dblAt = skillOn('arc') ? gg.double : null, allyAt = gg.ally;
     sl.forEach((s, i) => {
-      const x = SX(i), y = SY(i);
-      if (LT.plates) { R(x, y, SW, SH, K); R(x + 1, y + 1, SW - 2, SH - 2, LT.plates[i]); R(x + 1, y + 1, SW - 2, 1, 'rgba(255,255,255,.3)'); for (let k = 0; k < 5; k++) R(x + 6 + k * 14, y + 1 + (k % 2) * 30, 1, 1, 'rgba(255,255,255,.5)'); }
-      else { R(x, y, SW, SH, LT.frame || '#857d72'); R(x + 1, y + 1, SW - 2, SH - 2, LT.plate); }
-      for (const [ax, ay, dx, dy] of [[x + 2, y + 2, 1, 1], [x + SW - 3, y + 2, -1, 1], [x + 2, y + SH - 3, 1, -1], [x + SW - 3, y + SH - 3, -1, -1]]) {
+      const x = SX(i), y = SY(i), ww = SLOT_W(l, i), hh = SLOT_H(l, i), big = ww !== SW || hh !== SH;
+      if (LT.plates) { R(x, y, ww, hh, K); R(x + 1, y + 1, ww - 2, hh - 2, LT.plates[i]); R(x + 1, y + 1, ww - 2, 1, 'rgba(255,255,255,.3)'); for (let k = 0; k < 5; k++) R(x + 6 + k * 14, y + 1 + (k % 2) * 30, 1, 1, 'rgba(255,255,255,.5)'); }
+      else { R(x, y, ww, hh, LT.frame || '#857d72'); R(x + 1, y + 1, ww - 2, hh - 2, LT.plate); }
+      for (const [ax, ay, dx, dy] of [[x + 2, y + 2, 1, 1], [x + ww - 3, y + 2, -1, 1], [x + 2, y + hh - 3, 1, -1], [x + ww - 3, y + hh - 3, -1, -1]]) {
         R(dx > 0 ? ax : ax - 5, ay, 6, 1, '#e9c046'); R(ax, dy > 0 ? ay : ay - 5, 1, 6, '#e9c046');
       }
-      if (!s.machine) { const pc = LT.plates ? 'rgba(255,255,255,.45)' : '#b2a99c'; R(x + SW / 2 - 1, y + SH / 2 - 7, 2, 14, pc); R(x + SW / 2 - 7, y + SH / 2 - 1, 14, 2, pc); }
+      if (!s.machine) { const pc = LT.plates ? 'rgba(255,255,255,.45)' : '#b2a99c'; R(x + ww / 2 - 1, y + hh / 2 - 7, 2, 14, pc); R(x + ww / 2 - 7, y + hh / 2 - 1, 14, 2, pc); }
       else {
-        machine(s.machine, x + 36, y + 18);
-        if ((s.worker || MACH[s.machine].auto || (allyAt && allyAt.l === l && allyAt.i === i)) && s.machine !== 'belt') pile(x + 52, y + 63, 1 + Math.floor((t * 0.3 + i) % 3), LT.item);
+        if (s.machine === 'extract' && hh !== SH) extractor(x, y, hh);
+        else if (s.machine === 'etalon' && ww !== SW) etalon(x, y, ww, hh, slotStats(l, i, gg).etN);
+        else machine(s.machine, x + 36, y + 18);
+        if ((s.worker || MACH[s.machine].auto || (allyAt && allyAt.l === l && allyAt.i === i)) && s.machine !== 'belt' && !big) pile(x + 52, y + 63, 1 + Math.floor((t * 0.3 + i) % 3), LT.item);
         s.upg.forEach((u, k) => { R(x + 4 + k * 5, y + 4, 4, 6, K); R(x + 5 + k * 5, y + 5, 2, 4, RAR_COL[CARDS[u].rar]); });
       }
       if (dblAt && dblAt.l === l && dblAt.i === i && !s.worker) gx.drawImage(SPR.arcDouble, x + 6, y + 40 - Math.floor(t * 2 + i) % 2);
       else if (allyAt && allyAt.l === l && allyAt.i === i && !s.worker) gx.drawImage(SPR.rebelAlly, x + 6, y + 40 - Math.floor(t * 2 + i) % 2);
       const spk = state.run.spark;
       if (spk && spk.l === l && spk.i === i && !state.run.brk && state.run.qT < spk.until) for (let k = 0; k < 4; k++) { const a = t * 6 + k * Math.PI / 2; R(x + 52 + Math.round(Math.cos(a) * 9), y + 34 + Math.round(Math.sin(a) * 9), 2, 2, k % 2 ? '#7fd0f0' : '#e9fff8'); }
-      if (s.worker) {
-        const bob = Math.floor(t * 2 + i) % 2, on = skillOn(s.worker), w = state.workers[s.worker];
-        if (on) for (let k = 0; k < 6; k++) { const a = t * 4 + k * Math.PI / 3; R(x + 17 + Math.round(Math.cos(a) * 13), y + 56 + Math.round(Math.sin(a) * 15), 2, 2, k % 2 ? '#ffd54a' : '#fff1b0'); }
-        gx.drawImage(sprOf(s.worker), x + 6, y + 40 - bob);
+      // a worker stands at the bottom of a tall slot; the etalon takes nobody
+      if (s.worker && s.machine !== 'etalon') {
+        const bob = Math.floor(t * 2 + i) % 2, on = skillOn(s.worker), w = state.workers[s.worker], wy = y + hh - 34;
+        if (on) for (let k = 0; k < 6; k++) { const a = t * 4 + k * Math.PI / 3; R(x + 17 + Math.round(Math.cos(a) * 13), wy + 16 + Math.round(Math.sin(a) * 15), 2, 2, k % 2 ? '#ffd54a' : '#fff1b0'); }
+        gx.drawImage(sprOf(s.worker), x + 6, wy - bob);
         if (w.skill) {
           const f = skillBar(s.worker)[1];
-          R(x + 5, y + 69, 25, 3, K); R(x + 6, y + 70, Math.round(23 * f), 1, on ? '#ffd54a' : '#6fa3b5');
+          R(x + 5, y + hh - 5, 25, 3, K); R(x + 6, y + hh - 4, Math.round(23 * f), 1, on ? '#ffd54a' : '#6fa3b5');
         }
       }
     });
     // highlights
     sl.forEach((s, i) => {
-      const x = SX(i), y = SY(i);
+      const x = SX(i), y = SY(i), ww = SLOT_W(l, i), hh = SLOT_H(l, i);
       let col = null;
       if (mode) {
         const cl = mode.card ? cardLoc(mode.card) : -1;
@@ -2103,14 +3183,16 @@ textarea{height:84px;resize:vertical;word-break:break-all}
         const beltBlock = mode.card && CARDS[mode.card].machine === 'belt' && sl.some(z => z.machine === 'belt');
         if ((mode.kind === 'place' && !s.machine && locOk && !beltBlock) || (mode.kind === 'upgrade' && s.machine && s.machine !== 'belt' && locOk) || (mode.kind === 'equip' && s.worker) || (mode.kind === 'skill' && s.worker && !state.workers[s.worker].skill) || (mode.kind === 'move' && i !== mode.from)) col = `rgba(126,224,129,${pulse})`;
         if (mode.kind === 'move' && i === mode.from) col = '#ffd54a';
-      } else if (selWorker) { if (s.machine && s.machine !== 'belt') col = `rgba(126,224,129,${pulse})`; }
+      } else if (selWorker) { if (s.machine && s.machine !== 'belt' && s.machine !== 'etalon') col = `rgba(126,224,129,${pulse})`; }
       else if (selSlot === i) col = `rgba(255,213,74,${pulse})`;
       else if (linkedSel.includes(i)) col = '#7ee081';
-      else if (selSlot != null) R(x, y, SW, SH, 'rgba(30,22,45,.4)');
-      if (col) border(x, y, SW, SH, col);
+      else if (selSlot != null) R(x, y, ww, hh, 'rgba(30,22,45,.4)');
+      if (col) border(x, y, ww, hh, col);
     });
     if (selSlot != null && !mode && !selWorker) {
       linkedSel.forEach(j => {
+        // the tall and wide slots touch everyone and are highlighted, they need no connectors
+        if ([selSlot, j].some(k => TALL[l] === k || WIDE[l] === k)) return;
         const [ca, ra] = LAYOUTS[l][selSlot], [cb, rb] = LAYOUTS[l][j];
         if (ra === rb) for (let k = Math.min(ca, cb); k < Math.max(ca, cb); k++) { const gx0 = colX(k) + SW, gy0 = rowY(ra) + SH / 2; R(gx0, gy0 - 4, 6, 8, K); R(gx0 + 1, gy0 - 3, 4, 6, '#7ee081'); }
         else { const gx0 = colX(ca) + SW / 2, gy0 = rowY(Math.min(ra, rb)) + SH; R(gx0 - 5, gy0 - 1, 10, 6, K); R(gx0 - 4, gy0, 8, 4, '#7ee081'); }
@@ -2177,12 +3259,14 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const g = globals();
     slotsOf(l).forEach((s, i) => {
       const x = SX(i), y = SY(i);
-      if (!s.machine) { T('ПУСТО', x + SW / 2, y + SH / 2 + 10, 6, '#ece6da', 'center'); return; }
-      T(MACH[s.machine].short, x + SW - 4, y + 4, 6, '#ffffff', 'right');
+      const ww = SLOT_W(l, i), hh = SLOT_H(l, i);
+      if (!s.machine) { T('ПУСТО', x + ww / 2, y + hh / 2 + 10, 6, '#ece6da', 'center'); return; }
+      T(MACH[s.machine].short, x + ww - 4, y + 4, 6, '#ffffff', 'right');
       const st = slotStats(l, i, g);
-      if (s.machine === 'belt') T('+30% ВСЕМ', x + SW - 4, y + 11, 6, '#7ee081', 'right');
-      else if (!s.worker && !(st && st.income > 0)) T('НЕТ РАБОТНИКА', x + SW - 4, y + 11, 6, '#ffb3a6', 'right');
-      else T('+' + fmt(st.income) + '/с', x + SW - 4, y + 11, 6, '#7ee081', 'right');
+      if (s.machine === 'belt') T('+30% ВСЕМ', x + ww - 4, y + 11, 6, '#7ee081', 'right');
+      else if (s.machine === 'etalon' && !(st && st.income > 0)) T('НЕТ СОСЕДЕЙ', x + ww - 4, y + 11, 6, '#ffb3a6', 'right');
+      else if (!s.worker && !(st && st.income > 0)) T('НЕТ РАБОТНИКА', x + ww - 4, y + 11, 6, '#ffb3a6', 'right');
+      else T('+' + fmt(st.income) + '/с', x + ww - 4, y + 11, 6, '#7ee081', 'right');
     });
     if (l === 3 && state.locs[3].unlocked) { T('ГОРН', colX(1) + SW / 2, rowY(1) + SH - 6, 6, '#fff1b0', 'center'); T('+20% СКОР.', colX(1) + SW / 2, rowY(1) + 1, 5, '#ffd76a', 'center'); }
     if (crate) T(crate.kind === 'gold' ? 'ЗОЛОТАЯ' : crate.kind === 'card' ? 'С КАРТОЙ' : 'ПОСЫЛКА', crateX() + 7, FL - 26, 6, crate.kind === 'card' ? '#d9b8ff' : '#fff1b0', 'center');
@@ -2226,7 +3310,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   function toLogical(e) { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) / r.width * W, (e.clientY - r.top) / r.height * H]; }
   function hit(x, y) {
     if (crate && x >= crateX() - 4 && x <= crateX() + 18 && y >= FL - 30 && y <= FL) return { crate: true };
-    for (let i = 0; i < slotsOf(state.cur).length; i++) if (x >= SX(i) && x < SX(i) + SW && y >= SY(i) && y < SY(i) + SH) return { slot: i };
+    for (let i = 0; i < slotsOf(state.cur).length; i++) if (x >= SX(i) && x < SX(i) + SLOT_W(state.cur, i) && y >= SY(i) && y < SY(i) + SLOT_H(state.cur, i)) return { slot: i };
     for (let p = 0; p < lockerPages(); p++) if (x >= PTX(p) - 1 && x < PTX(p) + PTW + 1 && y >= PTY() - 3 && y < PTY() + 15) return { page: p };
     for (let i = lockerPage * NL; i < (lockerPage + 1) * NL; i++) if (x >= LX(i) - 1 && x < LX(i) + LW + 2 && y >= LYi(i) - 4 && y < LYi(i) + 58) return { locker: i };
     return null;
@@ -2271,14 +3355,17 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       else if (mode.kind === 'equip' && s.worker) finish(mode.card, s.worker);
       else if (mode.kind === 'skill' && s.worker) { if (state.workers[s.worker].skill) toast('У этого сотрудника скилл уже открыт'); else finish(mode.card, s.worker); }
       else if (mode.kind === 'move') {
-        if (i !== mode.from) { [sl[mode.from], sl[i]] = [sl[i], sl[mode.from]]; toast('Станок переставлен'); save(); }
+        // the extractor's tall slot and the etalon's wide one are built for them: nothing moves in or out
+        const fixed = k => TALL[l] === k || WIDE[l] === k;
+        if (i !== mode.from && (fixed(i) || fixed(mode.from))) toast('Этот станок встроен в своё место, его не переставить');
+        else if (i !== mode.from) { [sl[mode.from], sl[i]] = [sl[i], sl[mode.from]]; toast('Станок переставлен'); save(); }
         mode = null; selSlot = i; renderSheet();
       }
       return;
     }
     if (selWorker) {
       if (!s.machine) { toast('Сначала поставь сюда станок'); return; }
-      if (s.machine === 'belt') { toast('Конвейеру сотрудник не нужен'); return; }
+      if (s.machine === 'belt' || s.machine === 'etalon') { toast(s.machine === 'belt' ? 'Конвейеру сотрудник не нужен' : 'Эталону сотрудник не нужен, он работает сам'); return; }
       if (onStrike(selWorker)) { toast(`${WORKERS[selWorker].name} бастует до конца проверки`); return; }
       const prev = workerPlace(selWorker), other = s.worker, before = globals().combos;
       s.worker = selWorker;
@@ -2291,22 +3378,37 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   }
 
   /* ================= tabs ================= */
-  const tabs = LOCS.map((_, l) => l).map(l => document.getElementById('tab' + l));
-  tabs.forEach((b, l) => b.addEventListener('click', () => {
+  // ten workshops do not fit in one row: two pages of TPP tabs, flipped by the arrow or a swipe; the page follows the open workshop
+  const TPP = 5, tabs = [0, 1, 2, 3, 4].map(k => document.getElementById('tab' + k)), $tabPg = document.getElementById('tabPg'), $tabNav = document.querySelector('.tabs');
+  let tabPage = 0, tabCur = -1, swiped = false;
+  tabs.forEach((b, k) => b.addEventListener('click', () => {
+    if (swiped) { swiped = false; return; } // the click that ends a swipe only flips the page
+    const l = tabPage * TPP + k;
     if (!state.locs[l].unlocked && state.cur === l && !guest && !state.run.over) { unlockLoc(l); return; }
     if (mode && mode.kind === 'move') mode = null;
     state.cur = l; selSlot = null; renderSheet(); renderTabs();
   }));
+  const flipTabs = () => { tabPage = 1 - tabPage; renderTabs(); };
+  $tabPg.addEventListener('click', flipTabs);
+  let swipeX = null;
+  $tabNav.addEventListener('pointerdown', e => { swipeX = e.clientX; swiped = false; });
+  $tabNav.addEventListener('pointerup', e => { if (swipeX != null && Math.abs(e.clientX - swipeX) > 40 && (e.clientX < swipeX) === (tabPage === 0)) { flipTabs(); swiped = true; } swipeX = null; });
   function renderTabs() {
-    tabs.forEach((b, l) => {
-      const L = state.locs[l];
+    if (state.cur !== tabCur) { tabCur = state.cur; tabPage = Math.floor(state.cur / TPP); }
+    const pg = tabPage ? '‹' : '›';
+    if ($tabPg.dataset.p !== String(tabPage)) { $tabPg.dataset.p = tabPage; $tabPg.innerHTML = `${pg}<small>${tabPage + 1}/2</small>`; }
+    tabs.forEach((b, k) => {
+      const l = tabPage * TPP + k, L = state.locs[l];
       b.setAttribute('aria-pressed', String(state.cur === l));
       b.classList.toggle('locked', !L.unlocked);
       b.classList.toggle('ready', !L.unlocked && state.money >= LOCS[l].cost);
-      const txt = L.unlocked ? `Цех ${l + 1}\n${LOCS[l].name}` : `Цех ${l + 1} · ${fmt(LOCS[l].cost)}\n${LOCS[l].name}`;
+      const nm = LOCS[l].tab || LOCS[l].name, txt = L.unlocked ? `Цех ${l + 1}\n${nm}` : `Цех ${l + 1} · ${fmt(LOCS[l].cost)}\n${nm}`;
       if (b.textContent !== txt) b.textContent = txt;
     });
   }
+
+  // goods of workshops 6–10 for the counter line, shown once their workshop is open
+  const NEW_GOODS = [['pizza', 'пиццы'], ['pigeons', 'голубей'], ['manga', 'томов'], ['bottles', 'бутылок'], ['calib', 'калибровок']];
 
   /* ================= sheet ================= */
   const body = document.getElementById('sheetBody');
@@ -2372,9 +3474,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   }
   function idleHTML() {
     const g = globals();
-    const combos = g.combos.map(k => ({ night: '<span class="chip" style="--rc:var(--r3)">Ночная смена ×1,5</span>', maids: `<span class="chip" style="--rc:var(--r3)">Дуэт горничных: цех ${g.maidsLoc + 1} ×2</span>`, green: '<span class="chip" style="--rc:var(--r2)">Зелёная сила ×1,5</span>', family: `<span class="chip" style="--rc:var(--r3)">Семейный подряд${g.familyLoc >= 0 ? `: цех ${g.familyLoc + 1} ×2` : ''}</span>`, post: '<span class="chip" style="--rc:var(--r3)">Почтовый день: посылки ×2</span>', cozy: '<span class="chip" style="--rc:var(--r1)">Уютно: сила ×1,5</span>', case: '<span class="chip" style="--rc:var(--r2)">Дело закрыто</span>', robot: '<span class="chip" style="--rc:var(--r2)">Робот кормит улиток</span>', morning: '<span class="chip" style="--rc:var(--r1)">Утро после</span>', tape: '<span class="chip" style="--rc:var(--r1)">Скотч и клей</span>', lawn: '<span class="chip" style="--rc:var(--r1)">Оборона газона</span>', epidemic: '<span class="chip" style="--rc:var(--r2)">Эпидемия</span>', rising: `<span class="chip" style="--rc:var(--r3)">Восстание из мёртвых${state.run.rose ? ': использовано' : ''}</span>`, scarf: '<span class="chip" style="--rc:var(--r2)">Тёплый шарф</span>', feat: '<span class="chip" style="--rc:var(--r1)">Сам с собой фит</span>' })[k]).join('') + (state.run.subs ? `<span class="chip" style="--rc:var(--r3)">Подписка: +${pct(state.run.subs)} дохода</span>` : '');
+    const combos = g.combos.map(k => ({ night: '<span class="chip" style="--rc:var(--r3)">Ночная смена ×1,5</span>', maids: `<span class="chip" style="--rc:var(--r3)">Дуэт горничных: цех ${g.maidsLoc + 1} ×2</span>`, green: '<span class="chip" style="--rc:var(--r2)">Зелёная сила ×1,5</span>', family: `<span class="chip" style="--rc:var(--r3)">Семейный подряд${g.familyLoc >= 0 ? `: цех ${g.familyLoc + 1} ×2` : ''}</span>`, post: '<span class="chip" style="--rc:var(--r3)">Почтовый день: посылки ×2</span>', cozy: '<span class="chip" style="--rc:var(--r1)">Уютно: сила ×1,5</span>', case: '<span class="chip" style="--rc:var(--r2)">Дело закрыто</span>', robot: '<span class="chip" style="--rc:var(--r2)">Робот кормит улиток</span>', morning: '<span class="chip" style="--rc:var(--r1)">Утро после</span>', tape: '<span class="chip" style="--rc:var(--r1)">Скотч и клей</span>', lawn: '<span class="chip" style="--rc:var(--r1)">Оборона газона</span>', epidemic: '<span class="chip" style="--rc:var(--r2)">Эпидемия</span>', rising: `<span class="chip" style="--rc:var(--r3)">Восстание из мёртвых${state.run.rose ? ': использовано' : ''}</span>`, scarf: '<span class="chip" style="--rc:var(--r2)">Тёплый шарф</span>', feat: '<span class="chip" style="--rc:var(--r1)">Сам с собой фит</span>', same: '<span class="chip" style="--rc:var(--r2)">Это одно и то же ×2</span>' })[k]).join('') + (state.run.subs ? `<span class="chip" style="--rc:var(--r3)">Подписка: +${pct(state.run.subs)} дохода</span>` : '');
     if (guest) return `<h2>Завод: ${esc(guest.n)}</h2><p class="muted">Это снимок чужого завода: можно нажимать на станки и сотрудников и смотреть, как всё устроено.</p><h3>Рекорды</h3>${recordsHTML(guest.r, guest.a.length, meta.records)}`;
-    return `<h2>Цех ${state.cur + 1} · ${LOCS[state.cur].name}</h2><p class="muted">Нажми на шкафчик, а потом на станок, чтобы поставить туда сотрудника. Каждый сотрудник один на весь завод. Соседние станки усиливают друг друга, соседи по шкафчику дружат.</p>${combos ? `<h3>Активные комбо</h3><div class="row">${combos}</div>` : ''}<p class="muted">Досок: <b id="live-planks">0</b> · кирпичей: <b id="live-bricks">0</b> · гвоздей: <b id="live-nails">0</b> · стекла: <b id="live-glass">0</b> · пуфиков: <b id="live-poufs">0</b></p>`;
+    return `<h2>Цех ${state.cur + 1} · ${LOCS[state.cur].name}</h2><p class="muted">Нажми на шкафчик, а потом на станок, чтобы поставить туда сотрудника. Каждый сотрудник один на весь завод. Соседние станки усиливают друг друга, соседи по шкафчику дружат.</p>${combos ? `<h3>Активные комбо</h3><div class="row">${combos}</div>` : ''}<p class="muted">Досок: <b id="live-planks">0</b> · кирпичей: <b id="live-bricks">0</b> · гвоздей: <b id="live-nails">0</b> · стекла: <b id="live-glass">0</b> · пуфиков: <b id="live-poufs">0</b>${NEW_GOODS.filter((_, k) => state.locs[5 + k].unlocked).map(([id, word]) => ` · ${word}: <b id="live-${id}">0</b>`).join('')}</p>`;
   }
   function slotHTML(i) {
     const l = state.cur, s = slotsOf(l)[i];
@@ -2404,7 +3506,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const sets = Object.keys(TAGS).map(tg => { const n = g.tc[tg] || 0, p = Math.floor(n / 2); return `<dt class="${p ? 'on' : ''}">${tg}: ${n}</dt><dd>${TAGS[tg]}. Комплектов: ${p}</dd>`; }).join('');
     const night = g.combos.includes('night');
     const owned = Object.keys(counts).map(id => chip(id).replace('</span>', counts[id] > 1 ? ` ×${counts[id]}</span>` : '</span>')).join('') || '<span class="muted">Пока нет карт</span>';
-    return `<h2>Колода</h2><h3>Комплекты по тегам</h3><dl class="sets">${sets}</dl><h3>Комбо</h3><dl class="sets"><dt class="${night ? 'on' : ''}">Ночная смена</dt><dd>Крепкий кофе + Конвейер + Бродяга: доход ×1,5</dd><dt class="${g.sawWorking && anySlot(s => s.machine === 'kiln') ? 'on' : ''}">Растопка</dt><dd>Пилорама работает в цеху 1: печи в цеху 2 +25% скорости</dd><dt class="${g.kilnWorking && anySlot(s => s.machine === 'wire') ? 'on' : ''}">Закалка</dt><dd>Печь работает в цеху 2: проволока в цеху 3 +20% к цене</dd><dt class="${g.maidsLoc >= 0 ? 'on' : ''}">Дуэт горничных</dt><dd>V1 и V2 на соседних станках: доход их цеха ×2</dd><dt class="${g.green ? 'on' : ''}">Зелёная сила</dt><dd>Пришелец и Хаба на соседних станках: сила обоих ×1,5</dd><dt class="${g.combos.includes('family') ? 'on' : ''}">Семейный подряд</dt><dd>Хаба, Кастомка и Батя: соседям по станку из этой тройки +20% силы, все трое в одном цеху: доход цеха ×2</dd><dt class="${g.tumblerWorking && anySlot(s => s.machine === 'vitrage') ? 'on' : ''}">Рамы на гвоздях</dt><dd>Барабан работает в цеху 3: витражи в цеху 4 +20% к цене</dd><dt class="${g.cozy ? 'on' : ''}">Уютно</dt><dd>Швейная машинка и набивочный автомат работают: сила обоих сотрудников ×1,5</dd><dt class="${g.dryerWorking && state.locs[4].unlocked ? 'on' : ''}">Каркас</dt><dd>Сушилка работает в цеху 1: пуфики +20% к цене</dd><dt class="${g.vitrageWorking && anySlot(s => s.machine === 'stuff') ? 'on' : ''}">Стеклянные ножки</dt><dd>Витраж работает в цеху 4: набивка +20% скорости</dd><dt class="${g.caseClosed ? 'on' : ''}">Дело закрыто</dt><dd>Кролик-детектив рядом с Главной мразью цеха: мразь не крысит, у кролика сила ×1,5</dd><dt class="${g.combos.includes('robot') ? 'on' : ''}">Робот кормит улиток</dt><dd>Рука помощи + Зубастые улитки: в цеху с Рукой помощи минус улиток не действует</dd><dt class="${g.combos.includes('post') ? 'on' : ''}">Почтовый день</dt><dd>Почтальон + Курьер + Подписка: монеты в посылках ×2</dd><dt class="${g.combos.includes('morning') ? 'on' : ''}">Утро после</dt><dd>Сушняк и Газява у одного сотрудника: минус Сушняка снят, скорость ещё ×1,3</dd><dt class="${g.tape ? 'on' : ''}">Скотч и клей</dt><dd>Скотч братан + Супер клей: сотрудник у станка с клеем дружит со всеми соседями по станкам</dd><dt class="${g.lawn ? 'on' : ''}">Оборона газона</dt><dd>Подсолнух и Мухобойка на соседних станках: солнышки вдвое чаще, у Мухобойки сила ×1,5</dd><dt class="${g.epidemic ? 'on' : ''}">Эпидемия</dt><dd>Зомбачка и Могильщик на соседних станках: каждые 20 с смены укушен ещё один работник её цеха</dd><dt class="${g.rising ? 'on' : ''}">Восстание из мёртвых</dt><dd>Призрак вторника, Зомбачка и Могильщик в одном цеху: раз за забег квота, набранная хотя бы на 70%, засчитывается${state.run.rose ? ' (уже использовано)' : ''}</dd><dt class="${g.scarf ? 'on' : ''}">Тёплый шарф</dt><dd>Йети и Медаедь на соседних станках: шарф Йети готов с начала смены (+25% силы соседям), у Медаедя сила ×1,5</dd><dt class="${g.feat ? 'on' : ''}">Сам с собой фит</dt><dd>code10 и code80 на соседних станках: сила обоих ×1,5</dd></dl><h3>Твои карты</h3><div class="row">${owned}</div><div class="row"><button class="btn" type="button" data-act="back">Назад</button></div>`;
+    return `<h2>Колода</h2><h3>Комплекты по тегам</h3><dl class="sets">${sets}</dl><h3>Комбо</h3><dl class="sets"><dt class="${night ? 'on' : ''}">Ночная смена</dt><dd>Крепкий кофе + Конвейер + Бродяга: доход ×1,5</dd><dt class="${g.sawWorking && anySlot(s => s.machine === 'kiln') ? 'on' : ''}">Растопка</dt><dd>Пилорама работает в цеху 1: печи в цеху 2 +25% скорости</dd><dt class="${g.kilnWorking && anySlot(s => s.machine === 'wire') ? 'on' : ''}">Закалка</dt><dd>Печь работает в цеху 2: проволока в цеху 3 +20% к цене</dd><dt class="${g.maidsLoc >= 0 ? 'on' : ''}">Дуэт горничных</dt><dd>V1 и V2 на соседних станках: доход их цеха ×2</dd><dt class="${g.green ? 'on' : ''}">Зелёная сила</dt><dd>Пришелец и Хаба на соседних станках: сила обоих ×1,5</dd><dt class="${g.combos.includes('family') ? 'on' : ''}">Семейный подряд</dt><dd>Хаба, Кастомка и Батя: соседям по станку из этой тройки +20% силы, все трое в одном цеху: доход цеха ×2</dd><dt class="${g.tumblerWorking && anySlot(s => s.machine === 'vitrage') ? 'on' : ''}">Рамы на гвоздях</dt><dd>Барабан работает в цеху 3: витражи в цеху 4 +20% к цене</dd><dt class="${g.cozy ? 'on' : ''}">Уютно</dt><dd>Швейная машинка и набивочный автомат работают: сила обоих сотрудников ×1,5</dd><dt class="${g.dryerWorking && state.locs[4].unlocked ? 'on' : ''}">Каркас</dt><dd>Сушилка работает в цеху 1: пуфики +20% к цене</dd><dt class="${g.vitrageWorking && anySlot(s => s.machine === 'stuff') ? 'on' : ''}">Стеклянные ножки</dt><dd>Витраж работает в цеху 4: набивка +20% скорости</dd><dt class="${g.caseClosed ? 'on' : ''}">Дело закрыто</dt><dd>Кролик-детектив рядом с Главной мразью цеха: мразь не крысит, у кролика сила ×1,5</dd><dt class="${g.combos.includes('robot') ? 'on' : ''}">Робот кормит улиток</dt><dd>Рука помощи + Зубастые улитки: в цеху с Рукой помощи минус улиток не действует</dd><dt class="${g.combos.includes('post') ? 'on' : ''}">Почтовый день</dt><dd>Почтальон + Курьер + Подписка: монеты в посылках ×2</dd><dt class="${g.combos.includes('morning') ? 'on' : ''}">Утро после</dt><dd>Сушняк и Газява у одного сотрудника: минус Сушняка снят, скорость ещё ×1,3</dd><dt class="${g.tape ? 'on' : ''}">Скотч и клей</dt><dd>Скотч братан + Супер клей: сотрудник у станка с клеем дружит со всеми соседями по станкам</dd><dt class="${g.lawn ? 'on' : ''}">Оборона газона</dt><dd>Подсолнух и Мухобойка на соседних станках: солнышки вдвое чаще, у Мухобойки сила ×1,5</dd><dt class="${g.epidemic ? 'on' : ''}">Эпидемия</dt><dd>Зомбачка и Могильщик на соседних станках: каждые 20 с смены укушен ещё один работник её цеха</dd><dt class="${g.rising ? 'on' : ''}">Восстание из мёртвых</dt><dd>Призрак вторника, Зомбачка и Могильщик в одном цеху: раз за забег квота, набранная хотя бы на 70%, засчитывается${state.run.rose ? ' (уже использовано)' : ''}</dd><dt class="${g.scarf ? 'on' : ''}">Тёплый шарф</dt><dd>Йети и Медаедь на соседних станках: шарф Йети готов с начала смены (+25% силы соседям), у Медаедя сила ×1,5</dd><dt class="${g.feat ? 'on' : ''}">Сам с собой фит</dt><dd>code10 и code80 на соседних станках: сила обоих ×1,5</dd><dt class="${g.same ? 'on' : ''}">Это одно и то же</dt><dd>Унитаз и аэрогриль на соседних станках цеха 10: сила обоих сотрудников ×2</dd></dl><h3>Твои карты</h3><div class="row">${owned}</div><div class="row"><button class="btn" type="button" data-act="back">Назад</button></div>`;
   }
   const mmss = sec => `${Math.floor(sec / 60)}:${String(Math.floor(sec % 60)).padStart(2, '0')}`;
   // two columns when comparing with a friend: theirs first, ours second
@@ -2448,9 +3550,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     let bytes = Uint8Array.from(atob(m[2]), ch => ch.charCodeAt(0));
     if (m[1] === '1') bytes = await pipe(bytes, new DecompressionStream('deflate-raw'));
     // a code from the previous build is brought up to date like a save
-    const d = JSON.parse(new TextDecoder().decode(bytes)), st = d.s && d.s.v >= 9 && d.s.v <= 12 ? migrate(d.s) : d.s;
+    const d = JSON.parse(new TextDecoder().decode(bytes)), st = d.s && d.s.v >= 9 && d.s.v <= 13 ? migrate(d.s) : d.s;
     // a friend's code is drawn with our code, so only known ids may pass
-    const ok = st && st.v === 13 && st.run && (!st.run.stolen || CARDS[st.run.stolen]) && Array.isArray(st.locs) && st.locs.length === LOCS.length && st.locs.every((L, l) => Array.isArray(L.slots) && L.slots.length === LAYOUTS[l].length && L.slots.every(z => (!z.machine || MACH[z.machine]) && (!z.worker || WORKERS[z.worker]) && Array.isArray(z.upg) && z.upg.every(u => CARDS[u])))
+    const ok = st && st.v === 14 && st.run && (!st.run.stolen || CARDS[st.run.stolen]) && Array.isArray(st.locs) && st.locs.length === LOCS.length && st.locs.every((L, l) => Array.isArray(L.slots) && L.slots.length === LAYOUTS[l].length && L.slots.every(z => (!z.machine || MACH[z.machine]) && (!z.worker || WORKERS[z.worker]) && Array.isArray(z.upg) && z.upg.every(u => CARDS[u])))
       && Array.isArray(st.cards) && st.cards.every(id => CARDS[id]) && Object.keys(WORKERS).every(id => st.workers[id] && st.workers[id].equip.every(e => CARDS[e]))
       && Array.isArray(st.lockers) && st.lockers.every(id => WORKERS[id]) && d.r && Array.isArray(d.a);
     if (!ok) throw new Error('bad state');
@@ -2480,6 +3582,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     }
     if (selWorker) { const ws = workerStats(selWorker, g); set('live-power', fmt(ws.power)); set('live-speed', fmt(ws.speed)); set('live-luck', pct(ws.luck)); }
     set('live-planks', fmt(state.planks)); set('live-bricks', fmt(state.bricks)); set('live-nails', fmt(state.nails || 0)); set('live-glass', fmt(state.glass || 0)); set('live-poufs', fmt(state.poufs || 0));
+    NEW_GOODS.forEach(([id]) => set('live-' + id, fmt(state[id] || 0)));
   }
   document.querySelector('.sheet').addEventListener('click', e => {
     const b = e.target.closest('[data-act]');
