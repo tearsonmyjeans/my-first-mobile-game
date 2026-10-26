@@ -534,9 +534,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     m_tumbler: { name: 'Галтовочный барабан', type: 'machine', machine: 'tumbler', tag: 'Станки', rar: 1, desc: 'Гвоздь стоит 25. Медленный, зато блестит.' },
     s_zinc: { name: 'Оцинковка', type: 'mupg', loc: 2, tag: 'Улучшения', rar: 0, eff: { value: 1.5 }, desc: 'Гвозди с этого станка: цена +50%.' },
     u_nails: { name: 'Ремонт по всей стране', type: 'global', tag: 'Улучшения', rar: 1, loc: 2, eff: { nailPrice: 1.6 }, desc: 'Гвозди: цена +60%.' },
-    u_power: { name: 'Тренажёр в подсобке', type: 'global', tag: 'Сотрудники', rar: 0, eff: { power: 1.3 }, desc: 'Все сотрудники: сила +30%.' },
+    u_power: { name: 'Тренажёр в подсобке', type: 'global', tag: 'Сотрудники', rar: 0, eff: { power: 1.2 }, desc: 'Все сотрудники: сила +20%.' },
     u_speed: { name: 'Перекур отменён', type: 'global', tag: 'Сотрудники', rar: 0, eff: { speed: 1.3 }, desc: 'Все сотрудники: скорость +30%.' },
-    u_price: { name: 'Реклама на радио', type: 'global', tag: 'Улучшения', rar: 1, eff: { price: 1.3 }, desc: 'Всё, что делает завод: цена +30%.' },
+    u_price: { name: 'Реклама на радио', type: 'global', tag: 'Улучшения', rar: 2, eff: { price: 1.3 }, desc: 'Всё, что делает завод: цена +30%.' },
     u_bricks: { name: 'Стройка по соседству', type: 'global', tag: 'Улучшения', rar: 1, loc: 1, eff: { brickPrice: 1.6 }, desc: 'Кирпичи: цена +60%.' },
     e_coffee: { name: 'Крепкий кофе', type: 'equip', tag: 'Экипировка', rar: 1, eff: { speed: 1.3 }, desc: 'Скорость +30%. Мистер Жопосранчик с кофе работает в полную силу.' },
     e_helmet: { name: 'Каска', type: 'equip', tag: 'Экипировка', rar: 0, eff: { power: 1.4 }, desc: 'Сила +40%.' },
@@ -567,16 +567,16 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     w_sunflower: { name: 'Новый сотрудник', type: 'worker', worker: 'sunflower', tag: 'Сотрудники', rar: 1, desc: 'Приходит Подсолнух ГВ2. Роняет солнышки с монетами.' },
     w_flytrap: { name: 'Новый сотрудник', type: 'worker', worker: 'flytrap', tag: 'Сотрудники', rar: 1, desc: 'Приходит Мухобойка. Сильная, ест улиток и не даёт мрази крысить.' },
     w_tuesday: { name: 'Новый сотрудник', type: 'worker', worker: 'tuesday', tag: 'Сотрудники', rar: 1, desc: 'Приходит Призрак вторника. В чётных сменах сильнее, в нечётных слабее.' },
-    w_honeybear: { name: 'Новый сотрудник', type: 'worker', worker: 'honeybear', tag: 'Сотрудники', rar: 2, loc: 3, desc: 'Приходит Медаедь. Очень сильный, сотрудницам рядом +15% силы.' },
+    w_honeybear: { name: 'Новый сотрудник', type: 'worker', worker: 'honeybear', tag: 'Сотрудники', rar: 2, afterQ: 15, desc: 'Приходит Медаедь. Очень сильный, сотрудницам рядом +15% силы.' },
     w_nurse: { name: 'Новый сотрудник', type: 'worker', worker: 'nurse', tag: 'Сотрудники', rar: 2, loc: 3, desc: 'Приходит Медсестра. Не видит соседей, зато сила ×1,25.' },
     w_zombie: { name: 'Новый сотрудник', type: 'worker', worker: 'zombie', tag: 'Сотрудники', rar: 2, loc: 3, desc: 'Приходит Зомбачка. Кусает соседа: он сильнее, но медленнее.' },
-    w_arc: { name: 'Новый сотрудник', type: 'worker', worker: 'arc', tag: 'Сотрудники', rar: 3, loc: 4, desc: 'Приходит Арк Варден. Пускает искры, в скилле зовёт двойника.' },
+    w_arc: { name: 'Новый сотрудник', type: 'worker', worker: 'arc', tag: 'Сотрудники', rar: 3, loc: 7, desc: 'Приходит Арк Варден. Пускает искры, в скилле зовёт двойника.' },
     w_nemu: { name: 'Новый сотрудник', type: 'worker', worker: 'nemu', tag: 'Сотрудники', rar: 2, loc: 4, desc: 'Приходит Нему Куроцучи. Не слабее лучшего из соседей.' },
-    w_raven: { name: 'Новый сотрудник', type: 'worker', worker: 'raven', tag: 'Сотрудники', rar: 2, loc: 3, desc: 'Приходит Рейвен. Медитирует одна: удача +25%.' },
+    w_raven: { name: 'Новый сотрудник', type: 'worker', worker: 'raven', tag: 'Сотрудники', rar: 2, afterQ: 15, desc: 'Приходит Рейвен. Медитирует одна: удача +25%.' },
     w_fairy: { name: 'Новый сотрудник', type: 'worker', worker: 'fairy', tag: 'Сотрудники', rar: 1, desc: 'Прилетает фея эльфийка. Товар соседей +15% к цене.' },
     w_pirate: { name: 'Новый сотрудник', type: 'worker', worker: 'pirate', tag: 'Сотрудники', rar: 1, desc: 'Приходит Пират. С ним посылки богаче.' },
-    w_beekeeper: { name: 'Новый сотрудник', type: 'worker', worker: 'beekeeper', tag: 'Сотрудники', rar: 1, desc: 'Приходит Пчеловод. Пчёлы ускоряют соседей.' },
-    w_kisa: { name: 'Новый сотрудник', type: 'worker', worker: 'kisa', tag: 'Сотрудники', rar: 1, desc: 'Приходит Суперкиса. Каждая 10-я штука — картина.' },
+    w_beekeeper: { name: 'Новый сотрудник', type: 'worker', worker: 'beekeeper', tag: 'Сотрудники', rar: 1, loc: 6, desc: 'Приходит Пчеловод. Пчёлы ускоряют соседей.' },
+    w_kisa: { name: 'Новый сотрудник', type: 'worker', worker: 'kisa', tag: 'Сотрудники', rar: 1, loc: 6, desc: 'Приходит Суперкиса. Каждая 10-я штука — картина.' },
     w_toyalien: { name: 'Новый сотрудник', type: 'worker', worker: 'toyalien', tag: 'Сотрудники', rar: 1, desc: 'Приходит Трёхглазик. Клешня выбирает избранного.' },
     w_code10: { name: 'Новый сотрудник', type: 'worker', worker: 'code10', tag: 'Сотрудники', rar: 1, desc: 'Приходит code10. Сильный, с едой ещё сильнее.' },
     w_code80: { name: 'Новый сотрудник', type: 'worker', worker: 'code80', tag: 'Сотрудники', rar: 1, desc: 'Приходит code80. Быстрый, с едой ещё быстрее.' },
@@ -585,9 +585,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     w_moth: { name: 'Новый сотрудник', type: 'worker', worker: 'moth', tag: 'Сотрудники', rar: 2, loc: 3, desc: 'Прилетает Молька. Экипировка на ней сильнее.' },
     w_gastriter: { name: 'Новый сотрудник', type: 'worker', worker: 'gastriter', tag: 'Сотрудники', rar: 2, loc: 3, desc: 'Приезжает Гастритер. Еда на нём действует вдвое.' },
     w_palach: { name: 'Новый сотрудник', type: 'worker', worker: 'palach', tag: 'Сотрудники', rar: 2, loc: 3, desc: 'Приходит Палач. Слабый сосед боится и работает лучше.' },
-    w_thief: { name: 'Новый сотрудник', type: 'worker', worker: 'thief', tag: 'Сотрудники', rar: 2, loc: 3, desc: 'Приходит Воришка. Таскает экипировку у соседей по шкафчику.' },
+    w_thief: { name: 'Новый сотрудник', type: 'worker', worker: 'thief', tag: 'Сотрудники', rar: 2, afterQ: 10, desc: 'Приходит Воришка. Таскает экипировку у соседей по шкафчику.' },
     w_raccoons: { name: 'Новый сотрудник', type: 'worker', worker: 'raccoons', tag: 'Сотрудники', rar: 2, loc: 3, desc: 'Приходят три енота в плаще. Иногда три штуки вместо одной.' },
-    w_rebel: { name: 'Новый сотрудник', type: 'worker', worker: 'rebel', tag: 'Сотрудники', rar: 3, loc: 4, desc: 'Приходит Рейбел. Союзник работает на соседнем станке.' },
+    w_rebel: { name: 'Новый сотрудник', type: 'worker', worker: 'rebel', tag: 'Сотрудники', rar: 3, loc: 7, desc: 'Приходит Рейбел. Союзник работает на соседнем станке.' },
     w_squanch: { name: 'Новый сотрудник', type: 'worker', worker: 'squanch', tag: 'Сотрудники', rar: 2, loc: 5, desc: 'Приходит Сквонч. Каждую смену сквончит себе силу, скорость или удачу.' },
     w_spaghetti: { name: 'Новый сотрудник', type: 'worker', worker: 'spaghetti', tag: 'Сотрудники', rar: 3, loc: 5, desc: 'Приходит Макаронный монстр. Щупальца работают на соседних пустых станках.' },
     w_kaneki: { name: 'Новый сотрудник', type: 'worker', worker: 'kaneki', tag: 'Сотрудники', rar: 3, loc: 4, desc: 'Приходит Канеки. С кофе очень силён, еду не ест.' },
@@ -618,16 +618,16 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     s_grease: { name: 'Смазка', type: 'mupg', tag: 'Улучшения', rar: 1, eff: { rate: 1.4, value: 1.2 }, desc: 'Любой станок: скорость +40% и цена +20%.' },
     // cards with a minus: the minus line is shown in red on the card
     u_overtime: { name: 'Сверхурочка', type: 'global', tag: 'Сотрудники', rar: 3, eff: { speed: 1.8, power: 0.8 }, desc: 'Все сотрудники: скорость +80%.', minus: 'Сила всех ×0,8.' },
-    u_credit: { name: 'Кредит', type: 'global', tag: 'Улучшения', rar: 1, eff: {}, desc: 'Сразу монеты в размере прошлой квоты.', minus: 'Квота следующей смены ×1,25.' },
+    u_credit: { name: 'Кредит', type: 'global', tag: 'Улучшения', rar: 1, eff: {}, desc: 'Сразу монеты: половина прошлой квоты.', minus: 'Следующая смена — проверка, а если она уже проверка, квота ×1,25.' },
     e_loner: { name: 'Одиночка', type: 'equip', tag: 'Экипировка', rar: 2, eff: {}, desc: 'Сила ×2,2, если на соседних станках никто не работает.', minus: 'С работающими соседями сила ×0,6.' },
-    u_hack: { name: 'Халтура', type: 'global', tag: 'Улучшения', rar: 2, eff: { price: 1.6 }, desc: 'Всё, что делает завод: цена +60%.', minus: 'Удачи нет: двойных штук не будет.' },
+    u_hack: { name: 'Халтура', type: 'mupg', tag: 'Улучшения', rar: 2, eff: { value: 2 }, desc: 'Любой станок: цена +100%.', minus: 'У этого станка удачи нет: двойных штук не будет.' },
     // legendary engines grow with the run
     u_radio: { name: 'Сарафанное радио', type: 'global', tag: 'Улучшения', rar: 3, eff: {}, desc: 'Цена всего ×1,1 за каждую квоту, пройденную после этой карты.' },
     u_piggy: { name: 'Копилка', type: 'global', tag: 'Улучшения', rar: 3, eff: {}, desc: 'В каждом перерыве приносит 10% монет, заработанных за смену.' },
     s_gold: { name: 'Золотой станок', type: 'mupg', tag: 'Улучшения', rar: 3, eff: {}, desc: 'Любой станок: цена ×1,1 за каждую карту «Станки» в колоде.' },
     u_union: { name: 'Профсоюз', type: 'global', tag: 'Сотрудники', rar: 3, eff: {}, desc: 'Все сотрудники: сила +5% за каждого сотрудника на заводе.' },
     s_hand: { name: 'Рука помощи', type: 'mupg', tag: 'Улучшения', rar: 2, eff: {}, desc: 'Действует на весь цех: самый высокий множитель каждого станка (сила, скорость или цена) ещё ×1,3.' },
-    u_snails: { name: 'Зубастые улитки', type: 'global', tag: 'Улучшения', rar: 1, eff: { price: 1.4 }, desc: 'Всё, что делает завод: цена +40%.', minus: 'Скорость всех ×0,85.' },
+    u_snails: { name: 'Зубастые улитки', type: 'mupg', tag: 'Улучшения', rar: 1, eff: { value: 1.7 }, desc: 'Любой станок: цена +70%.', minus: 'Скорость станка ×0,85.' },
     // crate cards pay a share of the quota, so each comes once per run: copies would outgrow the quotas
     u_postman: { name: 'Почтальон', type: 'global', tag: 'Улучшения', rar: 0, once: true, eff: {}, desc: 'Посылки приходят вдвое чаще.' },
     u_courier: { name: 'Курьер', type: 'global', tag: 'Улучшения', rar: 1, once: true, eff: {}, desc: 'Если посылку не открыть, курьер откроет её сам за половину монет.' },
@@ -640,7 +640,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     // timed: the card changes during a shift, so its gain is judged by the shift's mean income
     e_soda: { name: 'Газява', type: 'equip', tag: 'Экипировка', rar: 0, food: true, timed: true, eff: {}, desc: 'Скорость +50% первые 30 с смены, потом выдыхается до +10%.' },
     s_plumbus: { name: 'Плюмбус', type: 'mupg', tag: 'Улучшения', rar: 2, eff: { value: 1.3 }, desc: 'Любой станок: цена +30%. Для комплектов считается картой всех тегов сразу.' },
-    u_squanch: { name: 'Посквончим', type: 'global', tag: 'Улучшения', rar: 1, eff: {}, desc: 'В начале каждой смены случайно сила, скорость или цена всех ×1,3.' },
+    u_squanch: { name: 'Посквончим', type: 'mupg', tag: 'Улучшения', rar: 1, eff: {}, desc: 'Сотрудник этого станка и соседних по стороне: в начале каждой смены случайно сила, скорость или цена ×1,4.' },
     u_hyper: { name: 'Гипер гипергамия', type: 'global', tag: 'Сотрудники', rar: 3, eff: {}, desc: 'Сила каждой сотрудницы как у самого сильного сотрудника завода, и ещё ×1,2.' },
     u_triad: { name: 'Друн триад', type: 'global', tag: 'Сотрудники', rar: 2, eff: {}, desc: 'Трое в соседних шкафчиках подряд в одном ряду: у всех троих сила и скорость ×1,3.' },
     s_veins: { name: 'Капилляры', type: 'mupg', tag: 'Улучшения', rar: 2, eff: {}, desc: 'Любой станок: связан и с соседями по диагоналям.' },
@@ -673,7 +673,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     x_power: { name: 'Мастер силы', type: 'global', tag: 'Мастерство', rar: 3, mastery: true, eff: { power: 1.5 }, desc: 'Все сотрудники: сила ×1,5.' },
     x_luck: { name: 'Мастер удачи', type: 'global', tag: 'Мастерство', rar: 3, mastery: true, eff: {}, desc: 'Все сотрудники: удача +20%.' },
     x_skill: { name: 'Мастер скиллов', type: 'global', tag: 'Мастерство', rar: 3, mastery: true, eff: {}, desc: 'Все скиллы действуют в 1,5 раза дольше.' },
-    x_wholesale: { name: 'Оптовик', type: 'global', tag: 'Мастерство', rar: 3, mastery: true, eff: {}, desc: 'С каждой витрины можно купить 2 карты.' },
+    x_wholesale: { name: 'Оптовик', type: 'global', tag: 'Мастерство', rar: 3, mastery: true, eff: {}, desc: 'С первой витрины перерыва и с первой обновлённой можно купить по 2 карты.' },
     x_logistics: { name: 'Мастер логистики', type: 'global', tag: 'Мастерство', rar: 3, mastery: true, eff: {}, desc: 'Золотые посылки приходят в 3 раза чаще.' }
   };
   const TYPE_LABEL = { machine: 'Станок', worker: 'Сотрудник', global: 'Для всех', equip: 'Экипировка', mupg: 'На станок', skill: 'Скилл' };
@@ -935,7 +935,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   const NEW_LOC_SLOTS = [4, 5, 6, 4, 5];
   const emptySlots = n => Array.from({ length: n }, () => ({ machine: null, worker: null, upg: [], acc: 0, kiss: 0 }));
   const fresh = () => ({
-    v: 15, money: 0, xp: 0, level: 1, planks: 0, bricks: 0, nails: 0, glass: 0, poufs: 0, pizza: 0, pigeons: 0, manga: 0, bottles: 0, calib: 0, earned: 0, cur: 0,
+    v: 16, money: 0, xp: 0, level: 1, planks: 0, bricks: 0, nails: 0, glass: 0, poufs: 0, pizza: 0, pigeons: 0, manga: 0, bottles: 0, calib: 0, earned: 0, cur: 0,
     locs: [
       { unlocked: true, slots: [{ machine: null, worker: null, upg: [], acc: 0, kiss: 0 }, { machine: 'saw', worker: 'crow', upg: [], acc: 0, kiss: 0 }, { machine: null, worker: null, upg: [], acc: 0, kiss: 0 }] },
       { unlocked: false, slots: emptySlots(4) },
@@ -958,7 +958,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     // workers bitten by the zombie girl, the Tuesday ghost's rollback done; rose: «Rising from the dead» used up this run
     // ongoing: shifts in a row the manga studio worked, mangaOn: it worked this shift;
     // claw: the worker the toy alien's claw chose this shift, warned: the neighbour the executioner warned, stolen: the equipment card the thief copied
-    run: { t: 0, q: 1, qT: 0, qEarned: 0, brk: true, shop: [], rule: null, sq: [], sqK: null, nova: false, spark: null, bitten: [], rolled: false, rose: false, claw: null, warned: null, stolen: null, over: false, rep: 0, passed: [], hired: 0, skills: 0, bestRate: 0, opened: [0, null, null, null, null, null, null, null, null, null], ongoing: 0, mangaOn: false }
+    run: { t: 0, q: 1, qT: 0, qEarned: 0, brk: true, shop: [], rule: null, sq: {}, sqK: null, nova: false, spark: null, bitten: [], rolled: false, rose: false, claw: null, warned: null, stolen: null, over: false, rep: 0, passed: [], hired: 0, skills: 0, bestRate: 0, opened: [0, null, null, null, null, null, null, null, null, null], ongoing: 0, mangaOn: false }
   });
   const NEW_WORKERS = ['sunflower', 'flytrap', 'honeybear', 'arc', 'nurse', 'nemu', 'tuesday', 'zombie', 'digger', 'kaneki', 'raven'];
   const NEW_WORKERS_13 = ['fairy', 'pirate', 'beekeeper', 'kisa', 'toyalien', 'code10', 'code80', 'yeti', 'slime', 'moth', 'gastriter', 'palach', 'thief', 'raccoons', 'rebel'];
@@ -1046,7 +1046,15 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       if (s.run) s.run.sqK = null;
       s.v = 15;
     }
-    return s.v === 8 || s.v === 15 ? s : null;
+    if (s.v === 15) {
+      // build 16: Toothy snails, Posquonchim and Hack became machine cards; a copy taken before goes on the first working machine with room,
+      // or leaves the deck; Posquonchim's rolls are kept per machine
+      const room = () => { for (const L of s.locs) if (L.unlocked) for (const z of L.slots) if (z.machine && z.machine !== 'belt' && z.worker && z.upg.length < 3) return z; return null; };
+      s.cards.filter(id => ['u_snails', 'u_squanch', 'u_hack'].includes(id)).forEach(id => { const z = room(); if (z) z.upg.push(id); else s.cards.splice(s.cards.indexOf(id), 1); });
+      if (s.run) s.run.sq = {};
+      s.v = 16;
+    }
+    return s.v === 8 || s.v === 16 ? s : null;
   }
   // meta lives across runs: reputation, its unlocks, achievements and records
   const META_KEY = 'pixel-factory-meta-v1';
@@ -1088,7 +1096,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   // xp/shop/quota grow geometrically, every levelEvery-th level gives a card, crates come every crate..2×crate seconds;
   // a crate holds a share of the quota: plain crateQ, gold crateGoldQ (chance crateGold), or a card pick (chance crateCard);
   // crates pay at most crateCap of the quota a shift, so they help but never carry it; from shift skillCoinQ skills are opened only by cards
-  const BAL = { tempo: 2, xp0: 15, xpK: 2.2, levelEvery: 3, shopQ: 0.3, shopRoll: 1, rarPrice: [0.6, 1, 1.6, 2.4], masteryEvery: 9, crate: 40, crateQ: [0.02, 0.06], crateGoldQ: [0.08, 0.12], crateGold: 0.1, crateCard: 0.05, quotaT: 90, quota0: 210, quotaK: 1.9, quotaA: 1.06, crateCap: 0.3, skillCoinQ: 10, cap: 3, trio: 3, add: true };
+  const BAL = { tempo: 2, xp0: 15, xpK: 2.2, levelEvery: 3, shopQ: 0.3, shopRoll: 1, rarPrice: [0.6, 1, 1.6, 2.4], masteryEvery: 9, crate: 40, crateQ: [0.02, 0.06], crateGoldQ: [0.08, 0.12], crateGold: 0.1, crateCard: 0.05, quotaT: 90, quota0: 210, quotaK: 1.9, quotaA: 1.06, crateCap: 0.3, skillCoinQ: 10, cap: 3, trio: 4, add: true, sq: 1.4 };
   const need = l => Math.round(BAL.xp0 * Math.pow(BAL.xpK, l - 1));
   // the showcase is priced off the quota just passed, so a runaway income cannot make cards free
   const shopBase = () => quotaTarget(Math.max(1, state.run.q - 1)) * BAL.shopQ;
@@ -1102,9 +1110,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     return Math.round(quotaTarget(Math.max(1, state.run.q - 1)) * (cd ? SKILL_RAR[cd.rar] : 0.5) * Math.pow(1.5, n));
   }
   const skillLocked = () => state.run.q >= BAL.skillCoinQ;
-  const rollShop = () => rollOffer().slice(0, 3).map(id => ({ id, bought: false }));
-  // one purchase per showcase: after it the showcase locks until it is refreshed, and every refresh in a break costs twice the last
-  const shopRollCost = () => Math.round(shopBase() * BAL.shopRoll / (hasUnlock('reroll') ? 2 : 1) * Math.pow(2, state.run.shopRolls || 0));
+  const rollShop = () => markCredit(rollOffer().slice(0, 3)).map(id => ({ id, bought: false }));
+  // one purchase per showcase: after it the showcase locks until it is refreshed; every refresh in a break costs one base price more than the last, like a reroll in Balatro
+  const shopRollCost = () => Math.round(shopBase() * BAL.shopRoll / (hasUnlock('reroll') ? 2 : 1) * (1 + (state.run.shopRolls || 0)));
   function rollNewShop() {
     const rc = shopRollCost();
     if (!state.run.brk || state.run.shopClosed || state.money < rc) return false;
@@ -1116,7 +1124,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const it = (state.run.shop || [])[i];
     if (!state.run.brk || state.run.shopLocked || !it || it.bought || !eligible(it.id) || state.money < cardPrice(it.id)) return false;
     state.money -= cardPrice(it.id); it.bought = true; state.shopBuys++;
-    if (state.run.shop.filter(x => x.bought).length >= (state.cards.includes('x_wholesale') ? 2 : 1)) state.run.shopLocked = true;
+    // Wholesaler: two cards from the break's first showcase and from its first refresh, one from the later ones
+    if (state.run.shop.filter(x => x.bought).length >= (state.cards.includes('x_wholesale') && (state.run.shopRolls || 0) < 2 ? 2 : 1)) state.run.shopLocked = true;
     state.offers.unshift({ src: 'shop', ids: [it.id] });
     return true;
   }
@@ -1139,9 +1148,14 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     }
     const pz = workerPlace('zombie');
     if (pz && !rule('sanepid')) { const nb = neigh(pz.l, pz.i).map(j => slotsOf(pz.l)[j].worker).filter(Boolean); if (nb.length) run.bitten.push(nb[Math.floor(Math.random() * nb.length)]); }
-    // Posquonchim: every copy squanches power, speed or price of everyone for the shift
-    run.sq = Array.from({ length: sqRolls() }, () => SQ_KINDS[Math.floor(Math.random() * 3)]);
-    if (run.sq.length) toast(`Посквончим: ${run.sq.map(k => SKIN_KINDS[k === 'price' ? 'value' : k]).join(' и ')} всех ×1,3`);
+    // Posquonchim: every copy squanches power, speed or price of its machine and the side neighbours for the shift
+    run.sq = {};
+    const sqAll = [];
+    state.locs.forEach((L, l) => { if (L.unlocked) L.slots.forEach((z, i) => {
+      const n = z.upg.filter(u => u === 'u_squanch').length * sqRolls();
+      if (n) sqAll.push(...(run.sq[l + ':' + i] = Array.from({ length: n }, () => SQ_KINDS[Math.floor(Math.random() * 3)])));
+    }); });
+    if (sqAll.length) toast(`Посквончим: ${sqAll.map(k => SKIN_KINDS[k === 'price' ? 'value' : k]).join(', ')} ×${fmt(BAL.sq)} у станка и соседей`);
     // Squanch squanches one of his own stats for the shift
     run.sqK = state.workers.squanch.unlocked ? SQK[Math.floor(Math.random() * 3)] : null;
     if (run.sqK) toast(`Сквонч! ${SQK_TXT[run.sqK]}`);
@@ -1149,7 +1163,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   }
   // quotas speed up: quota q grows quotaK × quotaA^(q−2) times over the previous one, so a stack of multipliers still hits a wall
   const quotaTarget = q => Math.round(BAL.quota0 * Math.pow(BAL.quotaK, q - 1) * Math.pow(BAL.quotaA, (q - 1) * (q - 2) / 2));
-  // the quota actually asked this shift: every Credit taken for it makes it ×1,25
+  // the quota actually asked this shift: every Credit taken when it is a check already makes it ×1,25
   // the first shift is half as long, so its quota is half too
   const curQuota = () => quotaTarget(state.run.q) * Math.pow(1.25, (state.run.credit || {})[state.run.q] || 0) / (state.run.q === 1 ? 2 : 1);
   // the first shift is half as long
@@ -1159,7 +1173,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   const newCrate = () => BAL.crate * (1 + Math.random());
   const cardN = id => state.cards.filter(x => x === id).length;
   // every copy of Posquonchim rolls twice while Squanch is on the factory
-  const sqRolls = () => cardN('u_squanch') * (state.workers.squanch.unlocked ? 2 : 1);
+  const sqRolls = () => state.workers.squanch.unlocked ? 2 : 1;
   // how fast the crate timer runs: Postman doubles it, a working Rabbit detective (or a Shadow copying him) adds 25%, every working machine of the pigeon roof 15%
   const crateFreq = g => Math.pow(2, cardN('u_postman') - cardN('u_snailpost')) * (workerPlace('rabbit') || Object.values(g.shadow).includes('rabbit') ? 1.25 : 1) * (1 + 0.15 * g.pigeonPost);
   // a working Pirate makes crates ×1,5 richer and lifts their limit ×1,5
@@ -1299,9 +1313,6 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     state.cards.forEach(id => { if (id === 'u_union') g.powerX *= 1 + 0.05 * crew; });
     // Overtime's minus is kept apart, so Mirror armour can shake it off
     g.minusPower = Math.pow(0.8, cardN('u_overtime'));
-    // Posquonchim: this shift's rolls; a copy not rolled yet (in a break) counts at its mean, ×1,3 spread over the three
-    const sq = state.run.sq || [];
-    for (let k = 0; k < sqRolls(); k++) { if (sq[k]) g[sq[k] + 'X'] *= 1.3; else SQ_KINDS.forEach(kd => { g[kd + 'X'] *= Math.pow(1.3, 1 / 3); }); }
     // Zorya's dawn doubles prices for the first 20 s of a shift, the Fat toad swells 3% every 10 s; Waffle day doubles every 5th shift
     const sT = shiftT();
     if (sT != null && sT < 20) g.priceX *= Math.pow(2, cardN('u_zorya'));
@@ -1319,9 +1330,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (g.tape) g.combos.push('tape');
     if (crewIds.some(id => hasEq(id, 'e_thirst') && hasEq(id, 'e_soda'))) g.combos.push('morning');
     g.luck = state.cards.includes('x_luck') ? 0.2 : 0;
-    g.snails = state.cards.filter(id => id === 'u_snails').length;
-    if (g.snails && anySlot(s => s.upg.includes('s_hand'))) g.combos.push('robot');
-    g.noLuck = state.cards.includes('u_hack');
+    // Robot feeds the snails: Toothy snails and a Helping hand in one workshop
+    if (state.locs.some(L => L.unlocked && L.slots.some(s => s.upg.includes('u_snails')) && L.slots.some(s => s.upg.includes('s_hand')))) g.combos.push('robot');
     if (state.cards.includes('e_coffee') && !rule('sanepid') && !rule('blackout') && anySlot(s => s.machine === 'belt') && state.workers.tramp.unlocked) { g.combos.push('night'); g.income *= 1.5; }
     // Post day: Postman, Courier and Subscription double the coins in crates; Subscription grows with every opened crate
     if (['u_postman', 'u_courier', 'u_sub'].every(id => state.cards.includes(id))) g.combos.push('post');
@@ -1468,14 +1478,14 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (id === 'squanch') { const k = state.run.sqK, f = k ? 1 : 1 / 3; if (!k || k === 'power') power *= Math.pow(1.5, f); if (!k || k === 'speed') speed *= Math.pow(1.5, f); if (!k || k === 'luck') lx += 0.15 * f; }
     if (g.trio.has(id)) { const k = Math.pow(1.3, cardN('u_triad')); power *= k; speed *= k; }
     if (g.lunch) power *= 1.1;
-    return { power, speed, luck: g.noLuck && !mirror ? 0 : Math.min(0.9, base.luck + l + g.luck + lx), fb, fr, hasCoffee, mirror, food };
+    return { power, speed, luck: Math.min(0.9, base.luck + l + g.luck + lx), fb, fr, hasCoffee, mirror, food };
   }
   function workerPlace(id) {
     for (let l = 0; l < state.locs.length; l++) { const i = slotsOf(l).findIndex(s => s.worker === id); if (i >= 0) return { l, i }; }
     return null;
   }
   // Super glue: the other cards of its machine work on the neighbouring machines too, but not the ones about links or the whole workshop
-  const GLUE_SKIP = ['s_glue', 's_hand', 's_banner', 's_veins', 's_queen'];
+  const GLUE_SKIP = ['s_glue', 's_hand', 's_banner', 's_veins', 's_queen', 'u_squanch'];
   function glued(l, i) {
     const sl = slotsOf(l), out = [];
     neigh(l, i).forEach(j => { if (sl[j].machine && sl[j].upg.includes('s_glue')) sl[j].upg.forEach(u => { if (!GLUE_SKIP.includes(u)) out.push(u); }); });
@@ -1498,6 +1508,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const stuck = W === 'slime' ? neigh(l, i).flatMap(j => sl[j].machine ? sl[j].upg.filter(u => !GLUE_SKIP.includes(u)) : []) : [];
     const own = [...s.upg, ...glued(l, i)], allUps = [...own, ...stuck], ups = W === 'kaneki' ? allUps.filter(u => !CARDS[u].food) : allUps;
     const stickX = skillOn('slime') ? 2 : 1;
+    // Hack on this machine (or reaching it by glue): no luck here
+    const noLuck = ups.includes('u_hack');
     ups.forEach((u, k) => {
       // Mirror armour ignores the speed minus of Sweet and sour sauce; code10 loves Ketchup twice as much
       const ef = CARDS[u].eff, rate = mirror && ef.rate < 1 ? 1 : ef.rate || 1, sticky = W === 'slime' && k >= own.length;
@@ -1543,32 +1555,32 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       // the storm double works with Arc Warden's own power and speed
       const aws = workerStats('arc', g);
       B = WORKERS.arc.power; skM.speed = 1; power = aws.power; speed = aws.speed;
-      luck = spark ? 1 : g.noLuck ? 0 : Math.min(0.9, aws.luck + lb);
+      luck = spark ? 1 : noLuck ? 0 : Math.min(0.9, aws.luck + lb);
       notes.push(`Двойник Арка Вардена: сила ${fmt(power)}, скорость ${fmt(speed)}`);
     } else if (ally && skillOn('rebel')) {
       // Sacrifice: Rebel's ally works with her own power, speed and luck
       const rws = workerStats('rebel', g);
       B = WORKERS.rebel.power; skM.speed = 1; power = rws.power; speed = rws.speed;
-      luck = spark ? 1 : g.noLuck ? 0 : Math.min(0.9, rws.luck + lb);
+      luck = spark ? 1 : noLuck ? 0 : Math.min(0.9, rws.luck + lb);
       notes.push(`Союзник Рейбел, «${SKILLS.rebel.name}»: сила ${fmt(power)}, скорость ${fmt(speed)}`);
     } else if (ally) {
       // Rebel's ally works like a plain worker: global cards reach it, perks and equipment do not
       B = 0.6; skM.speed = 1;
       power = B * (1 + g.power) * g.powerX; speed = (1 + g.speed) * g.speedX;
-      luck = spark ? 1 : g.noLuck ? 0 : Math.min(0.9, g.luck + lb);
+      luck = spark ? 1 : noLuck ? 0 : Math.min(0.9, g.luck + lb);
       notes.push('Союзник Рейбел: сила 0,6, скорость 1,0');
     } else if (noodle) {
       // the tentacles work like a plain worker with 30% of the monster's power and 50% of his speed, in «Bolognese» with all of it
       const full = skillOn('spaghetti');
       B = WORKERS.spaghetti.power * (full ? 1 : 0.3); skM.speed = 1;
       power = B * (1 + g.power) * g.powerX; speed = WORKERS.spaghetti.speed * (full ? 1 : 0.5) * (1 + g.speed) * g.speedX;
-      luck = spark ? 1 : g.noLuck ? 0 : Math.min(0.9, g.luck + lb);
+      luck = spark ? 1 : noLuck ? 0 : Math.min(0.9, g.luck + lb);
       notes.push(`${full ? `Щупальца, «${SKILLS.spaghetti.name}»` : 'Щупальца Макаронного монстра'}: сила ${fmt(power)}, скорость ${fmt(speed)}`);
     } else if (auto) {
       // the brick pump works alone like a plain worker: global cards reach it, perks, equipment and the dog's skill do not
       B = M.auto.power; skM.speed = 1;
       power = B * (1 + g.power) * g.powerX; speed = M.auto.speed * (1 + g.speed) * g.speedX;
-      luck = spark ? 1 : g.noLuck ? 0 : Math.min(0.9, g.luck + lb);
+      luck = spark ? 1 : noLuck ? 0 : Math.min(0.9, g.luck + lb);
       notes.push(s.machine === 'etalon' ? 'Работает сам, сотрудник не нужен' : `Качает сам: сила ${fmt(B)}, скорость ${fmt(M.auto.speed)}`);
     } else {
       ws = workerStats(W, g); power = ws.power; speed = ws.speed;
@@ -1680,18 +1692,27 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       const wand = skillOn('fairy') && nearW('fairy'), dust = skillOn('moth') && nearW('moth') ? 0.3 : 0, bees = nearW('beekeeper') ? 0.05 : 0;
       if (wand) notes.push(`Фея, «${SKILLS.fairy.name}»: каждая штука двойная`);
       if (dust) notes.push(`Молька, «${SKILLS.moth.name}»: удача +30%`);
-      luck = g.noLuck && !mirror ? 0 : (sk.kind === 'luck' && skillOn(W)) || spark || wand ? 1 : Math.min(0.9, ws.luck + lb + (kastNear ? 0.1 : 0) + (linNear ? 0.1 : 0) + meditate + (g.teamLuck[l] || 0) + dust + bees);
+      luck = noLuck && !mirror ? 0 : (sk.kind === 'luck' && skillOn(W)) || spark || wand ? 1 : Math.min(0.9, ws.luck + lb + (kastNear ? 0.1 : 0) + (linNear ? 0.1 : 0) + meditate + (g.teamLuck[l] || 0) + dust + bees);
       extra = has(W, 'jeanne', g) ? 2 : 1;
       if (luck === 1) notes.push(`Скилл «${sk.name}»: каждая штука ×${1 + extra}`);
     }
-    power *= skM.power;
-    let rate = M.rate * BAL.tempo * speed * speedM * skM.speed * (1 + rb) * rX;
-    let value = baseV * power * skM.value * (1 + vb) * vX * (1 + g.price) * g.priceX * g.locX[l];
-    // Toothy snails slow everyone down, but not in a workshop where the Helping hand feeds them, and not Mirror armour
+    // Posquonchim on this machine or a side neighbour: this shift's rolls; a copy not rolled yet (in a break) counts at its mean
+    const sqF = { power: 1, speed: 1, price: 1 }, sqGot = [];
+    [i, ...neigh(l, i)].forEach(j => {
+      const n = sl[j].upg.filter(u => u === 'u_squanch').length * sqRolls(), got = (state.run.sq || {})[l + ':' + j] || [];
+      for (let k = 0; k < n; k++) { if (got[k]) { sqF[got[k]] *= BAL.sq; sqGot.push(got[k]); } else SQ_KINDS.forEach(kd => { sqF[kd] *= Math.pow(BAL.sq, 1 / 3); }); }
+    });
+    if (sqGot.length) notes.push(`Посквончим: ${sqGot.map(k => SKIN_KINDS[k === 'price' ? 'value' : k]).join(', ')} ×${fmt(BAL.sq)}`);
+    else if (sqF.power > 1) notes.push('Посквончим: в смене выпадет сила, скорость или цена');
+    power *= skM.power * sqF.power;
+    let rate = M.rate * BAL.tempo * speed * speedM * skM.speed * (1 + rb) * rX * sqF.speed;
+    let value = baseV * power * skM.value * (1 + vb) * vX * (1 + g.price) * g.priceX * g.locX[l] * sqF.price;
+    // Toothy snails slow their machine down, but not in a workshop where the Helping hand feeds them or the Flytrap eats them, and not Mirror armour
     const hands = slotsOf(l).reduce((n, z) => n + z.upg.filter(u => u === 's_hand').length, 0), flytrap = slotsOf(l).some(z => z.worker === 'flytrap');
-    if (g.snails && !hands && !mirror && !flytrap) { rate *= Math.pow(0.85, g.snails); notes.push('Зубастые улитки: скорость ×0,85'); }
-    if (g.snails && flytrap && !hands) notes.push('Мухобойка ест улиток: улитки не тормозят');
-    if (g.snails && hands) notes.push('Робот кормит улиток: улитки не тормозят');
+    const snails = ups.filter(u => u === 'u_snails').length;
+    if (snails && !hands && !mirror && !flytrap) { rate *= Math.pow(0.85, snails); notes.push('Зубастые улитки: скорость ×0,85'); }
+    if (snails && flytrap && !hands) notes.push('Мухобойка ест улиток: улитки не тормозят');
+    if (snails && hands) notes.push('Робот кормит улиток: улитки не тормозят');
     // the Helping hand lifts the biggest of this machine's multipliers: power, speed or price
     if (hands) {
       const f = { power: power / B, speed: rate / (M.rate * BAL.tempo), price: value / ((baseV || 1) * power) }, top = Object.keys(f).reduce((a, b) => f[b] > f[a] ? b : a), hx = Math.pow(1.3, hands);
@@ -1741,8 +1762,12 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     return true;
   }
   const WEIGHT = [10, 5, 2, 1];
+  // the break a card offer is for: offers rolled during a shift wait for the break after it
+  const brkKey = () => state.run.brk ? state.run.q : state.run.q + 1;
+  // Credit shows up at most once per break, in one offer or showcase
+  const markCredit = ids => { if (ids.includes('u_credit')) state.run.creditB = brkKey(); return ids; };
   function rollOffer() {
-    const pool = Object.keys(CARDS).filter(id => !CARDS[id].mastery && eligible(id)), pick = [];
+    const pool = Object.keys(CARDS).filter(id => !CARDS[id].mastery && eligible(id) && !(id === 'u_credit' && state.run.creditB === brkKey())), pick = [];
     const n = hasUnlock('pick4') ? 4 : 3;
     while (pick.length < n && pick.length < pool.length) {
       const cand = pool.filter(id => !pick.includes(id));
@@ -1757,7 +1782,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   function queueOffer(src) {
     if (src === 'mastery' && !rollMastery().length) src = 'level';
     if (!state.firstOffer) { state.firstOffer = true; state.offers.push({ src, ids: ['m_bench', 'e_coffee', 'u_power'] }); }
-    else state.offers.push({ src, ids: src === 'mastery' ? rollMastery() : rollOffer() });
+    else state.offers.push({ src, ids: src === 'mastery' ? rollMastery() : markCredit(rollOffer()) });
     const last = state.offers[state.offers.length - 1];
     if (src === 'quota' && skillLocked() && eligible('k_skill') && !last.ids.includes('k_skill')) last.ids[0] = 'k_skill';
     if (state.run.sewDue && src !== 'mastery') { addSew(state.offers[state.offers.length - 1]); state.run.sewDue = false; }
@@ -1802,7 +1827,12 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   function applyNow(id) {
     const run = state.run;
     if (id === 'u_radio') (run.radio = run.radio || []).push(passedQ());
-    if (id === 'u_credit') { state.money += quotaTarget(Math.max(1, run.q - 1)); run.credit = run.credit || {}; run.credit[run.q] = (run.credit[run.q] || 0) + 1; }
+    // Credit: half the last quota now, and the inspector comes with the next shift; if it is a check already, its quota is ×1,25
+    if (id === 'u_credit') {
+      state.money += quotaTarget(Math.max(1, run.q - 1)) / 2;
+      if (!run.rule) { rollRule(); toast(`Кредит: следующая смена — проверка «${RULES[run.rule.id].name}»`); }
+      else { run.credit = run.credit || {}; run.credit[run.q] = (run.credit[run.q] || 0) + 1; }
+    }
   }
   // "+X/с" on a card: how much income it adds at its best place right now (a new worker is tried at every machine)
   // income averaged over a shift, for cards that change during it (Gazyava, Zorya, Fat toad)
@@ -2004,6 +2034,16 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     toast(`Могильщик выкопал посылку: ${fmt(crateCoins('plain'))} монет`);
   }
   const crateText = (r, who = 'В посылке') => r.card ? `${who}: внутри карта, выбор в перерыве!` : `${who}: ${fmt(r.gain)} монет${r.gold ? ', золотая!' : '!'}${r.full ? ' Посылок с монетами до конца смены больше не будет' : ''}`;
+  // the next shift becomes a check: a random evil rule that fits the factory
+  function rollRule() {
+    const run = state.run, ids = Object.keys(RULES).filter(id => RULES[id].ok()), id = ids[Math.floor(Math.random() * ids.length)];
+    run.rule = { id };
+    if (id === 'strike') {
+      const placed = strikers(), w = placed[Math.floor(Math.random() * placed.length)], p = workerPlace(w);
+      run.rule.w = w; slotsOf(p.l)[p.i].worker = null;
+      if (selWorker === w) selWorker = null;
+    }
+  }
   function passQuota() {
     const run = state.run, wasRule = run.rule;
     if (wasRule) run.passed.push(wasRule.id);
@@ -2012,17 +2052,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (piggy) { state.money += run.qEarned * 0.1 * piggy; toast(`Копилка: +${fmt(run.qEarned * 0.1 * piggy)} монет`); }
     // the manga ongoing grows with every shift the studio worked and breaks on an idle one
     run.ongoing = run.mangaOn ? (run.ongoing || 0) + 1 : 0; run.mangaOn = false;
-    run.q++; run.qT = 0; run.qEarned = 0; run.qCrate = 0; run.rule = null; run.sq = []; run.nova = false; run.bitten = []; run.spark = null; run.rolled = false; run.claw = null; run.warned = null; run.stolen = null;
+    run.q++; run.qT = 0; run.qEarned = 0; run.qCrate = 0; run.rule = null; run.sq = {}; run.nova = false; run.bitten = []; run.spark = null; run.rolled = false; run.claw = null; run.warned = null; run.stolen = null;
     run.brk = true; run.shopClosed = !!(wasRule && wasRule.id === 'audit'); run.shop = run.shopClosed ? [] : rollShop(); run.shopLocked = false; run.shopRolls = 0;
-    if (run.q % 3 === 0) {
-      const ids = Object.keys(RULES).filter(id => RULES[id].ok()), id = ids[Math.floor(Math.random() * ids.length)];
-      run.rule = { id };
-      if (id === 'strike') {
-        const placed = strikers(), w = placed[Math.floor(Math.random() * placed.length)], p = workerPlace(w);
-        run.rule.w = w; slotsOf(p.l)[p.i].worker = null;
-        if (selWorker === w) selWorker = null;
-      }
-    }
+    if (run.q % 3 === 0) rollRule();
     if (!piggy) toast(wasRule ? 'Проверка пройдена! Перерыв' : 'Квота выполнена! Перерыв');
     queueOffer('quota');
     checkAch(false);
@@ -3568,7 +3600,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
         return cardHTML(it.id, 'buyCard', ` data-i="${i}"`, label, it.bought || run.shopLocked || !can || state.money < price);
       }).join('');
       const rc = shopRollCost();
-      shop = `<h3>Витрина</h3><p class="muted">Одна покупка с витрины. Чтобы купить ещё, обнови её: каждое обновление в перерыве дороже вдвое.</p>${items ? `<div class="cards">${items}</div>` : '<p class="muted">Пусто.</p>'}<div class="row"><button class="btn" type="button" data-act="rerollShop" ${state.money < rc ? 'disabled' : ''}>Обновить витрину · ${fmt(rc)}</button></div>`;
+      shop = `<h3>Витрина</h3><p class="muted">${state.cards.includes('x_wholesale') && (run.shopRolls || 0) < 2 ? 'Оптовик: с этой витрины две покупки' : 'Одна покупка с витрины'}. Чтобы купить ещё, обнови её: каждое обновление в перерыве дороже первого на его цену.</p>${items ? `<div class="cards">${items}</div>` : '<p class="muted">Пусто.</p>'}<div class="row"><button class="btn" type="button" data-act="rerollShop" ${state.money < rc ? 'disabled' : ''}>Обновить витрину · ${fmt(rc)}</button></div>`;
     }
     return head + next + shop;
   }
@@ -3653,9 +3685,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     let bytes = Uint8Array.from(atob(m[2]), ch => ch.charCodeAt(0));
     if (m[1] === '1') bytes = await pipe(bytes, new DecompressionStream('deflate-raw'));
     // a code from the previous build is brought up to date like a save
-    const d = JSON.parse(new TextDecoder().decode(bytes)), st = d.s && d.s.v >= 9 && d.s.v <= 14 ? migrate(d.s) : d.s;
+    const d = JSON.parse(new TextDecoder().decode(bytes)), st = d.s && d.s.v >= 9 && d.s.v <= 15 ? migrate(d.s) : d.s;
     // a friend's code is drawn with our code, so only known ids may pass
-    const ok = st && st.v === 15 && st.run && (!st.run.stolen || CARDS[st.run.stolen]) && Array.isArray(st.locs) && st.locs.length === LOCS.length && st.locs.every((L, l) => Array.isArray(L.slots) && L.slots.length === LAYOUTS[l].length && L.slots.every(z => (!z.machine || MACH[z.machine]) && (!z.worker || WORKERS[z.worker]) && Array.isArray(z.upg) && z.upg.every(u => CARDS[u])))
+    const ok = st && st.v === 16 && st.run && (!st.run.stolen || CARDS[st.run.stolen]) && Array.isArray(st.locs) && st.locs.length === LOCS.length && st.locs.every((L, l) => Array.isArray(L.slots) && L.slots.length === LAYOUTS[l].length && L.slots.every(z => (!z.machine || MACH[z.machine]) && (!z.worker || WORKERS[z.worker]) && Array.isArray(z.upg) && z.upg.every(u => CARDS[u])))
       && Array.isArray(st.cards) && st.cards.every(id => CARDS[id]) && Object.keys(WORKERS).every(id => st.workers[id] && st.workers[id].equip.every(e => CARDS[e]))
       && Array.isArray(st.lockers) && st.lockers.every(id => WORKERS[id]) && d.r && Array.isArray(d.a);
     if (!ok) throw new Error('bad state');
