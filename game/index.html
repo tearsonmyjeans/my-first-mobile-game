@@ -620,14 +620,14 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     u_overtime: { name: 'Сверхурочка', type: 'global', tag: 'Сотрудники', rar: 3, eff: { speed: 1.8, power: 0.8 }, desc: 'Все сотрудники: скорость +80%.', minus: 'Сила всех ×0,8.' },
     u_credit: { name: 'Кредит', type: 'global', tag: 'Улучшения', rar: 1, eff: {}, desc: 'Сразу монеты: половина прошлой квоты.', minus: 'Квота следующей смены ×1,5.' },
     e_loner: { name: 'Одиночка', type: 'equip', tag: 'Экипировка', rar: 2, eff: {}, desc: 'Сила ×2,2, если на соседних станках никто не работает.', minus: 'С работающими соседями сила ×0,6.' },
-    u_hack: { name: 'Халтура', type: 'mupg', tag: 'Улучшения', rar: 2, eff: { value: 1.7 }, desc: 'Любой станок: цена +70%.', minus: 'У этого станка удачи нет: двойных штук не будет.' },
+    u_hack: { name: 'Халтура', type: 'mupg', tag: 'Улучшения', rar: 2, eff: { value: 1.7 }, desc: 'Любой станок: цена того, что он делает, +70%.', minus: 'У этого станка удачи нет: двойных штук не будет.' },
     // legendary engines grow with the run
     u_radio: { name: 'Сарафанное радио', type: 'global', tag: 'Улучшения', rar: 3, eff: {}, desc: 'Цена всего ×1,1 за каждую квоту, пройденную после этой карты.' },
     u_piggy: { name: 'Копилка', type: 'global', tag: 'Улучшения', rar: 3, eff: {}, desc: 'В каждом перерыве приносит 10% монет, заработанных за смену.' },
     s_gold: { name: 'Золотой станок', type: 'mupg', tag: 'Улучшения', rar: 3, eff: {}, desc: 'Любой станок: цена ×1,1 за каждую карту «Станки» в колоде.' },
     u_union: { name: 'Профсоюз', type: 'global', tag: 'Сотрудники', rar: 3, eff: {}, desc: 'Все сотрудники: сила +5% за каждого сотрудника на заводе.' },
     s_hand: { name: 'Рука помощи', type: 'mupg', tag: 'Улучшения', rar: 2, eff: {}, desc: 'Действует на весь цех: самый высокий множитель каждого станка (сила, скорость или цена) ещё ×1,3.' },
-    u_snails: { name: 'Зубастые улитки', type: 'mupg', tag: 'Улучшения', rar: 1, eff: { value: 1.7 }, desc: 'Любой станок: цена +70%.', minus: 'Скорость станка ×0,85.' },
+    u_snails: { name: 'Зубастые улитки', type: 'mupg', tag: 'Улучшения', rar: 1, eff: { value: 1.7 }, desc: 'Любой станок: цена того, что он делает, +70%.', minus: 'Скорость станка ×0,85.' },
     // crate cards pay a share of the quota, so each comes once per run: copies would outgrow the quotas
     u_postman: { name: 'Почтальон', type: 'global', tag: 'Улучшения', rar: 0, once: true, eff: {}, desc: 'Посылки приходят вдвое чаще.' },
     u_courier: { name: 'Курьер', type: 'global', tag: 'Улучшения', rar: 1, once: true, eff: {}, desc: 'Если посылку не открыть, курьер откроет её сам за половину монет.' },
@@ -1101,7 +1101,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   // xp/shop/quota grow geometrically, every levelEvery-th level gives a card, crates come every crate..2×crate seconds;
   // a crate holds a share of the quota: plain crateQ, gold crateGoldQ (chance crateGold), or a card pick (chance crateCard);
   // crates pay at most crateCap of the quota a shift, so they help but never carry it; from shift skillCoinQ skills are opened only by cards
-  const BAL = { tempo: 2, xp0: 15, xpK: 2.2, levelEvery: 3, shopQ: 0.3, shopRoll: 1, rarPrice: [0.6, 1, 1.6, 2.4], masteryEvery: 9, crate: 40, crateQ: [0.02, 0.06], crateGoldQ: [0.08, 0.12], crateGold: 0.1, crateCard: 0.05, quotaT: 45, quota0: 115, quotaK: 1.9, quotaA: 1.06, crateCap: 0.3, shopE: 0.2, skillCoinQ: 10, cap: 3, trio: 4, add: true, sq: 1.4 };
+  const BAL = { tempo: 2, xp0: 15, xpK: 2.2, levelEvery: 3, shopQ: 0.3, shopRoll: 1, rarPrice: [0.6, 1, 1.6, 2.4], masteryEvery: 9, crate: 40, crateQ: [0.02, 0.06], crateGoldQ: [0.08, 0.12], crateGold: 0.1, crateCard: 0.05, quotaT: 45, quota0: 230, quotaK: 1.9, quotaA: 1.06, crateCap: 0.3, shopE: 0.2, skillCoinQ: 10, cap: 3, trio: 4, add: true, sq: 1.4 };
   const need = l => Math.round(BAL.xp0 * Math.pow(BAL.xpK, l - 1));
   // the showcase is priced off the quota just passed or off the last shift's earnings (shopE of them), whichever is more,
   // so a runaway income cannot make cards free
