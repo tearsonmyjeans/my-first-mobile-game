@@ -935,7 +935,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   const NEW_LOC_SLOTS = [4, 5, 6, 4, 5];
   const emptySlots = n => Array.from({ length: n }, () => ({ machine: null, worker: null, upg: [], acc: 0, kiss: 0 }));
   const fresh = () => ({
-    v: 16, money: 0, xp: 0, level: 1, planks: 0, bricks: 0, nails: 0, glass: 0, poufs: 0, pizza: 0, pigeons: 0, manga: 0, bottles: 0, calib: 0, earned: 0, cur: 0,
+    v: 17, money: 0, xp: 0, level: 1, planks: 0, bricks: 0, nails: 0, glass: 0, poufs: 0, pizza: 0, pigeons: 0, manga: 0, bottles: 0, calib: 0, earned: 0, cur: 0,
     locs: [
       { unlocked: true, slots: [{ machine: null, worker: null, upg: [], acc: 0, kiss: 0 }, { machine: 'saw', worker: 'crow', upg: [], acc: 0, kiss: 0 }, { machine: null, worker: null, upg: [], acc: 0, kiss: 0 }] },
       { unlocked: false, slots: emptySlots(4) },
@@ -958,7 +958,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     // workers bitten by the zombie girl, the Tuesday ghost's rollback done; rose: «Rising from the dead» used up this run
     // ongoing: shifts in a row the manga studio worked, mangaOn: it worked this shift;
     // claw: the worker the toy alien's claw chose this shift, warned: the neighbour the executioner warned, stolen: the equipment card the thief copied
-    run: { t: 0, q: 1, qT: 0, qEarned: 0, brk: true, shop: [], rule: null, sq: {}, sqK: null, nova: false, spark: null, bitten: [], rolled: false, rose: false, claw: null, warned: null, stolen: null, over: false, rep: 0, passed: [], hired: 0, skills: 0, bestRate: 0, opened: [0, null, null, null, null, null, null, null, null, null], ongoing: 0, mangaOn: false }
+    run: { t: 0, q: 1, qT: 0, qEarned: 0, brk: true, shop: [], rule: null, sq: {}, sqK: null, nova: false, spark: null, bitten: [], rolled: false, rose: false, claw: null, warned: null, stolen: null, over: false, rep: 0, passed: [], hired: 0, skills: 0, bestRate: 0, opened: [0, null, null, null, null, null, null, null, null, null], ongoing: 0, mangaOn: false, qLast: 0 }
   });
   const NEW_WORKERS = ['sunflower', 'flytrap', 'honeybear', 'arc', 'nurse', 'nemu', 'tuesday', 'zombie', 'digger', 'kaneki', 'raven'];
   const NEW_WORKERS_13 = ['fairy', 'pirate', 'beekeeper', 'kisa', 'toyalien', 'code10', 'code80', 'yeti', 'slime', 'moth', 'gastriter', 'palach', 'thief', 'raccoons', 'rebel'];
@@ -1054,7 +1054,12 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       if (s.run) s.run.sq = {};
       s.v = 16;
     }
-    return s.v === 8 || s.v === 16 ? s : null;
+    if (s.v === 16) {
+      // build 17: the showcase is priced off the last shift's earnings too; an old save starts from the quota alone
+      if (s.run) s.run.qLast = 0;
+      s.v = 17;
+    }
+    return s.v === 8 || s.v === 17 ? s : null;
   }
   // meta lives across runs: reputation, its unlocks, achievements and records
   const META_KEY = 'pixel-factory-meta-v1';
@@ -1096,10 +1101,11 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   // xp/shop/quota grow geometrically, every levelEvery-th level gives a card, crates come every crate..2×crate seconds;
   // a crate holds a share of the quota: plain crateQ, gold crateGoldQ (chance crateGold), or a card pick (chance crateCard);
   // crates pay at most crateCap of the quota a shift, so they help but never carry it; from shift skillCoinQ skills are opened only by cards
-  const BAL = { tempo: 2, xp0: 15, xpK: 2.2, levelEvery: 3, shopQ: 0.3, shopRoll: 1, rarPrice: [0.6, 1, 1.6, 2.4], masteryEvery: 9, crate: 40, crateQ: [0.02, 0.06], crateGoldQ: [0.08, 0.12], crateGold: 0.1, crateCard: 0.05, quotaT: 90, quota0: 210, quotaK: 1.9, quotaA: 1.06, crateCap: 0.3, skillCoinQ: 10, cap: 3, trio: 4, add: true, sq: 1.4 };
+  const BAL = { tempo: 2, xp0: 15, xpK: 2.2, levelEvery: 3, shopQ: 0.3, shopRoll: 1, rarPrice: [0.6, 1, 1.6, 2.4], masteryEvery: 9, crate: 40, crateQ: [0.02, 0.06], crateGoldQ: [0.08, 0.12], crateGold: 0.1, crateCard: 0.05, quotaT: 90, quota0: 210, quotaK: 1.9, quotaA: 1.06, crateCap: 0.3, shopE: 0.2, skillCoinQ: 10, cap: 3, trio: 4, add: true, sq: 1.4 };
   const need = l => Math.round(BAL.xp0 * Math.pow(BAL.xpK, l - 1));
-  // the showcase is priced off the quota just passed, so a runaway income cannot make cards free
-  const shopBase = () => quotaTarget(Math.max(1, state.run.q - 1)) * BAL.shopQ;
+  // the showcase is priced off the quota just passed or off the last shift's earnings (shopE of them), whichever is more,
+  // so a runaway income cannot make cards free
+  const shopBase = () => Math.max(quotaTarget(Math.max(1, state.run.q - 1)) * BAL.shopQ, (state.run.qLast || 0) * BAL.shopE);
   const cardPrice = id => Math.round(shopBase() * BAL.rarPrice[CARDS[id].rar]);
   const rerollCost = () => Math.round(shopBase() / (hasUnlock('reroll') ? 4 : 2));
   // a skill costs the last quota × the worker's rarity × 1,5 for every skill already opened this run; Crow's skill is 150 if it is the first
@@ -2052,7 +2058,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (piggy) { state.money += run.qEarned * 0.1 * piggy; toast(`Копилка: +${fmt(run.qEarned * 0.1 * piggy)} монет`); }
     // the manga ongoing grows with every shift the studio worked and breaks on an idle one
     run.ongoing = run.mangaOn ? (run.ongoing || 0) + 1 : 0; run.mangaOn = false;
-    run.q++; run.qT = 0; run.qEarned = 0; run.qCrate = 0; run.rule = null; run.sq = {}; run.nova = false; run.bitten = []; run.spark = null; run.rolled = false; run.claw = null; run.warned = null; run.stolen = null;
+    run.qLast = run.qEarned; run.q++; run.qT = 0; run.qEarned = 0; run.qCrate = 0; run.rule = null; run.sq = {}; run.nova = false; run.bitten = []; run.spark = null; run.rolled = false; run.claw = null; run.warned = null; run.stolen = null;
     run.brk = true; run.shopClosed = !!(wasRule && wasRule.id === 'audit'); run.shop = run.shopClosed ? [] : rollShop(); run.shopLocked = false; run.shopRolls = 0;
     if (run.q % 3 === 0) rollRule();
     if (!piggy) toast(wasRule ? 'Проверка пройдена! Перерыв' : 'Квота выполнена! Перерыв');
@@ -3600,7 +3606,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
         return cardHTML(it.id, 'buyCard', ` data-i="${i}"`, label, it.bought || run.shopLocked || !can || state.money < price);
       }).join('');
       const rc = shopRollCost();
-      shop = `<h3>Витрина</h3><p class="muted">${state.cards.includes('x_wholesale') && (run.shopRolls || 0) < 2 ? 'Оптовик: с этой витрины две покупки' : 'Одна покупка с витрины'}. Чтобы купить ещё, обнови её: каждое обновление в перерыве дороже первого на его цену.</p>${items ? `<div class="cards">${items}</div>` : '<p class="muted">Пусто.</p>'}<div class="row"><button class="btn" type="button" data-act="rerollShop" ${state.money < rc ? 'disabled' : ''}>Обновить витрину · ${fmt(rc)}</button></div>`;
+      shop = `<h3>Витрина</h3><p class="muted">${state.cards.includes('x_wholesale') && (run.shopRolls || 0) < 2 ? 'Оптовик: с этой витрины две покупки' : 'Одна покупка с витрины'}. Чтобы купить ещё, обнови её: каждое обновление в перерыве дороже первого на его цену. Цены растут с заработком прошлой смены.</p>${items ? `<div class="cards">${items}</div>` : '<p class="muted">Пусто.</p>'}<div class="row"><button class="btn" type="button" data-act="rerollShop" ${state.money < rc ? 'disabled' : ''}>Обновить витрину · ${fmt(rc)}</button></div>`;
     }
     return head + next + shop;
   }
@@ -3685,9 +3691,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     let bytes = Uint8Array.from(atob(m[2]), ch => ch.charCodeAt(0));
     if (m[1] === '1') bytes = await pipe(bytes, new DecompressionStream('deflate-raw'));
     // a code from the previous build is brought up to date like a save
-    const d = JSON.parse(new TextDecoder().decode(bytes)), st = d.s && d.s.v >= 9 && d.s.v <= 15 ? migrate(d.s) : d.s;
+    const d = JSON.parse(new TextDecoder().decode(bytes)), st = d.s && d.s.v >= 9 && d.s.v <= 16 ? migrate(d.s) : d.s;
     // a friend's code is drawn with our code, so only known ids may pass
-    const ok = st && st.v === 16 && st.run && (!st.run.stolen || CARDS[st.run.stolen]) && Array.isArray(st.locs) && st.locs.length === LOCS.length && st.locs.every((L, l) => Array.isArray(L.slots) && L.slots.length === LAYOUTS[l].length && L.slots.every(z => (!z.machine || MACH[z.machine]) && (!z.worker || WORKERS[z.worker]) && Array.isArray(z.upg) && z.upg.every(u => CARDS[u])))
+    const ok = st && st.v === 17 && st.run && (!st.run.stolen || CARDS[st.run.stolen]) && Array.isArray(st.locs) && st.locs.length === LOCS.length && st.locs.every((L, l) => Array.isArray(L.slots) && L.slots.length === LAYOUTS[l].length && L.slots.every(z => (!z.machine || MACH[z.machine]) && (!z.worker || WORKERS[z.worker]) && Array.isArray(z.upg) && z.upg.every(u => CARDS[u])))
       && Array.isArray(st.cards) && st.cards.every(id => CARDS[id]) && Object.keys(WORKERS).every(id => st.workers[id] && st.workers[id].equip.every(e => CARDS[e]))
       && Array.isArray(st.lockers) && st.lockers.every(id => WORKERS[id]) && d.r && Array.isArray(d.a);
     if (!ok) throw new Error('bad state');
