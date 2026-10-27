@@ -3,6 +3,7 @@
 // RATES=1 also prints income at every minute. STRAT=random picks cards, targets and shop cards at random, like a player who does not think;
 // STRAT=semi picks a random card but puts it where it earns most, and buys random shop cards;
 // STRAT=smart is the usual bot that also collects pairs towards a Triple (3 same cards on one worker or machine).
+// SHOP=n caps showcase purchases per break (default 30, i.e. until the money runs out, like a player who keeps refreshing).
 const { chromium } = require('playwright');
 const RUNS = +process.argv[2] || 8, UNL = process.argv[3] || '', BAL = JSON.parse(process.argv[4] || '{}'), COSTS = JSON.parse(process.argv[5] || 'null');
 (async () => {
@@ -11,7 +12,7 @@ const RUNS = +process.argv[2] || 8, UNL = process.argv[3] || '', BAL = JSON.pars
   await p.goto('file://' + require('path').resolve(__dirname, '../game/index.html') + '#bot');
   const res = [];
   for (let r = 0; r < RUNS; r++) {
-    res.push(await p.evaluate(([unl, bal, costs, rnd, semi, smart]) => {
+    res.push(await p.evaluate(([unl, bal, costs, rnd, semi, smart, shopMax]) => {
       const P = window.PF;
       Object.assign(P.BAL, bal); if (costs) costs.forEach((c, l) => { P.LOCS[l].cost = c; });
       P.meta.unlocks = unl ? unl.split(',') : [];
@@ -92,7 +93,7 @@ const RUNS = +process.argv[2] || 8, UNL = process.argv[3] || '', BAL = JSON.pars
         while (P.state.offers.length) pickOffer();
         unlockNext();
         // one card per showcase: buy the cheapest, then refresh while a refresh plus a common card still fits in the wallet
-        for (let k = 0; k < 4 && !saving(); k++) {
+        for (let k = 0; k < shopMax && !saving(); k++) {
           const i = P.state.run.shop.map((it, i) => [i, rnd || semi ? Math.random() : P.cardPrice(it.id)]).sort((x, y) => x[1] - y[1]).map(x => x[0]).find(i => P.buyCard(i));
           if (i == null) break;
           pickOffer();
@@ -117,7 +118,7 @@ const RUNS = +process.argv[2] || 8, UNL = process.argv[3] || '', BAL = JSON.pars
       const st = P.state;
       return { passed: st.run.q - 1, end: Math.round(st.run.t), opened: log.opened, quotaAt: log.quotaAt, cards: st.cards.length, level: st.level, earned: st.earned, rate: st.run.bestRate, rateAt: log.rateAt, crateShare: log.crate / st.earned, skills: st.run.skills, maxEq: Math.max(...Object.values(st.workers).map(w => w.equip.length)), maxUpg: Math.max(...st.locs.flatMap(L => L.slots.map(z => z.upg.length))),
         trios: [...Object.values(st.workers).map(w => w.equip), ...st.locs.flatMap(L => L.slots.map(z => z.upg))].filter(a => a.some(c => a.filter(x => x === c).length >= 3)).length };
-    }, [UNL, BAL, COSTS, process.env.STRAT === 'random', process.env.STRAT === 'semi', process.env.STRAT === 'smart']));
+    }, [UNL, BAL, COSTS, process.env.STRAT === 'random', process.env.STRAT === 'semi', process.env.STRAT === 'smart', +process.env.SHOP || 30]));
     const x = res[res.length - 1];
     console.log(`run ${r + 1}: квот ${x.passed}, конец ${Math.floor(x.end / 60)}:${String(x.end % 60).padStart(2, '0')}, цеха ${x.opened.map(v => v == null ? '—' : Math.round(v / 6) / 10).join('/')} мин, карт ${x.cards}, ур ${x.level}, доход ${Math.round(x.rate)}/с, скиллов ${x.skills}, max карт на сотруднике/станке ${x.maxEq}/${x.maxUpg}, троек ${x.trios}, посылки ${Math.round(x.crateShare * 100)}% денег, квоты на ${x.quotaAt.map(v => Math.round(v / 6) / 10).join(' ')}`);
     if (process.env.RATES) console.log('  доход по минутам:', x.rateAt.join(' '));
