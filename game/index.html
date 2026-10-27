@@ -75,6 +75,14 @@ body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);-webkit-ta
 .card .minus{color:#c0392b;font-weight:700}
 .card .gain{font:400 12px/1 var(--pixel);color:#2f7a3a;padding:0 7px}
 .card .rar{font:400 10px/1 var(--pixel);color:#7a7088;padding:0 7px;margin-top:auto}
+.card.mc{background:#24507e;color:#e8f1fb}
+.card.mc .bp{margin:0 7px;height:80px;display:flex;align-items:center;justify-content:center;border:1px solid #6f9fd0;border-radius:4px;background-color:#1d4470;background-image:linear-gradient(#ffffff1c 1px,transparent 1px),linear-gradient(90deg,#ffffff1c 1px,transparent 1px);background-size:8px 8px;background-position:-1px -1px}
+.card.mc .bp img{image-rendering:pixelated}
+.card.mc .ct{color:#a9cdf2;filter:none;padding:0 7px}
+.card.mc .st{display:flex;gap:4px;flex-wrap:wrap;padding:0 7px}
+.card.mc .st span{font:400 11px/1 var(--pixel);border:1px solid #6f9fd0;border-radius:3px;padding:3px 4px;background:#ffffff14}
+.card.mc .gain{color:#8fe39a}
+.card.mc .rar,.card.mc .price{color:#a9cdf2}
 .r0{--rc:var(--r0)}.r1{--rc:var(--r1)}.r2{--rc:var(--r2)}.r3{--rc:var(--r3)}
 .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
 .stat{background:var(--panel2);border-radius:6px;padding:7px 8px;min-width:0}
@@ -1101,7 +1109,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   // xp/shop/quota grow geometrically, every levelEvery-th level gives a card, crates come every crate..2×crate seconds;
   // a crate holds a share of the quota: plain crateQ, gold crateGoldQ (chance crateGold), or a card pick (chance crateCard);
   // crates pay at most crateCap of the quota a shift, so they help but never carry it; from shift skillCoinQ skills are opened only by cards
-  const BAL = { tempo: 2, xp0: 15, xpK: 2.2, levelEvery: 3, shopQ: 0.3, shopRoll: 1, rarPrice: [0.6, 1, 1.6, 2.4], masteryEvery: 9, crate: 40, crateQ: [0.02, 0.06], crateGoldQ: [0.08, 0.12], crateGold: 0.1, crateCard: 0.05, quotaT: 45, quota0: 230, quotaK: 1.9, quotaA: 1.06, crateCap: 0.3, shopE: 0.2, skillCoinQ: 10, cap: 3, trio: 4, add: true, sq: 1.4 };
+  const BAL = { tempo: 2, machW: 3, xp0: 15, xpK: 2.2, levelEvery: 3, shopQ: 0.3, shopRoll: 1, rarPrice: [0.6, 1, 1.6, 2.4], masteryEvery: 9, crate: 40, crateQ: [0.02, 0.06], crateGoldQ: [0.08, 0.12], crateGold: 0.1, crateCard: 0.05, quotaT: 45, quota0: 230, quotaK: 1.9, quotaA: 1.06, crateCap: 0.3, shopE: 0.2, skillCoinQ: 10, cap: 3, trio: 4, add: true, sq: 1.4 };
   const need = l => Math.round(BAL.xp0 * Math.pow(BAL.xpK, l - 1));
   // the showcase is priced off the quota just passed or off the last shift's earnings (shopE of them), whichever is more,
   // so a runaway income cannot make cards free
@@ -1768,6 +1776,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     return true;
   }
   const WEIGHT = [10, 5, 2, 1];
+  // machine cards drop BAL.machW times as often as their rarity says: a new machine is what grows a workshop
+  const cardWeight = id => WEIGHT[CARDS[id].rar] * (CARDS[id].type === 'machine' ? BAL.machW : 1);
   // the break a card offer is for: offers rolled during a shift wait for the break after it
   const brkKey = () => state.run.brk ? state.run.q : state.run.q + 1;
   // Credit shows up at most once per break, in one offer or showcase
@@ -1777,8 +1787,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const n = hasUnlock('pick4') ? 4 : 3;
     while (pick.length < n && pick.length < pool.length) {
       const cand = pool.filter(id => !pick.includes(id));
-      let r = Math.random() * cand.reduce((a, id) => a + WEIGHT[CARDS[id].rar], 0), chosen = cand[cand.length - 1];
-      for (const id of cand) { r -= WEIGHT[CARDS[id].rar]; if (r <= 0) { chosen = id; break; } }
+      let r = Math.random() * cand.reduce((a, id) => a + cardWeight(id), 0), chosen = cand[cand.length - 1];
+      for (const id of cand) { r -= cardWeight(id); if (r <= 0) { chosen = id; break; } }
       pick.push(chosen);
     }
     return pick;
@@ -2089,7 +2099,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   /* ================= drawing ================= */
   const cv = document.getElementById('game'), c = cv.getContext('2d');
   const low = document.createElement('canvas'); low.width = W; low.height = H;
-  const gx = low.getContext('2d');
+  let gx = low.getContext('2d');
   const R = (x, y, w, h, col) => { gx.fillStyle = col; gx.fillRect(Math.round(x), Math.round(y), w, h); };
   let S = 2;
   const SW = 72, SH = 74;
@@ -2119,6 +2129,26 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   }
 
   function disc(cx, cy, r, col) { for (let dy = -r; dy <= r; dy++) { const w = Math.round(Math.sqrt(r * r - dy * dy)); R(cx - w, cy + dy, w * 2 + 1, 1, col); } }
+  // machine card art: the workshop sprite drawn on its own canvas and cropped to its pixels
+  const MACH_ART = {};
+  function machArt(type) {
+    if (MACH_ART[type]) return MACH_ART[type];
+    const cvs = document.createElement('canvas'); cvs.width = 64; cvs.height = 64;
+    const keep = gx, x = cvs.getContext('2d');
+    gx = x;
+    try { machine(type, 16, 16); } finally { gx = keep; }
+    const d = x.getImageData(0, 0, 64, 64).data;
+    let x0 = 64, y0 = 64, x1 = -1, y1 = -1;
+    for (let j = 0; j < 64; j++) for (let i = 0; i < 64; i++) if (d[(j * 64 + i) * 4 + 3]) { x0 = Math.min(x0, i); x1 = Math.max(x1, i); y0 = Math.min(y0, j); y1 = Math.max(y1, j); }
+    if (x1 < 0) return { src: ICONS['m_' + type] || '', w: 16, h: 16, k: 4 };
+    const w = x1 - x0 + 1, h = y1 - y0 + 1, out = document.createElement('canvas'); out.width = w; out.height = h;
+    out.getContext('2d').drawImage(cvs, x0, y0, w, h, 0, 0, w, h);
+    // twice the workshop size, smaller for tall ones like the kiln with its smoke so the blueprint keeps one height
+    const a = { src: out.toDataURL(), w, h, k: Math.min(2, 70 / h, 90 / w) };
+    // the brick pump borrows its card icon, which may still be loading
+    if (type !== 'pump' || ICON_IMG.complete) MACH_ART[type] = a;
+    return a;
+  }
   function machine(type, x, y) {
     R(x + 2, y + 30, 28, 3, 'rgba(30,20,40,.22)');
     if (type === 'saw') {
@@ -3558,6 +3588,11 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const M = cd.type === 'machine' && MACH[cd.machine];
     const gain = (act === 'pick' || act === 'buyCard') && !guest ? bestGain(id) : 0;
     const where = (cl >= 0 ? `<br>${LOCS[cl].name}` : '') + (M && M.max ? `<br>есть ${machineCount(cd.machine)} из ${M.max}` : '');
+    if (M) {
+      // a machine card is a blueprint: the machine as it stands in the workshop, its price per piece and pace
+      const a = machArt(cd.machine), st = M.value ? `<span class="st"><span>цена ${fmt(M.value)}</span><span>${fmt(M.rate * BAL.tempo)} шт/с</span></span>` : '';
+      return `<button type="button" class="card mc r${cd.rar}" data-act="${act}" data-id="${id}"${extra} ${off ? 'disabled' : ''}><span class="band">${esc(cd.name)}</span><span class="bp"><img src="${a.src}" width="${Math.round(a.w * a.k)}" height="${Math.round(a.h * a.k)}" alt=""></span><span class="ct">${kind}${where}</span>${st}<span class="cd">${esc(cd.desc)}</span>${gain > 0 ? `<span class="gain">+${fmt(gain)}/с</span>` : ''}<span class="rar">${RAR[cd.rar]}</span>${price != null ? `<span class="price">${price}</span>` : ''}</button>`;
+    }
     return `<button type="button" class="card r${cd.rar}" data-act="${act}" data-id="${id}"${extra} ${off ? 'disabled' : ''}><span class="band">${esc(cd.name)}</span><span class="top"><img class="ic" src="${ICONS[id]}" alt=""><span class="ct">${kind}${where}</span></span><span class="cd">${esc(cd.desc)}</span>${cd.minus ? `<span class="cd minus">${esc(cd.minus)}</span>` : ''}${gain > 0 ? `<span class="gain">+${fmt(gain)}/с</span>` : ''}<span class="rar">${RAR[cd.rar]}</span>${price != null ? `<span class="price">${price}</span>` : ''}</button>`;
   }
   const SRC = { level: 'Новый уровень', mastery: 'Мастерство', crate: 'Посылка', shop: 'Магазин', quota: 'Квота' };
@@ -3852,7 +3887,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     saveTimer += dt; if (saveTimer > 5) { saveTimer = 0; save(); }
     if (toastTimer > 0) { toastTimer -= dt; if (toastTimer <= 0) $toast.hidden = true; }
   }
-  if (BOT) window.PF = { BAL, get state() { return state; }, set state(v) { state = v; }, meta, tick, totalIncome, avgIncome, globals, eligible, finish, holder, isFull, unlockLoc, openCrate, cardPrice, skillCost, skillLocked, skillShare, buyCard, startShift, curQuota, rerollCost, rollNewShop, shopRollCost, rollOffer, ICONS, quotaTarget, quotaTime, newRun, workerPlace, slotStats, onStrike, rule, get crate() { return crate; }, CARDS, MACH, LOCS, SKILLS, LAYOUTS, WORKERS };
+  if (BOT) window.PF = { cardHTML, BAL, get state() { return state; }, set state(v) { state = v; }, meta, tick, totalIncome, avgIncome, globals, eligible, finish, holder, isFull, unlockLoc, openCrate, cardPrice, skillCost, skillLocked, skillShare, buyCard, startShift, curQuota, rerollCost, rollNewShop, shopRollCost, rollOffer, ICONS, quotaTarget, quotaTime, newRun, workerPlace, slotStats, onStrike, rule, get crate() { return crate; }, CARDS, MACH, LOCS, SKILLS, LAYOUTS, WORKERS };
   else requestAnimationFrame(loop);
 })();
 </script>
