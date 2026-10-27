@@ -418,7 +418,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     mrsha: { name: 'Мисис Ха', she: true, role: 'Вампирша под зонтом', power: 1.2, speed: 1.2, luck: 0.1, perk: 'Укус: +10% силы за каждого работающего соседа. Лучшая швея: за швейной машинкой сила и скорость ×1,5, а все пуфики цеха +25% к цене.' },
     kast: { name: 'Кастомка', she: true, role: 'Дефолтный скин', power: 1.1, speed: 1.1, luck: 0.1, perk: 'Пустой холст: работники соседних станков +10% удачи. С Хабой и Батей включается «Семейный подряд».' },
     batya: { name: 'Батя', role: 'Ветеран цеха', power: 1.8, speed: 0.6, luck: 0.2, perk: 'Пьяному везёт: удача 20%. С Хабой и Кастомкой включается «Семейный подряд».' },
-    thoth: { name: 'Тот', role: 'Бог мудрости на полставки', power: 1.3, speed: 1.0, luck: 0.1, perk: 'Смеётся последним: в последние 30 с смены сила ×2.' },
+    thoth: { name: 'Тот', role: 'Бог мудрости на полставки', power: 1.3, speed: 1.0, luck: 0.1, perk: 'Смеётся последним: в последние 15 с смены сила ×2.' },
     rat: { name: 'Главная мразь цеха', role: 'Тень в капюшоне', power: 1.0, speed: 1.0, luck: 0.05, perk: 'Крысит: у каждого работающего соседа сила −0,2, а он забирает её себе. Кролик-детектив рядом закрывает дело.' },
     lin: { name: 'Лин Лаф Лаг', role: 'Кувшин с сиропом', power: 1.2, speed: 0.7, luck: 0.15, perk: 'Laugh: работники соседних станков +10% удачи.' },
     horse: { name: 'Лошадь в гольфах', she: true, role: 'Рабочая лошадка', power: 1.5, speed: 1.1, luck: 0.05, perk: 'Пашет как лошадь: сила +5% за каждые 10 с смены у станка, до +50%. В раздевалке сбрасывается.' },
@@ -533,17 +533,17 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     m_nailer: { name: 'Гвоздильный автомат', type: 'machine', machine: 'nailer', tag: 'Станки', rar: 0, desc: 'Гвоздь стоит 5, но очень быстро. Рядом с барабаном: +25% к цене.' },
     m_tumbler: { name: 'Галтовочный барабан', type: 'machine', machine: 'tumbler', tag: 'Станки', rar: 1, desc: 'Гвоздь стоит 25. Медленный, зато блестит.' },
     s_zinc: { name: 'Оцинковка', type: 'mupg', loc: 2, tag: 'Улучшения', rar: 0, eff: { value: 1.5 }, desc: 'Гвозди с этого станка: цена +50%.' },
-    u_nails: { name: 'Ремонт по всей стране', type: 'global', tag: 'Улучшения', rar: 1, loc: 2, eff: { nailPrice: 1.6 }, desc: 'Гвозди: цена +60%.' },
+    u_nails: { name: 'Ремонт по всей стране', type: 'global', tag: 'Улучшения', rar: 2, loc: 2, eff: { nailPrice: 1.6 }, desc: 'Гвозди: цена +60%.' },
     u_power: { name: 'Тренажёр в подсобке', type: 'global', tag: 'Сотрудники', rar: 0, eff: { power: 1.2 }, desc: 'Все сотрудники: сила +20%.' },
-    u_speed: { name: 'Перекур отменён', type: 'global', tag: 'Сотрудники', rar: 0, eff: { speed: 1.3 }, desc: 'Все сотрудники: скорость +30%.' },
+    u_speed: { name: 'Перекур отменён', type: 'global', tag: 'Сотрудники', rar: 0, eff: { speed: 1.2 }, desc: 'Все сотрудники: скорость +20%.' },
     u_price: { name: 'Реклама на радио', type: 'global', tag: 'Улучшения', rar: 2, eff: { price: 1.3 }, desc: 'Всё, что делает завод: цена +30%.' },
-    u_bricks: { name: 'Стройка по соседству', type: 'global', tag: 'Улучшения', rar: 1, loc: 1, eff: { brickPrice: 1.6 }, desc: 'Кирпичи: цена +60%.' },
+    u_bricks: { name: 'Стройка по соседству', type: 'global', tag: 'Улучшения', rar: 2, loc: 1, eff: { brickPrice: 1.6 }, desc: 'Кирпичи: цена +60%.' },
     e_coffee: { name: 'Крепкий кофе', type: 'equip', tag: 'Экипировка', rar: 1, eff: { speed: 1.3 }, desc: 'Скорость +30%. Мистер Жопосранчик с кофе работает в полную силу.' },
     e_helmet: { name: 'Каска', type: 'equip', tag: 'Экипировка', rar: 0, eff: { power: 1.4 }, desc: 'Сила +40%.' },
     e_gloves: { name: 'Перчатки', type: 'equip', tag: 'Экипировка', rar: 0, eff: { power: 1.25, speed: 1.25 }, desc: 'Сила и скорость +25%.' },
     e_mask: { name: 'Респиратор', type: 'equip', tag: 'Экипировка', rar: 0, eff: { power: 1.15, speed: 1.15 }, desc: 'Сила и скорость +15%, а во время проверки +60%: инспектор доволен.' },
     e_horseshoe: { name: 'Подкова на удачу', type: 'equip', tag: 'Экипировка', rar: 1, eff: { luck: 0.30 }, desc: '+30% шанс сделать двойную штуку.' },
-    e_chainsaw: { name: 'Бензопила', type: 'equip', tag: 'Экипировка', rar: 2, eff: { speed: 1.35 }, desc: 'Скорость +35%.' },
+    e_chainsaw: { name: 'Бензопила', type: 'equip', tag: 'Экипировка', rar: 1, eff: { speed: 1.35 }, desc: 'Скорость +35%.' },
     s_blade: { name: 'Острое полотно', type: 'mupg', loc: 0, tag: 'Улучшения', rar: 0, eff: { rate: 1.5 }, desc: 'Станок в цеху досок: скорость +50%.' },
     s_varnish: { name: 'Лак', type: 'mupg', loc: 0, tag: 'Улучшения', rar: 0, eff: { value: 1.5 }, desc: 'Доски с этого станка: цена +50%.' },
     s_glaze: { name: 'Глазурь', type: 'mupg', loc: 1, tag: 'Улучшения', rar: 0, eff: { value: 1.5 }, desc: 'Кирпичи с этого станка: цена +50%.' },
@@ -614,13 +614,13 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     s_velour: { name: 'Велюр', type: 'mupg', loc: 4, tag: 'Улучшения', rar: 0, eff: { value: 1.5 }, desc: 'Пуфики с этого станка: цена +50%.' },
     u_poufs: { name: 'Мода на пуфики', type: 'global', tag: 'Улучшения', rar: 1, loc: 4, eff: { poufPrice: 1.6 }, desc: 'Пуфики: цена +60%.' },
     s_tint: { name: 'Цветное стекло', type: 'mupg', loc: 3, tag: 'Улучшения', rar: 0, eff: { value: 1.5 }, desc: 'Стекло с этого станка: цена +50%.' },
-    u_glass: { name: 'Витрины в городе', type: 'global', tag: 'Улучшения', rar: 1, loc: 3, eff: { glassPrice: 1.6 }, desc: 'Стекло: цена +60%.' },
+    u_glass: { name: 'Витрины в городе', type: 'global', tag: 'Улучшения', rar: 2, loc: 3, eff: { glassPrice: 1.6 }, desc: 'Стекло: цена +60%.' },
     s_grease: { name: 'Смазка', type: 'mupg', tag: 'Улучшения', rar: 1, eff: { rate: 1.4, value: 1.2 }, desc: 'Любой станок: скорость +40% и цена +20%.' },
     // cards with a minus: the minus line is shown in red on the card
     u_overtime: { name: 'Сверхурочка', type: 'global', tag: 'Сотрудники', rar: 3, eff: { speed: 1.8, power: 0.8 }, desc: 'Все сотрудники: скорость +80%.', minus: 'Сила всех ×0,8.' },
-    u_credit: { name: 'Кредит', type: 'global', tag: 'Улучшения', rar: 1, eff: {}, desc: 'Сразу монеты: половина прошлой квоты.', minus: 'Следующая смена — проверка, а если она уже проверка, квота ×1,25.' },
+    u_credit: { name: 'Кредит', type: 'global', tag: 'Улучшения', rar: 1, eff: {}, desc: 'Сразу монеты: половина прошлой квоты.', minus: 'Квота следующей смены ×1,5.' },
     e_loner: { name: 'Одиночка', type: 'equip', tag: 'Экипировка', rar: 2, eff: {}, desc: 'Сила ×2,2, если на соседних станках никто не работает.', minus: 'С работающими соседями сила ×0,6.' },
-    u_hack: { name: 'Халтура', type: 'mupg', tag: 'Улучшения', rar: 2, eff: { value: 2 }, desc: 'Любой станок: цена +100%.', minus: 'У этого станка удачи нет: двойных штук не будет.' },
+    u_hack: { name: 'Халтура', type: 'mupg', tag: 'Улучшения', rar: 2, eff: { value: 1.7 }, desc: 'Любой станок: цена +70%.', minus: 'У этого станка удачи нет: двойных штук не будет.' },
     // legendary engines grow with the run
     u_radio: { name: 'Сарафанное радио', type: 'global', tag: 'Улучшения', rar: 3, eff: {}, desc: 'Цена всего ×1,1 за каждую квоту, пройденную после этой карты.' },
     u_piggy: { name: 'Копилка', type: 'global', tag: 'Улучшения', rar: 3, eff: {}, desc: 'В каждом перерыве приносит 10% монет, заработанных за смену.' },
@@ -1101,7 +1101,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   // xp/shop/quota grow geometrically, every levelEvery-th level gives a card, crates come every crate..2×crate seconds;
   // a crate holds a share of the quota: plain crateQ, gold crateGoldQ (chance crateGold), or a card pick (chance crateCard);
   // crates pay at most crateCap of the quota a shift, so they help but never carry it; from shift skillCoinQ skills are opened only by cards
-  const BAL = { tempo: 2, xp0: 15, xpK: 2.2, levelEvery: 3, shopQ: 0.3, shopRoll: 1, rarPrice: [0.6, 1, 1.6, 2.4], masteryEvery: 9, crate: 40, crateQ: [0.02, 0.06], crateGoldQ: [0.08, 0.12], crateGold: 0.1, crateCard: 0.05, quotaT: 90, quota0: 210, quotaK: 1.9, quotaA: 1.06, crateCap: 0.3, shopE: 0.2, skillCoinQ: 10, cap: 3, trio: 4, add: true, sq: 1.4 };
+  const BAL = { tempo: 2, xp0: 15, xpK: 2.2, levelEvery: 3, shopQ: 0.3, shopRoll: 1, rarPrice: [0.6, 1, 1.6, 2.4], masteryEvery: 9, crate: 40, crateQ: [0.02, 0.06], crateGoldQ: [0.08, 0.12], crateGold: 0.1, crateCard: 0.05, quotaT: 45, quota0: 115, quotaK: 1.9, quotaA: 1.06, crateCap: 0.3, shopE: 0.2, skillCoinQ: 10, cap: 3, trio: 4, add: true, sq: 1.4 };
   const need = l => Math.round(BAL.xp0 * Math.pow(BAL.xpK, l - 1));
   // the showcase is priced off the quota just passed or off the last shift's earnings (shopE of them), whichever is more,
   // so a runaway income cannot make cards free
@@ -1169,11 +1169,11 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   }
   // quotas speed up: quota q grows quotaK × quotaA^(q−2) times over the previous one, so a stack of multipliers still hits a wall
   const quotaTarget = q => Math.round(BAL.quota0 * Math.pow(BAL.quotaK, q - 1) * Math.pow(BAL.quotaA, (q - 1) * (q - 2) / 2));
-  // the quota actually asked this shift: every Credit taken when it is a check already makes it ×1,25
+  // the quota actually asked this shift: every Credit taken before it makes it ×1,5
   // the first shift is half as long, so its quota is half too
-  const curQuota = () => quotaTarget(state.run.q) * Math.pow(1.25, (state.run.credit || {})[state.run.q] || 0) / (state.run.q === 1 ? 2 : 1);
+  const curQuota = () => quotaTarget(state.run.q) * Math.pow(1.5, (state.run.credit || {})[state.run.q] || 0) / (state.run.q === 1 ? 2 : 1);
   // the first shift is half as long
-  const quotaTime = () => (BAL.quotaT + (hasUnlock('time') ? 15 : 0)) / (state.run.q === 1 ? 2 : 1);
+  const quotaTime = () => Math.round((BAL.quotaT + (hasUnlock('time') ? 8 : 0)) / (state.run.q === 1 ? 2 : 1));
   // seconds into the shift, null in a break: the cards that change during a shift read it
   const shiftT = () => state.run.brk || state.run.over ? null : state.run.qT;
   const newCrate = () => BAL.crate * (1 + Math.random());
@@ -1217,7 +1217,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     { id: 'dog', name: 'Старый друг', desc: 'Пёс Бро на заводе с первой минуты', cost: 6 },
     { id: 'reroll', name: 'Свой человек в магазине', desc: 'Переброс карт вдвое дешевле', cost: 8 },
     { id: 'tramp', name: 'Бывалый', desc: 'Бродяга на заводе с первой минуты', cost: 10 },
-    { id: 'time', name: 'Отсрочка', desc: 'Каждая смена на 15 с длиннее', cost: 12 },
+    { id: 'time', name: 'Отсрочка', desc: 'Каждая смена на 8 с длиннее', cost: 12 },
     { id: 'pick4', name: 'Широкий выбор', desc: 'Выбор 1 из 4 карт', cost: 20 }
   ];
   const passedQ = () => state.run.q - 1;
@@ -1656,7 +1656,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       if (linNear) notes.push('Лин Лаф Лаг смеётся рядом: +10% удачи');
       if (W !== 'rabbit' && skillOn('rabbit') && near.some(j => sl[j].worker === 'rabbit')) { speedM *= SKILLS.rabbit.mult; notes.push(`Кролик-детектив, «${SKILLS.rabbit.name}»: скорость ×2`); }
       if (W === 'rabbit' && g.caseClosed) { power *= 1.5; notes.push('Дело закрыто: сила ×1,5'); }
-      if (has(W, 'thoth', g) && !state.run.brk && quotaTime() - state.run.qT <= 30) { power *= 2; notes.push('Тот смеётся последним: сила ×2'); }
+      if (has(W, 'thoth', g) && !state.run.brk && quotaTime() - state.run.qT <= 15) { power *= 2; notes.push('Тот смеётся последним: сила ×2'); }
       if (has(W, 'horse', g)) { const k = Math.min(10, Math.floor((state.workers[W].workT || 0) / 10)); if (k) { power *= 1 + 0.05 * k; notes.push(`Пашет как лошадь: +${k * 5}% силы`); } }
       // the Rat (or a Shadow copying it) steals 0,2 of base power from each working neighbour, its skill pays back double;
       // Mirror armour turns the stealing back on the thief
@@ -1833,11 +1833,11 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   function applyNow(id) {
     const run = state.run;
     if (id === 'u_radio') (run.radio = run.radio || []).push(passedQ());
-    // Credit: half the last quota now, and the inspector comes with the next shift; if it is a check already, its quota is ×1,25
+    // Credit: half the last quota now, and the next shift's quota is ×1,5
     if (id === 'u_credit') {
       state.money += quotaTarget(Math.max(1, run.q - 1)) / 2;
-      if (!run.rule) { rollRule(); toast(`Кредит: следующая смена — проверка «${RULES[run.rule.id].name}»`); }
-      else { run.credit = run.credit || {}; run.credit[run.q] = (run.credit[run.q] || 0) + 1; }
+      run.credit = run.credit || {}; run.credit[run.q] = (run.credit[run.q] || 0) + 1;
+      toast('Кредит: квота следующей смены ×1,5');
     }
   }
   // "+X/с" on a card: how much income it adds at its best place right now (a new worker is tried at every machine)
