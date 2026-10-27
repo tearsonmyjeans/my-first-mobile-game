@@ -313,37 +313,37 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   const LOCS = [
     { name: 'Доски', sign: 'ЦЕХ 1 · ДОСКИ', cost: 0, wall: '#b0654c', mortar: '#94523d', floor: '#a39b8f', grid: '#978f83', plate: '#938b7f', item: '#e3b47c',
       glass: '#bfe3ef', board: '#c98a4a', boardHi: '#e5a86a', goods: 'planks', unit: 'Доски', unit1: 'Цена доски' },
-    { name: 'Кирпичи', sign: 'ЦЕХ 2 · КИРПИЧИ', cost: 2000, wall: '#7d7f88', mortar: '#6a6c75', floor: '#9c877a', grid: '#8f7a6d', plate: '#8d7c70', item: '#c4553a',
+    { name: 'Кирпичи', sign: 'ЦЕХ 2 · КИРПИЧИ', cost: 1000, wall: '#7d7f88', mortar: '#6a6c75', floor: '#9c877a', grid: '#8f7a6d', plate: '#8d7c70', item: '#c4553a',
       glass: '#d9cbb8', board: '#5f6168', boardHi: '#8a8c95', goods: 'bricks', unit: 'Кирпичи', unit1: 'Цена кирпича', start: 'mixer',
       desc: 'Новая ветка завода. Здесь месят глину, прессуют и обжигают кирпичи. Кирпичи стоят дороже досок, а печь работает быстрее, если в цеху досок трудится пилорама.',
       opened: 'Цех кирпичей открыт! Поставь к глиномешалке сотрудника' },
-    { name: 'Гвозди', sign: 'ЦЕХ 3 · ГВОЗДИ', cost: 150000, wall: '#55606b', mortar: '#46505a', floor: '#8b9096', grid: '#7f858c', plate: '#7a8086', item: '#c9d0d6',
+    { name: 'Гвозди', sign: 'ЦЕХ 3 · ГВОЗДИ', cost: 75000, wall: '#55606b', mortar: '#46505a', floor: '#8b9096', grid: '#7f858c', plate: '#7a8086', item: '#c9d0d6',
       glass: '#a9c4d6', board: '#3e6a8a', boardHi: '#5f8fb0', goods: 'nails', unit: 'Гвозди', unit1: 'Цена гвоздя', start: 'nailer',
       desc: 'Третья ветка завода. Тянут проволоку, рубят гвозди и полируют их в барабане. Мест шесть: четыре внизу и два сверху. Если в цеху кирпичей горит печь, проволока выходит закалённой и дороже.',
       opened: 'Цех гвоздей открыт! Поставь к гвоздильному автомату сотрудника' },
-    { name: 'Стекло', sign: 'ЦЕХ 4 · СТЕКЛО', cost: 3000000, wall: '#2e2440', mortar: '#1d1629', floor: '#3a3150', grid: '#463c60', item: '#9fe6ef',
+    { name: 'Стекло', sign: 'ЦЕХ 4 · СТЕКЛО', cost: 1500000, wall: '#2e2440', mortar: '#1d1629', floor: '#3a3150', grid: '#463c60', item: '#9fe6ef',
       board: '#6a3f8a', boardHi: '#9a6ac2', goods: 'glass', unit: 'Стекло', unit1: 'Цена стекла', start: 'melt', hot: [1, 3, 4, 5],
       plates: ['#b34f78', '#c7723a', '#b89a2a', '#4f9550', '#4f63bf', '#a8479a'],
       desc: 'Четвёртая ветка завода. Шесть мест стоят подковой вокруг горна, нижние углы пустые. Места посередине сторон касаются горна и работают на 20% быстрее. Если в цеху гвоздей крутится барабан, витражи выходят дороже.',
       opened: 'Цех стекла открыт! Поставь к стекловарке сотрудника' },
-    { name: 'Пуфики', sign: 'ЦЕХ 5 · ПУФИКИ', cost: 60000000, wall: '#6aa2dc', mortar: '#5a90cc', floor: '#94643a', grid: '#94643a', plate: '#a8763f', frame: '#5a3420', item: '#f08cb4',
+    { name: 'Пуфики', sign: 'ЦЕХ 5 · ПУФИКИ', cost: 30000000, wall: '#6aa2dc', mortar: '#5a90cc', floor: '#94643a', grid: '#94643a', plate: '#a8763f', frame: '#5a3420', item: '#f08cb4',
       glass: '#cfe8f2', board: '#2f5e46', boardHi: '#3f7a5a', goods: 'poufs', unit: 'Пуфики', unit1: 'Цена пуфика',
       desc: 'Пятая ветка завода, школьный класс. Шьют чехлы и набивают пуфики. Места два, а станков с собой нет: швейная машинка придёт в ближайшем выборе карт. Если в цеху досок работает сушилка, пуфики дороже, а если в цеху стекла работает витраж, набивка быстрее.',
       opened: 'Цех пуфиков открыт! Швейная машинка ждёт в ближайшем выборе карт' },
     // workshops 6–10; startSlot: where the machine that comes with the workshop stands
-    { name: 'Пицца', sign: 'ЦЕХ 6 · ПИЦЦА', cost: 6e8, wall: '#f1e3c4', mortar: '#e3d0a8', floor: '#e9dcc0', grid: '#e9dcc0', plate: '#c98a52', frame: '#6a3f22', item: '#f2c94c', board: '#3f9a4f', boardHi: '#5fb86a', goods: 'pizza', unit: 'Пицца', unit1: 'Цена пиццы', start: 'dough',
+    { name: 'Пицца', sign: 'ЦЕХ 6 · ПИЦЦА', cost: 3e8, wall: '#f1e3c4', mortar: '#e3d0a8', floor: '#e9dcc0', grid: '#e9dcc0', plate: '#c98a52', frame: '#6a3f22', item: '#f2c94c', board: '#3f9a4f', boardHi: '#5fb86a', goods: 'pizza', unit: 'Пицца', unit1: 'Цена пиццы', start: 'dough',
       desc: 'Шестая ветка завода, пиццерия. Месят тесто, кладут начинку и пекут в дровяной печи. Места идут цепочкой: две пары, нижняя сдвинута вправо. Пока работает печь, у всех сотрудников завода обед: +10% силы.',
       opened: 'Пиццерия открыта! Поставь к тестомесу сотрудника' },
-    { name: 'Голуби', sign: 'ЦЕХ 7 · ГОЛУБИ', cost: 2e10, wall: '#8fc4ea', mortar: '#7ab0d8', floor: '#6e6a72', grid: '#6e6a72', plate: '#b08a58', frame: '#5a3f2a', item: '#a9b2c3', board: '#6a4a2c', boardHi: '#8a6a44', goods: 'pigeons', unit: 'Голуби', unit1: 'Цена голубя', start: 'feeder',
+    { name: 'Голуби', sign: 'ЦЕХ 7 · ГОЛУБИ', cost: 1e10, wall: '#8fc4ea', mortar: '#7ab0d8', floor: '#6e6a72', grid: '#6e6a72', plate: '#b08a58', frame: '#5a3f2a', item: '#a9b2c3', board: '#6a4a2c', boardHi: '#8a6a44', goods: 'pigeons', unit: 'Голуби', unit1: 'Цена голубя', start: 'feeder',
       desc: 'Седьмая ветка завода, крыша. Дрессируют почтовых голубей. Пять мест крестом, как голубь с раскрытыми крыльями: центр касается всех. Голубиная почта: каждый работающий станок цеха приносит посылки на 15% чаще.',
       opened: 'Голубятня открыта! Поставь к кормушке сотрудника' },
-    { name: 'Манга', sign: 'ЦЕХ 8 · МАНГА', cost: 6e11, wall: '#efe6cf', mortar: '#9a7650', floor: '#cfc890', grid: '#cfc890', plate: '#fbf8f0', frame: '#2b2135', item: '#fbf8f0', board: '#c8323c', boardHi: '#e05a5a', goods: 'manga', unit: 'Манга', unit1: 'Цена тома', start: 'sketch',
+    { name: 'Манга', sign: 'ЦЕХ 8 · МАНГА', cost: 3e11, wall: '#efe6cf', mortar: '#9a7650', floor: '#cfc890', grid: '#cfc890', plate: '#fbf8f0', frame: '#2b2135', item: '#fbf8f0', board: '#c8323c', boardHi: '#e05a5a', goods: 'manga', unit: 'Манга', unit1: 'Цена тома', start: 'sketch',
       desc: 'Восьмая ветка завода, студия манги. Рисуют наброски, тушуют и печатают тома. Верхнее место стоит отдельно и ни с кем не соседствует. Онгоинг: цена манги +10% за каждую смену подряд, когда цех работал, а смена простоя всё сбрасывает.',
       opened: 'Студия манги открыта! Поставь к столу набросков сотрудника' },
-    { name: 'Пепси', sign: 'ЦЕХ 9 · ЖИВЫЕ БУТЫЛКИ', cost: 2e13, wall: '#cfe3ee', mortar: '#a8c4d4', floor: '#8fa3ae', grid: '#7e929d', plate: '#dfe7ec', frame: '#44505c', item: '#3f7ac2', board: '#13439a', boardHi: '#3f7ac2', goods: 'bottles', unit: 'Бутылки', unit1: 'Цена бутылки', start: 'extract', startSlot: 3,
+    { name: 'Пепси', sign: 'ЦЕХ 9 · ЖИВЫЕ БУТЫЛКИ', cost: 1e13, wall: '#cfe3ee', mortar: '#a8c4d4', floor: '#8fa3ae', grid: '#7e929d', plate: '#dfe7ec', frame: '#44505c', item: '#3f7ac2', board: '#13439a', boardHi: '#3f7ac2', goods: 'bottles', unit: 'Бутылки', unit1: 'Цена бутылки', start: 'extract', startSlot: 3,
       desc: 'Девятая ветка завода, лаборатория. Здесь выращивают живые бутылки пепси. Экстрактор пепси открывается вместе с цехом, занимает место в три ряда и касается всех трёх мест слева.',
       opened: 'Лаборатория открыта! Поставь к экстрактору сотрудника' },
-    { name: 'Калибровка', tab: 'Калибр.', sign: 'ЦЕХ 10 · КАЛИБРОВКА', cost: 8e14, wall: '#f4f7f9', mortar: '#dfe5ea', floor: '#e9eef2', grid: '#dfe5ea', plate: '#ffffff', frame: '#9aa3ad', item: '#5aa9e6', board: '#5aa9e6', boardHi: '#8fd3f0', goods: 'calib', unit: 'Калибровки', unit1: 'Цена калибровки', start: 'etalon', startSlot: 2,
+    { name: 'Калибровка', tab: 'Калибр.', sign: 'ЦЕХ 10 · КАЛИБРОВКА', cost: 4e14, wall: '#f4f7f9', mortar: '#dfe5ea', floor: '#e9eef2', grid: '#dfe5ea', plate: '#ffffff', frame: '#9aa3ad', item: '#5aa9e6', board: '#5aa9e6', boardHi: '#8fd3f0', goods: 'calib', unit: 'Калибровки', unit1: 'Цена калибровки', start: 'etalon', startSlot: 2,
       desc: 'Десятая ветка завода, белая лаборатория: калибруют туалеты и аэрогрили. В центре Эталон, он открывается вместе с цехом и работает без сотрудника: чем больше соседей работает, тем он дороже. Унитаз рядом с аэрогрилем: «Это одно и то же», сила обоих ×2.',
       opened: 'Калибровка открыта! Эталон ждёт работающих соседей' }
   ];
@@ -943,7 +943,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   const NEW_LOC_SLOTS = [4, 5, 6, 4, 5];
   const emptySlots = n => Array.from({ length: n }, () => ({ machine: null, worker: null, upg: [], acc: 0, kiss: 0 }));
   const fresh = () => ({
-    v: 17, money: 0, xp: 0, level: 1, planks: 0, bricks: 0, nails: 0, glass: 0, poufs: 0, pizza: 0, pigeons: 0, manga: 0, bottles: 0, calib: 0, earned: 0, cur: 0,
+    v: 18, money: 0, xp: 0, level: 1, planks: 0, bricks: 0, nails: 0, glass: 0, poufs: 0, pizza: 0, pigeons: 0, manga: 0, bottles: 0, calib: 0, earned: 0, cur: 0,
     locs: [
       { unlocked: true, slots: [{ machine: null, worker: null, upg: [], acc: 0, kiss: 0 }, { machine: 'saw', worker: 'crow', upg: [], acc: 0, kiss: 0 }, { machine: null, worker: null, upg: [], acc: 0, kiss: 0 }] },
       { unlocked: false, slots: emptySlots(4) },
@@ -952,7 +952,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       { unlocked: false, slots: emptySlots(2) },
       ...NEW_LOC_SLOTS.map(n => ({ unlocked: false, slots: emptySlots(n) }))
     ],
-    workers: { crow: { unlocked: true, equip: [] }, mrp: { unlocked: true, equip: [] }, tramp: { unlocked: false, equip: [] }, dog: { unlocked: false, equip: [] }, toad: { unlocked: false, equip: [] }, pink: { unlocked: false, equip: [] }, v1: { unlocked: false, equip: [] }, v2: { unlocked: false, equip: [] }, jeanne: { unlocked: false, equip: [] }, alien: { unlocked: false, equip: [] }, jedi: { unlocked: false, equip: [] }, silver: { unlocked: false, equip: [] }, mrsha: { unlocked: false, equip: [] }, kast: { unlocked: false, equip: [] }, batya: { unlocked: false, equip: [] },
+    workers: { crow: { unlocked: true, equip: [], skill: true, skT: 0 }, mrp: { unlocked: true, equip: [] }, tramp: { unlocked: false, equip: [] }, dog: { unlocked: false, equip: [] }, toad: { unlocked: false, equip: [] }, pink: { unlocked: false, equip: [] }, v1: { unlocked: false, equip: [] }, v2: { unlocked: false, equip: [] }, jeanne: { unlocked: false, equip: [] }, alien: { unlocked: false, equip: [] }, jedi: { unlocked: false, equip: [] }, silver: { unlocked: false, equip: [] }, mrsha: { unlocked: false, equip: [] }, kast: { unlocked: false, equip: [] }, batya: { unlocked: false, equip: [] },
       thoth: { unlocked: false, equip: [] }, rat: { unlocked: false, equip: [] }, lin: { unlocked: false, equip: [] }, horse: { unlocked: false, equip: [] }, rabbit: { unlocked: false, equip: [] },
       sunflower: { unlocked: false, equip: [] }, flytrap: { unlocked: false, equip: [] }, honeybear: { unlocked: false, equip: [] }, arc: { unlocked: false, equip: [] }, nurse: { unlocked: false, equip: [] }, nemu: { unlocked: false, equip: [] }, tuesday: { unlocked: false, equip: [] }, zombie: { unlocked: false, equip: [] }, digger: { unlocked: false, equip: [] }, kaneki: { unlocked: false, equip: [] }, raven: { unlocked: false, equip: [] },
       fairy: { unlocked: false, equip: [] }, pirate: { unlocked: false, equip: [] }, beekeeper: { unlocked: false, equip: [] }, kisa: { unlocked: false, equip: [] }, toyalien: { unlocked: false, equip: [] }, code10: { unlocked: false, equip: [] }, code80: { unlocked: false, equip: [] }, yeti: { unlocked: false, equip: [] }, slime: { unlocked: false, equip: [] }, moth: { unlocked: false, equip: [] }, gastriter: { unlocked: false, equip: [] }, palach: { unlocked: false, equip: [] }, thief: { unlocked: false, equip: [] }, raccoons: { unlocked: false, equip: [] }, rebel: { unlocked: false, equip: [] }, squanch: { unlocked: false, equip: [] }, spaghetti: { unlocked: false, equip: [] } },
@@ -965,8 +965,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     // sq: this shift's Posquonchim rolls, sqK: the stat Squanch himself squanched, nova: Nova poshta's card crate already came this shift; this shift's spark of Arc Warden,
     // workers bitten by the zombie girl, the Tuesday ghost's rollback done; rose: «Rising from the dead» used up this run
     // ongoing: shifts in a row the manga studio worked, mangaOn: it worked this shift;
-    // claw: the worker the toy alien's claw chose this shift, warned: the neighbour the executioner warned, stolen: the equipment card the thief copied
-    run: { t: 0, q: 1, qT: 0, qEarned: 0, brk: true, shop: [], rule: null, sq: {}, sqK: null, nova: false, spark: null, bitten: [], rolled: false, rose: false, claw: null, warned: null, stolen: null, over: false, rep: 0, passed: [], hired: 0, skills: 0, bestRate: 0, opened: [0, null, null, null, null, null, null, null, null, null], ongoing: 0, mangaOn: false, qLast: 0 }
+    // claw: the worker the toy alien's claw chose this shift, warned: the neighbour the executioner warned, stolen: the equipment card the thief copied;
+    // stockQ: the shift of the last «Stocktaking», so it skips the next two checks
+    run: { t: 0, q: 1, qT: 0, qEarned: 0, brk: true, shop: [], rule: null, sq: {}, sqK: null, nova: false, spark: null, bitten: [], rolled: false, rose: false, claw: null, warned: null, stolen: null, over: false, rep: 0, passed: [], hired: 0, skills: 0, bestRate: 0, opened: [0, null, null, null, null, null, null, null, null, null], ongoing: 0, mangaOn: false, qLast: 0, stockQ: 0 }
   });
   const NEW_WORKERS = ['sunflower', 'flytrap', 'honeybear', 'arc', 'nurse', 'nemu', 'tuesday', 'zombie', 'digger', 'kaneki', 'raven'];
   const NEW_WORKERS_13 = ['fairy', 'pirate', 'beekeeper', 'kisa', 'toyalien', 'code10', 'code80', 'yeti', 'slime', 'moth', 'gastriter', 'palach', 'thief', 'raccoons', 'rebel'];
@@ -1067,7 +1068,13 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       if (s.run) s.run.qLast = 0;
       s.v = 17;
     }
-    return s.v === 8 || s.v === 17 ? s : null;
+    if (s.v === 17) {
+      // build 18: Crow's skill is open from the start; the shop-closing check «Stocktaking» split off the audit and remembers its last shift
+      if (s.workers.crow && !s.workers.crow.skill) Object.assign(s.workers.crow, { skill: true, skT: 0 });
+      if (s.run) s.run.stockQ = 0;
+      s.v = 18;
+    }
+    return s.v === 8 || s.v === 18 ? s : null;
   }
   // meta lives across runs: reputation, its unlocks, achievements and records
   const META_KEY = 'pixel-factory-meta-v1';
@@ -1109,18 +1116,17 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   // xp/shop/quota grow geometrically, every levelEvery-th level gives a card, crates come every crate..2×crate seconds;
   // a crate holds a share of the quota: plain crateQ, gold crateGoldQ (chance crateGold), or a card pick (chance crateCard);
   // crates pay at most crateCap of the quota a shift, so they help but never carry it; from shift skillCoinQ skills are opened only by cards
-  const BAL = { tempo: 2, machW: 3, xp0: 15, xpK: 2.2, levelEvery: 3, shopQ: 0.3, shopRoll: 1, rarPrice: [0.6, 1, 1.6, 2.4], masteryEvery: 9, crate: 40, crateQ: [0.02, 0.06], crateGoldQ: [0.08, 0.12], crateGold: 0.1, crateCard: 0.05, quotaT: 45, quota0: 230, quotaK: 1.9, quotaA: 1.06, crateCap: 0.3, shopE: 0.2, skillCoinQ: 10, cap: 3, trio: 4, add: true, sq: 1.4 };
+  const BAL = { tempo: 2, machW: 3, xp0: 7.5, xpK: 2.2, levelEvery: 3, shopQ: 0.3, shopRoll: 1, rarPrice: [0.6, 1, 1.6, 2.4], masteryEvery: 9, crate: 20, crateQ: [0.02, 0.06], crateGoldQ: [0.08, 0.12], crateGold: 0.1, crateCard: 0.05, quotaT: 45, quota0: 115, quotaK: 1.9, quotaA: 1.06, crateCap: 0.3, shopE: 0.2, skillCoinQ: 10, cap: 3, trio: 4, add: true, sq: 1.4 };
   const need = l => Math.round(BAL.xp0 * Math.pow(BAL.xpK, l - 1));
   // the showcase is priced off the quota just passed or off the last shift's earnings (shopE of them), whichever is more,
   // so a runaway income cannot make cards free
   const shopBase = () => Math.max(quotaTarget(Math.max(1, state.run.q - 1)) * BAL.shopQ, (state.run.qLast || 0) * BAL.shopE);
   const cardPrice = id => Math.round(shopBase() * BAL.rarPrice[CARDS[id].rar]);
   const rerollCost = () => Math.round(shopBase() / (hasUnlock('reroll') ? 4 : 2));
-  // a skill costs the last quota × the worker's rarity × 1,5 for every skill already opened this run; Crow's skill is 150 if it is the first
+  // a skill costs the last quota × the worker's rarity × 1,5 for every skill already opened this run; Crow's skill is open from the start
   const SKILL_RAR = [0.8, 0.8, 1.2, 2];
   function skillCost(id) {
     const n = state.run.skills || 0, cd = CARDS['w_' + id];
-    if (id === 'crow' && !n) return 150;
     return Math.round(quotaTarget(Math.max(1, state.run.q - 1)) * (cd ? SKILL_RAR[cd.rar] : 0.5) * Math.pow(1.5, n));
   }
   const skillLocked = () => state.run.q >= BAL.skillCoinQ;
@@ -1147,6 +1153,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const run = state.run;
     if (!run.brk || run.over || state.offers.length || mode) return false;
     run.brk = false; run.shop = []; run.shopClosed = false;
+    for (const id in SKILLS) if (longSk(id) && state.workers[id].skill) { state.workers[id].skT = 0; rollSkin(id); }
     // the zombie girl bites a random working neighbour, but not on a Sanepid
     run.bitten = []; run.spark = null; run.rolled = false; run.claw = null; run.warned = null; run.stolen = null;
     // the toy alien's claw picks a random worker of his workshop, himself too
@@ -1207,7 +1214,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     sanepid: { name: 'Санэпидем', desc: 'Кофе запрещён: Крепкий кофе не действует.', ok: () => state.cards.includes('e_coffee') },
     strike: { name: 'Забастовка', desc: '', ok: () => Object.keys(state.workers).filter(id => workerPlace(id)).length >= 2 && strikers().length > 0 },
     blackout: { name: 'Блэкаут', desc: 'Конвейеры стоят.', ok: () => anySlot(s => s.machine === 'belt') },
-    audit: { name: 'Ревизия', desc: 'Посылок нет, переброс нельзя, а в перерыве после смены витрина закрыта.', ok: () => true }
+    audit: { name: 'Ревизия', desc: 'Посылок нет, переброс карт нельзя.', ok: () => true },
+    // never the first check, and not again in the two checks after it came
+    stock: { name: 'Переучёт', desc: 'Витрина на переучёте: в перерыве после этой смены она закрыта.', ok: () => state.run.q > 3 && !(state.run.stockQ && state.run.q - state.run.stockQ <= 6) }
   };
   const rule = id => !!(state.run.rule && state.run.rule.id === id);
   const hasEq = (w, e) => !!w && state.workers[w].equip.includes(e);
@@ -1245,6 +1254,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     { id: 'strike', name: 'Штрейкбрехеры', desc: 'Пройти проверку «Забастовка»', rep: 3, test: () => state.run.passed.includes('strike') },
     { id: 'blackout', name: 'При свечах', desc: 'Пройти проверку «Блэкаут»', rep: 3, test: () => state.run.passed.includes('blackout') },
     { id: 'audit', name: 'Всё по бумагам', desc: 'Пройти проверку «Ревизия»', rep: 3, test: () => state.run.passed.includes('audit') },
+    { id: 'stock', name: 'Всё пересчитано', desc: 'Пройти проверку «Переучёт»', rep: 3, test: () => state.run.passed.includes('stock') },
     { id: 'solo', name: 'Своими силами', desc: 'Пройти 6 квот, не нанимая новых сотрудников', rep: 6, test: () => passedQ() >= 6 && !state.run.hired },
     { id: 'million', name: 'Миллионер', desc: 'Заработать 1M за забег', rep: 5, test: () => state.earned >= 1e6 },
     { id: 'rate1k', name: 'Тысяча в секунду', desc: 'Доход 1K в секунду', rep: 3, test: () => state.run.bestRate >= 1000 },
@@ -1293,6 +1303,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     return [...set].sort();
   }
   const skDur = id => SKILLS[id].dur * (state.cards.includes('x_skill') ? 1.5 : 1);
+  // a skill whose cooldown is longer than the shift starts its cycle anew at every shift's start, so it fires at least once a shift
+  const longSk = id => !SKILLS[id].shift && SKILLS[id].cd > quotaTime();
+  const skCd = id => longSk(id) ? quotaTime() : SKILLS[id].cd;
   const skillOn = id => {
     const w = state.workers[id];
     if (!w.skill || !workerPlace(id)) return false;
@@ -1302,7 +1315,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   function skillBar(id) {
     const w = state.workers[id], sk = SKILLS[id], dur = skDur(id), on = skillOn(id);
     if (sk.shift) { const left = quotaTime() - state.run.qT; return [on, on ? left / dur : state.run.brk ? 0 : state.run.qT / (quotaTime() - dur)]; }
-    return [on, on ? 1 - w.skT / dur : (w.skT - dur) / (sk.cd - dur)];
+    return [on, on ? 1 - w.skT / dur : Math.min(1, (w.skT - dur) / (skCd(id) - dur))];
   }
   const anySlot = pred => state.locs.some((L, l) => L.unlocked && L.slots.some((s, i) => pred(s, l, i)));
   function globals() {
@@ -1923,7 +1936,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   /* ================= simulation ================= */
   let achTimer = 0;
   const openSkill = id => { const w = state.workers[id]; w.skill = true; w.skT = 0; state.run.skills++; rollSkin(id); };
-  const skillShare = id => Math.min(1, skDur(id) / (SKILLS[id].shift ? quotaTime() : SKILLS[id].cd));
+  const skillShare = id => Math.min(1, skDur(id) / (SKILLS[id].shift ? quotaTime() : skCd(id)));
   const rollSkin = id => {
     if (SKILLS[id].kind === 'random') state.workers[id].skKind = Object.keys(SKIN_KINDS)[Math.floor(Math.random() * 3)];
     if (SKILLS[id].kind === 'drunk') state.workers[id].skKind = Math.random() < 0.5 ? 'stop' : 'fast';
@@ -2054,6 +2067,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   function rollRule() {
     const run = state.run, ids = Object.keys(RULES).filter(id => RULES[id].ok()), id = ids[Math.floor(Math.random() * ids.length)];
     run.rule = { id };
+    if (id === 'stock') run.stockQ = run.q;
     if (id === 'strike') {
       const placed = strikers(), w = placed[Math.floor(Math.random() * placed.length)], p = workerPlace(w);
       run.rule.w = w; slotsOf(p.l)[p.i].worker = null;
@@ -2069,7 +2083,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     // the manga ongoing grows with every shift the studio worked and breaks on an idle one
     run.ongoing = run.mangaOn ? (run.ongoing || 0) + 1 : 0; run.mangaOn = false;
     run.qLast = run.qEarned; run.q++; run.qT = 0; run.qEarned = 0; run.qCrate = 0; run.rule = null; run.sq = {}; run.nova = false; run.bitten = []; run.spark = null; run.rolled = false; run.claw = null; run.warned = null; run.stolen = null;
-    run.brk = true; run.shopClosed = !!(wasRule && wasRule.id === 'audit'); run.shop = run.shopClosed ? [] : rollShop(); run.shopLocked = false; run.shopRolls = 0;
+    run.brk = true; run.shopClosed = !!(wasRule && wasRule.id === 'stock'); run.shop = run.shopClosed ? [] : rollShop(); run.shopLocked = false; run.shopRolls = 0;
     if (run.q % 3 === 0) rollRule();
     if (!piggy) toast(wasRule ? 'Проверка пройдена! Перерыв' : 'Квота выполнена! Перерыв');
     queueOffer('quota');
@@ -3633,7 +3647,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       : `<h2>Перерыв после смены ${run.q - 1}</h2><p class="muted">Время стоит. Покупай на витрине, открывай цеха и скиллы, переставляй станки и сотрудников.</p>`;
     const next = `<p>Смена ${run.q}: квота <b>${fmt(curQuota())}</b>${(run.credit || {})[run.q] ? ' <span style="color:#ffb3a6">(кредит)</span>' : ''} за ${quotaTime()} с.${run.rule ? ` <span class="on" style="color:#ffb3a6!important">Проверка «${RULES[run.rule.id].name}»: ${esc(ruleDesc(run.rule))}</span>` : ''}</p>`;
     let shop = '';
-    if (run.shopClosed) shop = '<h3>Витрина</h3><p class="muted">Ревизия: в этом перерыве витрина закрыта.</p>';
+    if (run.shopClosed) shop = '<h3>Витрина</h3><p class="muted">Переучёт: в этом перерыве витрина закрыта.</p>';
     else if (!first) {
       const items = (run.shop || []).map((it, i) => {
         const price = cardPrice(it.id), can = eligible(it.id);
@@ -3728,7 +3742,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     // a code from the previous build is brought up to date like a save
     const d = JSON.parse(new TextDecoder().decode(bytes)), st = d.s && d.s.v >= 9 && d.s.v <= 16 ? migrate(d.s) : d.s;
     // a friend's code is drawn with our code, so only known ids may pass
-    const ok = st && st.v === 17 && st.run && (!st.run.stolen || CARDS[st.run.stolen]) && Array.isArray(st.locs) && st.locs.length === LOCS.length && st.locs.every((L, l) => Array.isArray(L.slots) && L.slots.length === LAYOUTS[l].length && L.slots.every(z => (!z.machine || MACH[z.machine]) && (!z.worker || WORKERS[z.worker]) && Array.isArray(z.upg) && z.upg.every(u => CARDS[u])))
+    const ok = st && st.v === 18 && st.run && (!st.run.stolen || CARDS[st.run.stolen]) && Array.isArray(st.locs) && st.locs.length === LOCS.length && st.locs.every((L, l) => Array.isArray(L.slots) && L.slots.length === LAYOUTS[l].length && L.slots.every(z => (!z.machine || MACH[z.machine]) && (!z.worker || WORKERS[z.worker]) && Array.isArray(z.upg) && z.upg.every(u => CARDS[u])))
       && Array.isArray(st.cards) && st.cards.every(id => CARDS[id]) && Object.keys(WORKERS).every(id => st.workers[id] && st.workers[id].equip.every(e => CARDS[e]))
       && Array.isArray(st.lockers) && st.lockers.every(id => WORKERS[id]) && d.r && Array.isArray(d.a);
     if (!ok) throw new Error('bad state');
@@ -3754,7 +3768,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       const w = state.workers[selWorker], sk = SKILLS[selWorker];
       const left = sk.shift ? quotaTime() - state.run.qT : skDur(selWorker) - w.skT;
       set('live-skill', !workerPlace(selWorker) ? 'Срабатывает, только когда сотрудник у станка' : skillOn(selWorker) ? `Активен: ещё ${Math.ceil(left)} с`
-        : sk.shift ? (state.run.brk ? `Сработает в последние ${skDur(selWorker)} с смены` : `До скилла: ${Math.ceil(left - skDur(selWorker))} с`) : `Перезарядка: ${Math.ceil(sk.cd - w.skT)} с`);
+        : sk.shift ? (state.run.brk ? `Сработает в последние ${skDur(selWorker)} с смены` : `До скилла: ${Math.ceil(left - skDur(selWorker))} с`) : longSk(selWorker) && (state.run.brk || sk.cd - w.skT > quotaTime() - state.run.qT) ? (state.run.brk ? 'Сработает в начале смены' : 'Сработает в начале следующей смены') : `Перезарядка: ${Math.ceil(sk.cd - w.skT)} с`);
     }
     if (selWorker) { const ws = workerStats(selWorker, g); set('live-power', fmt(ws.power)); set('live-speed', fmt(ws.speed)); set('live-luck', pct(ws.luck)); }
     set('live-planks', fmt(state.planks)); set('live-bricks', fmt(state.bricks)); set('live-nails', fmt(state.nails || 0)); set('live-glass', fmt(state.glass || 0)); set('live-poufs', fmt(state.poufs || 0));
@@ -3887,7 +3901,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     saveTimer += dt; if (saveTimer > 5) { saveTimer = 0; save(); }
     if (toastTimer > 0) { toastTimer -= dt; if (toastTimer <= 0) $toast.hidden = true; }
   }
-  if (BOT) window.PF = { cardHTML, BAL, get state() { return state; }, set state(v) { state = v; }, meta, tick, totalIncome, avgIncome, globals, eligible, finish, holder, isFull, unlockLoc, openCrate, cardPrice, skillCost, skillLocked, skillShare, buyCard, startShift, curQuota, rerollCost, rollNewShop, shopRollCost, rollOffer, ICONS, quotaTarget, quotaTime, newRun, workerPlace, slotStats, onStrike, rule, get crate() { return crate; }, CARDS, MACH, LOCS, SKILLS, LAYOUTS, WORKERS };
+  if (BOT) window.PF = { cardHTML, BAL, rollRule, get state() { return state; }, set state(v) { state = v; }, meta, tick, totalIncome, avgIncome, globals, eligible, finish, holder, isFull, unlockLoc, openCrate, cardPrice, skillCost, skillLocked, skillShare, buyCard, startShift, curQuota, rerollCost, rollNewShop, shopRollCost, rollOffer, ICONS, quotaTarget, quotaTime, newRun, workerPlace, slotStats, onStrike, rule, get crate() { return crate; }, CARDS, MACH, LOCS, SKILLS, LAYOUTS, WORKERS };
   else requestAnimationFrame(loop);
 })();
 </script>
