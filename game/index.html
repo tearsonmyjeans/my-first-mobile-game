@@ -313,37 +313,37 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   const LOCS = [
     { name: 'Доски', sign: 'ЦЕХ 1 · ДОСКИ', cost: 0, wall: '#b0654c', mortar: '#94523d', floor: '#a39b8f', grid: '#978f83', plate: '#938b7f', item: '#e3b47c',
       glass: '#bfe3ef', board: '#c98a4a', boardHi: '#e5a86a', goods: 'planks', unit: 'Доски', unit1: 'Цена доски' },
-    { name: 'Кирпичи', sign: 'ЦЕХ 2 · КИРПИЧИ', cost: 1000, wall: '#7d7f88', mortar: '#6a6c75', floor: '#9c877a', grid: '#8f7a6d', plate: '#8d7c70', item: '#c4553a',
+    { name: 'Кирпичи', sign: 'ЦЕХ 2 · КИРПИЧИ', cost: 2000, wall: '#7d7f88', mortar: '#6a6c75', floor: '#9c877a', grid: '#8f7a6d', plate: '#8d7c70', item: '#c4553a',
       glass: '#d9cbb8', board: '#5f6168', boardHi: '#8a8c95', goods: 'bricks', unit: 'Кирпичи', unit1: 'Цена кирпича', start: 'mixer',
       desc: 'Новая ветка завода. Здесь месят глину, прессуют и обжигают кирпичи. Кирпичи стоят дороже досок, а печь работает быстрее, если в цеху досок трудится пилорама.',
       opened: 'Цех кирпичей открыт! Поставь к глиномешалке сотрудника' },
-    { name: 'Гвозди', sign: 'ЦЕХ 3 · ГВОЗДИ', cost: 75000, wall: '#55606b', mortar: '#46505a', floor: '#8b9096', grid: '#7f858c', plate: '#7a8086', item: '#c9d0d6',
+    { name: 'Гвозди', sign: 'ЦЕХ 3 · ГВОЗДИ', cost: 150000, wall: '#55606b', mortar: '#46505a', floor: '#8b9096', grid: '#7f858c', plate: '#7a8086', item: '#c9d0d6',
       glass: '#a9c4d6', board: '#3e6a8a', boardHi: '#5f8fb0', goods: 'nails', unit: 'Гвозди', unit1: 'Цена гвоздя', start: 'nailer',
       desc: 'Третья ветка завода. Тянут проволоку, рубят гвозди и полируют их в барабане. Мест шесть: четыре внизу и два сверху. Если в цеху кирпичей горит печь, проволока выходит закалённой и дороже.',
       opened: 'Цех гвоздей открыт! Поставь к гвоздильному автомату сотрудника' },
-    { name: 'Стекло', sign: 'ЦЕХ 4 · СТЕКЛО', cost: 1500000, wall: '#2e2440', mortar: '#1d1629', floor: '#3a3150', grid: '#463c60', item: '#9fe6ef',
+    { name: 'Стекло', sign: 'ЦЕХ 4 · СТЕКЛО', cost: 3000000, wall: '#2e2440', mortar: '#1d1629', floor: '#3a3150', grid: '#463c60', item: '#9fe6ef',
       board: '#6a3f8a', boardHi: '#9a6ac2', goods: 'glass', unit: 'Стекло', unit1: 'Цена стекла', start: 'melt', hot: [1, 3, 4, 5],
       plates: ['#b34f78', '#c7723a', '#b89a2a', '#4f9550', '#4f63bf', '#a8479a'],
       desc: 'Четвёртая ветка завода. Шесть мест стоят подковой вокруг горна, нижние углы пустые. Места посередине сторон касаются горна и работают на 20% быстрее. Если в цеху гвоздей крутится барабан, витражи выходят дороже.',
       opened: 'Цех стекла открыт! Поставь к стекловарке сотрудника' },
-    { name: 'Пуфики', sign: 'ЦЕХ 5 · ПУФИКИ', cost: 30000000, wall: '#6aa2dc', mortar: '#5a90cc', floor: '#94643a', grid: '#94643a', plate: '#a8763f', frame: '#5a3420', item: '#f08cb4',
+    { name: 'Пуфики', sign: 'ЦЕХ 5 · ПУФИКИ', cost: 60000000, wall: '#6aa2dc', mortar: '#5a90cc', floor: '#94643a', grid: '#94643a', plate: '#a8763f', frame: '#5a3420', item: '#f08cb4',
       glass: '#cfe8f2', board: '#2f5e46', boardHi: '#3f7a5a', goods: 'poufs', unit: 'Пуфики', unit1: 'Цена пуфика',
       desc: 'Пятая ветка завода, школьный класс. Шьют чехлы и набивают пуфики. Места два, а станков с собой нет: швейная машинка придёт в ближайшем выборе карт. Если в цеху досок работает сушилка, пуфики дороже, а если в цеху стекла работает витраж, набивка быстрее.',
       opened: 'Цех пуфиков открыт! Швейная машинка ждёт в ближайшем выборе карт' },
     // workshops 6–10; startSlot: where the machine that comes with the workshop stands
-    { name: 'Пицца', sign: 'ЦЕХ 6 · ПИЦЦА', cost: 3e8, wall: '#f1e3c4', mortar: '#e3d0a8', floor: '#e9dcc0', grid: '#e9dcc0', plate: '#c98a52', frame: '#6a3f22', item: '#f2c94c', board: '#3f9a4f', boardHi: '#5fb86a', goods: 'pizza', unit: 'Пицца', unit1: 'Цена пиццы', start: 'dough',
+    { name: 'Пицца', sign: 'ЦЕХ 6 · ПИЦЦА', cost: 6e8, wall: '#f1e3c4', mortar: '#e3d0a8', floor: '#e9dcc0', grid: '#e9dcc0', plate: '#c98a52', frame: '#6a3f22', item: '#f2c94c', board: '#3f9a4f', boardHi: '#5fb86a', goods: 'pizza', unit: 'Пицца', unit1: 'Цена пиццы', start: 'dough',
       desc: 'Шестая ветка завода, пиццерия. Месят тесто, кладут начинку и пекут в дровяной печи. Места идут цепочкой: две пары, нижняя сдвинута вправо. Пока работает печь, у всех сотрудников завода обед: +10% силы.',
       opened: 'Пиццерия открыта! Поставь к тестомесу сотрудника' },
-    { name: 'Голуби', sign: 'ЦЕХ 7 · ГОЛУБИ', cost: 1e10, wall: '#8fc4ea', mortar: '#7ab0d8', floor: '#6e6a72', grid: '#6e6a72', plate: '#b08a58', frame: '#5a3f2a', item: '#a9b2c3', board: '#6a4a2c', boardHi: '#8a6a44', goods: 'pigeons', unit: 'Голуби', unit1: 'Цена голубя', start: 'feeder',
+    { name: 'Голуби', sign: 'ЦЕХ 7 · ГОЛУБИ', cost: 2e10, wall: '#8fc4ea', mortar: '#7ab0d8', floor: '#6e6a72', grid: '#6e6a72', plate: '#b08a58', frame: '#5a3f2a', item: '#a9b2c3', board: '#6a4a2c', boardHi: '#8a6a44', goods: 'pigeons', unit: 'Голуби', unit1: 'Цена голубя', start: 'feeder',
       desc: 'Седьмая ветка завода, крыша. Дрессируют почтовых голубей. Пять мест крестом, как голубь с раскрытыми крыльями: центр касается всех. Голубиная почта: каждый работающий станок цеха приносит посылки на 15% чаще.',
       opened: 'Голубятня открыта! Поставь к кормушке сотрудника' },
-    { name: 'Манга', sign: 'ЦЕХ 8 · МАНГА', cost: 3e11, wall: '#efe6cf', mortar: '#9a7650', floor: '#cfc890', grid: '#cfc890', plate: '#fbf8f0', frame: '#2b2135', item: '#fbf8f0', board: '#c8323c', boardHi: '#e05a5a', goods: 'manga', unit: 'Манга', unit1: 'Цена тома', start: 'sketch',
+    { name: 'Манга', sign: 'ЦЕХ 8 · МАНГА', cost: 6e11, wall: '#efe6cf', mortar: '#9a7650', floor: '#cfc890', grid: '#cfc890', plate: '#fbf8f0', frame: '#2b2135', item: '#fbf8f0', board: '#c8323c', boardHi: '#e05a5a', goods: 'manga', unit: 'Манга', unit1: 'Цена тома', start: 'sketch',
       desc: 'Восьмая ветка завода, студия манги. Рисуют наброски, тушуют и печатают тома. Верхнее место стоит отдельно и ни с кем не соседствует. Онгоинг: цена манги +10% за каждую смену подряд, когда цех работал, а смена простоя всё сбрасывает.',
       opened: 'Студия манги открыта! Поставь к столу набросков сотрудника' },
-    { name: 'Пепси', sign: 'ЦЕХ 9 · ЖИВЫЕ БУТЫЛКИ', cost: 1e13, wall: '#cfe3ee', mortar: '#a8c4d4', floor: '#8fa3ae', grid: '#7e929d', plate: '#dfe7ec', frame: '#44505c', item: '#3f7ac2', board: '#13439a', boardHi: '#3f7ac2', goods: 'bottles', unit: 'Бутылки', unit1: 'Цена бутылки', start: 'extract', startSlot: 3,
+    { name: 'Пепси', sign: 'ЦЕХ 9 · ЖИВЫЕ БУТЫЛКИ', cost: 2e13, wall: '#cfe3ee', mortar: '#a8c4d4', floor: '#8fa3ae', grid: '#7e929d', plate: '#dfe7ec', frame: '#44505c', item: '#3f7ac2', board: '#13439a', boardHi: '#3f7ac2', goods: 'bottles', unit: 'Бутылки', unit1: 'Цена бутылки', start: 'extract', startSlot: 3,
       desc: 'Девятая ветка завода, лаборатория. Здесь выращивают живые бутылки пепси. Экстрактор пепси открывается вместе с цехом, занимает место в три ряда и касается всех трёх мест слева.',
       opened: 'Лаборатория открыта! Поставь к экстрактору сотрудника' },
-    { name: 'Калибровка', tab: 'Калибр.', sign: 'ЦЕХ 10 · КАЛИБРОВКА', cost: 4e14, wall: '#f4f7f9', mortar: '#dfe5ea', floor: '#e9eef2', grid: '#dfe5ea', plate: '#ffffff', frame: '#9aa3ad', item: '#5aa9e6', board: '#5aa9e6', boardHi: '#8fd3f0', goods: 'calib', unit: 'Калибровки', unit1: 'Цена калибровки', start: 'etalon', startSlot: 2,
+    { name: 'Калибровка', tab: 'Калибр.', sign: 'ЦЕХ 10 · КАЛИБРОВКА', cost: 8e14, wall: '#f4f7f9', mortar: '#dfe5ea', floor: '#e9eef2', grid: '#dfe5ea', plate: '#ffffff', frame: '#9aa3ad', item: '#5aa9e6', board: '#5aa9e6', boardHi: '#8fd3f0', goods: 'calib', unit: 'Калибровки', unit1: 'Цена калибровки', start: 'etalon', startSlot: 2,
       desc: 'Десятая ветка завода, белая лаборатория: калибруют туалеты и аэрогрили. В центре Эталон, он открывается вместе с цехом и работает без сотрудника: чем больше соседей работает, тем он дороже. Унитаз рядом с аэрогрилем: «Это одно и то же», сила обоих ×2.',
       opened: 'Калибровка открыта! Эталон ждёт работающих соседей' }
   ];
@@ -429,7 +429,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     thoth: { name: 'Тот', role: 'Бог мудрости на полставки', power: 1.3, speed: 1.0, luck: 0.1, perk: 'Смеётся последним: в последние 15 с смены сила ×2.' },
     rat: { name: 'Главная мразь цеха', role: 'Тень в капюшоне', power: 1.0, speed: 1.0, luck: 0.05, perk: 'Крысит: у каждого работающего соседа сила −0,2, а он забирает её себе. Кролик-детектив рядом закрывает дело.' },
     lin: { name: 'Лин Лаф Лаг', role: 'Кувшин с сиропом', power: 1.2, speed: 0.7, luck: 0.15, perk: 'Laugh: работники соседних станков +10% удачи.' },
-    horse: { name: 'Лошадь в гольфах', she: true, role: 'Рабочая лошадка', power: 1.5, speed: 1.1, luck: 0.05, perk: 'Пашет как лошадь: сила +5% за каждые 10 с смены у станка, до +50%. В раздевалке сбрасывается.' },
+    horse: { name: 'Лошадь в гольфах', she: true, role: 'Рабочая лошадка', power: 1.5, speed: 1.1, luck: 0.05, perk: 'Пашет как лошадь: сила +5% за каждые 5 с смены у станка, до +50%. В раздевалке сбрасывается.' },
     rabbit: { name: 'Кролик-детектив', role: 'Бешеный кролик в плаще', power: 0.9, speed: 1.3, luck: 0.1, perk: 'Сыщик: пока он работает, посылки приходят на 25% чаще. Рядом с Главной мразью цеха закрывает дело.' },
     sunflower: { name: 'Подсолнух ГВ2', she: true, role: 'Цветок с газона', power: 0.9, speed: 1.1, luck: 0.1, perk: 'Солнышко: пока работает, каждые 15 с смены роняет солнышко: +1% квоты монетами. Рядом с Мухобойкой «Оборона газона».' },
     flytrap: { name: 'Мухобойка', she: true, role: 'Живой плющ в горшке', power: 1.3, speed: 1.0, luck: 0.05, perk: 'Ест вредителей: в её цеху минус Зубастых улиток не действует, а Главная мразь цеха у неё не крысит.' },
@@ -1116,7 +1116,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   // xp/shop/quota grow geometrically, every levelEvery-th level gives a card, crates come every crate..2×crate seconds;
   // a crate holds a share of the quota: plain crateQ, gold crateGoldQ (chance crateGold), or a card pick (chance crateCard);
   // crates pay at most crateCap of the quota a shift, so they help but never carry it; from shift skillCoinQ skills are opened only by cards
-  const BAL = { tempo: 2, machW: 3, xp0: 7.5, xpK: 2.2, levelEvery: 3, shopQ: 0.3, shopRoll: 1, rarPrice: [0.6, 1, 1.6, 2.4], masteryEvery: 9, crate: 20, crateQ: [0.02, 0.06], crateGoldQ: [0.08, 0.12], crateGold: 0.1, crateCard: 0.05, quotaT: 45, quota0: 115, quotaK: 1.9, quotaA: 1.06, crateCap: 0.3, shopE: 0.2, skillCoinQ: 10, cap: 3, trio: 4, add: true, sq: 1.4 };
+  const BAL = { tempo: 2, machW: 3, xp0: 15, xpK: 2, levelEvery: 3, shopQ: 0.3, shopRoll: 1, rarPrice: [0.6, 1, 1.6, 2.4], masteryEvery: 9, crate: 20, crateQ: [0.02, 0.06], crateGoldQ: [0.08, 0.12], crateGold: 0.1, crateCard: 0.05, quotaT: 45, quota0: 200, quotaE0: 115, quotaEK: 1.9, quota1: 60, quotaK: 1.65, quotaA: 1.06, crateCap: 0.3, shopE: 0.2, skillCoinQ: 10, cap: 3, trio: 4, add: true, sq: 1.4 };
   const need = l => Math.round(BAL.xp0 * Math.pow(BAL.xpK, l - 1));
   // the showcase is priced off the quota just passed or off the last shift's earnings (shopE of them), whichever is more,
   // so a runaway income cannot make cards free
@@ -1182,11 +1182,13 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (run.sqK) toast(`Сквонч! ${SQK_TXT[run.sqK]}`);
     return true;
   }
-  // quotas speed up: quota q grows quotaK × quotaA^(q−2) times over the previous one, so a stack of multipliers still hits a wall
-  const quotaTarget = q => Math.round(BAL.quota0 * Math.pow(BAL.quotaK, q - 1) * Math.pow(BAL.quotaA, (q - 1) * (q - 2) / 2));
+  // quotas speed up: quota q grows quotaK × quotaA^(q−2) times over the previous one, so a stack of multipliers still hits a wall;
+  // the first shifts follow a gentler early curve (quotaE0, quotaEK), so a run is not lost on a bad first card
+  const quotaCurve = (b, k, q) => b * Math.pow(k, q - 1) * Math.pow(BAL.quotaA, (q - 1) * (q - 2) / 2);
+  const quotaTarget = q => Math.round(Math.min(quotaCurve(BAL.quota0, BAL.quotaK, q), quotaCurve(BAL.quotaE0, BAL.quotaEK, q)));
   // the quota actually asked this shift: every Credit taken before it makes it ×1,5
-  // the first shift is half as long, so its quota is half too
-  const curQuota = () => quotaTarget(state.run.q) * Math.pow(1.5, (state.run.credit || {})[state.run.q] || 0) / (state.run.q === 1 ? 2 : 1);
+  // the first shift is half as long and Crow works it alone, so its quota is its own (quota1)
+  const curQuota = () => (state.run.q === 1 ? BAL.quota1 : quotaTarget(state.run.q)) * Math.pow(1.5, (state.run.credit || {})[state.run.q] || 0);
   // the first shift is half as long
   const quotaTime = () => Math.round((BAL.quotaT + (hasUnlock('time') ? 8 : 0)) / (state.run.q === 1 ? 2 : 1));
   // seconds into the shift, null in a break: the cards that change during a shift read it
@@ -1678,7 +1680,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       if (W !== 'rabbit' && skillOn('rabbit') && near.some(j => sl[j].worker === 'rabbit')) { speedM *= SKILLS.rabbit.mult; notes.push(`Кролик-детектив, «${SKILLS.rabbit.name}»: скорость ×2`); }
       if (W === 'rabbit' && g.caseClosed) { power *= 1.5; notes.push('Дело закрыто: сила ×1,5'); }
       if (has(W, 'thoth', g) && !state.run.brk && quotaTime() - state.run.qT <= 15) { power *= 2; notes.push('Тот смеётся последним: сила ×2'); }
-      if (has(W, 'horse', g)) { const k = Math.min(10, Math.floor((state.workers[W].workT || 0) / 10)); if (k) { power *= 1 + 0.05 * k; notes.push(`Пашет как лошадь: +${k * 5}% силы`); } }
+      if (has(W, 'horse', g)) { const k = Math.min(10, Math.floor((state.workers[W].workT || 0) / 5)); if (k) { power *= 1 + 0.05 * k; notes.push(`Пашет как лошадь: +${k * 5}% силы`); } }
       // the Rat (or a Shadow copying it) steals 0,2 of base power from each working neighbour, its skill pays back double;
       // Mirror armour turns the stealing back on the thief
       B = WORKERS[W].power;
