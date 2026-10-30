@@ -345,7 +345,11 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       opened: 'Лаборатория открыта! Поставь к экстрактору сотрудника' },
     { name: 'Калибровка', tab: 'Калибр.', sign: 'ЦЕХ 10 · КАЛИБРОВКА', cost: 8e14, wall: '#f4f7f9', mortar: '#dfe5ea', floor: '#e9eef2', grid: '#dfe5ea', plate: '#ffffff', frame: '#9aa3ad', item: '#5aa9e6', board: '#5aa9e6', boardHi: '#8fd3f0', goods: 'calib', unit: 'Калибровки', unit1: 'Цена калибровки', start: 'etalon', startSlot: 2,
       desc: 'Десятая ветка завода, белая лаборатория: калибруют туалеты и аэрогрили. В центре Эталон, он открывается вместе с цехом и работает без сотрудника: чем больше соседей работает, тем он дороже. Унитаз рядом с аэрогрилем: «Это одно и то же», сила обоих ×2.',
-      opened: 'Калибровка открыта! Эталон ждёт работающих соседей' }
+      opened: 'Калибровка открыта! Эталон ждёт работающих соседей' },
+    // workshop 7 on the other route: glaciers instead of pigeons; it sits at index 10 and shows on the seventh tab
+    { name: 'Ледники', sign: 'ЦЕХ 7 · ЛЕДНИКИ', cost: 2e10, wall: '#1e2a4a', mortar: '#2a3d63', floor: '#2f5a86', grid: '#2f5a86', plate: '#e3f1f8', frame: '#7fb6d6', item: '#bfe6f8', board: '#2a4f7a', boardHi: '#4f86b8', goods: 'ice', unit: 'Лёд', unit1: 'Цена глыбы', start: 'icesaw',
+      desc: 'Седьмая ветка завода на другом маршруте, вместо голубей. Четыре льдины ромбом касаются по кругу. Каждую смену льдины дрейфуют: станки с сотрудниками меняются местами. В каждой второй смене метель на 20 с: у сотрудников цеха скорость ×0,5 и сила ×3, бонусы к скорости и удача не действуют.',
+      opened: 'Ледники открыты! Поставь к ледорезу сотрудника' }
   ];
   // slot i sits at [column, row] of its workshop's grid; slot indexes never move, so saves stay valid
   const LAYOUTS = [
@@ -364,8 +368,12 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     // a column of three on the left, the extractor on the right: its slot is three rows tall, anchored at row 0
     [[0, 0], [0, 1], [0, 2], [1, 0]],
     // a pair on top, the etalon across both columns in the middle (anchored at column 0), a pair below
-    [[0, 0], [1, 0], [0, 1], [0, 2], [1, 2]]
+    [[0, 0], [1, 0], [0, 1], [0, 2], [1, 2]],
+    // glaciers: four floes in a diamond, top, left, right, bottom; they touch in a ring, not across
+    [[1, 0], [0, 1], [2, 1], [1, 2]]
   ];
+  // the route fork: workshop 7 is pigeons (6) or glaciers (ICE), only one of them opens in a run
+  const ICE = 10, altOf = l => l === 6 ? ICE : l === ICE ? 6 : null, locNo = l => l === ICE ? 7 : l + 1;
   const gridSize = l => LAYOUTS[l].reduce(([c, r], [x, y]) => [Math.max(c, x + 1), Math.max(r, y + 1)], [0, 0]);
   // max: how many machines of a type the factory may own; the maxes of a workshop add up to its slot count (the brick pump is one extra).
   // Once all are placed, the card stops dropping
@@ -396,6 +404,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     loft: { loc: 6, name: 'Почтовая голубятня', short: 'ГОЛУБЯТНЯ', rate: 0.3, value: 3e6, max: 1, desc: 'Выпускает дипломированных почтовых голубей. Медленно, но дорого.' },
     sketch: { loc: 7, name: 'Стол набросков', short: 'НАБРОСКИ', rate: 0.9, value: 1.2e7, max: 3, desc: 'Рисует наброски глазастых героев.' },
     ink: { loc: 7, name: 'Тушевальня', short: 'ТУШЬ', rate: 0.5, value: 3e7, max: 2, desc: 'Обводит страницы тушью.' },
+    icesaw: { loc: 10, name: 'Ледорез', short: 'ЛЕДОРЕЗ', rate: 0.8, value: 6e5, max: 2, desc: 'Пилит глыбы льда.' },
+    icehole: { loc: 10, name: 'Прорубь', short: 'ПРОРУБЬ', rate: 0.5, value: 1.5e6, max: 1, desc: 'Ловит рыбу подо льдом.' },
+    igloo: { loc: 10, name: 'Иглу', short: 'ИГЛУ', rate: 0.25, value: 4e6, max: 1, desc: 'Строит иглу из снежных кирпичей. Медленно, но дорого.' },
     printer: { loc: 7, name: 'Печатный пресс', short: 'ПРЕСС', rate: 0.3, value: 7e7, max: 1, desc: 'Печатает тома. Медленно, но дорого.' },
     // the extractor and the etalon come with their workshops and have no cards
     extract: { loc: 8, name: 'Экстрактор пепси', short: 'ЭКСТРАКТОР', rate: 0.4, value: 1e9, max: 1, desc: 'Высокий станок на три ряда: качает пепси во все три места слева, им +20% скорости.' },
@@ -610,6 +621,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     m_feeder: { name: 'Кормушка', type: 'machine', machine: 'feeder', tag: 'Станки', rar: 0, desc: 'Голубь стоит 500K. Рядом с полосой: +30% её скорости.' },
     m_course: { name: 'Полоса препятствий', type: 'machine', machine: 'course', tag: 'Станки', rar: 1, desc: 'Голубь стоит 1,3M. Рядом с голубятней: +25% к её цене.' },
     m_loft: { name: 'Почтовая голубятня', type: 'machine', machine: 'loft', tag: 'Станки', rar: 1, desc: 'Голубь стоит 3M. Медленно, зато почтовый.' },
+    m_icesaw: { name: 'Ледорез', type: 'machine', machine: 'icesaw', tag: 'Станки', rar: 0, desc: 'Глыба стоит 600K. Рядом с прорубью: +30% её скорости.' },
+    m_icehole: { name: 'Прорубь', type: 'machine', machine: 'icehole', tag: 'Станки', rar: 1, desc: 'Глыба стоит 1,5M. Рядом с иглу: +25% к его цене.' },
+    m_igloo: { name: 'Иглу', type: 'machine', machine: 'igloo', tag: 'Станки', rar: 1, desc: 'Глыба стоит 4M. Соседям +15% к цене, это не сдувает метелью.' },
     m_sketch: { name: 'Стол набросков', type: 'machine', machine: 'sketch', tag: 'Станки', rar: 0, desc: 'Том стоит 12M. Рядом с тушевальней: +30% её скорости.' },
     m_ink: { name: 'Тушевальня', type: 'machine', machine: 'ink', tag: 'Станки', rar: 1, desc: 'Том стоит 30M. Рядом с прессом: +25% к его цене.' },
     m_printer: { name: 'Печатный пресс', type: 'machine', machine: 'printer', tag: 'Станки', rar: 1, desc: 'Том стоит 70M. Рядом с набросками: +15% их скорости.' },
@@ -704,6 +718,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (src === 'feeder' && dst === 'course') return { rate: 0.30, value: 0, text: 'Сытые голуби: +30% скорости' };
     if (src === 'course' && dst === 'loft') return { rate: 0, value: 0.25, text: 'Обученные голуби: +25% к цене' };
     if (src === 'loft' && dst === 'feeder') return { rate: 0.15, value: 0, text: 'Голубятня рядом: +15% скорости' };
+    if (src === 'icesaw' && dst === 'icehole') return { rate: 0.30, value: 0, text: 'Ледорез расчистил прорубь: +30% скорости' };
+    if (src === 'icehole' && dst === 'igloo') return { rate: 0, value: 0.25, text: 'Свежая рыба к ужину: +25% к цене' };
+    if (src === 'igloo') return { rate: 0, value: 0.15, text: 'Тёплое иглу рядом: +15% к цене' };
     if (src === 'sketch' && dst === 'ink') return { rate: 0.30, value: 0, text: 'Готовые наброски: +30% скорости' };
     if (src === 'ink' && dst === 'printer') return { rate: 0, value: 0.25, text: 'Чистая тушь: +25% к цене' };
     if (src === 'printer' && dst === 'sketch') return { rate: 0.15, value: 0, text: 'Дедлайн у пресса: +15% скорости' };
@@ -905,6 +922,10 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     feeder: r => { r(7, 6, 2, 10, K); r(1, 6, 14, 3, K); r(2, 7, 12, 1, '#c98a52'); for (let dy = 0; dy < 5; dy++) r(2 + dy, 5 - dy, 12 - dy * 2, 1, K); for (let dy = 0; dy < 4; dy++) r(3 + dy, 5 - dy, 10 - dy * 2, 1, '#b8423b'); for (let k = 0; k < 5; k++) r(3 + k * 2, 5 + (k % 2), 1, 1, '#e5c56a'); r(2, 12, 5, 3, K); r(3, 13, 3, 1, '#a9b2c3'); r(6, 11, 2, 2, K); r(7, 11, 1, 1, '#ff7a2a'); },
     course: (r, d) => { r(7, 9, 1, 7, K); r(1, 15, 14, 1, K); for (let a = 0; a < 40; a++) { const an = a / 40 * Math.PI * 2; r(7 + Math.round(Math.cos(an) * 5), 6 + Math.round(Math.sin(an) * 5), 1, 1, K); } for (let a = 0; a < 32; a++) { const an = a / 32 * Math.PI * 2; r(7 + Math.round(Math.cos(an) * 4), 6 + Math.round(Math.sin(an) * 4), 1, 1, a % 8 < 4 ? '#f2c94c' : '#d9535a'); } r(10, 4, 5, 3, K); r(11, 5, 3, 1, '#a9b2c3'); r(14, 3, 2, 2, K); r(15, 3, 1, 1, '#6fbf9a'); },
     loft: r => { for (let dy = 0; dy < 6; dy++) r(7 - dy, dy, 2 + dy * 2, 1, K); for (let dy = 1; dy < 6; dy++) r(8 - dy, dy, dy * 2, 1, '#5b7f8a'); r(1, 6, 14, 8, K); r(2, 6, 12, 7, '#e3d6b8'); r(3, 8, 4, 3, K); r(9, 8, 4, 3, K); r(4, 9, 2, 1, '#7f889a'); r(10, 9, 1, 1, '#ff7a2a'); r(3, 14, 2, 2, K); r(11, 14, 2, 2, K); },
+    // glacier machines
+    icesaw: r => { r(5, 0, 6, 1, K); r(4, 1, 1, 1, K); r(5, 1, 1, 1, '#9aa3ad'); r(6, 1, 4, 1, '#c9d0d6'); r(10, 1, 1, 1, '#9aa3ad'); r(11, 1, 1, 1, K); r(3, 2, 1, 1, K); r(4, 2, 1, 1, '#9aa3ad'); r(5, 2, 2, 1, '#c9d0d6'); r(7, 2, 2, 1, '#e9eef2'); r(9, 2, 2, 1, '#c9d0d6'); r(11, 2, 1, 1, '#9aa3ad'); r(12, 2, 1, 1, K); r(2, 3, 1, 1, K); r(3, 3, 1, 1, '#9aa3ad'); r(4, 3, 1, 1, '#c9d0d6'); r(5, 3, 2, 1, '#e9eef2'); r(7, 3, 2, 1, K); r(9, 3, 2, 1, '#e9eef2'); r(11, 3, 1, 1, '#c9d0d6'); r(12, 3, 1, 1, '#9aa3ad'); r(13, 3, 1, 1, K); r(2, 4, 1, 1, K); r(3, 4, 1, 1, '#9aa3ad'); r(4, 4, 1, 1, '#c9d0d6'); r(5, 4, 1, 1, '#e9eef2'); r(6, 4, 1, 1, K); r(7, 4, 2, 1, '#9aa3ad'); r(9, 4, 1, 1, K); r(10, 4, 1, 1, '#e9eef2'); r(11, 4, 1, 1, '#c9d0d6'); r(12, 4, 1, 1, '#9aa3ad'); r(13, 4, 1, 1, K); r(2, 5, 1, 1, K); r(3, 5, 1, 1, '#9aa3ad'); r(4, 5, 1, 1, '#c9d0d6'); r(5, 5, 2, 1, '#e9eef2'); r(7, 5, 2, 1, K); r(9, 5, 2, 1, '#e9eef2'); r(11, 5, 1, 1, '#c9d0d6'); r(12, 5, 1, 1, '#9aa3ad'); r(13, 5, 1, 1, K); r(3, 6, 1, 1, K); r(4, 6, 1, 1, '#9aa3ad'); r(5, 6, 2, 1, '#c9d0d6'); r(7, 6, 2, 1, '#e9eef2'); r(9, 6, 2, 1, '#c9d0d6'); r(11, 6, 1, 1, '#9aa3ad'); r(12, 6, 1, 1, K); r(1, 7, 4, 1, K); r(5, 7, 1, 1, '#9aa3ad'); r(6, 7, 4, 1, '#c9d0d6'); r(10, 7, 1, 1, '#9aa3ad'); r(11, 7, 4, 1, K); r(1, 8, 1, 1, K); r(2, 8, 2, 1, '#dff3fb'); r(4, 8, 1, 1, '#9fd3ee'); r(5, 8, 6, 1, K); r(11, 8, 3, 1, '#9fd3ee'); r(14, 8, 1, 1, K); r(1, 9, 1, 1, K); r(2, 9, 2, 1, '#dff3fb'); r(4, 9, 3, 1, '#9fd3ee'); r(7, 9, 2, 1, '#5a9cc4'); r(9, 9, 5, 1, '#9fd3ee'); r(14, 9, 1, 1, K); r(1, 10, 1, 1, K); r(2, 10, 1, 1, '#dff3fb'); r(3, 10, 4, 1, '#9fd3ee'); r(7, 10, 2, 1, '#5a9cc4'); r(9, 10, 3, 1, '#9fd3ee'); r(12, 10, 1, 1, '#a9cde0'); r(13, 10, 1, 1, '#9fd3ee'); r(14, 10, 1, 1, K); r(1, 11, 1, 1, K); r(2, 11, 1, 1, '#dff3fb'); r(3, 11, 4, 1, '#9fd3ee'); r(7, 11, 2, 1, '#5a9cc4'); r(9, 11, 5, 1, '#9fd3ee'); r(14, 11, 1, 1, K); r(1, 12, 1, 1, K); r(2, 12, 5, 1, '#9fd3ee'); r(7, 12, 2, 1, '#5a9cc4'); r(9, 12, 2, 1, '#9fd3ee'); r(11, 12, 1, 1, '#a9cde0'); r(12, 12, 2, 1, '#9fd3ee'); r(14, 12, 1, 1, K); r(1, 13, 14, 1, K); r(1, 14, 1, 1, K); r(2, 14, 12, 1, '#a8693a'); r(14, 14, 1, 1, K); r(0, 15, 16, 1, K); },
+    icehole: r => { r(13, 0, 1, 1, '#8a5a32'); r(12, 1, 1, 1, '#8a5a32'); r(13, 1, 1, 1, '#f4f4f4'); r(1, 2, 2, 1, K); r(11, 2, 1, 1, '#8a5a32'); r(13, 2, 1, 1, '#f4f4f4'); r(0, 3, 1, 1, K); r(1, 3, 2, 1, '#8fb6ec'); r(3, 3, 1, 1, K); r(10, 3, 1, 1, '#8a5a32'); r(13, 3, 1, 1, '#f4f4f4'); r(0, 4, 1, 1, K); r(1, 4, 1, 1, '#8fb6ec'); r(2, 4, 1, 1, '#5b8fd6'); r(3, 4, 1, 1, '#8fb6ec'); r(4, 4, 1, 1, K); r(9, 4, 1, 1, '#8a5a32'); r(13, 4, 1, 1, '#f4f4f4'); r(1, 5, 1, 1, K); r(2, 5, 1, 1, '#8fb6ec'); r(3, 5, 1, 1, K); r(8, 5, 1, 1, '#8a5a32'); r(13, 5, 1, 1, '#f4f4f4'); r(0, 6, 2, 1, K); r(7, 6, 1, 1, '#8a5a32'); r(13, 6, 1, 1, '#f4f4f4'); r(6, 7, 1, 1, '#8a5a32'); r(13, 7, 1, 1, '#f4f4f4'); r(5, 8, 1, 1, '#8a5a32'); r(13, 8, 1, 1, '#f4f4f4'); r(4, 9, 1, 1, '#8a5a32'); r(8, 9, 7, 1, K); r(3, 10, 1, 1, '#8a5a32'); r(6, 10, 2, 1, K); r(8, 10, 4, 1, '#cfe6f2'); r(12, 10, 1, 1, K); r(13, 10, 1, 1, '#d64545'); r(14, 10, 2, 1, K); r(2, 11, 1, 1, K); r(3, 11, 1, 1, '#8a5a32'); r(5, 11, 1, 1, K); r(6, 11, 1, 1, '#cfe6f2'); r(7, 11, 4, 1, '#1f3d66'); r(11, 11, 1, 1, K); r(12, 11, 1, 1, '#f4f4f4'); r(13, 11, 1, 1, K); r(14, 11, 1, 1, '#cfe6f2'); r(15, 11, 1, 1, K); r(1, 12, 1, 1, K); r(2, 12, 1, 1, '#d64545'); r(3, 12, 1, 1, K); r(5, 12, 1, 1, K); r(6, 12, 1, 1, '#cfe6f2'); r(7, 12, 1, 1, '#1f3d66'); r(8, 12, 1, 1, '#3f6e9c'); r(9, 12, 5, 1, '#1f3d66'); r(14, 12, 1, 1, '#cfe6f2'); r(15, 12, 1, 1, K); r(2, 13, 1, 1, K); r(5, 13, 1, 1, K); r(6, 13, 2, 1, '#cfe6f2'); r(8, 13, 6, 1, '#1f3d66'); r(14, 13, 1, 1, '#cfe6f2'); r(15, 13, 1, 1, K); r(6, 14, 2, 1, K); r(8, 14, 6, 1, '#cfe6f2'); r(14, 14, 2, 1, K); r(8, 15, 6, 1, K); },
+    igloo: r => { r(5, 1, 6, 1, K); r(4, 2, 1, 1, K); r(5, 2, 6, 1, '#eef6fb'); r(11, 2, 1, 1, '#f4f4f4'); r(12, 2, 1, 1, K); r(3, 3, 1, 1, K); r(4, 3, 2, 1, '#eef6fb'); r(6, 3, 1, 1, '#a9cde0'); r(7, 3, 3, 1, '#eef6fb'); r(10, 3, 1, 1, '#a9cde0'); r(11, 3, 2, 1, '#eef6fb'); r(13, 3, 1, 1, K); r(2, 4, 1, 1, K); r(3, 4, 11, 1, '#a9cde0'); r(14, 4, 1, 1, K); r(2, 5, 1, 1, K); r(3, 5, 2, 1, '#eef6fb'); r(5, 5, 1, 1, '#a9cde0'); r(6, 5, 3, 1, '#eef6fb'); r(9, 5, 1, 1, '#a9cde0'); r(10, 5, 4, 1, '#eef6fb'); r(14, 5, 1, 1, K); r(1, 6, 1, 1, K); r(2, 6, 4, 1, '#eef6fb'); r(6, 6, 1, 1, '#a9cde0'); r(7, 6, 3, 1, '#eef6fb'); r(10, 6, 1, 1, '#a9cde0'); r(11, 6, 4, 1, '#eef6fb'); r(15, 6, 1, 1, K); r(1, 7, 1, 1, K); r(2, 7, 13, 1, '#a9cde0'); r(15, 7, 1, 1, K); r(1, 8, 1, 1, K); r(2, 8, 1, 1, '#eef6fb'); r(3, 8, 1, 1, '#a9cde0'); r(4, 8, 2, 1, '#eef6fb'); r(6, 8, 5, 1, K); r(11, 8, 1, 1, '#eef6fb'); r(12, 8, 1, 1, '#a9cde0'); r(13, 8, 2, 1, '#eef6fb'); r(15, 8, 1, 1, K); r(0, 9, 1, 1, K); r(1, 9, 4, 1, '#eef6fb'); r(5, 9, 1, 1, K); r(6, 9, 5, 1, '#2a3d63'); r(11, 9, 1, 1, K); r(12, 9, 3, 1, '#eef6fb'); r(15, 9, 1, 1, K); r(0, 10, 1, 1, K); r(1, 10, 3, 1, '#a9cde0'); r(4, 10, 1, 1, K); r(5, 10, 7, 1, '#2a3d63'); r(12, 10, 1, 1, K); r(13, 10, 2, 1, '#a9cde0'); r(15, 10, 1, 1, K); r(0, 11, 1, 1, K); r(1, 11, 1, 1, '#eef6fb'); r(2, 11, 1, 1, '#a9cde0'); r(3, 11, 1, 1, '#eef6fb'); r(4, 11, 1, 1, K); r(5, 11, 1, 1, '#3f6e9c'); r(6, 11, 2, 1, '#2a3d63'); r(8, 11, 2, 1, '#e0a040'); r(10, 11, 2, 1, '#2a3d63'); r(12, 11, 1, 1, K); r(13, 11, 1, 1, '#a9cde0'); r(14, 11, 1, 1, '#eef6fb'); r(15, 11, 1, 1, K); r(0, 12, 1, 1, K); r(1, 12, 3, 1, '#eef6fb'); r(4, 12, 1, 1, K); r(5, 12, 1, 1, '#3f6e9c'); r(6, 12, 1, 1, '#2a3d63'); r(7, 12, 3, 1, '#e0a040'); r(10, 12, 2, 1, '#2a3d63'); r(12, 12, 1, 1, K); r(13, 12, 2, 1, '#eef6fb'); r(15, 12, 1, 1, K); r(0, 13, 1, 1, K); r(1, 13, 3, 1, '#a9cde0'); r(4, 13, 1, 1, K); r(5, 13, 7, 1, '#2a3d63'); r(12, 13, 1, 1, K); r(13, 13, 2, 1, '#a9cde0'); r(15, 13, 1, 1, K); r(0, 14, 1, 1, K); r(1, 14, 3, 1, '#eef6fb'); r(4, 14, 1, 1, K); r(5, 14, 7, 1, '#2a3d63'); r(12, 14, 1, 1, K); r(13, 14, 2, 1, '#eef6fb'); r(15, 14, 1, 1, K); r(0, 15, 16, 1, K); },
     sketch: r => { r(1, 1, 13, 12, K); r(2, 2, 11, 10, '#fbf8f0'); r(3, 3, 9, 1, '#8f8aa0'); r(4, 5, 2, 3, K); r(8, 5, 2, 3, K); r(4, 5, 1, 1, '#ffffff'); r(8, 5, 1, 1, '#ffffff'); r(6, 9, 2, 1, '#e8737a'); r(2, 13, 2, 3, K); r(11, 13, 2, 3, K); for (let k = 0; k < 6; k++) { r(9 + k, 11 - k, 1, 1, k ? '#f2c94c' : K); r(10 + k, 11 - k, 1, 1, '#c98a2a'); } },
     ink: r => { r(3, 7, 10, 9, K); r(4, 8, 8, 7, '#1d1629'); r(4, 10, 8, 3, '#e9e2d0'); r(6, 11, 4, 1, '#c8323c'); r(5, 5, 6, 3, K); r(6, 6, 4, 1, '#3a3346'); r(5, 8, 1, 2, '#6a6280'); r(8, 4, 1, 2, '#9aa3ad'); for (let k = 2; k < 8; k++) { r(8 + (k >> 1), 6 - k, 1, 1, '#c98a52'); r(9 + (k >> 1), 6 - k, 1, 1, '#8a5a32'); } },
     printer: (r, d) => { r(0, 13, 16, 3, K); r(7, 2, 8, 12, K); r(8, 3, 6, 10, '#4a6a6a'); d(11, 6, 2, '#c9d0d6'); d(11, 10, 2, '#3a3346'); d(5, 8, 5, K); d(5, 8, 4, '#c8323c'); d(5, 8, 1, K); r(1, 7, 1, 1, '#f2c94c'); r(12, 7, 4, 3, K); r(13, 8, 3, 1, '#fbf8f0'); },
@@ -932,7 +953,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     u_scotch: 'scotch', e_thirst: 'thirst', e_soda: 'soda', s_plumbus: 'plumbus', u_squanch: 'squanch', u_hyper: 'hyper', u_triad: 'triad', s_veins: 'veins', s_banner: 'banner', s_sponge: 'sponge',
     u_zorya: 'zorya', s_ketchup: 'ketchup', e_mirror: 'mirror', s_spice: 'spice', s_sauce: 'sauce', e_crackers: 'crackers', s_glue: 'glue', u_fattoad: 'fattoad', u_novapost: 'novapost', e_shadow: 'shadow',
     u_pizza4: 'pizza4', e_pillow: 'pillow', e_honeycake: 'honeycake', e_jelly: 'jelly', m_pump: 'brickpump', e_flipflop: 'flipflop', u_waffle: 'waffle', s_queen: 'clayqueen', e_salve: 'burnsalve',
-    m_dough: 'dough', m_topping: 'topping', m_pizzaoven: 'pizzaoven', m_feeder: 'feeder', m_course: 'course', m_loft: 'loft', m_sketch: 'sketch', m_ink: 'ink', m_printer: 'printer', m_vat: 'vat', m_fizz: 'fizz', m_hatch: 'hatch', m_toilet: 'toilet', m_airfryer: 'airfryer', m_shorts: 'shorts', m_drinks: 'drinks'
+    m_dough: 'dough', m_topping: 'topping', m_pizzaoven: 'pizzaoven', m_feeder: 'feeder', m_course: 'course', m_loft: 'loft', m_icesaw: 'icesaw', m_icehole: 'icehole', m_igloo: 'igloo', m_sketch: 'sketch', m_ink: 'ink', m_printer: 'printer', m_vat: 'vat', m_fizz: 'fizz', m_hatch: 'hatch', m_toilet: 'toilet', m_airfryer: 'airfryer', m_shorts: 'shorts', m_drinks: 'drinks'
   };
   const ICONS = {};
   for (const id in CARD_ICON) ICONS[id] = makeIcon(ICON_DRAW[CARD_ICON[id]]);
@@ -941,11 +962,11 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   /* ================= state ================= */
   const KEY = 'pixel-factory-save-v1';
   // kiss: pieces made, for the 44th piece of Sponges 44
-  // slot counts of workshops 6–10
-  const NEW_LOC_SLOTS = [4, 5, 6, 4, 5];
+  // slot counts of workshops 6–10 and of the glaciers
+  const NEW_LOC_SLOTS = [4, 5, 6, 4, 5, 4];
   const emptySlots = n => Array.from({ length: n }, () => ({ machine: null, worker: null, upg: [], acc: 0, kiss: 0 }));
   const fresh = () => ({
-    v: 19, money: 0, xp: 0, level: 1, planks: 0, bricks: 0, nails: 0, glass: 0, poufs: 0, pizza: 0, pigeons: 0, manga: 0, bottles: 0, calib: 0, earned: 0, cur: 0,
+    v: 20, money: 0, xp: 0, level: 1, planks: 0, bricks: 0, nails: 0, glass: 0, poufs: 0, pizza: 0, pigeons: 0, manga: 0, bottles: 0, calib: 0, ice: 0, earned: 0, cur: 0,
     locs: [
       { unlocked: true, slots: [{ machine: null, worker: null, upg: [], acc: 0, kiss: 0 }, { machine: 'saw', worker: 'crow', upg: [], acc: 0, kiss: 0 }, { machine: null, worker: null, upg: [], acc: 0, kiss: 0 }] },
       { unlocked: false, slots: emptySlots(4) },
@@ -969,7 +990,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     // ongoing: shifts in a row the manga studio worked, mangaOn: it worked this shift;
     // claw: the worker the toy alien's claw chose this shift, warned: the neighbour the executioner warned, stolen: the equipment card the thief copied;
     // stockQ: the shift of the last «Stocktaking», so it skips the next two checks; thermos: Mr. Butthole's coffee waits for him to be hired
-    run: { t: 0, q: 1, qT: 0, qEarned: 0, brk: true, shop: [], rule: null, sq: {}, sqK: null, nova: false, spark: null, bitten: [], rolled: false, rose: false, claw: null, warned: null, stolen: null, over: false, rep: 0, passed: [], hired: 0, skills: 0, bestRate: 0, opened: [0, null, null, null, null, null, null, null, null, null], ongoing: 0, mangaOn: false, qLast: 0, stockQ: 0, thermos: false }
+    run: { t: 0, q: 1, qT: 0, qEarned: 0, brk: true, shop: [], rule: null, sq: {}, sqK: null, nova: false, spark: null, bitten: [], rolled: false, rose: false, claw: null, warned: null, stolen: null, over: false, rep: 0, passed: [], hired: 0, skills: 0, bestRate: 0, opened: [0, null, null, null, null, null, null, null, null, null, null], ongoing: 0, mangaOn: false, qLast: 0, stockQ: 0, thermos: false }
   });
   const NEW_WORKERS = ['sunflower', 'flytrap', 'honeybear', 'arc', 'nurse', 'nemu', 'tuesday', 'zombie', 'digger', 'kaneki', 'raven'];
   const NEW_WORKERS_13 = ['fairy', 'pirate', 'beekeeper', 'kisa', 'toyalien', 'code10', 'code80', 'yeti', 'slime', 'moth', 'gastriter', 'palach', 'thief', 'raccoons', 'rebel'];
@@ -1081,7 +1102,13 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       if (s.run) s.run.thermos = false;
       s.v = 19;
     }
-    return s.v === 8 || s.v === 19 ? s : null;
+    if (s.v === 19) {
+      // build 20: the glaciers joined as workshop 7 of the other route, with their goods and the blizzard
+      s.locs.push({ unlocked: false, slots: emptySlots(4) }); s.ice = 0;
+      if (s.run) { while (s.run.opened.length < 11) s.run.opened.push(null); Object.assign(s.run, { storm: false, stormAt: null }); }
+      s.v = 20;
+    }
+    return s.v === 8 || s.v === 20 ? s : null;
   }
   // meta lives across runs: reputation, its unlocks, achievements and records
   const META_KEY = 'pixel-factory-meta-v1';
@@ -1129,7 +1156,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   // xp/shop/quota grow geometrically, every levelEvery-th level gives a card, crates come every crate..2×crate seconds;
   // a crate holds a share of the quota: plain crateQ, gold crateGoldQ (chance crateGold), or a card pick (chance crateCard);
   // crates pay at most crateCap of the quota a shift, so they help but never carry it; from shift skillCoinQ skills are opened only by cards
-  const BAL = { tempo: 2, machW: 3, xp0: 15, xpK: 2, levelEvery: 3, shopQ: 0.3, shopRoll: 1, rarPrice: [0.6, 1, 1.6, 2.4], masteryEvery: 9, crate: 20, crateQ: [0.02, 0.06], crateGoldQ: [0.08, 0.12], crateGold: 0.1, crateCard: 0.05, quotaT: 45, quota0: 200, quota1: 60, quotaK: 1.5, quotaA: 1.06, crateCap: 0.3, shopE: 0.2, skillCoinQ: 10, cap: 3, trio: 4, add: true, sq: 1.4, subCap: 0.6 };
+  const BAL = { storm: 20, stormEvery: 2, tempo: 2, machW: 3, xp0: 15, xpK: 2, levelEvery: 3, shopQ: 0.3, shopRoll: 1, rarPrice: [0.6, 1, 1.6, 2.4], masteryEvery: 9, crate: 20, crateQ: [0.02, 0.06], crateGoldQ: [0.08, 0.12], crateGold: 0.1, crateCard: 0.05, quotaT: 45, quota0: 200, quota1: 60, quotaK: 1.5, quotaA: 1.06, crateCap: 0.3, shopE: 0.2, skillCoinQ: 10, cap: 3, trio: 4, add: true, sq: 1.4, subCap: 0.6 };
   const need = l => Math.round(BAL.xp0 * Math.pow(BAL.xpK, l - 1));
   // the showcase is priced off the quota just passed or off the last shift's earnings (shopE of them), whichever is more,
   // so a runaway income cannot make cards free
@@ -1182,6 +1209,11 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     }
     const pz = workerPlace('zombie');
     if (pz && !rule('sanepid')) { const nb = neigh(pz.l, pz.i).map(j => slotsOf(pz.l)[j].worker).filter(Boolean); if (nb.length) run.bitten.push(nb[Math.floor(Math.random() * nb.length)]); }
+    // the floes drift: a shuffle that always moves something, the slot objects travel whole
+    if (state.locs[ICE].unlocked) { const S = state.locs[ICE].slots, keep = S.slice(); do { for (let k = S.length - 1; k > 0; k--) { const j = Math.floor(Math.random() * (k + 1)); [S[k], S[j]] = [S[j], S[k]]; } } while (S.every((s, k) => s === keep[k])); }
+    // a blizzard on every BAL.stormEvery-th shift, BAL.storm seconds at a random moment of it
+    run.storm = false; run.stormAt = state.locs[ICE].unlocked && run.q % BAL.stormEvery === 0 ? Math.random() * Math.max(0, quotaTime() - BAL.storm) : null;
+    if (run.stormAt != null) toast('Ледники: в этой смене будет метель');
     // Posquonchim: every copy squanches power, speed or price of its machine and the side neighbours for the shift
     run.sq = {};
     const sqAll = [];
@@ -1292,6 +1324,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   const TALL = { 8: 3 }, WIDE = { 9: 2 };
   const adjacent = (l, i, j) => {
     if (i === j) return false;
+    // floes touch in a ring: the top and bottom ones touch the left and right ones
+    if (l === ICE) return (i === 0 || i === 3) !== (j === 0 || j === 3);
     if (TALL[l] === i || TALL[l] === j || WIDE[l] === i || WIDE[l] === j) return true;
     const [a, b] = [LAYOUTS[l][i], LAYOUTS[l][j]], dx = Math.abs(a[0] - b[0]), dy = Math.abs(a[1] - b[1]);
     return (dy === 0 && dx === 1) || (dy === 1 && dx < 1);
@@ -1749,6 +1783,11 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (sqGot.length) notes.push(`Посквончим: ${sqGot.map(k => SKIN_KINDS[k === 'price' ? 'value' : k]).join(', ')} ×${fmt(BAL.sq)}`);
     else if (sqF.power > 1) notes.push('Посквончим: в смене выпадет сила, скорость или цена');
     power *= skM.power * sqF.power;
+    // the glaciers' blizzard: workers slow to half of their own speed, every speed bonus and luck are blown away, power ×3
+    if (l === ICE && state.run.storm && !state.run.brk) {
+      speed = Math.min(speed, W ? WORKERS[W].speed : 1) * 0.5; speedM = Math.min(1, speedM); skM.speed = Math.min(1, skM.speed); rb = Math.min(0, rb); rX = Math.min(1, rX); sqF.speed = Math.min(1, sqF.speed);
+      power *= 3; luck = 0; notes.push('Метель: скорость ×0,5, сила ×3, бонусы к скорости и удача не действуют');
+    }
     let rate = M.rate * BAL.tempo * speed * speedM * skM.speed * (1 + rb) * rX * sqF.speed;
     let value = baseV * power * skM.value * (1 + vb) * vX * (1 + g.price) * g.priceX * g.locX[l] * sqF.price;
     // Toothy snails slow their machine down, but not in a workshop where the Helping hand feeds them or the Flytrap eats them, and not Mirror armour
@@ -1942,6 +1981,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   function unlockLoc(l) {
     const L = state.locs[l], cost = LOCS[l].cost;
     if (L.unlocked) return;
+    if (altOf(l) != null && state.locs[altOf(l)].unlocked) { toast('На этом забеге выбран другой маршрут'); return; }
     if (state.money < cost) { toast(`Чтобы открыть цех, нужно ${fmt(cost)} монет`); return; }
     state.money -= cost; L.unlocked = true; state.run.opened[l] = state.run.t;
     if (LOCS[l].start) L.slots[LOCS[l].startSlot ?? 1].machine = LOCS[l].start;
@@ -2049,6 +2089,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     floats.forEach(f => { f.life -= dt * 0.8; });
     floats = floats.filter(f => f.life > 0);
     run.t += dt; run.qT += dt;
+    const storm = run.stormAt != null && run.qT >= run.stormAt && run.qT < run.stormAt + BAL.storm;
+    if (storm && !run.storm) toast('Метель на ледниках: скорость ×0,5, сила ×3');
+    run.storm = storm;
     if (incomeNow > run.bestRate) run.bestRate = incomeNow;
     // a shift always lasts quotaTime(): the quota is checked only when it ends
     if (run.qT >= quotaTime()) {
@@ -2102,7 +2145,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (piggy) { state.money += run.qEarned * 0.1 * piggy; toast(`Копилка: +${fmt(run.qEarned * 0.1 * piggy)} монет`); }
     // the manga ongoing grows with every shift the studio worked and breaks on an idle one
     run.ongoing = run.mangaOn ? (run.ongoing || 0) + 1 : 0; run.mangaOn = false;
-    run.qLast = run.qEarned; run.q++; run.qT = 0; run.qEarned = 0; run.qCrate = 0; run.rule = null; run.sq = {}; run.nova = false; run.bitten = []; run.spark = null; run.rolled = false; run.claw = null; run.warned = null; run.stolen = null;
+    run.qLast = run.qEarned; run.q++; run.qT = 0; run.qEarned = 0; run.qCrate = 0; run.rule = null; run.sq = {}; run.nova = false; run.bitten = []; run.spark = null; run.rolled = false; run.claw = null; run.warned = null; run.stolen = null; run.storm = false; run.stormAt = null;
     run.brk = true; run.shopClosed = !!(wasRule && wasRule.id === 'stock'); run.shop = run.shopClosed ? [] : rollShop(); run.shopLocked = false; run.shopRolls = 0;
     if (run.q % 3 === 0) rollRule();
     if (!piggy) toast(wasRule ? 'Проверка пройдена! Перерыв' : 'Квота выполнена! Перерыв');
@@ -2311,6 +2354,42 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       R(x + 14, y + 2, 7, 21, K); R(x + 15, y + 3, 5, 19, '#c9d0d6'); R(x + 16, y + 4, 3, 17, '#bfeef4'); R(x + 16, y + 5, 1, 4, '#ffffff'); R(x + 18, y + 14, 1, 5, '#7fd6e0');
       R(x + 16, y + 22, 3, 2, K);
       const hot = Math.floor(t * 5) % 2; R(x + 27, y + 12, 3, 3, hot ? '#fff1b0' : '#ffb35a'); R(x + 28, y + 13, 1, 1, '#ffffff');
+    } else if (type === 'icesaw') {
+      // a block of ice on a sled under a steel gantry, a circular saw spins and cuts it, chips spray
+      R(x + 1, y + 26, 30, 4, K); R(x + 2, y + 27, 28, 2, '#a8693a'); R(x, y + 29, 5, 2, K); R(x + 27, y + 29, 5, 2, K);
+      R(x + 5, y + 13, 22, 14, K); R(x + 6, y + 14, 20, 12, '#9fd3ee'); R(x + 6, y + 14, 20, 2, '#dff3fb'); R(x + 7, y + 16, 2, 8, '#e9f7fd'); R(x + 20, y + 19, 5, 1, '#7fb6d6'); R(x + 21, y + 22, 4, 1, '#7fb6d6');
+      R(x + 15, y + 16, 2, 10, '#5a9cc4');
+      R(x + 1, y + 2, 3, 25, K); R(x + 2, y + 3, 1, 23, '#9aa3ad'); R(x + 28, y + 2, 3, 25, K); R(x + 29, y + 3, 1, 23, '#9aa3ad'); R(x + 1, y, 30, 4, K); R(x + 2, y + 1, 28, 2, '#c9d0d6'); R(x + 2, y + 1, 28, 1, '#e9eef2');
+      R(x + 14, y + 3, 4, 4, K); R(x + 15, y + 3, 2, 3, '#5a5060');
+      disc(x + 16, y + 12, 8, K); disc(x + 16, y + 12, 7, '#c9d0d6'); disc(x + 16, y + 12, 5, '#e9eef2'); disc(x + 16, y + 12, 2, K); R(x + 16, y + 12, 1, 1, '#f2c94c');
+      for (let k = 0; k < 8; k++) { const a = t * 12 + k * Math.PI / 4; R(x + 16 + Math.round(Math.cos(a) * 7), y + 12 + Math.round(Math.sin(a) * 7), 1, 1, '#5a5060'); }
+      for (let k = 0; k < 6; k++) { const ph = (t * 2 + k / 6) % 1, d = k % 2 ? 1 : -1; R(x + 16 + d * Math.round(ph * 15), y + 18 - Math.round(ph * 12 - ph * ph * 16), 1, 1, '#ffffff'); }
+    } else if (type === 'icehole') {
+      const ell = (cx, cy, rx, ry, col) => { for (let dy = -ry; dy <= ry; dy++) { const w = Math.round(rx * Math.sqrt(1 - (dy / ry) ** 2)); R(cx - w, cy + dy, w * 2 + 1, 1, col); } };
+      // a hole in the ice with a rod stuck in the snow, the float bobs, now and then a fish leaps into the bucket
+      ell(x + 13, y + 25, 12, 5, K); ell(x + 13, y + 25, 11, 4, '#cfe6f2'); ell(x + 13, y + 25, 8, 3, K); ell(x + 13, y + 25, 7, 2, '#1f3d66'); R(x + 9, y + 24, 4, 1, '#3f6e9c');
+      for (let k = 0; k < 15; k++) R(x + 2 + k, y + 21 - Math.round(k * 1.25), 2, 1, k < 4 ? K : '#8a5a32');
+      R(x + 1, y + 20, 4, 3, K); R(x + 2, y + 21, 2, 1, '#d64545');
+      const fb = Math.round(Math.sin(t * 3) * 0.8);
+      R(x + 16, y + 3, 1, 21 + fb, 'rgba(240,240,240,.75)'); R(x + 15, y + 22 + fb, 3, 3, K); R(x + 16, y + 22 + fb, 1, 1, '#d64545'); R(x + 16, y + 23 + fb, 1, 1, '#f4efe6');
+      R(x + 23, y + 15, 10, 13, K); R(x + 24, y + 16, 8, 11, '#7d8794'); R(x + 24, y + 16, 8, 2, '#9aa3ad'); R(x + 25, y + 18, 1, 8, '#c9d0d6'); R(x + 22, y + 14, 12, 2, K);
+      R(x + 25, y + 11, 3, 4, K); R(x + 26, y + 12, 1, 2, '#5b8fd6'); R(x + 28, y + 12, 3, 3, K); R(x + 29, y + 13, 1, 1, '#8fb6ec');
+      const jp = (t * 0.4) % 1;
+      if (jp < 0.35) { const u = jp / 0.35, fx = x + 13 + Math.round(u * 15), fy = y + 22 - Math.round(Math.sin(u * Math.PI) * 14); R(fx - 3, fy - 2, 7, 4, K); R(fx - 2, fy - 1, 5, 2, '#8fb6ec'); R(fx + 2, fy - 1, 1, 1, K); R(fx - 5, fy - 2, 3, 4, K); R(fx - 4, fy - 1, 1, 2, '#5b8fd6'); }
+    } else if (type === 'igloo') {
+      // an igloo of snow bricks with a dark doorway; the top course is laid again and again, a brick floats down into place
+      for (let dy = 0; dy <= 15; dy++) { const w = Math.round(16 * Math.sqrt(1 - (dy / 16) ** 2)); R(x + 16 - w - 1, y + 29 - dy, w * 2 + 3, 1, K); }
+      R(x - 1, y + 29, 35, 2, K);
+      const n = Math.floor(t * 1.2) % 4;
+      for (let dy = 0; dy <= 14; dy++) {
+        if (dy >= 11 && n < 3 && dy >= 11 + n) continue;
+        const w = Math.round(15 * Math.sqrt(1 - (dy / 15) ** 2)), yy = y + 29 - dy;
+        R(x + 16 - w, yy, w * 2 + 1, 1, dy % 4 === 3 ? '#a9cde0' : '#eef6fb'); R(x + 16 - w, yy, 2, 1, '#ffffff'); R(x + 16 + w - 2, yy, 3, 1, '#cfe4f0');
+        if (dy % 4 === 1) for (let k = x + 16 - w + ((dy >> 2) % 2) * 3 + 2; k < x + 16 + w - 1; k += 6) R(k, yy - 1, 1, 3, '#a9cde0');
+      }
+      if (n < 3) { const fall = (t * 1.2) % 1, ty = y + 2 + Math.round(fall * (11 + n) * 0.6); R(x + 12, ty, 9, 5, K); R(x + 13, ty + 1, 7, 3, '#eef6fb'); R(x + 13, ty + 1, 7, 1, '#ffffff'); }
+      R(x + 9, y + 20, 11, 10, K); R(x + 10, y + 22, 9, 8, '#2a3d63'); R(x + 11, y + 21, 7, 1, '#2a3d63'); R(x + 11, y + 23, 2, 6, '#3a5a86');
+      R(x + 13, y + 25, 3, 2, Math.floor(t * 3) % 2 ? '#f2c94c' : '#e0a040');
     } else if (type === 'dough') {
       R(x + 4, y + 25, 24, 5, K); R(x + 5, y + 26, 22, 3, '#d9535a'); R(x + 5, y + 26, 22, 1, '#ef8a8a');
       R(x + 22, y + 6, 6, 20, K); R(x + 23, y + 7, 4, 19, '#e8e2d6'); R(x + 23, y + 7, 1, 19, '#ffffff');
@@ -2882,6 +2961,18 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       R(cx + 22, 6, 7, 9, '#2e2e38'); R(cx + 23, 7, 5, 2, '#ff8a3a');
       for (let k = 0; k < 4; k++) R(cx + 4 + k * 8, 17, 5, 1, k % 2 ? '#7ee081' : '#9aa3ad');
     }
+    else if (l === ICE) {
+      // polar night: stars, a green and violet aurora that ripples, icebergs on the horizon
+      R(0, 0, W, 29, '#1e2a4a'); R(0, 0, W, 7, '#182240'); R(0, 18, W, 11, '#2a3d63');
+      for (let k = 0; k < 26; k++) R((k * 47 + 13) % W, (k * 29) % 17, 1, 1, Math.floor(t * 2 + k) % 5 ? '#9fb0d8' : '#ffffff');
+      for (let xx = 0; xx < W; xx++) {
+        const a = 8 + Math.round(Math.sin(xx / 23 + t * 0.6) * 3 + Math.sin(xx / 9 - t) * 1), b = 3 + Math.round(Math.sin(xx / 31 - t * 0.4) * 2);
+        R(xx, a, 1, 2, 'rgba(110,230,170,.6)'); R(xx, a + 2, 1, 4, 'rgba(110,230,170,.22)'); R(xx, b, 1, 2, 'rgba(190,130,235,.4)');
+      }
+      const berg = (bx, w, h) => { for (let k = 0; k < w; k++) { const hh = Math.max(1, Math.round(h * Math.pow(1 - Math.abs(k / w * 2 - 1), 0.6)) + (k % 7 === 3 ? 1 : 0)); R(bx + k, 27 - hh, 1, hh, k < w * 0.45 ? '#e8f4fa' : '#a9cde0'); R(bx + k, 27 - hh, 1, 1, '#ffffff'); } };
+      for (const [bx, w, h] of [[2, 34, 10], [40, 16, 5], [W - 74, 24, 6], [W - 40, 38, 12]]) berg(bx, w, h);
+      R(0, 27, W, 2, '#3a5a86'); for (let xx = (Math.floor(t * 4) % 6); xx < W; xx += 6) R(xx, 27, 3, 1, '#5a8ab8');
+    }
     else { for (let xx = 0; xx < W; xx += 30) R(xx, 0, 1, 29, LT.mortar); R(0, 14, W, 1, LT.mortar); R(0, 22, W, 3, '#5f6168'); R(0, 22, W, 1, '#9a9ca5'); for (let xx = 8; xx < W; xx += 40) R(xx, 21, 4, 5, '#4a4c53'); }
     if (l === 4) for (const wx of [14, W - 54]) {
       R(wx, 3, 40, 2, '#c9d0d6'); for (let i = 0; i < 10; i++) { R(wx + 1 + i * 4, 5, 3, 15, '#a8dcf4'); R(wx + 4 + i * 4, 5, 1, 15, '#6fb4dc'); }
@@ -2895,6 +2986,74 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     R(0, 28, W, 3, '#5a3f36');
     // floor
     R(0, 31, W, FL - 31, LT.floor);
+    if (l === ICE) {
+      // icy sea: ripples drift past, slush floats
+      for (let k = 0; k < 70; k++) { const wx = (k * 61 + Math.floor(t * 5) + (k % 4) * 17) % (W + 8) - 4, wy = 33 + (k * 37) % (FL - 36); R(wx, wy, 4, 1, k % 3 ? '#3f6e9c' : '#5a8ab8'); }
+      for (let k = 0; k < 12; k++) { const sx = (k * 83 + Math.floor(t * 3)) % W, sy = 40 + (k * 53) % (FL - 50); R(sx, sy, 2, 1, '#cfe6f2'); }
+      const ell = (cx, cy, rx, ry, col) => { for (let dy = -ry; dy <= ry; dy++) { const w = Math.round(rx * Math.sqrt(1 - (dy / ry) ** 2)); R(cx - w, cy + dy, w * 2 + 1, 1, col); } };
+      // a floe: a ragged squarish slab, snow on top, a blue ice side, a pale ring of ice under the water
+      const floe = (cx, cy, rx, ry, seed) => {
+        const rows = [];
+        for (let dy = -ry; dy <= ry; dy++) { const u = dy / ry; rows.push([cy + dy, Math.round(rx * Math.pow(1 - u ** 6, 0.5) + Math.sin(dy * 0.7 + seed) * 2 + Math.sin(dy * 0.21 + seed * 3) * 3)]); }
+        for (const [yy, w] of rows) R(cx - w - 3, yy + 2, w * 2 + 7, 4, 'rgba(160,220,240,.18)');
+        for (const [yy, w] of rows) R(cx - w - 1, yy - 1, w * 2 + 3, 7, K);
+        for (const [yy, w] of rows) R(cx - w, yy + 1, w * 2 + 1, 4, '#6fa6cc');
+        for (const [yy, w] of rows) { R(cx - w, yy, w * 2 + 1, 1, '#eef6fb'); R(cx - w, yy, 2, 1, '#ffffff'); R(cx + w - 3, yy, 4, 1, '#cfe4f0'); }
+        for (let k = 0; k < 9; k++) { const [yy, w] = rows[(k * 7 + seed) % rows.length]; R(cx - w + 3 + (k * 13) % Math.max(1, w * 2 - 6), yy, 2, 1, '#d6e9f4'); }
+        // a crack runs across
+        for (let k = 0; k < 10; k++) R(cx - rx + 4 + k * 3, cy + ry - 8 + Math.round(Math.sin(k * 1.3 + seed) * 2), 3, 1, '#a9cde0');
+      };
+      const P = LAYOUTS[ICE], fx = i => colX(P[i][0]) + SW / 2, fy = i => rowY(P[i][1]) + SH / 2;
+      // foam laps around every floe
+      for (let i = 0; i < P.length; i++) for (let k = 0; k < 8; k++) { const a = k * Math.PI / 4 + t * 0.3 + i, r = 46 + Math.round(Math.sin(t * 2 + k) * 1); R(fx(i) + Math.round(Math.cos(a) * r), fy(i) + Math.round(Math.sin(a) * r), 3, 1, 'rgba(230,245,255,.5)'); }
+      for (let i = 0; i < P.length; i++) floe(fx(i), fy(i), 42, 41, i * 5 + 1);
+      // where two floes touch, the ice heaps into a ridge and creaks
+      for (let i = 0; i < P.length; i++) for (let j = i + 1; j < P.length; j++) if (adjacent(ICE, i, j)) {
+        const mx = Math.round((fx(i) + fx(j)) / 2), my = Math.round((fy(i) + fy(j)) / 2), c = Math.floor(t * 3 + i + j) % 3;
+        for (const [a, b, w, h] of [[-7, 0, 6, 5], [-2, -4, 6, 8], [3, -1, 5, 6], [-4, 3, 9, 4]]) { R(mx + a - 1, my + b - 1, w + 2, h + 2, K); R(mx + a, my + b, w, h, '#dff0f8'); R(mx + a, my + b, w, 1, '#ffffff'); R(mx + a + w - 1, my + b + 1, 1, h - 1, '#9cc6de'); }
+        if (!c) { R(mx - 10, my - 7, 2, 1, '#ffffff'); R(mx + 9, my - 6, 2, 1, '#ffffff'); R(mx, my - 9, 1, 2, '#ffffff'); }
+      }
+      // top left: penguins on a small floe, one waddles, one slides into the water and climbs back
+      const px = 36, py = rowY(0) + 40;
+      ell(px, py + 4, 30, 9, K); ell(px, py + 5, 29, 8, '#6fa6cc'); ell(px, py + 3, 29, 7, '#eef6fb'); R(px - 22, py + 1, 12, 1, '#ffffff');
+      const peng = (x0, y0, dir, step) => {
+        R(x0 - 4, y0 - 12, 9, 13, K); R(x0 - 3, y0 - 11, 7, 11, '#2b2b3a'); R(x0 - 2 + (dir > 0 ? 1 : 0), y0 - 8, 4, 8, '#f4f8fb');
+        R(x0 + dir * 2, y0 - 9, 1, 1, '#ffffff'); R(x0 + dir * 4, y0 - 8, 2, 1, '#f29a3a'); R(x0 + (dir > 0 ? -4 : 4), y0 - 6 + step, 1, 4, '#2b2b3a');
+        R(x0 - 3 + step, y0 + 1, 3, 1, '#f29a3a'); R(x0 + 1 - step, y0 + 1, 3, 1, '#f29a3a');
+      };
+      const wd = Math.sin(t * 0.9), st = Math.floor(t * 4) % 2;
+      peng(px - 14, py, 1, 0); peng(px + Math.round(wd * 8), py + 1, wd > 0 ? 1 : -1, st);
+      const sl = (t * 0.25) % 1;
+      if (sl < 0.5) { const sx = px + 14 + Math.round(sl * 2 * 14); R(sx - 6, py - 2, 12, 5, K); R(sx - 5, py - 1, 10, 3, '#2b2b3a'); R(sx - 4, py + 1, 8, 1, '#f4f8fb'); R(sx + 5, py - 1, 2, 1, '#f29a3a'); R(sx - 9, py, 3, 1, '#ffffff'); }
+      else { const k = Math.round(Math.sin((sl - 0.5) * 2 * Math.PI) * 4); R(px + 30, py + 8 - k, 5, 4, K); R(px + 31, py + 9 - k, 3, 2, '#2b2b3a'); R(px + 34, py + 9 - k, 1, 1, '#f29a3a'); for (let q = 0; q < 3; q++) R(px + 27 + q * 4, py + 12, 3, 1, '#cfe6f2'); }
+      // top right: a seal on a floe balances a ball on its nose and claps
+      const qx = W - 38, qy = rowY(0) + 46;
+      ell(qx, qy + 4, 30, 9, K); ell(qx, qy + 5, 29, 8, '#6fa6cc'); ell(qx, qy + 3, 29, 7, '#eef6fb');
+      ell(qx - 2, qy - 3, 13, 5, K); ell(qx - 2, qy - 3, 12, 4, '#8a93a6'); ell(qx - 2, qy - 2, 9, 2, '#aab3c3'); R(qx - 16, qy - 6, 5, 4, K); R(qx - 15, qy - 5, 3, 2, '#5f6878');
+      R(qx + 7, qy - 13, 9, 10, K); R(qx + 8, qy - 12, 7, 8, '#8a93a6'); R(qx + 10, qy - 10, 1, 1, K); R(qx + 13, qy - 10, 1, 1, K); R(qx + 11, qy - 8, 2, 1, K); R(qx + 15, qy - 8, 3, 1, '#cfd5e0'); R(qx + 15, qy - 7, 3, 1, '#cfd5e0');
+      const clap = Math.floor(t * 3) % 2; R(qx + 2, qy - 6 - clap * 2, 4, 3, K); R(qx + 3, qy - 5 - clap * 2, 2, 1, '#5f6878');
+      const bb = Math.abs(Math.sin(t * 2.5)) * 6, bx = qx + 11, by = qy - 19 - Math.round(bb);
+      disc(bx, by, 4, K); disc(bx, by, 3, '#d64545'); R(bx - 3, by - 1, 7, 2, '#f4efe6'); R(bx - 1, by - 2, 2, 1, '#ffffff');
+      // between the floes: an orca fin circles, a spout now and then
+      const cx = W / 2, cy = rowY(1) + SH / 2, oa = t * 0.5, ox = cx + Math.round(Math.cos(oa) * 14), oy = cy + Math.round(Math.sin(oa) * 6), od = Math.sin(oa) > 0 ? -1 : 1;
+      for (let k = 0; k < 5; k++) R(ox - od * (4 + k * 3), oy + 6 + (k % 2), 3, 1, 'rgba(230,245,255,.55)');
+      for (let k = 0; k < 9; k++) R(ox + (od > 0 ? -2 + Math.floor(k / 3) : 2 - Math.floor(k / 3)) - 1, oy + 5 - k, 4 - Math.floor(k / 3), 1, K);
+      for (let k = 1; k < 8; k++) R(ox + (od > 0 ? -1 + Math.floor(k / 3) : 1 - Math.floor(k / 3)), oy + 5 - k, 2 - Math.floor(k / 4), 1, '#2b2b3a');
+      if ((t * 0.3) % 1 < 0.15) for (let k = 0; k < 5; k++) R(ox - 2 + k, oy - 10 - (k % 2) * 3, 1, 3, 'rgba(230,245,255,.8)');
+      // bottom left: a fish jumps out of the water in an arc, rings spread where it fell
+      const jx = 34, jy = rowY(2) + 44, jp = (t * 0.45) % 1;
+      if (jp < 0.4) { const u = jp / 0.4, fxx = jx - 12 + Math.round(u * 24), fyy = jy - Math.round(Math.sin(u * Math.PI) * 18); R(fxx - 4, fyy - 2, 8, 5, K); R(fxx - 3, fyy - 1, 6, 3, '#8fb6ec'); R(fxx - 3, fyy - 1, 6, 1, '#c4dcf6'); R(fxx + 1, fyy - 1, 1, 1, K); R(fxx - 6, fyy - 2, 3, 5, K); R(fxx - 5, fyy - 1, 1, 3, '#5b8fd6'); }
+      else { const u = (jp - 0.4) / 0.6, r = 2 + Math.round(u * 10); ell(jx + 12, jy, r, Math.max(1, Math.round(r / 3)), `rgba(200,230,250,${(0.6 * (1 - u)).toFixed(2)})`); ell(jx + 12, jy, Math.max(0, r - 2), Math.max(1, Math.round(r / 3) - 1), LT.floor); }
+      // bottom right: a polar bear cub sits on a floe and nibbles a fish, its ears twitch
+      const ux = W - 36, uy = rowY(2) + 54;
+      ell(ux, uy + 4, 28, 9, K); ell(ux, uy + 5, 27, 8, '#6fa6cc'); ell(ux, uy + 3, 27, 7, '#eef6fb');
+      ell(ux, uy - 6, 9, 8, K); ell(ux, uy - 6, 8, 7, '#f4efe6'); ell(ux - 2, uy - 5, 5, 4, '#ffffff');
+      const ear = Math.floor(t * 0.8) % 3 === 0 ? 1 : 0;
+      ell(ux + 1, uy - 17, 7, 6, K); ell(ux + 1, uy - 17, 6, 5, '#f4efe6'); R(ux - 5, uy - 24 + ear, 4, 4, K); R(ux - 4, uy - 23 + ear, 2, 2, '#e3dccd'); R(ux + 4, uy - 24, 4, 4, K); R(ux + 5, uy - 23, 2, 2, '#e3dccd');
+      R(ux - 2, uy - 18, 1, 1, K); R(ux + 3, uy - 18, 1, 1, K); R(ux, uy - 15, 2, 1, K);
+      const nib = Math.floor(t * 4) % 2; R(ux + 2, uy - 12 + nib, 10, 4, K); R(ux + 3, uy - 11 + nib, 7, 2, '#8fb6ec'); R(ux + 10, uy - 13 + nib, 3, 6, K); R(ux + 11, uy - 12 + nib, 1, 4, '#5b8fd6');
+      R(ux - 6, uy - 10, 4, 5, K); R(ux - 5, uy - 9, 2, 3, '#f4efe6'); R(ux - 6, uy, 6, 3, K); R(ux - 5, uy, 4, 2, '#f4efe6'); R(ux + 2, uy, 6, 3, K); R(ux + 3, uy, 4, 2, '#f4efe6');
+    }
     if (l < 5) {
       for (let yy = 31; yy < FL; yy += 20) R(0, yy, W, 1, LT.grid);
       for (let xx = 0; xx < W; xx += 20) R(xx, 31, 1, FL - 31, LT.grid);
@@ -3367,7 +3526,10 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       if (s.worker && s.machine !== 'etalon') {
         const bob = Math.floor(t * 2 + i) % 2, on = skillOn(s.worker), w = state.workers[s.worker], wy = y + hh - 34;
         if (on) for (let k = 0; k < 6; k++) { const a = t * 4 + k * Math.PI / 3; R(x + 17 + Math.round(Math.cos(a) * 13), wy + 16 + Math.round(Math.sin(a) * 15), 2, 2, k % 2 ? '#ffd54a' : '#fff1b0'); }
-        gx.drawImage(sprOf(s.worker), x + 6, wy - bob);
+        // in a blizzard the worker shivers and breathes steam
+        const shiver = l === ICE && state.run.storm ? Math.floor(t * 20 + i) % 2 : 0;
+        gx.drawImage(sprOf(s.worker), x + 6 + shiver, wy - bob);
+        if (shiver || (l === ICE && state.run.storm)) { const ph = (t * 0.8 + i * 0.3) % 1; R(x + 22 + Math.round(ph * 4), wy + 6 - Math.round(ph * 8), 3, 2, `rgba(240,250,255,${(0.7 * (1 - ph)).toFixed(2)})`); }
         if (w.skill) {
           const f = skillBar(s.worker)[1];
           R(x + 5, y + hh - 5, 25, 3, K); R(x + 6, y + hh - 4, Math.round(23 * f), 1, on ? '#ffd54a' : '#6fa3b5');
@@ -3383,6 +3545,14 @@ textarea{height:84px;resize:vertical;word-break:break-all}
         }
       }
     });
+    if (l === ICE && state.run.storm) {
+      // a blizzard: a cold haze, flakes driven sideways by gusts, frost creeping in from the edges
+      gx.fillStyle = 'rgba(215,232,246,.42)'; gx.fillRect(0, 29, W, FL - 29);
+      const gust = 1 + Math.sin(t * 1.7) * 0.4;
+      for (let k = 0; k < 220; k++) { const sx = ((k * 97 + t * (90 + (k % 5) * 20) * gust) % (W + 40)) - 20, sy = 31 + ((k * 53 + t * (30 + (k % 3) * 10)) % (FL - 31)), big = k % 5 === 0; R(Math.round(sx), Math.round(sy), big ? 2 : 3, big ? 2 : 1, k % 3 ? '#ffffff' : '#dff0f8'); }
+      for (let k = 0; k < 10; k++) { const wy = 40 + ((k * 41 + t * 20) % (FL - 50)), wx = ((k * 67 + t * 160) % (W + 80)) - 40; R(Math.round(wx), Math.round(wy), 30, 1, 'rgba(255,255,255,.6)'); R(Math.round(wx) + 8, Math.round(wy) + 1, 18, 1, 'rgba(255,255,255,.35)'); }
+      for (let yy = 31; yy < FL; yy += 3) { const d = 5 + Math.round(Math.sin(yy * 0.7) * 2 + Math.sin(yy * 0.13) * 2); R(0, yy, d, 3, 'rgba(240,250,255,.7)'); R(W - d, yy, d, 3, 'rgba(240,250,255,.7)'); }
+    }
     // highlights
     sl.forEach((s, i) => {
       const x = SX(i), y = SY(i), ww = SLOT_W(l, i), hh = SLOT_H(l, i);
@@ -3581,7 +3751,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       const prev = workerPlace(selWorker), other = s.worker, before = globals().combos;
       s.worker = selWorker;
       if (prev && !(prev.l === l && prev.i === i)) slotsOf(prev.l)[prev.i].worker = other;
-      if (prev && prev.l !== l) toast(`${WORKERS[selWorker].name}: теперь в цеху ${l + 1}`);
+      if (prev && prev.l !== l) toast(`${WORKERS[selWorker].name}: теперь в цеху ${locNo(l)}`);
       comboToast(before);
       selWorker = null; selSlot = i; save(); renderSheet(); return;
     }
@@ -3592,9 +3762,13 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   // ten workshops do not fit in one row: two pages of TPP tabs, flipped by the arrow or a swipe; the page follows the open workshop
   const TPP = 5, tabs = [0, 1, 2, 3, 4].map(k => document.getElementById('tab' + k)), $tabPg = document.getElementById('tabPg'), $tabNav = document.querySelector('.tabs');
   let tabPage = 0, tabCur = -1, swiped = false;
+  // the seventh tab shows the opened route, or the one being looked at while neither is open
+  const tabLoc = l => l === 6 && (state.locs[ICE].unlocked || (state.cur === ICE && !state.locs[6].unlocked)) ? ICE : l;
   tabs.forEach((b, k) => b.addEventListener('click', () => {
     if (swiped) { swiped = false; return; } // the click that ends a swipe only flips the page
-    const l = tabPage * TPP + k;
+    const l = tabLoc(tabPage * TPP + k);
+    // a locked fork tab tapped again shows the other route, a locked plain tab opens the workshop
+    if (!state.locs[l].unlocked && state.cur === l && altOf(l) != null) { state.cur = altOf(l); selSlot = null; renderSheet(); renderTabs(); return; }
     if (!state.locs[l].unlocked && state.cur === l && !guest && !state.run.over) { unlockLoc(l); return; }
     if (mode && mode.kind === 'move') mode = null;
     state.cur = l; selSlot = null; renderSheet(); renderTabs();
@@ -3605,21 +3779,21 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   $tabNav.addEventListener('pointerdown', e => { swipeX = e.clientX; swiped = false; });
   $tabNav.addEventListener('pointerup', e => { if (swipeX != null && Math.abs(e.clientX - swipeX) > 40 && (e.clientX < swipeX) === (tabPage === 0)) { flipTabs(); swiped = true; } swipeX = null; });
   function renderTabs() {
-    if (state.cur !== tabCur) { tabCur = state.cur; tabPage = Math.floor(state.cur / TPP); }
+    if (state.cur !== tabCur) { tabCur = state.cur; tabPage = Math.floor((locNo(state.cur) - 1) / TPP); }
     const pg = tabPage ? '‹' : '›';
     if ($tabPg.dataset.p !== String(tabPage)) { $tabPg.dataset.p = tabPage; $tabPg.innerHTML = `${pg}<small>${tabPage + 1}/2</small>`; }
     tabs.forEach((b, k) => {
-      const l = tabPage * TPP + k, L = state.locs[l];
+      const l = tabLoc(tabPage * TPP + k), L = state.locs[l];
       b.setAttribute('aria-pressed', String(state.cur === l));
       b.classList.toggle('locked', !L.unlocked);
       b.classList.toggle('ready', !L.unlocked && state.money >= LOCS[l].cost);
-      const nm = LOCS[l].tab || LOCS[l].name, txt = L.unlocked ? `Цех ${l + 1}\n${nm}` : `Цех ${l + 1} · ${fmt(LOCS[l].cost)}\n${nm}`;
+      const nm = LOCS[l].tab || LOCS[l].name, txt = L.unlocked ? `Цех ${locNo(l)}\n${nm}` : `Цех ${locNo(l)} · ${fmt(LOCS[l].cost)}\n${nm}`;
       if (b.textContent !== txt) b.textContent = txt;
     });
   }
 
   // goods of workshops 6–10 for the counter line, shown once their workshop is open
-  const NEW_GOODS = [['pizza', 'пиццы'], ['pigeons', 'голубей'], ['manga', 'томов'], ['bottles', 'бутылок'], ['calib', 'калибровок']];
+  const NEW_GOODS = [['pizza', 'пиццы'], ['pigeons', 'голубей'], ['manga', 'томов'], ['bottles', 'бутылок'], ['calib', 'калибровок'], ['ice', 'льда']];
 
   /* ================= sheet ================= */
   const body = document.getElementById('sheetBody');
@@ -3689,13 +3863,14 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     return head + next + shop;
   }
   function lockedHTML(l) {
-    return `<h2>Цех ${l + 1} · ${LOCS[l].name}</h2><p class="muted">${LOCS[l].desc}</p><p class="muted">Сотрудники общие на весь завод: каждый может работать только в одном цеху.</p><div class="row"><button class="btn primary" type="button" data-act="unlock" ${state.money < LOCS[l].cost ? 'disabled' : ''}>Открыть за ${fmt(LOCS[l].cost)}</button></div>`;
+    const fork = altOf(l) != null ? `<p class="muted">Развилка: цех 7 — голуби или ледники, за забег откроется только один. Нажми на вкладку ещё раз, чтобы посмотреть другой.</p>` : '';
+    return `<h2>Цех ${locNo(l)} · ${LOCS[l].name}</h2><p class="muted">${LOCS[l].desc}</p>${fork}<p class="muted">Сотрудники общие на весь завод: каждый может работать только в одном цеху.</p><div class="row"><button class="btn primary" type="button" data-act="unlock" ${state.money < LOCS[l].cost ? 'disabled' : ''}>Открыть за ${fmt(LOCS[l].cost)}</button></div>`;
   }
   function idleHTML() {
     const g = globals();
-    const combos = g.combos.map(k => ({ night: '<span class="chip" style="--rc:var(--r3)">Ночная смена ×1,5</span>', maids: `<span class="chip" style="--rc:var(--r3)">Дуэт горничных: цех ${g.maidsLoc + 1} ×2</span>`, green: '<span class="chip" style="--rc:var(--r2)">Зелёная сила ×1,5</span>', family: `<span class="chip" style="--rc:var(--r3)">Семейный подряд${g.familyLoc >= 0 ? `: цех ${g.familyLoc + 1} ×2` : ''}</span>`, post: '<span class="chip" style="--rc:var(--r3)">Почтовый день: посылки ×2</span>', cozy: '<span class="chip" style="--rc:var(--r1)">Уютно: сила ×1,5</span>', case: '<span class="chip" style="--rc:var(--r2)">Дело закрыто</span>', robot: '<span class="chip" style="--rc:var(--r2)">Робот кормит улиток</span>', morning: '<span class="chip" style="--rc:var(--r1)">Утро после</span>', tape: '<span class="chip" style="--rc:var(--r1)">Скотч и клей</span>', lawn: '<span class="chip" style="--rc:var(--r1)">Оборона газона</span>', epidemic: '<span class="chip" style="--rc:var(--r2)">Эпидемия</span>', rising: `<span class="chip" style="--rc:var(--r3)">Восстание из мёртвых${state.run.rose ? ': использовано' : ''}</span>`, scarf: '<span class="chip" style="--rc:var(--r2)">Тёплый шарф</span>', feat: '<span class="chip" style="--rc:var(--r1)">Сам с собой фит</span>', same: '<span class="chip" style="--rc:var(--r2)">Это одно и то же ×2</span>', sun: '<span class="chip" style="--rc:var(--r2)">Лучи чужого солнца: пицца ×2</span>', wolf: '<span class="chip" style="--rc:var(--r2)">Счастливая волчица ×2</span>' })[k]).join('') + (state.run.subs ? `<span class="chip" style="--rc:var(--r3)">Подписка: +${pct(state.run.subs)} дохода</span>` : '');
+    const combos = g.combos.map(k => ({ night: '<span class="chip" style="--rc:var(--r3)">Ночная смена ×1,5</span>', maids: `<span class="chip" style="--rc:var(--r3)">Дуэт горничных: цех ${locNo(g.maidsLoc)} ×2</span>`, green: '<span class="chip" style="--rc:var(--r2)">Зелёная сила ×1,5</span>', family: `<span class="chip" style="--rc:var(--r3)">Семейный подряд${g.familyLoc >= 0 ? `: цех ${g.familyLoc + 1} ×2` : ''}</span>`, post: '<span class="chip" style="--rc:var(--r3)">Почтовый день: посылки ×2</span>', cozy: '<span class="chip" style="--rc:var(--r1)">Уютно: сила ×1,5</span>', case: '<span class="chip" style="--rc:var(--r2)">Дело закрыто</span>', robot: '<span class="chip" style="--rc:var(--r2)">Робот кормит улиток</span>', morning: '<span class="chip" style="--rc:var(--r1)">Утро после</span>', tape: '<span class="chip" style="--rc:var(--r1)">Скотч и клей</span>', lawn: '<span class="chip" style="--rc:var(--r1)">Оборона газона</span>', epidemic: '<span class="chip" style="--rc:var(--r2)">Эпидемия</span>', rising: `<span class="chip" style="--rc:var(--r3)">Восстание из мёртвых${state.run.rose ? ': использовано' : ''}</span>`, scarf: '<span class="chip" style="--rc:var(--r2)">Тёплый шарф</span>', feat: '<span class="chip" style="--rc:var(--r1)">Сам с собой фит</span>', same: '<span class="chip" style="--rc:var(--r2)">Это одно и то же ×2</span>', sun: '<span class="chip" style="--rc:var(--r2)">Лучи чужого солнца: пицца ×2</span>', wolf: '<span class="chip" style="--rc:var(--r2)">Счастливая волчица ×2</span>' })[k]).join('') + (state.run.subs ? `<span class="chip" style="--rc:var(--r3)">Подписка: +${pct(state.run.subs)} дохода</span>` : '');
     if (guest) return `<h2>Завод: ${esc(guest.n)}</h2><p class="muted">Это снимок чужого завода: можно нажимать на станки и сотрудников и смотреть, как всё устроено.</p><h3>Рекорды</h3>${recordsHTML(guest.r, guest.a.length, meta.records)}`;
-    return `<h2>Цех ${state.cur + 1} · ${LOCS[state.cur].name}</h2><p class="muted">Нажми на шкафчик, а потом на станок, чтобы поставить туда сотрудника. Каждый сотрудник один на весь завод. Соседние станки усиливают друг друга, соседи по шкафчику дружат.</p>${combos ? `<h3>Активные комбо</h3><div class="row">${combos}</div>` : ''}<p class="muted">Досок: <b id="live-planks">0</b> · кирпичей: <b id="live-bricks">0</b> · гвоздей: <b id="live-nails">0</b> · стекла: <b id="live-glass">0</b> · пуфиков: <b id="live-poufs">0</b>${NEW_GOODS.filter((_, k) => state.locs[5 + k].unlocked).map(([id, word]) => ` · ${word}: <b id="live-${id}">0</b>`).join('')}</p>`;
+    return `<h2>Цех ${locNo(state.cur)} · ${LOCS[state.cur].name}</h2><p class="muted">Нажми на шкафчик, а потом на станок, чтобы поставить туда сотрудника. Каждый сотрудник один на весь завод. Соседние станки усиливают друг друга, соседи по шкафчику дружат.</p>${combos ? `<h3>Активные комбо</h3><div class="row">${combos}</div>` : ''}<p class="muted">Досок: <b id="live-planks">0</b> · кирпичей: <b id="live-bricks">0</b> · гвоздей: <b id="live-nails">0</b> · стекла: <b id="live-glass">0</b> · пуфиков: <b id="live-poufs">0</b>${NEW_GOODS.filter((_, k) => state.locs[5 + k].unlocked).map(([id, word]) => ` · ${word}: <b id="live-${id}">0</b>`).join('')}</p>`;
   }
   function slotHTML(i) {
     const l = state.cur, s = slotsOf(l)[i];
@@ -3717,7 +3892,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const eq = st.equip.length ? st.equip.map(chip).join('') : '<span class="muted">Пусто</span>';
     const wp = workerPlace(id);
     const fr = ws.fr.length ? ws.fr.map(f => WORKERS[f].name).join(', ') + ` (+${pct(ws.fb)} силы)` : 'нет';
-    return `<h2>${Wd.name}</h2><p class="muted">${Wd.role} · ${wp ? `работает: цех ${wp.l + 1}, ${MACH[slotsOf(wp.l)[wp.i].machine].name}` : 'отдыхает в раздевалке'}</p><div class="stats"><div class="stat"><small>Сила</small><b id="live-power">0</b></div><div class="stat"><small>Скорость</small><b id="live-speed">0</b></div><div class="stat"><small>Удача</small><b id="live-luck">0</b></div></div><p>${esc(Wd.perk)}</p>${skillHTML(id)}<h3>В шкафчике: ${st.equip.length} из ${BAL.cap}</h3><div class="row">${eq}</div><p class="${trioOf(st.equip) ? 'on' : 'muted'}">${trioOf(st.equip) ? `Тройка: 3 × ${CARDS[trioOf(st.equip)].name}, доход станка ×${fmt(BAL.trio)}` : `Три одинаковые карты в шкафчике — Тройка: доход станка ×${fmt(BAL.trio)}`}</p><p class="muted">Друзья по шкафчику: ${fr}</p><p class="muted">Нажми на станок в любом цеху, чтобы перевести туда. Нажми на другой шкафчик, чтобы поменяться местами.</p>${wp ? '<div class="row"><button class="btn" type="button" data-act="rest">В раздевалку</button></div>' : ''}`;
+    return `<h2>${Wd.name}</h2><p class="muted">${Wd.role} · ${wp ? `работает: цех ${locNo(wp.l)}, ${MACH[slotsOf(wp.l)[wp.i].machine].name}` : 'отдыхает в раздевалке'}</p><div class="stats"><div class="stat"><small>Сила</small><b id="live-power">0</b></div><div class="stat"><small>Скорость</small><b id="live-speed">0</b></div><div class="stat"><small>Удача</small><b id="live-luck">0</b></div></div><p>${esc(Wd.perk)}</p>${skillHTML(id)}<h3>В шкафчике: ${st.equip.length} из ${BAL.cap}</h3><div class="row">${eq}</div><p class="${trioOf(st.equip) ? 'on' : 'muted'}">${trioOf(st.equip) ? `Тройка: 3 × ${CARDS[trioOf(st.equip)].name}, доход станка ×${fmt(BAL.trio)}` : `Три одинаковые карты в шкафчике — Тройка: доход станка ×${fmt(BAL.trio)}`}</p><p class="muted">Друзья по шкафчику: ${fr}</p><p class="muted">Нажми на станок в любом цеху, чтобы перевести туда. Нажми на другой шкафчик, чтобы поменяться местами.</p>${wp ? '<div class="row"><button class="btn" type="button" data-act="rest">В раздевалку</button></div>' : ''}`;
   }
   function deckHTML() {
     const g = globals(), counts = {};
@@ -3769,9 +3944,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     let bytes = Uint8Array.from(atob(m[2]), ch => ch.charCodeAt(0));
     if (m[1] === '1') bytes = await pipe(bytes, new DecompressionStream('deflate-raw'));
     // a code from the previous build is brought up to date like a save
-    const d = JSON.parse(new TextDecoder().decode(bytes)), st = d.s && d.s.v >= 9 && d.s.v <= 18 ? migrate(d.s) : d.s;
+    const d = JSON.parse(new TextDecoder().decode(bytes)), st = d.s && d.s.v >= 9 && d.s.v <= 19 ? migrate(d.s) : d.s;
     // a friend's code is drawn with our code, so only known ids may pass
-    const ok = st && st.v === 19 && st.run && (!st.run.stolen || CARDS[st.run.stolen]) && Array.isArray(st.locs) && st.locs.length === LOCS.length && st.locs.every((L, l) => Array.isArray(L.slots) && L.slots.length === LAYOUTS[l].length && L.slots.every(z => (!z.machine || MACH[z.machine]) && (!z.worker || WORKERS[z.worker]) && Array.isArray(z.upg) && z.upg.every(u => CARDS[u])))
+    const ok = st && st.v === 20 && st.run && (!st.run.stolen || CARDS[st.run.stolen]) && Array.isArray(st.locs) && st.locs.length === LOCS.length && st.locs.every((L, l) => Array.isArray(L.slots) && L.slots.length === LAYOUTS[l].length && L.slots.every(z => (!z.machine || MACH[z.machine]) && (!z.worker || WORKERS[z.worker]) && Array.isArray(z.upg) && z.upg.every(u => CARDS[u])))
       && Array.isArray(st.cards) && st.cards.every(id => CARDS[id]) && Object.keys(WORKERS).every(id => st.workers[id] && st.workers[id].equip.every(e => CARDS[e]))
       && Array.isArray(st.lockers) && st.lockers.every(id => WORKERS[id]) && d.r && Array.isArray(d.a);
     if (!ok) throw new Error('bad state');
