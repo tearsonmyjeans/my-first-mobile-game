@@ -346,11 +346,22 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     { name: 'Калибровка', tab: 'Калибр.', sign: 'ЦЕХ 10 · КАЛИБРОВКА', cost: 8e14, wall: '#f4f7f9', mortar: '#dfe5ea', floor: '#e9eef2', grid: '#dfe5ea', plate: '#ffffff', frame: '#9aa3ad', item: '#5aa9e6', board: '#5aa9e6', boardHi: '#8fd3f0', goods: 'calib', unit: 'Калибровки', unit1: 'Цена калибровки', start: 'etalon', startSlot: 2,
       desc: 'Десятая ветка завода, белая лаборатория: калибруют туалеты и аэрогрили. В центре Эталон, он открывается вместе с цехом и работает без сотрудника: чем больше соседей работает, тем он дороже. Унитаз рядом с аэрогрилем: «Это одно и то же», сила обоих ×2.',
       opened: 'Калибровка открыта! Эталон ждёт работающих соседей' },
-    // workshop 7 on the other route: glaciers instead of pigeons; it sits at index 10 and shows on the seventh tab
+    // the botanical garden: the other workshop 6, the run picks it or the pizzeria; it sits at the end so the indexes of 6–10 stay
+    { name: 'Сад', tab: 'Сад', sign: 'ЦЕХ 6 · БОТАНИЧЕСКИЙ САД', cost: 6e8, wall: '#bfe3ee', mortar: '#eef5f1', floor: '#86bf5e', grid: '#86bf5e', plate: '#7a5236', frame: '#3f2a1a', item: '#8fd16a', board: '#2f6e3a', boardHi: '#57b04f', goods: 'plants', unit: 'Растения', unit1: 'Цена растения', start: 'random',
+      desc: 'Шестая ветка завода, оранжерея: яблоня, пальма и розовый куст. Растения растут: за каждую отработанную смену +20% к цене, до +100%, а пересадка сбрасывает рост. Верхнее среднее место касается четырёх соседей.',
+      opened: 'Ботанический сад открыт! Поставь к растению сотрудника' },
+    // glaciers: the other workshop 7, the run picks it or the pigeons; it sits at the end so the indexes of 6–10 stay
     { name: 'Ледники', sign: 'ЦЕХ 7 · ЛЕДНИКИ', cost: 2e10, wall: '#1e2a4a', mortar: '#2a3d63', floor: '#2f5a86', grid: '#2f5a86', plate: '#e3f1f8', frame: '#7fb6d6', item: '#bfe6f8', board: '#2a4f7a', boardHi: '#4f86b8', goods: 'ice', unit: 'Лёд', unit1: 'Цена глыбы', start: 'icesaw',
       desc: 'Седьмая ветка завода на другом маршруте, вместо голубей. Четыре льдины ромбом касаются по кругу. Каждую смену льдины дрейфуют: станки с сотрудниками меняются местами. В каждой второй смене метель на 20 с: у сотрудников цеха скорость ×0,5 и сила ×3, бонусы к скорости и удача не действуют.',
       opened: 'Ледники открыты! Поставь к ледорезу сотрудника' }
   ];
+  const GARDEN = 10, ICE = 11, PLANTS = ['apple', 'palm', 'rosebush'];
+  // the route: tab k shows workshop run.route[k]; a tab with alternatives (ALTS) stays null till the run opens one of them,
+  // the other one stays shut till the run ends
+  const ALTS = { 5: [5, GARDEN], 6: [6, ICE] };
+  const tabOf = l => l === GARDEN ? 5 : l === ICE ? 6 : l, locNo = l => tabOf(l) + 1;
+  const routeOf = k => (state.run.route || [])[k];
+  const tabLoc = k => routeOf(k) ?? (ALTS[k] ? (ALTS[k].includes(state.cur) ? state.cur : ALTS[k][0]) : k);
   // slot i sits at [column, row] of its workshop's grid; slot indexes never move, so saves stay valid
   const LAYOUTS = [
     [[0, 0], [1, 0], [2, 0]],
@@ -369,11 +380,11 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     [[0, 0], [0, 1], [0, 2], [1, 0]],
     // a pair on top, the etalon across both columns in the middle (anchored at column 0), a pair below
     [[0, 0], [1, 0], [0, 1], [0, 2], [1, 2]],
+    // three plants in a row, a pair below shifted by half a slot: each lower slot touches two upper ones and the other lower one
+    [[0, 0], [1, 0], [2, 0], [0.5, 1], [1.5, 1]],
     // glaciers: four floes in a diamond, top, left, right, bottom; they touch in a ring, not across
     [[1, 0], [0, 1], [2, 1], [1, 2]]
   ];
-  // the route fork: workshop 7 is pigeons (6) or glaciers (ICE), only one of them opens in a run
-  const ICE = 10, altOf = l => l === 6 ? ICE : l === ICE ? 6 : null, locNo = l => l === ICE ? 7 : l + 1;
   const gridSize = l => LAYOUTS[l].reduce(([c, r], [x, y]) => [Math.max(c, x + 1), Math.max(r, y + 1)], [0, 0]);
   // max: how many machines of a type the factory may own; the maxes of a workshop add up to its slot count (the brick pump is one extra).
   // Once all are placed, the card stops dropping
@@ -404,9 +415,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     loft: { loc: 6, name: 'Почтовая голубятня', short: 'ГОЛУБЯТНЯ', rate: 0.3, value: 3e6, max: 1, desc: 'Выпускает дипломированных почтовых голубей. Медленно, но дорого.' },
     sketch: { loc: 7, name: 'Стол набросков', short: 'НАБРОСКИ', rate: 0.9, value: 1.2e7, max: 3, desc: 'Рисует наброски глазастых героев.' },
     ink: { loc: 7, name: 'Тушевальня', short: 'ТУШЬ', rate: 0.5, value: 3e7, max: 2, desc: 'Обводит страницы тушью.' },
-    icesaw: { loc: 10, name: 'Ледорез', short: 'ЛЕДОРЕЗ', rate: 0.8, value: 6e5, max: 2, desc: 'Пилит глыбы льда.' },
-    icehole: { loc: 10, name: 'Прорубь', short: 'ПРОРУБЬ', rate: 0.5, value: 1.5e6, max: 1, desc: 'Ловит рыбу подо льдом.' },
-    igloo: { loc: 10, name: 'Иглу', short: 'ИГЛУ', rate: 0.25, value: 4e6, max: 1, desc: 'Строит иглу из снежных кирпичей. Медленно, но дорого.' },
+    icesaw: { loc: 11, name: 'Ледорез', short: 'ЛЕДОРЕЗ', rate: 0.8, value: 6e5, max: 2, desc: 'Пилит глыбы льда.' },
+    icehole: { loc: 11, name: 'Прорубь', short: 'ПРОРУБЬ', rate: 0.5, value: 1.5e6, max: 1, desc: 'Ловит рыбу подо льдом.' },
+    igloo: { loc: 11, name: 'Иглу', short: 'ИГЛУ', rate: 0.25, value: 4e6, max: 1, desc: 'Строит иглу из снежных кирпичей. Медленно, но дорого.' },
     printer: { loc: 7, name: 'Печатный пресс', short: 'ПРЕСС', rate: 0.3, value: 7e7, max: 1, desc: 'Печатает тома. Медленно, но дорого.' },
     // the extractor and the etalon come with their workshops and have no cards
     extract: { loc: 8, name: 'Экстрактор пепси', short: 'ЭКСТРАКТОР', rate: 0.4, value: 1e9, max: 1, desc: 'Высокий станок на три ряда: качает пепси во все три места слева, им +20% скорости.' },
@@ -419,6 +430,10 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     airfryer: { loc: 9, name: 'Аэрогриль', short: 'АЭРОГРИЛЬ', rate: 0.5, value: 1.4e10, max: 1, desc: 'Калибрует аэрогрили. Рядом с унитазом: «Это одно и то же».' },
     shorts: { loc: 9, name: 'Студия коротких видео', short: 'ШОРТСЫ', rate: 0.8, value: 8e9, max: 1, desc: 'Снимает шортсы про калибровку. Соседям +15% к цене.' },
     drinks: { loc: 9, name: 'Автомат с пивом и колой', short: 'ПИВО-КОЛА', rate: 0.6, value: 1.1e10, max: 1, desc: 'Поит калибровщиков. Унитазу рядом +30% скорости.' },
+    // the garden's plants grow: +20% price for every shift worked, up to +100%; the apple ripens during a shift
+    apple: { loc: 10, name: 'Яблоня', short: 'ЯБЛОНЯ', rate: 0.6, value: 3e4, max: 2, desc: 'Яблоки созревают за смену: цена от ×0,5 в начале до ×1,5 в конце.' },
+    palm: { loc: 10, name: 'Пальма', short: 'ПАЛЬМА', rate: 0.4, value: 6e4, max: 2, desc: 'Тень пальмы: соседним растениям +25% скорости.' },
+    rosebush: { loc: 10, name: 'Розовый куст', short: 'РОЗЫ', rate: 0.3, value: 1.2e5, max: 1, desc: 'Цветёт: соседним растениям +25% к цене, яблоне рядом ещё +30% скорости.' },
     belt: { loc: -1, name: 'Конвейер', short: 'КОНВЕЙЕР', rate: 0, value: 0, desc: 'Сам ничего не делает. Связан со всем рядом и ускоряет каждый станок на 30%. Сотрудник ему не нужен.' }
   };
   const WORKERS = {
@@ -627,6 +642,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     m_sketch: { name: 'Стол набросков', type: 'machine', machine: 'sketch', tag: 'Станки', rar: 0, desc: 'Том стоит 12M. Рядом с тушевальней: +30% её скорости.' },
     m_ink: { name: 'Тушевальня', type: 'machine', machine: 'ink', tag: 'Станки', rar: 1, desc: 'Том стоит 30M. Рядом с прессом: +25% к его цене.' },
     m_printer: { name: 'Печатный пресс', type: 'machine', machine: 'printer', tag: 'Станки', rar: 1, desc: 'Том стоит 70M. Рядом с набросками: +15% их скорости.' },
+    m_apple: { name: 'Яблоня', type: 'machine', machine: 'apple', tag: 'Станки', rar: 0, desc: 'Яблоко стоит 30K. Созревает за смену: цена от ×0,5 до ×1,5.' },
+    m_palm: { name: 'Пальма', type: 'machine', machine: 'palm', tag: 'Станки', rar: 1, desc: 'Кокос стоит 60K. Тень: соседним растениям +25% скорости.' },
+    m_rosebush: { name: 'Розовый куст', type: 'machine', machine: 'rosebush', tag: 'Станки', rar: 1, desc: 'Роза стоит 120K. Соседним растениям +25% к цене, яблоне ещё +30% скорости.' },
     m_vat: { name: 'Чан брожения', type: 'machine', machine: 'vat', tag: 'Станки', rar: 0, desc: 'Бутылка стоит 300M. Рядом с помпой: +30% её скорости.' },
     m_fizz: { name: 'Газировочная помпа', type: 'machine', machine: 'fizz', tag: 'Станки', rar: 1, desc: 'Бутылка стоит 550M. Рядом с инкубатором: +25% к его цене.' },
     m_hatch: { name: 'Инкубатор', type: 'machine', machine: 'hatch', tag: 'Станки', rar: 1, desc: 'Бутылка стоит 1,1B. Медленно, зато живая.' },
@@ -729,6 +747,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (src === 'fizz' && dst === 'hatch') return { rate: 0, value: 0.25, text: 'Газированные яйца: +25% к цене' };
     if (src === 'shorts') return { rate: 0, value: 0.15, text: 'Шортсы про станок: +15% к цене' };
     if (src === 'drinks' && dst === 'toilet') return { rate: 0.30, value: 0, text: 'Пиво и кола рядом: +30% скорости' };
+    // the garden: palm shade speeds up the neighbouring plants, roses make them dearer and pollinate an apple tree
+    if (src === 'palm' && PLANTS.includes(dst)) return { rate: 0.25, value: 0, text: 'Тень пальмы: +25% скорости' };
+    if (src === 'rosebush' && PLANTS.includes(dst)) return { rate: dst === 'apple' ? 0.30 : 0, value: 0.25, text: dst === 'apple' ? 'Розы рядом: +25% к цене, опыление +30% скорости' : 'Розы рядом: +25% к цене' };
     if (src === 'etalon') return { rate: 0, value: 0, text: 'Эталон рядом: сверяется с этим станком' };
     if (src === 'dryer') return { rate: 0, value: 0.20, text: 'Сушилка рядом: +20% к цене' };
     if (src === 'saw' && dst !== 'saw') return { rate: 0.15, value: 0, text: 'Пилорама рядом: +15% скорости' };
@@ -935,7 +956,10 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     toilet: (r, d) => { r(3, 0, 10, 7, K); r(4, 1, 8, 5, '#f4f7f9'); r(10, 1, 2, 5, '#d8dee4'); r(1, 2, 2, 2, K); r(1, 7, 14, 4, K); r(2, 8, 12, 2, '#ffffff'); r(4, 8, 8, 1, '#5aa9e6'); r(4, 11, 8, 5, K); r(5, 11, 6, 4, '#e9eef2'); r(9, 11, 2, 4, '#c9d0d6'); r(14, 0, 2, 9, '#f2c94c'); r(14, 4, 2, 1, '#d9453f'); },
     airfryer: (r, d) => { r(2, 0, 12, 16, K); r(3, 1, 10, 14, '#2e2e38'); r(3, 1, 1, 14, '#4a4a58'); r(5, 2, 6, 3, '#141419'); r(6, 3, 1, 1, '#ff8a3a'); r(8, 3, 1, 1, '#ff8a3a'); r(3, 9, 10, 1, K); r(0, 10, 3, 3, K); r(1, 11, 1, 1, '#55556a'); for (let k = 0; k < 4; k++) r(5 + k * 2, 6 + (k % 2), 1, 3, '#f2c94c'); },
     shorts: (r, d) => { d(8, 7, 7, K); d(8, 7, 6, '#fff1b0'); d(8, 7, 5, K); r(5, 1, 7, 13, K); r(6, 2, 5, 11, '#ff6fa8'); r(7, 5, 3, 4, '#ffd6e6'); r(8, 6, 1, 2, K); r(6, 12, 3, 1, '#ffffff'); r(7, 14, 3, 2, K); r(12, 1, 1, 1, '#ff5f87'); r(14, 1, 1, 1, '#ff5f87'); r(12, 2, 3, 1, '#ff5f87'); r(13, 3, 1, 1, '#ff5f87'); },
-    drinks: (r, d) => { r(2, 0, 12, 16, K); r(3, 1, 10, 14, '#e9eef2'); r(3, 1, 5, 3, '#d9453f'); r(4, 2, 3, 1, '#ffffff'); r(8, 1, 5, 3, '#e0a32e'); r(8, 1, 5, 1, '#fff6e0'); r(4, 5, 8, 8, '#1b2230'); r(5, 7, 1, 1, '#5a3410'); r(5, 6, 1, 1, '#f2c94c'); r(4, 8, 3, 3, '#7a4a1a'); r(4, 9, 3, 1, '#f2c94c'); r(8, 7, 3, 1, '#c9d0d6'); r(8, 8, 3, 3, '#d9453f'); r(8, 9, 3, 1, '#ffffff'); r(4, 11, 8, 1, '#44505c'); r(12, 6, 1, 1, '#7ee081'); r(4, 13, 8, 2, '#1b2230'); }
+    drinks: (r, d) => { r(2, 0, 12, 16, K); r(3, 1, 10, 14, '#e9eef2'); r(3, 1, 5, 3, '#d9453f'); r(4, 2, 3, 1, '#ffffff'); r(8, 1, 5, 3, '#e0a32e'); r(8, 1, 5, 1, '#fff6e0'); r(4, 5, 8, 8, '#1b2230'); r(5, 7, 1, 1, '#5a3410'); r(5, 6, 1, 1, '#f2c94c'); r(4, 8, 3, 3, '#7a4a1a'); r(4, 9, 3, 1, '#f2c94c'); r(8, 7, 3, 1, '#c9d0d6'); r(8, 8, 3, 3, '#d9453f'); r(8, 9, 3, 1, '#ffffff'); r(4, 11, 8, 1, '#44505c'); r(12, 6, 1, 1, '#7ee081'); r(4, 13, 8, 2, '#1b2230'); },
+    apple: r => { r(5, 1, 6, 1, K); r(3, 2, 2, 1, K); r(5, 2, 2, 1, '#8fd16a'); r(7, 2, 3, 1, '#5fa84a'); r(10, 2, 2, 1, K); r(2, 3, 1, 1, K); r(3, 3, 2, 1, '#8fd16a'); r(5, 3, 3, 1, '#5fa84a'); r(8, 3, 1, 1, '#d64545'); r(9, 3, 3, 1, '#5fa84a'); r(12, 3, 1, 1, K); r(1, 4, 1, 1, K); r(2, 4, 2, 1, '#8fd16a'); r(4, 4, 1, 1, '#5fa84a'); r(5, 4, 1, 1, '#d64545'); r(6, 4, 6, 1, '#5fa84a'); r(12, 4, 1, 1, '#3f7f3a'); r(13, 4, 1, 1, K); r(1, 5, 1, 1, K); r(2, 5, 5, 1, '#5fa84a'); r(7, 5, 1, 1, '#d64545'); r(8, 5, 3, 1, '#5fa84a'); r(11, 5, 1, 1, '#3f7f3a'); r(12, 5, 1, 1, '#5fa84a'); r(13, 5, 1, 1, K); r(0, 6, 1, 1, K); r(1, 6, 10, 1, '#5fa84a'); r(11, 6, 2, 1, '#3f7f3a'); r(13, 6, 1, 1, '#5fa84a'); r(14, 6, 1, 1, K); r(0, 7, 1, 1, K); r(1, 7, 1, 1, '#5fa84a'); r(2, 7, 1, 1, '#d64545'); r(3, 7, 8, 1, '#5fa84a'); r(11, 7, 1, 1, '#3f7f3a'); r(12, 7, 2, 1, '#5fa84a'); r(14, 7, 1, 1, '#3f7f3a'); r(15, 7, 1, 1, K); r(0, 8, 1, 1, K); r(1, 8, 8, 1, '#5fa84a'); r(9, 8, 1, 1, '#d64545'); r(10, 8, 1, 1, '#5fa84a'); r(11, 8, 1, 1, '#3f7f3a'); r(12, 8, 2, 1, '#5fa84a'); r(14, 8, 1, 1, '#3f7f3a'); r(15, 8, 1, 1, K); r(0, 9, 1, 1, K); r(1, 9, 11, 1, '#5fa84a'); r(12, 9, 1, 1, '#3f7f3a'); r(13, 9, 1, 1, '#5fa84a'); r(14, 9, 1, 1, '#3f7f3a'); r(15, 9, 1, 1, K); r(1, 10, 1, 1, K); r(2, 10, 4, 1, '#5fa84a'); r(6, 10, 1, 1, '#d64545'); r(7, 10, 6, 1, '#5fa84a'); r(13, 10, 1, 1, '#3f7f3a'); r(14, 10, 1, 1, K); r(2, 11, 2, 1, K); r(4, 11, 5, 1, '#5fa84a'); r(9, 11, 2, 1, '#3f7f3a'); r(11, 11, 1, 1, '#5fa84a'); r(12, 11, 2, 1, K); r(4, 12, 3, 1, K); r(7, 12, 2, 1, '#8a5a32'); r(9, 12, 3, 1, K); r(7, 13, 2, 1, '#8a5a32'); r(7, 14, 2, 1, '#8a5a32'); r(6, 15, 1, 1, K); r(7, 15, 2, 1, '#8a5a32'); r(9, 15, 1, 1, K); },
+    palm: r => { r(4, 1, 8, 1, K); r(2, 2, 2, 1, K); r(4, 2, 1, 1, '#c4ec8c'); r(5, 2, 7, 1, '#8fd16a'); r(12, 2, 2, 1, K); r(1, 3, 1, 1, K); r(2, 3, 2, 1, '#8fd16a'); r(4, 3, 2, 1, '#5fa84a'); r(6, 3, 4, 1, K); r(10, 3, 2, 1, '#5fa84a'); r(12, 3, 2, 1, '#8fd16a'); r(14, 3, 1, 1, K); r(0, 4, 1, 1, K); r(1, 4, 3, 1, '#5fa84a'); r(4, 4, 2, 1, K); r(6, 4, 1, 1, '#6a4024'); r(7, 4, 2, 1, '#8a5a32'); r(9, 4, 1, 1, '#6a4024'); r(10, 4, 2, 1, K); r(12, 4, 3, 1, '#5fa84a'); r(15, 4, 1, 1, K); r(0, 5, 1, 1, K); r(1, 5, 1, 1, '#5fa84a'); r(2, 5, 1, 1, '#3f7f3a'); r(3, 5, 1, 1, K); r(5, 5, 1, 1, K); r(6, 5, 1, 1, '#6a4024'); r(7, 5, 1, 1, '#c9955f'); r(8, 5, 1, 1, '#8a5a32'); r(9, 5, 1, 1, '#6a4024'); r(10, 5, 1, 1, K); r(12, 5, 1, 1, K); r(13, 5, 1, 1, '#3f7f3a'); r(14, 5, 1, 1, '#5fa84a'); r(15, 5, 1, 1, K); r(0, 6, 1, 1, K); r(1, 6, 1, 1, '#3f7f3a'); r(2, 6, 1, 1, K); r(6, 6, 1, 1, K); r(7, 6, 1, 1, '#c9955f'); r(8, 6, 1, 1, '#8a5a32'); r(9, 6, 1, 1, K); r(13, 6, 1, 1, K); r(14, 6, 1, 1, '#3f7f3a'); r(15, 6, 1, 1, K); r(1, 7, 1, 1, K); r(6, 7, 1, 1, K); r(7, 7, 1, 1, '#c9955f'); r(8, 7, 1, 1, '#8a5a32'); r(9, 7, 1, 1, K); r(14, 7, 1, 1, K); r(6, 8, 1, 1, K); r(7, 8, 1, 1, '#8a5a32'); r(8, 8, 1, 1, '#c9955f'); r(9, 8, 1, 1, K); r(5, 9, 1, 1, K); r(6, 9, 1, 1, '#c9955f'); r(7, 9, 1, 1, '#8a5a32'); r(8, 9, 1, 1, K); r(5, 10, 1, 1, K); r(6, 10, 1, 1, '#8a5a32'); r(7, 10, 1, 1, '#c9955f'); r(8, 10, 1, 1, K); r(4, 11, 1, 1, K); r(5, 11, 1, 1, '#c9955f'); r(6, 11, 1, 1, '#8a5a32'); r(7, 11, 1, 1, K); r(3, 12, 8, 1, K); r(3, 13, 1, 1, K); r(4, 13, 6, 1, '#5b8fd6'); r(10, 13, 1, 1, K); r(3, 14, 1, 1, K); r(4, 14, 1, 1, '#3f6fd1'); r(5, 14, 1, 1, '#f4efe6'); r(6, 14, 1, 1, '#3f6fd1'); r(7, 14, 1, 1, '#f4efe6'); r(8, 14, 2, 1, '#3f6fd1'); r(10, 14, 1, 1, K); r(4, 15, 6, 1, K); },
+    rosebush: r => { r(5, 1, 6, 1, K); r(3, 2, 2, 1, K); r(5, 2, 2, 1, '#5fa84a'); r(7, 2, 3, 1, '#8fd16a'); r(10, 2, 1, 1, '#5fa84a'); r(11, 2, 2, 1, K); r(2, 3, 1, 1, K); r(3, 3, 1, 1, '#5fa84a'); r(4, 3, 3, 1, '#e0533a'); r(7, 3, 1, 1, '#5fa84a'); r(8, 3, 2, 1, '#8fd16a'); r(10, 3, 3, 1, '#d96a9a'); r(13, 3, 1, 1, K); r(1, 4, 1, 1, K); r(2, 4, 2, 1, '#5fa84a'); r(4, 4, 1, 1, '#e0533a'); r(5, 4, 1, 1, '#a83232'); r(6, 4, 1, 1, '#e0533a'); r(7, 4, 2, 1, '#5fa84a'); r(9, 4, 1, 1, '#d96a9a'); r(10, 4, 1, 1, '#f2a7c3'); r(11, 4, 1, 1, '#d96a9a'); r(12, 4, 1, 1, '#5fa84a'); r(13, 4, 1, 1, K); r(1, 5, 1, 1, K); r(2, 5, 2, 1, '#5fa84a'); r(4, 5, 3, 1, '#e0533a'); r(7, 5, 2, 1, '#5fa84a'); r(9, 5, 1, 1, '#8fd16a'); r(10, 5, 3, 1, '#d96a9a'); r(13, 5, 1, 1, '#5fa84a'); r(14, 5, 1, 1, K); r(0, 6, 1, 1, K); r(1, 6, 1, 1, '#5fa84a'); r(2, 6, 3, 1, '#d96a9a'); r(5, 6, 2, 1, '#5fa84a'); r(7, 6, 3, 1, '#e0533a'); r(10, 6, 4, 1, '#5fa84a'); r(14, 6, 1, 1, '#3f7f3a'); r(15, 6, 1, 1, K); r(0, 7, 1, 1, K); r(1, 7, 1, 1, '#5fa84a'); r(2, 7, 1, 1, '#d96a9a'); r(3, 7, 1, 1, '#f2a7c3'); r(4, 7, 1, 1, '#d96a9a'); r(5, 7, 2, 1, '#5fa84a'); r(7, 7, 1, 1, '#e0533a'); r(8, 7, 1, 1, '#a83232'); r(9, 7, 1, 1, '#e0533a'); r(10, 7, 1, 1, '#5fa84a'); r(11, 7, 3, 1, '#e0533a'); r(14, 7, 1, 1, '#3f7f3a'); r(15, 7, 1, 1, K); r(0, 8, 1, 1, K); r(1, 8, 1, 1, '#5fa84a'); r(2, 8, 3, 1, '#d96a9a'); r(5, 8, 1, 1, '#3f7f3a'); r(6, 8, 1, 1, '#5fa84a'); r(7, 8, 3, 1, '#e0533a'); r(10, 8, 1, 1, '#5fa84a'); r(11, 8, 1, 1, '#e0533a'); r(12, 8, 1, 1, '#a83232'); r(13, 8, 1, 1, '#e0533a'); r(14, 8, 1, 1, '#3f7f3a'); r(15, 8, 1, 1, K); r(1, 9, 1, 1, K); r(2, 9, 1, 1, '#5fa84a'); r(3, 9, 1, 1, '#3f7f3a'); r(4, 9, 3, 1, '#5fa84a'); r(7, 9, 2, 1, '#3f7f3a'); r(9, 9, 2, 1, '#5fa84a'); r(11, 9, 3, 1, '#e0533a'); r(14, 9, 1, 1, K); r(2, 10, 2, 1, K); r(4, 10, 2, 1, '#3f7f3a'); r(6, 10, 1, 1, '#5fa84a'); r(7, 10, 3, 1, '#3f7f3a'); r(10, 10, 1, 1, '#5fa84a'); r(11, 10, 2, 1, '#3f7f3a'); r(13, 10, 2, 1, K); r(3, 11, 10, 1, K); r(3, 12, 1, 1, K); r(4, 12, 9, 1, '#c9d0d6'); r(13, 12, 1, 1, K); r(4, 13, 1, 1, K); r(5, 13, 7, 1, '#9aa3ad'); r(12, 13, 1, 1, K); r(5, 14, 2, 1, K); r(7, 14, 3, 1, '#c9d0d6'); r(10, 14, 1, 1, K); r(6, 15, 5, 1, K); },
   };
   const CARD_ICON = {
     m_bench: 'bench', m_dryer: 'dryer', m_mixer: 'mixer', m_press: 'press', m_kiln: 'kiln', m_belt: 'belt',
@@ -953,7 +977,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     u_scotch: 'scotch', e_thirst: 'thirst', e_soda: 'soda', s_plumbus: 'plumbus', u_squanch: 'squanch', u_hyper: 'hyper', u_triad: 'triad', s_veins: 'veins', s_banner: 'banner', s_sponge: 'sponge',
     u_zorya: 'zorya', s_ketchup: 'ketchup', e_mirror: 'mirror', s_spice: 'spice', s_sauce: 'sauce', e_crackers: 'crackers', s_glue: 'glue', u_fattoad: 'fattoad', u_novapost: 'novapost', e_shadow: 'shadow',
     u_pizza4: 'pizza4', e_pillow: 'pillow', e_honeycake: 'honeycake', e_jelly: 'jelly', m_pump: 'brickpump', e_flipflop: 'flipflop', u_waffle: 'waffle', s_queen: 'clayqueen', e_salve: 'burnsalve',
-    m_dough: 'dough', m_topping: 'topping', m_pizzaoven: 'pizzaoven', m_feeder: 'feeder', m_course: 'course', m_loft: 'loft', m_icesaw: 'icesaw', m_icehole: 'icehole', m_igloo: 'igloo', m_sketch: 'sketch', m_ink: 'ink', m_printer: 'printer', m_vat: 'vat', m_fizz: 'fizz', m_hatch: 'hatch', m_toilet: 'toilet', m_airfryer: 'airfryer', m_shorts: 'shorts', m_drinks: 'drinks'
+    m_dough: 'dough', m_topping: 'topping', m_pizzaoven: 'pizzaoven', m_feeder: 'feeder', m_course: 'course', m_loft: 'loft', m_icesaw: 'icesaw', m_icehole: 'icehole', m_igloo: 'igloo', m_sketch: 'sketch', m_ink: 'ink', m_printer: 'printer', m_vat: 'vat', m_fizz: 'fizz', m_hatch: 'hatch', m_toilet: 'toilet', m_airfryer: 'airfryer', m_shorts: 'shorts', m_drinks: 'drinks', m_apple: 'apple', m_palm: 'palm', m_rosebush: 'rosebush'
   };
   const ICONS = {};
   for (const id in CARD_ICON) ICONS[id] = makeIcon(ICON_DRAW[CARD_ICON[id]]);
@@ -962,18 +986,20 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   /* ================= state ================= */
   const KEY = 'pixel-factory-save-v1';
   // kiss: pieces made, for the 44th piece of Sponges 44
-  // slot counts of workshops 6–10 and of the glaciers
-  const NEW_LOC_SLOTS = [4, 5, 6, 4, 5, 4];
+  // slot counts of workshops 6–10
+  const NEW_LOC_SLOTS = [4, 5, 6, 4, 5];
   const emptySlots = n => Array.from({ length: n }, () => ({ machine: null, worker: null, upg: [], acc: 0, kiss: 0 }));
   const fresh = () => ({
-    v: 20, money: 0, xp: 0, level: 1, planks: 0, bricks: 0, nails: 0, glass: 0, poufs: 0, pizza: 0, pigeons: 0, manga: 0, bottles: 0, calib: 0, ice: 0, earned: 0, cur: 0,
+    v: 21, money: 0, xp: 0, level: 1, planks: 0, bricks: 0, nails: 0, glass: 0, poufs: 0, pizza: 0, pigeons: 0, manga: 0, bottles: 0, calib: 0, plants: 0, ice: 0, earned: 0, cur: 0,
     locs: [
       { unlocked: true, slots: [{ machine: null, worker: null, upg: [], acc: 0, kiss: 0 }, { machine: 'saw', worker: 'crow', upg: [], acc: 0, kiss: 0 }, { machine: null, worker: null, upg: [], acc: 0, kiss: 0 }] },
       { unlocked: false, slots: emptySlots(4) },
       { unlocked: false, slots: emptySlots(6) },
       { unlocked: false, slots: emptySlots(6) },
       { unlocked: false, slots: emptySlots(2) },
-      ...NEW_LOC_SLOTS.map(n => ({ unlocked: false, slots: emptySlots(n) }))
+      ...NEW_LOC_SLOTS.map(n => ({ unlocked: false, slots: emptySlots(n) })),
+      { unlocked: false, slots: emptySlots(5) },
+      { unlocked: false, slots: emptySlots(4) }
     ],
     workers: { crow: { unlocked: true, equip: [], skill: true, skT: 0 }, mrp: { unlocked: false, equip: [] }, tramp: { unlocked: false, equip: [] }, dog: { unlocked: false, equip: [] }, toad: { unlocked: false, equip: [] }, pink: { unlocked: false, equip: [] }, v1: { unlocked: false, equip: [] }, v2: { unlocked: false, equip: [] }, jeanne: { unlocked: false, equip: [] }, alien: { unlocked: false, equip: [] }, jedi: { unlocked: false, equip: [] }, silver: { unlocked: false, equip: [] }, mrsha: { unlocked: false, equip: [] }, kast: { unlocked: false, equip: [] }, batya: { unlocked: false, equip: [] },
       thoth: { unlocked: false, equip: [] }, rat: { unlocked: false, equip: [] }, lin: { unlocked: false, equip: [] }, horse: { unlocked: false, equip: [] }, rabbit: { unlocked: false, equip: [] },
@@ -989,8 +1015,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     // workers bitten by the zombie girl, the Tuesday ghost's rollback done; rose: «Rising from the dead» used up this run
     // ongoing: shifts in a row the manga studio worked, mangaOn: it worked this shift;
     // claw: the worker the toy alien's claw chose this shift, warned: the neighbour the executioner warned, stolen: the equipment card the thief copied;
-    // stockQ: the shift of the last «Stocktaking», so it skips the next two checks; thermos: Mr. Butthole's coffee waits for him to be hired
-    run: { t: 0, q: 1, qT: 0, qEarned: 0, brk: true, shop: [], rule: null, sq: {}, sqK: null, nova: false, spark: null, bitten: [], rolled: false, rose: false, claw: null, warned: null, stolen: null, over: false, rep: 0, passed: [], hired: 0, skills: 0, bestRate: 0, opened: [0, null, null, null, null, null, null, null, null, null, null], ongoing: 0, mangaOn: false, qLast: 0, stockQ: 0, thermos: false }
+    // stockQ: the shift of the last «Stocktaking», so it skips the next two checks; thermos: Mr. Butthole's coffee waits for him to be hired;
+    // route: the workshop of every tab, null while the run has not picked one of its alternatives
+    run: { t: 0, q: 1, qT: 0, qEarned: 0, brk: true, shop: [], rule: null, sq: {}, sqK: null, nova: false, spark: null, bitten: [], rolled: false, rose: false, claw: null, warned: null, stolen: null, over: false, rep: 0, passed: [], hired: 0, skills: 0, bestRate: 0, opened: [0, null, null, null, null, null, null, null, null, null, null, null], route: [0, 1, 2, 3, 4, null, null, 7, 8, 9], ongoing: 0, mangaOn: false, qLast: 0, stockQ: 0, thermos: false }
   });
   const NEW_WORKERS = ['sunflower', 'flytrap', 'honeybear', 'arc', 'nurse', 'nemu', 'tuesday', 'zombie', 'digger', 'kaneki', 'raven'];
   const NEW_WORKERS_13 = ['fairy', 'pirate', 'beekeeper', 'kisa', 'toyalien', 'code10', 'code80', 'yeti', 'slime', 'moth', 'gastriter', 'palach', 'thief', 'raccoons', 'rebel'];
@@ -1103,12 +1130,18 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       s.v = 19;
     }
     if (s.v === 19) {
-      // build 20: the glaciers joined as workshop 7 of the other route, with their goods and the blizzard
-      s.locs.push({ unlocked: false, slots: emptySlots(4) }); s.ice = 0;
-      if (s.run) { while (s.run.opened.length < 11) s.run.opened.push(null); Object.assign(s.run, { storm: false, stormAt: null }); }
+      // build 20: the botanical garden joins as the other workshop 6; the route keeps the pizzeria if it is open
+      s.locs.push({ unlocked: false, slots: emptySlots(5) }); s.plants = 0;
+      if (s.run) { s.run.opened.push(null); s.run.route = [0, 1, 2, 3, 4, s.locs[5].unlocked ? 5 : null, 6, 7, 8, 9]; }
       s.v = 20;
     }
-    return s.v === 8 || s.v === 20 ? s : null;
+    if (s.v === 20) {
+      // build 21: the glaciers join as the other workshop 7, with their goods and the blizzard; the route keeps the pigeons if they are open
+      s.locs.push({ unlocked: false, slots: emptySlots(4) }); s.ice = 0;
+      if (s.run) { s.run.opened.push(null); s.run.route[6] = s.locs[6].unlocked ? 6 : null; Object.assign(s.run, { storm: false, stormAt: null }); }
+      s.v = 21;
+    }
+    return s.v === 8 || s.v === 21 ? s : null;
   }
   // meta lives across runs: reputation, its unlocks, achievements and records
   const META_KEY = 'pixel-factory-meta-v1';
@@ -1490,6 +1523,12 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const wsl = slotsOf(9), pt = wsl.findIndex(z => z.machine === 'toilet' && z.worker), pf = wsl.findIndex(z => z.machine === 'airfryer' && z.worker);
     g.same = pt >= 0 && pf >= 0 && adjacent(9, pt, pf);
     if (g.same) g.combos.push('same');
+    // the garden: compost from the workbench of workshop 1, the beekeeper's bees in the roses, the pirate's island under a palm
+    g.compost = slotsOf(0).some(z => z.machine === 'bench' && z.worker);
+    g.bees = slotsOf(GARDEN).some(z => z.machine === 'rosebush' && z.worker === 'beekeeper');
+    if (g.bees) g.combos.push('bees');
+    g.island = slotsOf(GARDEN).some(z => z.machine === 'palm' && z.worker === 'pirate');
+    if (g.island) g.combos.push('island');
     // Shadow copies the perk of its working neighbour with the biggest income
     g.shadow = {};
     for (const w of crewIds) {
@@ -1612,6 +1651,15 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (l === 4 && g.couture) { vb += 0.25; notes.push('Мисис Ха шьёт чехлы: +25% к цене'); }
     if (s.machine === 'stuff' && g.vitrageWorking) { rb += 0.2; notes.push('Стеклянные ножки из цеха 4: +20% скорости'); }
     if (s.machine !== 'belt' && LOCS[l].hot && LOCS[l].hot.includes(i)) { rb += 0.2; notes.push('Жар горна: +20% скорости'); }
+    if (l === GARDEN && PLANTS.includes(s.machine)) {
+      if (s.grow) { vb += 0.2 * s.grow; notes.push(`Рост, ${s.grow} ${s.grow === 1 ? 'смена' : s.grow < 5 ? 'смены' : 'смен'}: +${s.grow * 20}% к цене`); }
+      else notes.push('Рост: +20% к цене за каждую отработанную смену, до +100%');
+      if (g.bees) { rb += 0.3; notes.push('Медовый сад: +30% скорости'); }
+      if (g.island) { lb += 0.2; notes.push('Остров сокровищ: +20% удачи'); }
+    }
+    if (s.machine === 'apple' && g.compost) { vb += 0.2; notes.push('Компост из стружки верстака цеха 1: +20% к цене'); }
+    // the apples ripen through a shift: ×0,5 at its start, ×1,5 at its end, ×1 in a break
+    if (s.machine === 'apple') { const f = shiftT(), k = f == null ? 1 : 0.5 + Math.min(1, f / quotaTime()); vX *= k; notes.push(`Яблоки созревают: цена ×${fmt(k)}`); }
     if (l === 7 && state.run.ongoing) { vb += 0.1 * state.run.ongoing; notes.push(`Онгоинг, ${state.run.ongoing} смен подряд: +${state.run.ongoing * 10}% к цене`); }
     // the etalon's price grows with the square of its working neighbours
     const etN = s.machine === 'etalon' ? neigh(l, i).filter(j => sl[j].machine && !['belt', 'etalon'].includes(sl[j].machine) && (sl[j].worker || MACH[sl[j].machine].auto)).length : 0;
@@ -1901,7 +1949,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     state.cards.push(id);
     if (cd.type === 'worker' && cd.worker === 'mrp' && state.run.thermos) { state.workers.mrp.equip.push('e_coffee'); state.cards.push('e_coffee'); state.run.thermos = false; }
     if (cd.type === 'worker') { state.workers[cd.worker].unlocked = true; state.run.hired++; lockerPage = Math.floor(state.lockers.indexOf(cd.worker) / NL); toast(`${WORKERS[cd.worker].name} ${WORKERS[cd.worker].she ? 'пришла' : 'пришёл'} на завод!`); }
-    if (cd.type === 'machine') slotsOf(target.l)[target.i].machine = cd.machine;
+    if (cd.type === 'machine') Object.assign(slotsOf(target.l)[target.i], { machine: cd.machine, grow: 0, grew: false });
     if (cd.type === 'equip') state.workers[target].equip.push(id);
     if (cd.type === 'mupg') slotsOf(target.l)[target.i].upg.push(id);
     if (cd.type === 'skill') { openSkill(target); toast(`${WORKERS[target].name}: скилл «${SKILLS[target].name}» открыт!`); }
@@ -1977,14 +2025,19 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     else if (got('sun')) toast('Комбо «Лучи чужого солнца»: пицца ×2!');
     else if (got('drink')) toast('Комбо «Собутыльники»: удача +15%, монетка Сквонча всегда удачная!');
     else if (got('same')) toast('Комбо «Это одно и то же»: унитаз и аэрогриль, сила ×2!');
+    else if (got('bees')) toast('Комбо «Медовый сад»: растения +30% скорости!');
+    else if (got('island')) toast('Комбо «Остров сокровищ»: в саду +20% удачи!');
   }
   function unlockLoc(l) {
     const L = state.locs[l], cost = LOCS[l].cost;
     if (L.unlocked) return;
-    if (altOf(l) != null && state.locs[altOf(l)].unlocked) { toast('На этом забеге выбран другой маршрут'); return; }
+    const k = tabOf(l);
+    if (routeOf(k) != null && routeOf(k) !== l) { toast(`В этом забеге на месте цеха ${k + 1} уже ${LOCS[routeOf(k)].name.toLowerCase()}`); return; }
     if (state.money < cost) { toast(`Чтобы открыть цех, нужно ${fmt(cost)} монет`); return; }
-    state.money -= cost; L.unlocked = true; state.run.opened[l] = state.run.t;
-    if (LOCS[l].start) L.slots[LOCS[l].startSlot ?? 1].machine = LOCS[l].start;
+    state.money -= cost; L.unlocked = true; state.run.opened[l] = state.run.t; state.run.route[k] = l;
+    // the garden starts with a random plant on a random upper slot
+    if (LOCS[l].start === 'random') L.slots[Math.floor(Math.random() * 3)].machine = PLANTS[Math.floor(Math.random() * 3)];
+    else if (LOCS[l].start) L.slots[LOCS[l].startSlot ?? 1].machine = LOCS[l].start;
     // the poufs workshop starts empty: its sewing machine is promised in the next card pick, a waiting one if there is one
     if (l === 4) { const o = state.offers.find(x => ['level', 'quota', 'crate'].includes(x.src)); if (o) addSew(o); else state.run.sewDue = true; }
     state.cur = l; selSlot = null; selWorker = null;
@@ -2052,6 +2105,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
         const st = slotStats(l, i, g);
         if (!st || st.rate <= 0) return;
         if (l === 7) state.run.mangaOn = true;
+        if (l === GARDEN) s.grew = true;
         total += st.income;
         s.acc = (s.acc || 0) + st.rate * dt;
         const n = Math.floor(s.acc);
@@ -2145,6 +2199,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (piggy) { state.money += run.qEarned * 0.1 * piggy; toast(`Копилка: +${fmt(run.qEarned * 0.1 * piggy)} монет`); }
     // the manga ongoing grows with every shift the studio worked and breaks on an idle one
     run.ongoing = run.mangaOn ? (run.ongoing || 0) + 1 : 0; run.mangaOn = false;
+    // a garden plant that worked this shift grows: +20% price, five shifts at most
+    slotsOf(GARDEN).forEach(z => { if (z.grew && PLANTS.includes(z.machine)) z.grow = Math.min(5, (z.grow || 0) + 1); z.grew = false; });
     run.qLast = run.qEarned; run.q++; run.qT = 0; run.qEarned = 0; run.qCrate = 0; run.rule = null; run.sq = {}; run.nova = false; run.bitten = []; run.spark = null; run.rolled = false; run.claw = null; run.warned = null; run.stolen = null; run.storm = false; run.stormAt = null;
     run.brk = true; run.shopClosed = !!(wasRule && wasRule.id === 'stock'); run.shop = run.shopClosed ? [] : rollShop(); run.shopLocked = false; run.shopRolls = 0;
     if (run.q % 3 === 0) rollRule();
@@ -2354,6 +2410,57 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       R(x + 14, y + 2, 7, 21, K); R(x + 15, y + 3, 5, 19, '#c9d0d6'); R(x + 16, y + 4, 3, 17, '#bfeef4'); R(x + 16, y + 5, 1, 4, '#ffffff'); R(x + 18, y + 14, 1, 5, '#7fd6e0');
       R(x + 16, y + 22, 3, 2, K);
       const hot = Math.floor(t * 5) % 2; R(x + 27, y + 12, 3, 3, hot ? '#fff1b0' : '#ffb35a'); R(x + 28, y + 13, 1, 1, '#ffffff');
+    } else if (type === 'apple') {
+      const ell = (cx, cy, rx, ry, col) => { for (let dy = -ry; dy <= ry; dy++) { const w = Math.round(rx * Math.sqrt(1 - (dy / ry) ** 2)); R(cx - w, cy + dy, w * 2 + 1, 1, col); } };
+      // a wooden planter box with iron bands, a gnarled trunk and a big crown full of apples
+      R(x + 4, y + 21, 24, 10, K); R(x + 5, y + 22, 22, 8, '#a8693a'); R(x + 5, y + 22, 22, 1, '#c98a52'); R(x + 5, y + 26, 22, 1, '#8a5a32');
+      R(x + 5, y + 23, 1, 7, '#5a5060'); R(x + 26, y + 23, 1, 7, '#5a5060'); R(x + 10, y + 23, 1, 7, '#8a5a32'); R(x + 16, y + 23, 1, 7, '#8a5a32'); R(x + 21, y + 23, 1, 7, '#8a5a32');
+      R(x + 5, y + 21, 22, 1, '#5a3a22');
+      R(x + 13, y + 13, 6, 9, K); R(x + 14, y + 13, 4, 9, '#8a5a32'); R(x + 14, y + 14, 1, 7, '#a8744a'); R(x + 16, y + 16, 1, 2, '#6a4024'); R(x + 11, y + 19, 3, 2, K); R(x + 18, y + 19, 3, 2, K);
+      R(x + 10, y + 12, 4, 2, K); R(x + 19, y + 11, 4, 2, K);
+      const sw = Math.round(Math.sin(t * 1.4) * 0.6);
+      for (const [a, b, rx, ry] of [[16, 8, 11, 8], [7, 11, 6, 5], [25, 11, 6, 5], [11, 4, 6, 4], [21, 4, 6, 4]]) ell(x + a + sw, y + b, rx + 1, ry + 1, K);
+      for (const [a, b, rx, ry] of [[16, 8, 11, 8], [7, 11, 6, 5], [25, 11, 6, 5], [11, 4, 6, 4], [21, 4, 6, 4]]) ell(x + a + sw, y + b, rx, ry, '#3f7f3a');
+      for (const [a, b, rx, ry] of [[15, 7, 9, 6], [7, 10, 4, 3], [24, 10, 4, 3], [11, 3, 5, 3], [21, 3, 4, 2]]) ell(x + a + sw, y + b, rx, ry, '#5fa84a');
+      for (const [a, b, rx, ry] of [[12, 4, 4, 2], [6, 9, 2, 1], [20, 2, 2, 1]]) ell(x + a + sw, y + b, rx, ry, '#8fd16a');
+      for (const [a, b] of [[9, 2], [17, 1], [4, 9], [14, 6], [22, 7], [27, 11], [10, 13]]) R(x + a + sw, y + b, 1, 1, '#c4ec8c');
+      for (const [a, b] of [[18, 10], [6, 13], [26, 14], [12, 15], [22, 14], [16, 5]]) R(x + a + sw, y + b, 2, 1, '#2f6e3a');
+      for (const [a, b] of [[8, 6], [19, 4], [24, 9], [12, 11], [20, 13], [4, 12], [28, 12]]) { R(x + a + sw, y + b, 3, 3, K); R(x + a + sw + 1, y + b + 1, 2, 2, '#d64545'); R(x + a + sw + 1, y + b + 1, 1, 1, '#ff9a8a'); R(x + a + sw + 1, y + b - 1, 1, 1, '#6a4024'); }
+      // one ripe apple drops into the box now and then
+      const f = (t * 0.5) % 1; if (f < 0.7) { const ay = y + 15 + Math.round(f / 0.7 * 6); R(x + 23, ay, 3, 3, K); R(x + 24, ay + 1, 2, 2, '#d64545'); }
+      R(x + 22, y + 21, 3, 1, '#d64545');
+    } else if (type === 'palm') {
+      // a glazed blue pot with a pattern, a tall ringed trunk leaning a little, coconuts and arching fronds
+      R(x + 9, y + 22, 14, 9, K); R(x + 10, y + 23, 12, 7, '#3f6fd1'); R(x + 10, y + 23, 12, 1, '#5b8fd6'); R(x + 11, y + 24, 1, 5, '#8fb6ec');
+      for (let k = 0; k < 3; k++) { R(x + 12 + k * 3, y + 26, 2, 2, '#f4efe6'); R(x + 13 + k * 3, y + 25, 1, 1, '#f2c94c'); }
+      R(x + 8, y + 20, 16, 3, K); R(x + 9, y + 21, 14, 1, '#5b8fd6'); R(x + 10, y + 20, 12, 1, '#5a3a22');
+      const sw = Math.sin(t * 1.2);
+      const tr = k => x + 15 + Math.round(Math.sin(k / 14 * 1.8) * 3);
+      for (let k = 0; k < 15; k++) { const tx = tr(k), ty = y + 20 - k; R(tx - 1, ty, 5, 1, K); R(tx, ty, 3, 1, k % 3 === 0 ? '#8a5a32' : '#c9955f'); R(tx, ty, 1, 1, k % 3 === 0 ? '#6a4024' : '#e0b07a'); }
+      const cx = tr(14) + 1, cy = y + 6;
+      // fronds: an arching rib with short leaflets on both sides; an outline pass, then a fill pass
+      const fronds = [[-1, 13, 0.4, 13], [1, 13, 0.4, 13], [-0.6, 9, 0.9, 8], [0.7, 9, 0.9, 8], [0.1, 5, 1, 4]];
+      for (const pass of [0, 1]) for (const [dir, len, rise, droop] of fronds) for (let s = 1; s <= len; s++) {
+        const u = s / len, px = Math.round(cx + dir * s + (u > 0.5 ? sw * Math.sign(dir) * (u - 0.5) * 2 : 0)), py = Math.round(cy - rise * s + droop * u * u);
+        const ll = s < len ? 2 : 0;
+        if (!pass) R(px - 1, py - 2, 3, 3 + ll + 1, K);
+        else { R(px, py - 1, 1, 1, '#8fd16a'); R(px, py, 1, 1, '#c4ec8c'); if (ll) { R(px, py + 1, 1, 1, '#5fa84a'); R(px, py + 2, 1, 1, '#3f7f3a'); } }
+      }
+      for (const [a, b] of [[-2, 2], [1, 3], [-1, 4]]) { R(cx + a - 1, cy + b - 1, 4, 4, K); R(cx + a, cy + b, 2, 2, '#6a4024'); R(cx + a, cy + b, 1, 1, '#a8744a'); }
+    } else if (type === 'rosebush') {
+      const ell = (cx, cy, rx, ry, col) => { for (let dy = -ry; dy <= ry; dy++) { const w = Math.round(rx * Math.sqrt(1 - (dy / ry) ** 2)); R(cx - w, cy + dy, w * 2 + 1, 1, col); } };
+      // a stone urn, a round bush with thorny stems and red and pink roses, a butterfly visits
+      R(x + 9, y + 26, 14, 5, K); R(x + 10, y + 27, 12, 3, '#9aa3ad'); R(x + 12, y + 23, 8, 4, K); R(x + 13, y + 23, 6, 3, '#b8c0c8');
+      R(x + 5, y + 18, 22, 6, K); R(x + 6, y + 19, 20, 4, '#c9d0d6'); R(x + 6, y + 19, 20, 1, '#e9eef2'); R(x + 6, y + 22, 20, 1, '#9aa3ad'); for (let k = 0; k < 5; k++) R(x + 8 + k * 4, y + 20, 2, 1, '#aab4bd');
+      const sw = Math.round(Math.sin(t * 1.6) * 0.5);
+      ell(x + 16, y + 11, 14, 9, K); ell(x + 16, y + 11, 13, 8, '#2f6e3a'); ell(x + 14, y + 10, 11, 6, '#3f7f3a'); ell(x + 12, y + 8, 7, 4, '#5fa84a'); ell(x + 10, y + 7, 3, 2, '#8fd16a');
+      for (const [a, b] of [[5, 13], [9, 16], [22, 15], [26, 11], [19, 4], [7, 9]]) R(x + a, y + b, 2, 1, '#5fa84a');
+      for (const [a, b] of [[8, 17], [14, 18], [20, 17], [25, 16]]) { R(x + a, y + b, 1, 2, '#2f6e3a'); R(x + a + 1, y + b, 1, 1, '#c4ec8c'); }
+      // a rose: dark centre swirl, petals around it, a pale highlight
+      const rose = (rx, ry, c1, c2, c3) => { R(rx - 1, ry - 1, 6, 6, K); R(rx, ry, 4, 4, c1); R(rx + 1, ry + 1, 2, 2, c2); R(rx + 2, ry + 1, 1, 1, c3); R(rx, ry, 1, 1, 'rgba(255,255,255,.5)'); };
+      for (const [a, b, red] of [[6, 7, 1], [13, 3, 0], [20, 6, 1], [24, 11, 0], [10, 12, 0], [17, 11, 1], [4, 13, 1]]) rose(x + a + sw, y + b, red ? '#e0533a' : '#f2a7c3', red ? '#a83232' : '#d96a9a', red ? '#7a1f2a' : '#a8477a');
+      const bx = x + 16 + Math.round(Math.cos(t * 1.9) * 14), by = y - 2 + Math.round(Math.sin(t * 2.7) * 3), wf = Math.floor(t * 10) % 2;
+      R(bx, by, 1, 4, K); R(bx - 3 + wf, by - 1, 3, 3, '#f2c94c'); R(bx + 1, by - 1, 3 - wf, 3, '#f2c94c'); R(bx - 2 + wf, by + 2, 2, 2, '#ff8fc8'); R(bx + 1, by + 2, 2 - wf, 2, '#ff8fc8');
     } else if (type === 'icesaw') {
       // a block of ice on a sled under a steel gantry, a circular saw spins and cuts it, chips spray
       R(x + 1, y + 26, 30, 4, K); R(x + 2, y + 27, 28, 2, '#a8693a'); R(x, y + 29, 5, 2, K); R(x + 27, y + 29, 5, 2, K);
@@ -2892,6 +2999,31 @@ textarea{height:84px;resize:vertical;word-break:break-all}
         R(px - 2, py, 5, 4, K); R(px - 1, py + 1, 3, 2, '#a9b2c3'); R(px + (k % 2 ? 2 : -3), py - 2 + bob, 3, 3, K); R(px + (k % 2 ? 3 : -2), py - 1 + bob, 1, 1, '#6fbf9a');
       }
     }
+    else if (l === GARDEN) {
+      // a greenhouse: sky through glass in white iron frames with arched tops, big tropical leaves inside,
+      // a low terracotta brick wall below, hanging baskets with trailing ivy
+      R(0, 0, W, 28, '#bfe3ee'); R(0, 0, W, 6, '#a9d6e8'); R(0, 18, W, 10, '#cfeaf0');
+      for (const [cx, cy] of [[18, 5], [W - 48, 3], [W / 2 + 60, 8]]) { R(cx, cy, 16, 3, '#f4f8fb'); R(cx + 3, cy - 2, 8, 2, '#f4f8fb'); R(cx + 2, cy + 3, 13, 1, '#dcebf2'); }
+      // monstera and banana leaves behind the glass
+      const leaf = (lx, ly, s, col, dk) => { for (let k = 0; k < s; k++) { const w = Math.round(Math.sin(k / s * Math.PI) * s * 0.6); R(lx - w, ly - k, w * 2 + 1, 1, col); } R(lx, ly - s + 1, 1, s, dk); for (let k = 2; k < s - 1; k += 3) { R(lx - Math.round(Math.sin(k / s * Math.PI) * s * 0.6), ly - k, 2, 1, '#cfeaf0'); } };
+      for (let k = 0; k < 12; k++) { const lx = 6 + k * 21 + (k % 3) * 3, s = 8 + (k * 7) % 6; leaf(lx, 24, s, k % 2 ? '#5e9e7e' : '#4f8e70', '#3f7a5e'); }
+      for (let k = 0; k < 8; k++) { const lx = 16 + k * 30, s = 6 + (k * 5) % 4; leaf(lx, 25, s, '#7bb894', '#5e9e7e'); }
+      // white frames: posts, a top beam, a transom and an arch over every pane
+      for (let xx = 0; xx <= W; xx += 30) { R(xx, 0, 3, 22, '#eef5f1'); R(xx + 2, 0, 1, 22, '#a9c4bc'); }
+      R(0, 0, W, 2, '#eef5f1'); R(0, 2, W, 1, '#a9c4bc'); R(0, 11, W, 2, '#eef5f1'); R(0, 13, W, 1, '#a9c4bc');
+      for (let xx = 0; xx < W; xx += 30) { R(xx + 3, 3, 4, 1, '#eef5f1'); R(xx + 23, 3, 4, 1, '#eef5f1'); R(xx + 3, 4, 2, 1, '#eef5f1'); R(xx + 25, 4, 2, 1, '#eef5f1'); R(xx + 7, 4, 3, 1, 'rgba(255,255,255,.55)'); R(xx + 6, 5, 1, 4, 'rgba(255,255,255,.4)'); }
+      // knee wall of terracotta bricks
+      R(0, 21, W, 7, '#b5654c'); R(0, 21, W, 1, '#d98a6a');
+      for (let r = 0; r < 2; r++) { R(0, 24 + r * 3, W, 1, '#94523d'); for (let xx = (r % 2) * 6; xx < W; xx += 12) R(xx, 22 + r * 3, 1, 2, '#94523d'); }
+      // hanging baskets with ivy, either side of the sign
+      for (const hx of [30, W - 30]) {
+        R(hx, 2, 1, 6, '#5a5060'); R(hx - 4, 7, 1, 2, '#5a5060'); R(hx + 4, 7, 1, 2, '#5a5060'); R(hx - 4, 7, 9, 1, '#5a5060');
+        R(hx - 6, 9, 13, 6, K); R(hx - 5, 10, 11, 4, '#a8693a'); R(hx - 5, 10, 11, 1, '#c98a52'); for (let k = 0; k < 3; k++) R(hx - 4 + k * 4, 11, 1, 3, '#7a4a28');
+        R(hx - 7, 7, 15, 3, K); R(hx - 6, 7, 13, 2, '#3f7f3a'); R(hx - 5, 7, 4, 1, '#8fd16a'); R(hx + 2, 7, 3, 1, '#5fa84a'); R(hx - 1, 6, 2, 1, '#f2a7c3'); R(hx + 4, 6, 2, 1, '#f2c94c');
+        const sw = Math.round(Math.sin(t * 1.3 + hx) * 1);
+        for (const [dx, len] of [[-6, 9], [-2, 12], [3, 7], [6, 11]]) for (let k = 0; k < len; k++) { const vx = hx + dx + (k > len / 2 ? sw : 0); R(vx, 15 + k, 1, 1, '#3f7f3a'); if (k % 3 === 1) R(vx + (k % 2 ? 1 : -1), 15 + k, 1, 1, '#5fa84a'); }
+      }
+    }
     else if (l === 5) {
       // pizzeria: cream plaster, an Italian stripe, a shelf of tomato cans with garlic, a chalk menu
       R(0, 0, W, 29, '#f1e3c4'); R(0, 0, W, 2, '#e3d0a8');
@@ -3075,6 +3207,59 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       ell(bx + 10, by + 6, 4, 3, '#4c4c58'); R(bx + 6, by + 13, 12, 1, '#2a2a32'); R(bx + 18, by + 9, 1, 5, '#2a2a32'); R(bx + 21, by + 15, 6, 1, '#2a2a32'); R(bx + 4, by + 17, 5, 1, '#4c4c58');
       const dx = W - 36, dy = FL - 34; R(dx + 2, dy + 28, 28, 2, 'rgba(30,20,40,.3)'); R(dx, dy, 30, 5, K); R(dx + 1, dy + 1, 28, 3, '#d9a66a'); R(dx + 1, dy + 1, 28, 1, '#ecc48f'); R(dx + 6, dy + 5, 18, 5, K); R(dx + 7, dy + 5, 16, 4, '#c98a52');
       R(dx + 3, dy + 5, 2, 22, '#c9d0d6'); R(dx + 25, dy + 5, 2, 22, '#c9d0d6'); R(dx + 1, dy + 26, 6, 2, '#9aa3ad'); R(dx + 23, dy + 26, 6, 2, '#9aa3ad');
+    }
+    if (l === GARDEN) {
+      // grass with tufts and a stepping stone path between the beds
+      for (let k = 0; k < 90; k++) { const gx2 = (k * 53 + (k % 7) * 11) % W, gy = 33 + (k * 37) % (FL - 36); R(gx2, gy, 1, 2, '#6fa84c'); R(gx2 + 1, gy - 1, 1, 3, '#9fd174'); R(gx2 + 2, gy, 1, 2, '#6fa84c'); }
+      for (let k = 0; k < 30; k++) R((k * 71 + 9) % W, 34 + (k * 43) % (FL - 38), 2, 1, '#a6d47a');
+      const ell = (cx, cy, rx, ry, col) => { for (let dy = -ry; dy <= ry; dy++) { const w = Math.round(rx * Math.sqrt(1 - (dy / ry) ** 2)); R(cx - w, cy + dy, w * 2 + 1, 1, col); } };
+      const shadow = (x, y, w) => R(x, y, w, 3, 'rgba(30,20,40,.28)');
+      const stone = (sx, sy, rx, ry) => { ell(sx, sy + 1, rx, ry, '#5f7a4a'); ell(sx, sy, rx, ry, '#b9b3a6'); ell(sx - 1, sy - 1, rx - 2, ry - 1, '#d3cdbf'); R(sx + rx - 3, sy + 1, 2, 1, '#9a9488'); };
+      for (const [sx, sy] of [[20, FL - 10], [W - 20, FL - 10], [120, 112], [42, 111], [198, 111]]) stone(sx, sy, 7, 3);
+      // a flowerbed border of tulips under the lower pair
+      const B0 = colX(0.5), B1 = colX(1.5) + SW;
+      R(B0, FL - 14, B1 - B0, 12, '#6b4a2f'); R(B0, FL - 14, B1 - B0, 1, '#8a6040'); R(B0, FL - 3, B1 - B0, 1, '#4f3420');
+      for (let k = 0; k < 14; k++) {
+        const fx = B0 + 6 + k * 11, fy = FL - 12, bob = Math.round(Math.sin(t * 2 + k) * 0.6), col = ['#e0533a', '#f2c94c', '#f2a7c3', '#f4efe6'][k % 4];
+        R(fx + 1, fy + 2, 1, 6, '#3f7f3a'); R(fx - 1, fy + 5, 2, 2, '#5fa84a'); R(fx + 2, fy + 4, 2, 2, '#5fa84a');
+        R(fx - 1 + bob, fy - 2, 5, 5, K); R(fx + bob, fy - 1, 3, 3, col); R(fx + bob, fy - 2, 1, 1, col); R(fx + 2 + bob, fy - 2, 1, 1, col); R(fx + bob, fy - 1, 1, 1, 'rgba(255,255,255,.5)');
+      }
+      // bottom left: a garden gnome with a fishing rod on a stack of terracotta pots and a sack of soil
+      const gx = 22, gy = rowY(1) + 6;
+      shadow(gx - 18, FL - 22, 36);
+      for (const [px, py] of [[gx - 16, FL - 36], [gx - 4, FL - 36], [gx - 10, FL - 46]]) { R(px, py, 13, 11, K); R(px + 1, py + 1, 11, 9, '#c8643c'); R(px - 1, py, 15, 3, K); R(px, py + 1, 13, 1, '#d97a50'); R(px + 2, py + 3, 2, 6, '#e08a60'); R(px + 4, py + 4, 7, 2, '#5a3a22'); }
+      // the gnome: red cap, white beard, blue coat, a rod with a bobbing float
+      const nx = gx - 6, ny = gy + 2, nb = Math.floor(t * 1.5) % 2;
+      R(nx + 2, ny - 2, 9, 3, K); R(nx + 3, ny - 1, 7, 1, '#d64545');
+      for (let k = 0; k < 7; k++) { const h = Math.floor((6 - k) / 2); R(nx + 6 - h - 1, ny - 3 - k, h * 2 + 3, 1, K); }
+      for (let k = 0; k < 6; k++) { const h = Math.floor((6 - k) / 2); R(nx + 6 - h, ny - 3 - k, h * 2 + 1, 1, '#d64545'); }
+      R(nx + 5, ny - 6, 1, 2, '#ff8a7a');
+      R(nx + 2, ny + 1, 9, 5, K); R(nx + 3, ny + 1, 7, 3, '#f2c8a0'); R(nx + 4, ny + 2, 1, 1, K); R(nx + 8, ny + 2, 1, 1, K); R(nx + 5, ny + 3, 3, 1, '#e8968a');
+      R(nx + 1, ny + 4, 11, 8, K); R(nx + 3, ny + 4, 7, 7, '#f4efe6'); R(nx + 2, ny + 6, 1, 4, '#3f6fd1'); R(nx + 10, ny + 6, 1, 4, '#3f6fd1'); R(nx + 4, ny + 10, 5, 1, '#e3dccd');
+      R(nx + 2, ny + 12, 9, 6, K); R(nx + 3, ny + 12, 7, 4, '#3f6fd1'); R(nx + 3, ny + 12, 7, 1, '#5b8fd6'); R(nx + 3, ny + 15, 7, 1, '#8a5a32'); R(nx + 6, ny + 15, 1, 1, '#f2c94c');
+      R(nx + 3, ny + 17, 3, 2, '#5a3a22'); R(nx + 7, ny + 17, 3, 2, '#5a3a22');
+      R(nx + 11, ny + 9, 2, 2, '#f2c8a0'); for (let k = 0; k < 10; k++) R(nx + 12 + k, ny + 9 - k, 1, 1, '#8a5a32');
+      R(nx + 22, ny - 1, 1, 9 + nb, 'rgba(240,240,240,.7)'); R(nx + 21, ny + 8 + nb, 3, 3, K); R(nx + 22, ny + 8 + nb, 1, 1, '#d64545'); R(nx + 22, ny + 9 + nb, 1, 1, '#f4efe6');
+      // sack of soil
+      const sx2 = 4, sy2 = FL - 34; R(sx2, sy2, 12, 14, K); R(sx2 + 1, sy2 + 2, 10, 11, '#c9a26a'); R(sx2 + 1, sy2 + 2, 2, 11, '#dcbb85'); R(sx2 + 3, sy2 - 1, 6, 3, K); R(sx2 + 4, sy2, 4, 1, '#c9a26a'); R(sx2 + 3, sy2 + 6, 6, 4, '#6b4a2f'); R(sx2 + 4, sy2 + 7, 4, 1, '#8fd16a');
+      // bottom right: a wheelbarrow of soil with seedlings, a rake leaning, a watering can, a butterfly
+      const wx = W - 40, wy = FL - 34;
+      shadow(wx, FL - 20, 38);
+      R(wx + 26, wy - 30, 2, 40, K); R(wx + 26, wy - 29, 1, 38, '#a8693a'); R(wx + 21, wy - 33, 12, 3, K); R(wx + 22, wy - 32, 10, 1, '#9aa3ad'); for (let k = 0; k < 5; k++) R(wx + 22 + k * 2, wy - 30, 1, 3, '#7d8794');
+      R(wx + 2, wy + 2, 30, 12, K); R(wx + 3, wy + 3, 28, 9, '#3f8a5a'); R(wx + 3, wy + 3, 28, 1, '#5faa78'); R(wx + 3, wy + 9, 28, 1, '#2f6e48');
+      R(wx + 4, wy, 26, 4, K); R(wx + 5, wy + 1, 24, 2, '#6b4a2f'); R(wx + 7, wy + 1, 3, 1, '#8a6040'); R(wx + 18, wy + 1, 4, 1, '#8a6040');
+      for (const [a, c] of [[9, '#5fa84a'], [16, '#8fd16a'], [24, '#5fa84a']]) { R(wx + a, wy - 4, 1, 4, '#3f7f3a'); R(wx + a - 2, wy - 5, 2, 2, c); R(wx + a + 1, wy - 6, 2, 2, c); }
+      R(wx - 1, wy + 6, 4, 2, K); R(wx - 4, wy + 7, 4, 1, '#8a5a32');
+      disc(wx + 26, wy + 16, 4, K); disc(wx + 26, wy + 16, 3, '#3a3346'); R(wx + 26, wy + 16, 1, 1, '#9aa3ad'); R(wx + 6, wy + 13, 2, 7, K);
+      // watering can
+      const cx = W - 22, cy = rowY(1) + 4;
+      shadow(cx - 2, cy + 16, 22);
+      R(cx, cy + 4, 14, 12, K); R(cx + 1, cy + 5, 12, 10, '#4f9550'); R(cx + 1, cy + 5, 12, 2, '#6fbf6a'); R(cx + 2, cy + 7, 1, 6, '#8fe07a');
+      R(cx + 3, cy, 8, 5, K); R(cx + 4, cy + 1, 6, 1, '#4f9550'); R(cx - 6, cy + 6, 7, 2, K); R(cx - 8, cy + 4, 3, 4, K); R(cx - 7, cy + 5, 1, 2, '#9aa3ad');
+      R(cx + 14, cy + 6, 3, 6, K); R(cx + 13, cy + 7, 2, 4, '#4f9550');
+      // a butterfly flutters over the beds
+      const bx = Math.round(W / 2 + Math.sin(t * 0.7) * 100), by = Math.round(rowY(1) - 6 + Math.sin(t * 2.3) * 5), wf = Math.floor(t * 10) % 2;
+      R(bx, by, 1, 4, K); R(bx - 3 + wf, by - 1, 3, 3, '#f2a7c3'); R(bx + 1, by - 1, 3 - wf, 3, '#f2a7c3'); R(bx - 2 + wf, by + 2, 2, 2, '#f2c94c'); R(bx + 1, by + 2, 2 - wf, 2, '#f2c94c');
     }
     if (l === 5) {
       // big red and cream checker tiles, soft enough to read the slots over them
@@ -3658,7 +3843,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       if (!onPage(i)) return;
       if (id && !state.workers[id].unlocked) { T('?', LX(i) + LW / 2, LYi(i) + 6, 12, '#6b6178', 'center', false); return; }
       const wp = id && workerPlace(id);
-      if (wp) T('Ц' + (wp.l + 1), LX(i) + 9.5, LYi(i) + 35, 5, K, 'center', false);
+      if (wp) T('Ц' + locNo(wp.l), LX(i) + 9.5, LYi(i) + 35, 5, K, 'center', false);
     });
     floats.forEach(f => {
       if (f.l !== l) return;
@@ -3739,7 +3924,13 @@ textarea{height:84px;resize:vertical;word-break:break-all}
         // the extractor's tall slot and the etalon's wide one are built for them: nothing moves in or out
         const fixed = k => TALL[l] === k || WIDE[l] === k;
         if (i !== mode.from && (fixed(i) || fixed(mode.from))) toast('Этот станок встроен в своё место, его не переставить');
-        else if (i !== mode.from) { [sl[mode.from], sl[i]] = [sl[i], sl[mode.from]]; toast('Станок переставлен'); save(); }
+        else if (i !== mode.from) {
+          [sl[mode.from], sl[i]] = [sl[i], sl[mode.from]];
+          // a replanted garden plant starts growing anew
+          const re = l === GARDEN && [sl[i], sl[mode.from]].some(z => z.grow);
+          if (l === GARDEN) [sl[i], sl[mode.from]].forEach(z => { z.grow = 0; z.grew = false; });
+          toast(re ? 'Растение пересажено, рост сброшен' : 'Станок переставлен'); save();
+        }
         mode = null; selSlot = i; renderSheet();
       }
       return;
@@ -3762,13 +3953,11 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   // ten workshops do not fit in one row: two pages of TPP tabs, flipped by the arrow or a swipe; the page follows the open workshop
   const TPP = 5, tabs = [0, 1, 2, 3, 4].map(k => document.getElementById('tab' + k)), $tabPg = document.getElementById('tabPg'), $tabNav = document.querySelector('.tabs');
   let tabPage = 0, tabCur = -1, swiped = false;
-  // the seventh tab shows the opened route, or the one being looked at while neither is open
-  const tabLoc = l => l === 6 && (state.locs[ICE].unlocked || (state.cur === ICE && !state.locs[6].unlocked)) ? ICE : l;
   tabs.forEach((b, k) => b.addEventListener('click', () => {
     if (swiped) { swiped = false; return; } // the click that ends a swipe only flips the page
-    const l = tabLoc(tabPage * TPP + k);
-    // a locked fork tab tapped again shows the other route, a locked plain tab opens the workshop
-    if (!state.locs[l].unlocked && state.cur === l && altOf(l) != null) { state.cur = altOf(l); selSlot = null; renderSheet(); renderTabs(); return; }
+    const t = tabPage * TPP + k, l = tabLoc(t);
+    // a fork not picked yet: a second tap shows the other workshop, it opens from the sheet's buttons
+    if (ALTS[t] && routeOf(t) == null && state.cur === l) { const a = ALTS[t]; state.cur = a[(a.indexOf(l) + 1) % a.length]; selSlot = null; renderSheet(); renderTabs(); return; }
     if (!state.locs[l].unlocked && state.cur === l && !guest && !state.run.over) { unlockLoc(l); return; }
     if (mode && mode.kind === 'move') mode = null;
     state.cur = l; selSlot = null; renderSheet(); renderTabs();
@@ -3779,21 +3968,21 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   $tabNav.addEventListener('pointerdown', e => { swipeX = e.clientX; swiped = false; });
   $tabNav.addEventListener('pointerup', e => { if (swipeX != null && Math.abs(e.clientX - swipeX) > 40 && (e.clientX < swipeX) === (tabPage === 0)) { flipTabs(); swiped = true; } swipeX = null; });
   function renderTabs() {
-    if (state.cur !== tabCur) { tabCur = state.cur; tabPage = Math.floor((locNo(state.cur) - 1) / TPP); }
+    if (state.cur !== tabCur) { tabCur = state.cur; tabPage = Math.floor(tabOf(state.cur) / TPP); }
     const pg = tabPage ? '‹' : '›';
     if ($tabPg.dataset.p !== String(tabPage)) { $tabPg.dataset.p = tabPage; $tabPg.innerHTML = `${pg}<small>${tabPage + 1}/2</small>`; }
     tabs.forEach((b, k) => {
-      const l = tabLoc(tabPage * TPP + k), L = state.locs[l];
-      b.setAttribute('aria-pressed', String(state.cur === l));
+      const t = tabPage * TPP + k, l = tabLoc(t), L = state.locs[l], fork = ALTS[t] && routeOf(t) == null;
+      b.setAttribute('aria-pressed', String(tabOf(state.cur) === t));
       b.classList.toggle('locked', !L.unlocked);
       b.classList.toggle('ready', !L.unlocked && state.money >= LOCS[l].cost);
-      const nm = LOCS[l].tab || LOCS[l].name, txt = L.unlocked ? `Цех ${locNo(l)}\n${nm}` : `Цех ${locNo(l)} · ${fmt(LOCS[l].cost)}\n${nm}`;
+      const nm = fork ? ALTS[t].map(a => LOCS[a].tab || LOCS[a].name).join('/') : LOCS[l].tab || LOCS[l].name, txt = L.unlocked ? `Цех ${t + 1}\n${nm}` : `Цех ${t + 1} · ${fmt(LOCS[l].cost)}\n${nm}`;
       if (b.textContent !== txt) b.textContent = txt;
     });
   }
 
-  // goods of workshops 6–10 for the counter line, shown once their workshop is open
-  const NEW_GOODS = [['pizza', 'пиццы'], ['pigeons', 'голубей'], ['manga', 'томов'], ['bottles', 'бутылок'], ['calib', 'калибровок'], ['ice', 'льда']];
+  // goods of workshops 6–10 and the garden for the counter line, shown once their workshop is open
+  const NEW_GOODS = [['pizza', 'пиццы', 5], ['plants', 'растений', GARDEN], ['pigeons', 'голубей', 6], ['manga', 'томов', 7], ['bottles', 'бутылок', 8], ['calib', 'калибровок', 9], ['ice', 'льда', ICE]];
 
   /* ================= sheet ================= */
   const body = document.getElementById('sheetBody');
@@ -3863,14 +4052,17 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     return head + next + shop;
   }
   function lockedHTML(l) {
-    const fork = altOf(l) != null ? `<p class="muted">Развилка: цех 7 — голуби или ледники, за забег откроется только один. Нажми на вкладку ещё раз, чтобы посмотреть другой.</p>` : '';
-    return `<h2>Цех ${locNo(l)} · ${LOCS[l].name}</h2><p class="muted">${LOCS[l].desc}</p>${fork}<p class="muted">Сотрудники общие на весь завод: каждый может работать только в одном цеху.</p><div class="row"><button class="btn primary" type="button" data-act="unlock" ${state.money < LOCS[l].cost ? 'disabled' : ''}>Открыть за ${fmt(LOCS[l].cost)}</button></div>`;
+    const k = tabOf(l), fork = ALTS[k] && routeOf(k) == null, ids = fork ? ALTS[k] : [l];
+    const shut = routeOf(k) != null && routeOf(k) !== l;
+    const btn = x => `<button class="btn${x === l ? ' primary' : ''}" type="button" data-act="unlock" data-l="${x}" ${state.money < LOCS[x].cost ? 'disabled' : ''}>Открыть ${fork ? `«${LOCS[x].name}» ` : ''}за ${fmt(LOCS[x].cost)}</button>`;
+    const pick = fork ? `<p><b>Развилка:</b> на месте цеха ${k + 1} можно открыть ${ids.map(x => `«${LOCS[x].name}»`).join(' или ')}. Второй цех закроется до конца забега. Нажми на вкладку ещё раз, чтобы посмотреть другой цех.</p>` : '';
+    return `<h2>Цех ${k + 1} · ${LOCS[l].name}</h2>${pick}<p class="muted">${LOCS[l].desc}</p><p class="muted">Сотрудники общие на весь завод: каждый может работать только в одном цеху.</p>${shut ? `<p class="muted">В этом забеге выбран другой цех.</p>` : `<div class="row">${ids.map(btn).join('')}</div>`}`;
   }
   function idleHTML() {
     const g = globals();
-    const combos = g.combos.map(k => ({ night: '<span class="chip" style="--rc:var(--r3)">Ночная смена ×1,5</span>', maids: `<span class="chip" style="--rc:var(--r3)">Дуэт горничных: цех ${locNo(g.maidsLoc)} ×2</span>`, green: '<span class="chip" style="--rc:var(--r2)">Зелёная сила ×1,5</span>', family: `<span class="chip" style="--rc:var(--r3)">Семейный подряд${g.familyLoc >= 0 ? `: цех ${g.familyLoc + 1} ×2` : ''}</span>`, post: '<span class="chip" style="--rc:var(--r3)">Почтовый день: посылки ×2</span>', cozy: '<span class="chip" style="--rc:var(--r1)">Уютно: сила ×1,5</span>', case: '<span class="chip" style="--rc:var(--r2)">Дело закрыто</span>', robot: '<span class="chip" style="--rc:var(--r2)">Робот кормит улиток</span>', morning: '<span class="chip" style="--rc:var(--r1)">Утро после</span>', tape: '<span class="chip" style="--rc:var(--r1)">Скотч и клей</span>', lawn: '<span class="chip" style="--rc:var(--r1)">Оборона газона</span>', epidemic: '<span class="chip" style="--rc:var(--r2)">Эпидемия</span>', rising: `<span class="chip" style="--rc:var(--r3)">Восстание из мёртвых${state.run.rose ? ': использовано' : ''}</span>`, scarf: '<span class="chip" style="--rc:var(--r2)">Тёплый шарф</span>', feat: '<span class="chip" style="--rc:var(--r1)">Сам с собой фит</span>', same: '<span class="chip" style="--rc:var(--r2)">Это одно и то же ×2</span>', sun: '<span class="chip" style="--rc:var(--r2)">Лучи чужого солнца: пицца ×2</span>', wolf: '<span class="chip" style="--rc:var(--r2)">Счастливая волчица ×2</span>' })[k]).join('') + (state.run.subs ? `<span class="chip" style="--rc:var(--r3)">Подписка: +${pct(state.run.subs)} дохода</span>` : '');
+    const combos = g.combos.map(k => ({ night: '<span class="chip" style="--rc:var(--r3)">Ночная смена ×1,5</span>', maids: `<span class="chip" style="--rc:var(--r3)">Дуэт горничных: цех ${locNo(g.maidsLoc)} ×2</span>`, green: '<span class="chip" style="--rc:var(--r2)">Зелёная сила ×1,5</span>', family: `<span class="chip" style="--rc:var(--r3)">Семейный подряд${g.familyLoc >= 0 ? `: цех ${locNo(g.familyLoc)} ×2` : ''}</span>`, post: '<span class="chip" style="--rc:var(--r3)">Почтовый день: посылки ×2</span>', cozy: '<span class="chip" style="--rc:var(--r1)">Уютно: сила ×1,5</span>', case: '<span class="chip" style="--rc:var(--r2)">Дело закрыто</span>', robot: '<span class="chip" style="--rc:var(--r2)">Робот кормит улиток</span>', morning: '<span class="chip" style="--rc:var(--r1)">Утро после</span>', tape: '<span class="chip" style="--rc:var(--r1)">Скотч и клей</span>', lawn: '<span class="chip" style="--rc:var(--r1)">Оборона газона</span>', epidemic: '<span class="chip" style="--rc:var(--r2)">Эпидемия</span>', rising: `<span class="chip" style="--rc:var(--r3)">Восстание из мёртвых${state.run.rose ? ': использовано' : ''}</span>`, scarf: '<span class="chip" style="--rc:var(--r2)">Тёплый шарф</span>', feat: '<span class="chip" style="--rc:var(--r1)">Сам с собой фит</span>', same: '<span class="chip" style="--rc:var(--r2)">Это одно и то же ×2</span>', sun: '<span class="chip" style="--rc:var(--r2)">Лучи чужого солнца: пицца ×2</span>', bees: '<span class="chip" style="--rc:var(--r1)">Медовый сад</span>', island: '<span class="chip" style="--rc:var(--r1)">Остров сокровищ</span>', wolf: '<span class="chip" style="--rc:var(--r2)">Счастливая волчица ×2</span>' })[k]).join('') + (state.run.subs ? `<span class="chip" style="--rc:var(--r3)">Подписка: +${pct(state.run.subs)} дохода</span>` : '');
     if (guest) return `<h2>Завод: ${esc(guest.n)}</h2><p class="muted">Это снимок чужого завода: можно нажимать на станки и сотрудников и смотреть, как всё устроено.</p><h3>Рекорды</h3>${recordsHTML(guest.r, guest.a.length, meta.records)}`;
-    return `<h2>Цех ${locNo(state.cur)} · ${LOCS[state.cur].name}</h2><p class="muted">Нажми на шкафчик, а потом на станок, чтобы поставить туда сотрудника. Каждый сотрудник один на весь завод. Соседние станки усиливают друг друга, соседи по шкафчику дружат.</p>${combos ? `<h3>Активные комбо</h3><div class="row">${combos}</div>` : ''}<p class="muted">Досок: <b id="live-planks">0</b> · кирпичей: <b id="live-bricks">0</b> · гвоздей: <b id="live-nails">0</b> · стекла: <b id="live-glass">0</b> · пуфиков: <b id="live-poufs">0</b>${NEW_GOODS.filter((_, k) => state.locs[5 + k].unlocked).map(([id, word]) => ` · ${word}: <b id="live-${id}">0</b>`).join('')}</p>`;
+    return `<h2>Цех ${locNo(state.cur)} · ${LOCS[state.cur].name}</h2><p class="muted">Нажми на шкафчик, а потом на станок, чтобы поставить туда сотрудника. Каждый сотрудник один на весь завод. Соседние станки усиливают друг друга, соседи по шкафчику дружат.</p>${combos ? `<h3>Активные комбо</h3><div class="row">${combos}</div>` : ''}<p class="muted">Досок: <b id="live-planks">0</b> · кирпичей: <b id="live-bricks">0</b> · гвоздей: <b id="live-nails">0</b> · стекла: <b id="live-glass">0</b> · пуфиков: <b id="live-poufs">0</b>${NEW_GOODS.filter(([, , l]) => state.locs[l].unlocked).map(([id, word]) => ` · ${word}: <b id="live-${id}">0</b>`).join('')}</p>`;
   }
   function slotHTML(i) {
     const l = state.cur, s = slotsOf(l)[i];
@@ -3900,7 +4092,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const sets = Object.keys(TAGS).map(tg => { const n = g.tc[tg] || 0, p = Math.floor(n / 2); return `<dt class="${p ? 'on' : ''}">${tg}: ${n}</dt><dd>${TAGS[tg]}. Комплектов: ${p}</dd>`; }).join('');
     const night = g.combos.includes('night');
     const owned = Object.keys(counts).map(id => chip(id).replace('</span>', counts[id] > 1 ? ` ×${counts[id]}</span>` : '</span>')).join('') || '<span class="muted">Пока нет карт</span>';
-    return `<h2>Колода</h2><p class="muted">Бонусы карт со знаком «+» складываются: две Каски дают силу +80%. Умножают (×) комбо, Тройки, перки и скиллы. Тройка: три одинаковые карты в одном шкафчике или на одном станке, доход станка ×${fmt(BAL.trio)}.</p><h3>Комплекты по тегам</h3><dl class="sets">${sets}</dl><h3>Комбо</h3><dl class="sets"><dt class="${night ? 'on' : ''}">Ночная смена</dt><dd>Крепкий кофе + Конвейер + Бродяга: доход ×1,5</dd><dt class="${g.sawWorking && anySlot(s => s.machine === 'kiln') ? 'on' : ''}">Растопка</dt><dd>Пилорама работает в цеху 1: печи в цеху 2 +25% скорости</dd><dt class="${g.kilnWorking && anySlot(s => s.machine === 'wire') ? 'on' : ''}">Закалка</dt><dd>Печь работает в цеху 2: проволока в цеху 3 +20% к цене</dd><dt class="${g.maidsLoc >= 0 ? 'on' : ''}">Дуэт горничных</dt><dd>V1 и V2 на соседних станках: доход их цеха ×2</dd><dt class="${g.green ? 'on' : ''}">Зелёная сила</dt><dd>Пришелец и Хаба на соседних станках: сила обоих ×1,5</dd><dt class="${g.combos.includes('family') ? 'on' : ''}">Семейный подряд</dt><dd>Хаба, Кастомка и Батя: соседям по станку из этой тройки +20% силы, все трое в одном цеху: доход цеха ×2</dd><dt class="${g.tumblerWorking && anySlot(s => s.machine === 'vitrage') ? 'on' : ''}">Рамы на гвоздях</dt><dd>Барабан работает в цеху 3: витражи в цеху 4 +20% к цене</dd><dt class="${g.cozy ? 'on' : ''}">Уютно</dt><dd>Швейная машинка и набивочный автомат работают: сила обоих сотрудников ×1,5</dd><dt class="${g.dryerWorking && state.locs[4].unlocked ? 'on' : ''}">Каркас</dt><dd>Сушилка работает в цеху 1: пуфики +20% к цене</dd><dt class="${g.vitrageWorking && anySlot(s => s.machine === 'stuff') ? 'on' : ''}">Стеклянные ножки</dt><dd>Витраж работает в цеху 4: набивка +20% скорости</dd><dt class="${g.caseClosed ? 'on' : ''}">Дело закрыто</dt><dd>Кролик-детектив рядом с Главной мразью цеха: мразь не крысит, у кролика сила ×1,5</dd><dt class="${g.combos.includes('robot') ? 'on' : ''}">Робот кормит улиток</dt><dd>Рука помощи + Зубастые улитки: в цеху с Рукой помощи минус улиток не действует</dd><dt class="${g.combos.includes('post') ? 'on' : ''}">Почтовый день</dt><dd>Почтальон + Курьер + Подписка: монеты в посылках ×2</dd><dt class="${g.combos.includes('morning') ? 'on' : ''}">Утро после</dt><dd>Сушняк и Газява у одного сотрудника: минус Сушняка снят, скорость ещё ×1,3</dd><dt class="${g.tape ? 'on' : ''}">Скотч и клей</dt><dd>Скотч братан + Супер клей: сотрудник у станка с клеем дружит со всеми соседями по станкам</dd><dt class="${g.lawn ? 'on' : ''}">Оборона газона</dt><dd>Подсолнух и Мухобойка на соседних станках: солнышки вдвое чаще, у Мухобойки сила ×1,5</dd><dt class="${g.epidemic ? 'on' : ''}">Эпидемия</dt><dd>Зомбачка и Могильщик на соседних станках: каждые 20 с смены укушен ещё один работник её цеха</dd><dt class="${g.rising ? 'on' : ''}">Восстание из мёртвых</dt><dd>Призрак вторника, Зомбачка и Могильщик в одном цеху: раз за забег квота, набранная хотя бы на 70%, засчитывается${state.run.rose ? ' (уже использовано)' : ''}</dd><dt class="${g.scarf ? 'on' : ''}">Тёплый шарф</dt><dd>Йети и Медаедь на соседних станках: шарф Йети готов с начала смены (+25% силы соседям), у Медаедя сила ×1,5</dd><dt class="${g.feat ? 'on' : ''}">Сам с собой фит</dt><dd>code10 и code80 на соседних станках: сила обоих ×1,5</dd><dt class="${g.same ? 'on' : ''}">Это одно и то же</dt><dd>Унитаз и аэрогриль на соседних станках цеха 10: сила обоих сотрудников ×2</dd><dt class="${g.sun ? 'on' : ''}">Лучи чужого солнца</dt><dd>Зоря из Зорвеля и Пришелец с Трёхглазиком на соседних станках: пицца стоит ×2</dd><dt class="${g.drink ? 'on' : ''}">Собутыльники</dt><dd>Сквонч и Батя на соседних станках: удача обоих +15%, монетка Сквонча всегда удачная</dd><dt class="${g.wolf ? 'on' : ''}">Счастливая волчица</dt><dd>Сильвер с Газявой: весь её доход ×2</dd></dl><h3>Твои карты</h3><div class="row">${owned}</div><div class="row"><button class="btn" type="button" data-act="back">Назад</button></div>`;
+    return `<h2>Колода</h2><p class="muted">Бонусы карт со знаком «+» складываются: две Каски дают силу +80%. Умножают (×) комбо, Тройки, перки и скиллы. Тройка: три одинаковые карты в одном шкафчике или на одном станке, доход станка ×${fmt(BAL.trio)}.</p><h3>Комплекты по тегам</h3><dl class="sets">${sets}</dl><h3>Комбо</h3><dl class="sets"><dt class="${night ? 'on' : ''}">Ночная смена</dt><dd>Крепкий кофе + Конвейер + Бродяга: доход ×1,5</dd><dt class="${g.sawWorking && anySlot(s => s.machine === 'kiln') ? 'on' : ''}">Растопка</dt><dd>Пилорама работает в цеху 1: печи в цеху 2 +25% скорости</dd><dt class="${g.kilnWorking && anySlot(s => s.machine === 'wire') ? 'on' : ''}">Закалка</dt><dd>Печь работает в цеху 2: проволока в цеху 3 +20% к цене</dd><dt class="${g.maidsLoc >= 0 ? 'on' : ''}">Дуэт горничных</dt><dd>V1 и V2 на соседних станках: доход их цеха ×2</dd><dt class="${g.green ? 'on' : ''}">Зелёная сила</dt><dd>Пришелец и Хаба на соседних станках: сила обоих ×1,5</dd><dt class="${g.combos.includes('family') ? 'on' : ''}">Семейный подряд</dt><dd>Хаба, Кастомка и Батя: соседям по станку из этой тройки +20% силы, все трое в одном цеху: доход цеха ×2</dd><dt class="${g.tumblerWorking && anySlot(s => s.machine === 'vitrage') ? 'on' : ''}">Рамы на гвоздях</dt><dd>Барабан работает в цеху 3: витражи в цеху 4 +20% к цене</dd><dt class="${g.cozy ? 'on' : ''}">Уютно</dt><dd>Швейная машинка и набивочный автомат работают: сила обоих сотрудников ×1,5</dd><dt class="${g.dryerWorking && state.locs[4].unlocked ? 'on' : ''}">Каркас</dt><dd>Сушилка работает в цеху 1: пуфики +20% к цене</dd><dt class="${g.vitrageWorking && anySlot(s => s.machine === 'stuff') ? 'on' : ''}">Стеклянные ножки</dt><dd>Витраж работает в цеху 4: набивка +20% скорости</dd><dt class="${g.caseClosed ? 'on' : ''}">Дело закрыто</dt><dd>Кролик-детектив рядом с Главной мразью цеха: мразь не крысит, у кролика сила ×1,5</dd><dt class="${g.combos.includes('robot') ? 'on' : ''}">Робот кормит улиток</dt><dd>Рука помощи + Зубастые улитки: в цеху с Рукой помощи минус улиток не действует</dd><dt class="${g.combos.includes('post') ? 'on' : ''}">Почтовый день</dt><dd>Почтальон + Курьер + Подписка: монеты в посылках ×2</dd><dt class="${g.combos.includes('morning') ? 'on' : ''}">Утро после</dt><dd>Сушняк и Газява у одного сотрудника: минус Сушняка снят, скорость ещё ×1,3</dd><dt class="${g.tape ? 'on' : ''}">Скотч и клей</dt><dd>Скотч братан + Супер клей: сотрудник у станка с клеем дружит со всеми соседями по станкам</dd><dt class="${g.lawn ? 'on' : ''}">Оборона газона</dt><dd>Подсолнух и Мухобойка на соседних станках: солнышки вдвое чаще, у Мухобойки сила ×1,5</dd><dt class="${g.epidemic ? 'on' : ''}">Эпидемия</dt><dd>Зомбачка и Могильщик на соседних станках: каждые 20 с смены укушен ещё один работник её цеха</dd><dt class="${g.rising ? 'on' : ''}">Восстание из мёртвых</dt><dd>Призрак вторника, Зомбачка и Могильщик в одном цеху: раз за забег квота, набранная хотя бы на 70%, засчитывается${state.run.rose ? ' (уже использовано)' : ''}</dd><dt class="${g.scarf ? 'on' : ''}">Тёплый шарф</dt><dd>Йети и Медаедь на соседних станках: шарф Йети готов с начала смены (+25% силы соседям), у Медаедя сила ×1,5</dd><dt class="${g.feat ? 'on' : ''}">Сам с собой фит</dt><dd>code10 и code80 на соседних станках: сила обоих ×1,5</dd><dt class="${g.same ? 'on' : ''}">Это одно и то же</dt><dd>Унитаз и аэрогриль на соседних станках цеха 10: сила обоих сотрудников ×2</dd><dt class="${g.sun ? 'on' : ''}">Лучи чужого солнца</dt><dd>Зоря из Зорвеля и Пришелец с Трёхглазиком на соседних станках: пицца стоит ×2</dd><dt class="${g.drink ? 'on' : ''}">Собутыльники</dt><dd>Сквонч и Батя на соседних станках: удача обоих +15%, монетка Сквонча всегда удачная</dd><dt class="${g.wolf ? 'on' : ''}">Счастливая волчица</dt><dd>Сильвер с Газявой: весь её доход ×2</dd><dt class="${g.compost && anySlot(s => s.machine === 'apple') ? 'on' : ''}">Компост</dt><dd>Верстак работает в цеху 1: яблони в саду +20% к цене</dd><dt class="${g.bees ? 'on' : ''}">Медовый сад</dt><dd>Пчеловод на розовом кусте: все растения сада +30% скорости</dd><dt class="${g.island ? 'on' : ''}">Остров сокровищ</dt><dd>Пират на пальме: все растения сада +20% удачи</dd></dl><h3>Твои карты</h3><div class="row">${owned}</div><div class="row"><button class="btn" type="button" data-act="back">Назад</button></div>`;
   }
   const mmss = sec => `${Math.floor(sec / 60)}:${String(Math.floor(sec % 60)).padStart(2, '0')}`;
   // two columns when comparing with a friend: theirs first, ours second
@@ -3944,9 +4136,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     let bytes = Uint8Array.from(atob(m[2]), ch => ch.charCodeAt(0));
     if (m[1] === '1') bytes = await pipe(bytes, new DecompressionStream('deflate-raw'));
     // a code from the previous build is brought up to date like a save
-    const d = JSON.parse(new TextDecoder().decode(bytes)), st = d.s && d.s.v >= 9 && d.s.v <= 19 ? migrate(d.s) : d.s;
+    const d = JSON.parse(new TextDecoder().decode(bytes)), st = d.s && d.s.v >= 9 && d.s.v <= 20 ? migrate(d.s) : d.s;
     // a friend's code is drawn with our code, so only known ids may pass
-    const ok = st && st.v === 20 && st.run && (!st.run.stolen || CARDS[st.run.stolen]) && Array.isArray(st.locs) && st.locs.length === LOCS.length && st.locs.every((L, l) => Array.isArray(L.slots) && L.slots.length === LAYOUTS[l].length && L.slots.every(z => (!z.machine || MACH[z.machine]) && (!z.worker || WORKERS[z.worker]) && Array.isArray(z.upg) && z.upg.every(u => CARDS[u])))
+    const ok = st && st.v === 21 && st.run && (!st.run.stolen || CARDS[st.run.stolen]) && Array.isArray(st.locs) && st.locs.length === LOCS.length && st.locs.every((L, l) => Array.isArray(L.slots) && L.slots.length === LAYOUTS[l].length && L.slots.every(z => (!z.machine || MACH[z.machine]) && (!z.worker || WORKERS[z.worker]) && Array.isArray(z.upg) && z.upg.every(u => CARDS[u])))
       && Array.isArray(st.cards) && st.cards.every(id => CARDS[id]) && Object.keys(WORKERS).every(id => st.workers[id] && st.workers[id].equip.every(e => CARDS[e]))
       && Array.isArray(st.lockers) && st.lockers.every(id => WORKERS[id]) && d.r && Array.isArray(d.a);
     if (!ok) throw new Error('bad state');
@@ -4020,7 +4212,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       toast(`Скилл «${sk.name}» открыт!`); save(); renderSheet();
     }
     else if (act === 'rest') { const wp = workerPlace(selWorker); if (wp) slotsOf(wp.l)[wp.i].worker = null; save(); renderSheet(); }
-    else if (act === 'unlock') unlockLoc(state.cur);
+    else if (act === 'unlock') unlockLoc(b.dataset.l != null ? +b.dataset.l : state.cur);
     else if (act === 'deck') { view = view === 'deck' ? 'main' : 'deck'; renderSheet(); }
     else if (act === 'menu') { view = view === 'menu' ? 'main' : 'menu'; confirmQuit = false; renderSheet(); }
     else if (act === 'ach' || act === 'friends') { view = act; renderSheet(); }
@@ -4080,8 +4272,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     $qbar.style.width = (run.brk ? 0 : Math.min(100, run.qEarned / target * 100)) + '%';
     $qtext.textContent = (run.brk ? `Квота ${fmt(target)} за ${quotaTime()} с` : `${fmt(run.qEarned)} из ${fmt(target)}`) + (run.rule ? ` · ${ruleDesc(run.rule)}` : run.q % 3 === 2 ? ' · следующая смена с проверкой' : '');
     renderTabs();
-    const ub = body.querySelector('[data-act="unlock"]');
-    if (ub) ub.disabled = state.money < LOCS[state.cur].cost;
+    body.querySelectorAll('[data-act="unlock"]').forEach(ub => { ub.disabled = state.money < LOCS[ub.dataset.l != null ? +ub.dataset.l : state.cur].cost; });
     const sb = body.querySelector('[data-act="skill"]');
     if (sb && selWorker) sb.disabled = state.money < skillCost(selWorker);
   }
