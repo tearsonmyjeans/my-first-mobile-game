@@ -1301,7 +1301,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   // xp/shop/quota grow geometrically, every levelEvery-th level gives a card, crates come every crate..2×crate seconds;
   // a crate holds a share of the quota: plain crateQ, gold crateGoldQ (chance crateGold), or a card pick (chance crateCard);
   // crates pay at most crateCap of the quota a shift, so they help but never carry it; from shift skillCoinQ skills are opened only by cards
-  const BAL = { storm: 20, stormEvery: 2, beam: 0.6, beamNear: 0.2, beamCd: 8, orderBatch: [100, 4], orderDouble: [15, 1], orderHall: 20, orderPay: [0.04, 0.06], tempo: 2, machW: 3, xp0: 15, xpK: 2, levelEvery: 3, shopQ: 0.3, shopRoll: 1, rarPrice: [0.6, 1, 1.6, 2.4], masteryEvery: 9, crate: 20, crateQ: [0.02, 0.06], crateGoldQ: [0.08, 0.12], crateGold: 0.1, crateCard: 0.05, quotaT: 45, quota0: 200, quota1: 60, quotaK: 1.5, quotaA: 1.06, quotaE: 0.9, winQ: 20, winRep: 30, comboW: 2.5, crateCap: 0.3, shopE: 0.2, skillCoinQ: 10, cap: 3, trio: 4, add: true, sq: 1.4, subCap: 0.6 };
+  const BAL = { storm: 20, stormEvery: 2, beam: 0.6, beamNear: 0.2, beamCd: 8, orderBatch: [100, 4], orderDouble: [15, 1], orderHall: 20, orderPay: [0.04, 0.06], tempo: 2, machW: 3, xp0: 15, xpK: 2, levelEvery: 3, shopQ: 0.3, shopRoll: 1, rarPrice: [0.6, 1, 1.6, 2.4], masteryEvery: 9, crate: 20, crateQ: [0.02, 0.06], crateGoldQ: [0.08, 0.12], crateGold: 0.1, crateCard: 0.05, quotaT: 45, quota0: 200, quota1: 60, quotaK: 1.5, quotaA: 1.06, quotaMax: 99, quotaE: 0.9, winQ: 20, winRep: 30, comboW: 2.5, crateCap: 0.3, shopE: 0.2, skillCoinQ: 10, cap: 3, trio: 4, add: true, sq: 1.4, subCap: 0.6 };
   const need = l => Math.round(BAL.xp0 * Math.pow(BAL.xpK, l - 1));
   // the showcase is priced off the quota just passed or off the last shift's earnings (shopE of them), whichever is more,
   // so a runaway income cannot make cards free
@@ -1381,7 +1381,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     return true;
   }
   // quotas speed up: quota q grows quotaK × quotaA^(q−2) times over the previous one, so a stack of multipliers still hits a wall;
-  const quotaCurve = (b, k, q) => b * Math.pow(k, q - 1) * Math.pow(BAL.quotaA, (q - 1) * (q - 2) / 2);
+  // from the middle of a run a quota grows at most quotaMax times over the previous one: past it the income-following quota keeps the pressure
+  const quotaCurve = (b, k, q) => { let v = b; for (let j = 2; j <= q; j++) v *= Math.min(BAL.quotaMax, k * Math.pow(BAL.quotaA, j - 2)); return v; };
   const quotaTarget = q => Math.round(quotaCurve(BAL.quota0, BAL.quotaK, q));
   // the quota actually asked this shift: every Credit taken before it makes it ×1,5
   // the first shift is half as long and Crow works it alone, so its quota is its own (quota1)
