@@ -1056,7 +1056,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   const NEW_LOC_SLOTS = [4, 5, 6, 4, 5];
   const emptySlots = n => Array.from({ length: n }, () => ({ machine: null, worker: null, upg: [], acc: 0, kiss: 0 }));
   const fresh = () => ({
-    v: 23, money: 0, xp: 0, level: 1, planks: 0, bricks: 0, nails: 0, glass: 0, poufs: 0, pizza: 0, pigeons: 0, manga: 0, bottles: 0, calib: 0, plants: 0, ice: 0, sweets: 0, dreams: 0, songs: 0, earned: 0, cur: 0,
+    v: 24, money: 0, xp: 0, level: 1, planks: 0, bricks: 0, nails: 0, glass: 0, poufs: 0, pizza: 0, pigeons: 0, manga: 0, bottles: 0, calib: 0, plants: 0, ice: 0, sweets: 0, dreams: 0, songs: 0, earned: 0, cur: 0,
     locs: [
       { unlocked: true, slots: [{ machine: null, worker: null, upg: [], acc: 0, kiss: 0 }, { machine: 'saw', worker: 'crow', upg: [], acc: 0, kiss: 0 }, { machine: null, worker: null, upg: [], acc: 0, kiss: 0 }] },
       { unlocked: false, slots: emptySlots(4) },
@@ -1088,7 +1088,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     // route: the workshop of every tab, null while the run has not picked one of its alternatives;
     // counter: the bakery's counter, 'cake' or 'hot', order: its shift order; beam: the slot the dream tower aims at, beamCd: its charge 0..1;
     // eaten: the workers the living room ate this run, eatAt: when it ate the last one; legacy: machines that worked in the shut workshops, their links stay on
-    run: { t: 0, q: 1, qT: 0, qEarned: 0, brk: true, shop: [], rule: null, sq: {}, sqK: null, nova: false, spark: null, bitten: [], rolled: false, rose: false, claw: null, warned: null, stolen: null, over: false, rep: 0, passed: [], hired: 0, skills: 0, bestRate: 0, opened: [0, null, null, null, null, null, null, null, null, null, null, null, null, null, null], route: [0, 1, 2, 3, 4, null, null, null, null, null], counter: null, order: null, beam: null, beamCd: 1, eaten: [], eatAt: null, legacy: [], ongoing: 0, mangaOn: false, qLast: 0, stockQ: 0, thermos: false }
+    run: { t: 0, q: 1, qT: 0, qEarned: 0, brk: true, shop: [], rule: null, sq: {}, sqK: null, nova: false, spark: null, bitten: [], rolled: false, rose: false, claw: null, warned: null, stolen: null, over: false, rep: 0, passed: [], hired: 0, skills: 0, bestRate: 0, opened: [0, null, null, null, null, null, null, null, null, null, null, null, null, null, null], route: [0, 1, 2, 3, 4, null, null, null, null, null], counter: null, order: null, beam: null, beamCd: 1, eaten: [], eatAt: null, legacy: [], ongoing: 0, mangaOn: false, qLast: 0, stockQ: 0, thermos: false, won: false }
   });
   const NEW_WORKERS = ['sunflower', 'flytrap', 'honeybear', 'arc', 'nurse', 'nemu', 'tuesday', 'zombie', 'digger', 'kaneki', 'raven'];
   const NEW_WORKERS_13 = ['fairy', 'pirate', 'beekeeper', 'kisa', 'toyalien', 'code10', 'code80', 'yeti', 'slime', 'moth', 'gastriter', 'palach', 'thief', 'raccoons', 'rebel'];
@@ -1248,11 +1248,16 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       if (s.run) { s.run.legacy = []; for (let k = 5; k < 10; k++) { const l = s.run.route[k]; if (l != null && s.locs[l].unlocked) closeLoc(s, k - 5, l); } }
       s.v = 23;
     }
-    return s.v === 8 || s.v === 23 ? s : null;
+    if (s.v === 23) {
+      // build 24: a run can be won (quota BAL.winQ passed with workshop 10 open)
+      if (s.run) s.run.won = false;
+      s.v = 24;
+    }
+    return s.v === 8 || s.v === 24 ? s : null;
   }
   // meta lives across runs: reputation, its unlocks, achievements and records
   const META_KEY = 'pixel-factory-meta-v1';
-  const freshMeta = () => ({ rep: 0, unlocks: [], ach: [], name: '', records: { runs: 0, bestQuota: 0, bestEarned: 0, bestRate: 0, fastestGlass: 0 } });
+  const freshMeta = () => ({ rep: 0, unlocks: [], ach: [], name: '', records: { runs: 0, wins: 0, bestQuota: 0, bestEarned: 0, bestRate: 0, fastestGlass: 0 } });
   const BOT = location.hash === '#bot'; // balance bot drives the game itself and never touches saves
   let meta = freshMeta();
   if (!BOT) try { Object.assign(meta, JSON.parse(localStorage.getItem(META_KEY))); } catch (e) { }
@@ -1296,7 +1301,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   // xp/shop/quota grow geometrically, every levelEvery-th level gives a card, crates come every crate..2×crate seconds;
   // a crate holds a share of the quota: plain crateQ, gold crateGoldQ (chance crateGold), or a card pick (chance crateCard);
   // crates pay at most crateCap of the quota a shift, so they help but never carry it; from shift skillCoinQ skills are opened only by cards
-  const BAL = { storm: 20, stormEvery: 2, beam: 0.6, beamNear: 0.2, beamCd: 8, orderBatch: [100, 4], orderDouble: [15, 1], orderHall: 20, orderPay: [0.04, 0.06], tempo: 2, machW: 3, xp0: 15, xpK: 2, levelEvery: 3, shopQ: 0.3, shopRoll: 1, rarPrice: [0.6, 1, 1.6, 2.4], masteryEvery: 9, crate: 20, crateQ: [0.02, 0.06], crateGoldQ: [0.08, 0.12], crateGold: 0.1, crateCard: 0.05, quotaT: 45, quota0: 200, quota1: 60, quotaK: 1.5, quotaA: 1.06, crateCap: 0.3, shopE: 0.2, skillCoinQ: 10, cap: 3, trio: 4, add: true, sq: 1.4, subCap: 0.6 };
+  const BAL = { storm: 20, stormEvery: 2, beam: 0.6, beamNear: 0.2, beamCd: 8, orderBatch: [100, 4], orderDouble: [15, 1], orderHall: 20, orderPay: [0.04, 0.06], tempo: 2, machW: 3, xp0: 15, xpK: 2, levelEvery: 3, shopQ: 0.3, shopRoll: 1, rarPrice: [0.6, 1, 1.6, 2.4], masteryEvery: 9, crate: 20, crateQ: [0.02, 0.06], crateGoldQ: [0.08, 0.12], crateGold: 0.1, crateCard: 0.05, quotaT: 45, quota0: 200, quota1: 60, quotaK: 1.5, quotaA: 1.06, quotaE: 0.9, winQ: 20, winRep: 30, comboW: 2.5, crateCap: 0.3, shopE: 0.2, skillCoinQ: 10, cap: 3, trio: 4, add: true, sq: 1.4, subCap: 0.6 };
   const need = l => Math.round(BAL.xp0 * Math.pow(BAL.xpK, l - 1));
   // the showcase is priced off the quota just passed or off the last shift's earnings (shopE of them), whichever is more,
   // so a runaway income cannot make cards free
@@ -1310,7 +1315,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     return Math.round(quotaTarget(Math.max(1, state.run.q - 1)) * (cd && id !== 'mrp' ? SKILL_RAR[cd.rar] : 0.5) * Math.pow(1.5, n));
   }
   const skillLocked = () => state.run.q >= BAL.skillCoinQ;
-  const rollShop = () => markCredit(rollOffer().slice(0, 3)).map(id => ({ id, bought: false }));
+  const rollShop = () => markCredit(rollOffer(false).slice(0, 3)).map(id => ({ id, bought: false }));
   // one purchase per showcase: after it the showcase locks until it is refreshed; every refresh in a break costs one base price more than the last, like a reroll in Balatro
   const shopRollCost = () => Math.round(shopBase() * BAL.shopRoll / (hasUnlock('reroll') ? 2 : 1) * (1 + (state.run.shopRolls || 0)));
   function rollNewShop() {
@@ -1380,7 +1385,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   const quotaTarget = q => Math.round(quotaCurve(BAL.quota0, BAL.quotaK, q));
   // the quota actually asked this shift: every Credit taken before it makes it ×1,5
   // the first shift is half as long and Crow works it alone, so its quota is its own (quota1)
-  const curQuota = () => (state.run.q === 1 ? BAL.quota1 : quotaTarget(state.run.q)) * Math.pow(1.5, (state.run.credit || {})[state.run.q] || 0);
+  // from the second shift the quota keeps up with the income: at least quotaE of what the last shift earned, like the showcase prices
+  const curQuota = () => (state.run.q === 1 ? BAL.quota1 : Math.max(quotaTarget(state.run.q), (state.run.qLast || 0) * BAL.quotaE)) * Math.pow(1.5, (state.run.credit || {})[state.run.q] || 0);
   // the first shift is half as long
   const quotaTime = () => Math.round((BAL.quotaT + (hasUnlock('time') ? 8 : 0)) / (state.run.q === 1 ? 2 : 1));
   // seconds into the shift, null in a break: the cards that change during a shift read it
@@ -1434,6 +1440,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   const passedQ = () => state.run.q - 1;
   const ACH = [
     { id: 'first', name: 'Первое банкротство', desc: 'Закончить забег', rep: 2, test: end => end },
+    { id: 'win', name: 'План выполнен', desc: 'Выиграть забег', rep: 10, test: () => state.run.won },
     { id: 'insp', name: 'Сдал проверку', desc: 'Пройти первую проверку', rep: 2, test: () => state.run.passed.length > 0 },
     { id: 'q6', name: 'Полгода на плаву', desc: 'Пройти 6 квот за забег', rep: 3, test: () => passedQ() >= 6 },
     { id: 'q9', name: 'Крепкий бизнес', desc: 'Пройти 9 квот за забег', rep: 5, test: () => passedQ() >= 9 },
@@ -2032,18 +2039,24 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   }
   const WEIGHT = [10, 5, 2, 1];
   // machine cards drop BAL.machW times as often as their rarity says: a new machine is what grows a workshop
-  const cardWeight = id => WEIGHT[CARDS[id].rar] * (CARDS[id].type === 'machine' ? BAL.machW : 1);
+  const cardWeight = (id, help) => WEIGHT[CARDS[id].rar] * (CARDS[id].type === 'machine' ? BAL.machW : 1) * (help && help.has(id) ? BAL.comboW : 1);
+  // the cards of every combo: when the factory already has a part of one, the missing parts come BAL.comboW times as often in a card pick (not in the showcase)
+  const COMBO_PARTS = [['e_coffee', 'm_belt', 'w_tramp'], ['w_v1', 'w_v2'], ['w_alien', 'w_jedi'], ['w_jedi', 'w_kast', 'w_batya'], ['m_sew', 'm_stuff'], ['u_postman', 'u_courier', 'u_sub'],
+    ['w_rat', 'w_rabbit'], ['s_hand', 'u_snails'], ['e_thirst', 'e_soda'], ['w_sunflower', 'w_flytrap'], ['w_zombie', 'w_digger'], ['w_tuesday', 'w_zombie', 'w_digger'], ['w_yeti', 'w_honeybear'],
+    ['w_code10', 'w_code80'], ['w_squanch', 'w_batya'], ['u_zorya', 'w_alien', 'w_toyalien'], ['w_silver', 'e_soda'], ['u_scotch', 's_glue'], ['w_beekeeper', 'm_rosebush'], ['w_pirate', 'm_palm'], ['m_toilet', 'm_airfryer']];
+  const hasPart = id => CARDS[id].type === 'worker' ? state.workers[CARDS[id].worker].unlocked : CARDS[id].type === 'machine' ? anySlot(s => s.machine === CARDS[id].machine) : state.cards.includes(id);
+  const comboHelp = () => new Set(COMBO_PARTS.filter(c => c.some(hasPart)).flatMap(c => c.filter(id => !hasPart(id))));
   // the break a card offer is for: offers rolled during a shift wait for the break after it
   const brkKey = () => state.run.brk ? state.run.q : state.run.q + 1;
   // Credit shows up at most once per break, in one offer or showcase
   const markCredit = ids => { if (ids.includes('u_credit')) state.run.creditB = brkKey(); return ids; };
-  function rollOffer() {
-    const pool = Object.keys(CARDS).filter(id => !CARDS[id].mastery && eligible(id) && !(id === 'u_credit' && state.run.creditB === brkKey())), pick = [];
+  function rollOffer(combo = true) {
+    const help = combo ? comboHelp() : null, pool = Object.keys(CARDS).filter(id => !CARDS[id].mastery && eligible(id) && !(id === 'u_credit' && state.run.creditB === brkKey())), pick = [];
     const n = hasUnlock('pick4') ? 4 : 3;
     while (pick.length < n && pick.length < pool.length) {
       const cand = pool.filter(id => !pick.includes(id));
-      let r = Math.random() * cand.reduce((a, id) => a + cardWeight(id), 0), chosen = cand[cand.length - 1];
-      for (const id of cand) { r -= cardWeight(id); if (r <= 0) { chosen = id; break; } }
+      let r = Math.random() * cand.reduce((a, id) => a + cardWeight(id, help), 0), chosen = cand[cand.length - 1];
+      for (const id of cand) { r -= cardWeight(id, help); if (r <= 0) { chosen = id; break; } }
       pick.push(chosen);
     }
     return pick;
@@ -2354,6 +2367,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     const run = state.run, wasRule = run.rule;
     if (wasRule) run.passed.push(wasRule.id);
     run.rep += wasRule ? 2 : 1;
+    // the win: quota BAL.winQ or a later one passed with workshop 10 open (either of its fork) ends the run
+    if (run.q >= BAL.winQ && run.route[9] != null && state.locs[run.route[9]].unlocked) { run.q++; run.qLast = run.qEarned; endRun(true); return; }
     const piggy = state.cards.filter(id => id === 'u_piggy').length;
     if (piggy) { state.money += run.qEarned * 0.1 * piggy; toast(`Копилка: +${fmt(run.qEarned * 0.1 * piggy)} монет`); }
     // the manga ongoing grows with every shift the studio worked and breaks on an idle one
@@ -2368,9 +2383,11 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     queueOffer('quota');
     checkAch(false);
   }
-  function bankrupt() {
+  const bankrupt = () => endRun(false);
+  function endRun(won) {
     const run = state.run, rec = meta.records;
-    run.over = true;
+    run.over = true; run.won = won;
+    if (won) { run.rep += BAL.winRep; rec.wins = (rec.wins || 0) + 1; }
     meta.rep += run.rep;
     rec.runs++;
     rec.bestQuota = Math.max(rec.bestQuota, passedQ());
@@ -2379,7 +2396,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (run.opened[3] != null && (!rec.fastestGlass || run.opened[3] < rec.fastestGlass)) rec.fastestGlass = run.opened[3];
     checkAch(true);
     mode = null; selSlot = null; selWorker = null; view = 'main'; crate = null; incomeNow = 0;
-    saveMeta(); save(); renderSheet(); toast('Банкротство! Забег окончен');
+    saveMeta(); save(); renderSheet(); toast(won ? 'Победа! Завод выполнил план' : 'Банкротство! Забег окончен');
   }
   function checkAch(end) {
     const g = globals(), got = ACH.filter(a => !meta.ach.includes(a.id) && a.test(end, g));
@@ -5015,8 +5032,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   const mmss = sec => `${Math.floor(sec / 60)}:${String(Math.floor(sec % 60)).padStart(2, '0')}`;
   // two columns when comparing with a friend: theirs first, ours second
   function recordsHTML(r, achN, mine) {
-    const rows = [['Забегов', r.runs, v => v], ['Лучшая квота', r.bestQuota, v => v], ['Заработано за забег', r.bestEarned, fmt], ['Доход в секунду', r.bestRate, v => fmt(v) + '/с'], ['Стекло открыто на', r.fastestGlass, v => v ? mmss(v) : '—'], ['Достижения', achN, v => `${v} из ${ACH.length}`]];
-    const mv = mine ? [mine.runs, mine.bestQuota, mine.bestEarned, mine.bestRate, mine.fastestGlass, meta.ach.length] : [];
+    const rows = [['Забегов', r.runs, v => v], ['Побед', r.wins, v => v], ['Лучшая квота', r.bestQuota, v => v], ['Заработано за забег', r.bestEarned, fmt], ['Доход в секунду', r.bestRate, v => fmt(v) + '/с'], ['Стекло открыто на', r.fastestGlass, v => v ? mmss(v) : '—'], ['Достижения', achN, v => `${v} из ${ACH.length}`]];
+    const mv = mine ? [mine.runs, mine.wins, mine.bestQuota, mine.bestEarned, mine.bestRate, mine.fastestGlass, meta.ach.length] : [];
     return `<ul class="list">${rows.map(([name, v, f], k) => `<li><span>${name}</span><span class="val">${f(v || 0)}${mine ? ` <span class="muted">· у тебя ${f(mv[k] || 0)}</span>` : ''}</span></li>`).join('')}</ul>`;
   }
   function unlocksHTML() {
@@ -5024,6 +5041,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   }
   function endHTML() {
     const run = state.run;
+    if (run.won) return `<h2>Победа!</h2><p>Завод выполнил план: квота ${passedQ()} пройдена с открытым цехом «${LOCS[run.route[9]].name}». Проверок: <b>${run.passed.length}</b>, забег длился ${mmss(run.t)}, заработано ${fmt(state.earned)}.</p><p class="on">Репутация за забег: +${run.rep} (из них за победу +${BAL.winRep})</p>${unlocksHTML()}<div class="row"><button class="btn primary" type="button" data-act="newrun">Новый забег</button></div>`;
     return `<h2>Банкротство!</h2><p>Завод не выполнил квоту ${run.q}. Пройдено квот: <b>${passedQ()}</b>, проверок: <b>${run.passed.length}</b>, забег длился ${mmss(run.t)}, заработано ${fmt(state.earned)}.</p><p class="on">Репутация за забег: +${run.rep}</p>${unlocksHTML()}<div class="row"><button class="btn primary" type="button" data-act="newrun">Новый забег</button></div>`;
   }
   function menuHTML() {
@@ -5054,9 +5072,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     let bytes = Uint8Array.from(atob(m[2]), ch => ch.charCodeAt(0));
     if (m[1] === '1') bytes = await pipe(bytes, new DecompressionStream('deflate-raw'));
     // a code from the previous build is brought up to date like a save
-    const d = JSON.parse(new TextDecoder().decode(bytes)), st = d.s && d.s.v >= 9 && d.s.v <= 22 ? migrate(d.s) : d.s;
+    const d = JSON.parse(new TextDecoder().decode(bytes)), st = d.s && d.s.v >= 9 && d.s.v <= 23 ? migrate(d.s) : d.s;
     // a friend's code is drawn with our code, so only known ids may pass
-    const ok = st && st.v === 23 && st.run && (!st.run.stolen || CARDS[st.run.stolen]) && Array.isArray(st.locs) && st.locs.length === LOCS.length && st.locs.every((L, l) => Array.isArray(L.slots) && L.slots.length === LAYOUTS[l].length && L.slots.every(z => (!z.machine || MACH[z.machine]) && (!z.worker || WORKERS[z.worker]) && Array.isArray(z.upg) && z.upg.every(u => CARDS[u])))
+    const ok = st && st.v === 24 && st.run && (!st.run.stolen || CARDS[st.run.stolen]) && Array.isArray(st.locs) && st.locs.length === LOCS.length && st.locs.every((L, l) => Array.isArray(L.slots) && L.slots.length === LAYOUTS[l].length && L.slots.every(z => (!z.machine || MACH[z.machine]) && (!z.worker || WORKERS[z.worker]) && Array.isArray(z.upg) && z.upg.every(u => CARDS[u])))
       && Array.isArray(st.cards) && st.cards.every(id => CARDS[id]) && Object.keys(WORKERS).every(id => st.workers[id] && st.workers[id].equip.every(e => CARDS[e]))
       && Array.isArray(st.lockers) && st.lockers.every(id => WORKERS[id]) && d.r && Array.isArray(d.a);
     if (!ok) throw new Error('bad state');
@@ -5186,7 +5204,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     $shop.textContent = run.brk ? 'Магазин' : 'Магазин в перерыве';
     $shop.disabled = !run.brk || !!guest || run.over;
     $quota.classList.toggle('insp', !!run.rule);
-    $qname.textContent = run.over ? `Банкротство на квоте ${run.q}` : (run.brk ? `Перерыв · дальше смена ${run.q}` : `Смена ${run.q}`) + (run.rule ? ` · проверка «${RULES[run.rule.id].name}»` : '');
+    $qname.textContent = run.over ? (run.won ? `Победа на квоте ${run.q - 1}` : `Банкротство на квоте ${run.q}`) : (run.brk ? `Перерыв · дальше смена ${run.q}` : `Смена ${run.q}`) + (run.rule ? ` · проверка «${RULES[run.rule.id].name}»` : '');
     $qtime.textContent = run.over ? '' : run.brk ? 'пауза' : mmss(Math.max(0, quotaTime() - run.qT));
     $qbar.style.width = (run.brk ? 0 : Math.min(100, run.qEarned / target * 100)) + '%';
     $qtext.textContent = (run.brk ? `Квота ${fmt(target)} за ${quotaTime()} с` : `${fmt(run.qEarned)} из ${fmt(target)}`) + (run.rule ? ` · ${ruleDesc(run.rule)}` : run.q % 3 === 2 ? ' · следующая смена с проверкой' : '');
