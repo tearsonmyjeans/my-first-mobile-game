@@ -5,6 +5,7 @@
 // STRAT=smart is the usual bot that also collects pairs towards a Triple (3 same cards on one worker or machine).
 // SHOP=n caps showcase purchases per break (default 30, i.e. until the money runs out, like a player who keeps refreshing).
 // ROUTE=10,11,12,13,14 opens these alternative workshops instead of the main ones on their tabs (garden, glaciers, bakery, dreams, living room);
+// Every run also prints the share of workshops 1–5 in the income summed over the run (sampled every 10 s); shut workshops are never opened again.
 // COUNTER=cake|hot is the bakery's counter (default cake), DEBUG=1 prints the bakery's slots and its orders given and done. The bot aims the dream tower's beam and feeds the living room when it pays.
 const { chromium } = require('playwright');
 const RUNS = +process.argv[2] || 8, UNL = process.argv[3] || '', BAL = JSON.parse(process.argv[4] || '{}'), COSTS = JSON.parse(process.argv[5] || 'null');
@@ -87,7 +88,7 @@ const RUNS = +process.argv[2] || 8, UNL = process.argv[3] || '', BAL = JSON.pars
       let sinceOpt = 0;
       // the workshop of every tab: an alternative from ROUTE replaces the main one on its tab
       const locOf = k => route.find(l => P.ALTS[k] && P.ALTS[k].includes(l)) ?? k;
-      const nextLoc = () => [1, 2, 3, 4, 5, 6, 7, 8, 9].map(locOf).find(l => !P.state.locs[l].unlocked);
+      const nextLoc = () => [1, 2, 3, 4, 5, 6, 7, 8, 9].map(locOf).find(l => !P.state.locs[l].unlocked && !P.state.locs[l].closed);
       const tabOfLoc = l => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].find(k => locOf(k) === l);
       // the dream tower: aim the beam where the income is highest (in a break moving it costs nothing)
       function aimBeam() {
@@ -135,6 +136,8 @@ const RUNS = +process.argv[2] || 8, UNL = process.argv[3] || '', BAL = JSON.pars
         const st = P.state;
         if (step % 4) continue;
         if (step % 240 === 0) (log.rateAt = log.rateAt || []).push(Math.round(inc()));
+        // every 10 s: how much of the income comes from workshops 1–5, summed over the run
+        if (step % 40 === 0) { const g = P.globals(); st.locs.forEach((L, l) => { if (L.unlocked) L.slots.forEach((z, i) => { const x = P.slotStats(l, i, g); if (x) { log.incAll = (log.incAll || 0) + x.income; if (l < 5) log.incOld = (log.incOld || 0) + x.income; } }); }); }
         if (st.run.q - 1 > log.quotaAt.length) log.quotaAt.push(Math.round(st.run.t));
         const o = st.run.order; if (o && o.done && !o.seen) { o.seen = true; log.ordersDone++; (log.done = log.done || {})[o.kind] = (log.done[o.kind] || 0) + 1; }
         if (P.crate) { const r = P.openCrate(); if (!r.card) log.crate += r.gain; }
@@ -146,11 +149,11 @@ const RUNS = +process.argv[2] || 8, UNL = process.argv[3] || '', BAL = JSON.pars
       // the share of the income each of the workshops 6–10 (by tab) brings at the end of the run
       const g = P.globals(), byLoc = st.locs.map((L, l) => L.unlocked ? L.slots.reduce((a, z, i) => { const x = P.slotStats(l, i, g); return a + (x ? x.income : 0); }, 0) : 0), all = byLoc.reduce((a, b) => a + b, 0) || 1;
       const share = [5, 6, 7, 8, 9].map(k => st.locs[locOf(k)].unlocked ? Math.round(byLoc[locOf(k)] / all * 100) : null);
-      return { debug: [st.locs[12].slots.map(z => z.machine + ':' + z.worker), log.kinds, log.done], share, orders: log.orders, ordersDone: log.ordersDone, eaten: (st.run.eaten || []).length, passed: st.run.q - 1, end: Math.round(st.run.t), opened: log.opened, quotaAt: log.quotaAt, cards: st.cards.length, level: st.level, earned: st.earned, rate: st.run.bestRate, rateAt: log.rateAt, crateShare: log.crate / st.earned, skills: st.run.skills, maxEq: Math.max(...Object.values(st.workers).map(w => w.equip.length)), maxUpg: Math.max(...st.locs.flatMap(L => L.slots.map(z => z.upg.length))),
+      return { oldShare: (log.incOld || 0) / (log.incAll || 1), debug: [st.locs[12].slots.map(z => z.machine + ':' + z.worker), log.kinds, log.done], share, orders: log.orders, ordersDone: log.ordersDone, eaten: (st.run.eaten || []).length, passed: st.run.q - 1, end: Math.round(st.run.t), opened: log.opened, quotaAt: log.quotaAt, cards: st.cards.length, level: st.level, earned: st.earned, rate: st.run.bestRate, rateAt: log.rateAt, crateShare: log.crate / st.earned, skills: st.run.skills, maxEq: Math.max(...Object.values(st.workers).map(w => w.equip.length)), maxUpg: Math.max(...st.locs.flatMap(L => L.slots.map(z => z.upg.length))),
         trios: [...Object.values(st.workers).map(w => w.equip), ...st.locs.flatMap(L => L.slots.map(z => z.upg))].filter(a => a.some(c => a.filter(x => x === c).length >= 3)).length };
     }, [UNL, BAL, COSTS, process.env.STRAT === 'random', process.env.STRAT === 'semi', process.env.STRAT === 'smart', +process.env.SHOP || 30, (process.env.ROUTE || '').split(',').filter(Boolean).map(Number), process.env.COUNTER || 'cake']));
     const x = res[res.length - 1];
-    console.log(`run ${r + 1}: квот ${x.passed}, конец ${Math.floor(x.end / 60)}:${String(x.end % 60).padStart(2, '0')}, цеха ${x.opened.map(v => v == null ? '—' : Math.round(v / 6) / 10).join('/')} мин, карт ${x.cards}, ур ${x.level}, доход ${Math.round(x.rate)}/с, скиллов ${x.skills}, max карт на сотруднике/станке ${x.maxEq}/${x.maxUpg}, троек ${x.trios},${x.orders ? ` заказов ${x.ordersDone}/${x.orders},` : ''}${x.eaten ? ` съедено ${x.eaten},` : ''} доля цехов 6–10 ${x.share.map(v => v == null ? '—' : v + '%').join('/')}, посылки ${Math.round(x.crateShare * 100)}% денег, квоты на ${x.quotaAt.map(v => Math.round(v / 6) / 10).join(' ')}`);
+    console.log(`run ${r + 1}: квот ${x.passed}, конец ${Math.floor(x.end / 60)}:${String(x.end % 60).padStart(2, '0')}, цеха ${x.opened.map(v => v == null ? '—' : Math.round(v / 6) / 10).join('/')} мин, карт ${x.cards}, ур ${x.level}, доход ${Math.round(x.rate)}/с, скиллов ${x.skills}, max карт на сотруднике/станке ${x.maxEq}/${x.maxUpg}, троек ${x.trios},${x.orders ? ` заказов ${x.ordersDone}/${x.orders},` : ''}${x.eaten ? ` съедено ${x.eaten},` : ''} доля цехов 6–10 ${x.share.map(v => v == null ? '—' : v + '%').join('/')}, посылки ${Math.round(x.crateShare * 100)}% денег, цеха 1–5 ${Math.round(x.oldShare * 100)}% дохода, квоты на ${x.quotaAt.map(v => Math.round(v / 6) / 10).join(' ')}`);
     if (process.env.DEBUG) console.log('  ', JSON.stringify(x.debug));
     if (process.env.RATES) console.log('  доход по минутам:', x.rateAt.join(' '));
   }
