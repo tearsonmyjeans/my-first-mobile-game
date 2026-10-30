@@ -2091,7 +2091,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   function bestGain(id) {
     const cd = CARDS[id], saved = state, inc = cd.timed ? avgIncome : totalIncome, base = inc(), tg = [];
     state.locs.forEach((L, l) => { if (L.unlocked) L.slots.forEach((s, i) => {
-      if (cd.type === 'machine' && !s.machine && (MACH[cd.machine].loc < 0 || MACH[cd.machine].loc === l)) tg.push({ l, i });
+      if (cd.type === 'machine' && !s.machine && (MACH[cd.machine].loc < 0 || MACH[cd.machine].loc === l) && slotOk(l, i, cd.machine)) tg.push({ l, i });
       if ((cd.type === 'worker' || (cd.type === 'mupg' && (cardLoc(id) < 0 || cardLoc(id) === l))) && s.machine && s.machine !== 'belt') tg.push({ l, i });
     }); });
     if (cd.type === 'equip') Object.keys(state.workers).forEach(w => { if (state.workers[w].unlocked) tg.push(w); });
