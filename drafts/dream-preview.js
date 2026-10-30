@@ -13,7 +13,8 @@ rep('    else if (l === 8) {\n', `    else if (l === 8) {\n${block('WALL').repla
 rep('    if (l === 8) {\n', `    if (l === 8) {\n${block('FLOOR').replace(/\bG\b/g, '8')}\n    }\n    if (false) {\n`);
 rep('  function machine(type, x, y) {\n', block('TOWER') + '\n  function machine(type, x, y) {\n');
 rep("    } else if (type === 'dough') {\n", block('MACHINES') + "\n    } else if (type === 'dough') {\n");
-rep("if (s.machine === 'extract' && hh !== SH) extractor(x, y, hh);", "if (s.machine === 'dreamtower' && big) { const ok = j => !!(sl[j].machine && sl[j].worker); tower(x, y, ww, hh, [ok(0) && ok(1) && ok(3) && ok(4), ok(4), ok(3), ok(1), ok(0)], state.run.dream || 'sweet'); }\n        else if (s.machine === 'extract' && hh !== SH) extractor(x, y, hh);");
+rep("if (s.machine === 'extract' && hh !== SH) extractor(x, y, hh);", "if (s.machine === 'dreamtower' && big) { const ok = j => !!(sl[j].machine && sl[j].worker); tower(x, y, ww, hh, [ok(0) && ok(1) && ok(3) && ok(4), ok(4), ok(3), ok(1), ok(0)], state.run.beamCd ?? 1); }\n        else if (s.machine === 'extract' && hh !== SH) extractor(x, y, hh);");
+rep('      if (!s.machine) { const pc', `${block('MARK')}\n      if (!s.machine) { const pc`);
 rep('  if (BOT) window.PF', '  window.PF'); rep('  else requestAnimationFrame(loop);', '  requestAnimationFrame(loop);');
 const file = path.join(tmp, 'dream-game.html'); fs.writeFileSync(file, src);
 (async () => {
@@ -39,7 +40,7 @@ const file = path.join(tmp, 'dream-game.html'); fs.writeFileSync(file, src);
       s.locs[G].unlocked = true;
       const ms = ['sheep', 'lullaby', 'nightmare', 'fluffer', 'dreamcatcher'];
       s.locs[G].slots = ms.map((m, i) => ({ machine: m, worker: mode === 'part' && i % 2 ? null : ws[i], upg: [], acc: 0, kiss: 0 })).concat([{ machine: 'dreamtower', worker: null, upg: [], acc: 0, kiss: 0 }]);
-      s.run.dream = mode === 'full' ? 'sweet' : 'night';
+      s.run.beam = mode === 'full' ? 3 : 0; s.run.beamCd = mode === 'full' ? 1 : 0.55;
       s.cur = G; P.state = s;
     }, mode);
     await p.waitForTimeout(1800);

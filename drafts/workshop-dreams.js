@@ -6,8 +6,9 @@
 // Места по кругу: 0 левое, 1 левое нижнее, 2 нижнее, 3 правое, 4 правое верхнее, 5 башня.
 // Соседство задано списком, а не по клеткам (как у ледников): цепочка 0–1–2–3–4 и башня с местами 0, 1, 3, 4. Нижнее место 2 башни не касается.
 // Синие полоски на рисунке — «нити снов»: в цеху они нарисованы между соседями и бегут светлячками, когда оба конца работают.
-// Механика башни ещё не выбрана (docs/workshops.md, «Открытые вопросы»): на башне заранее нарисован «сон смены» (шар в звезде, цвет = вид сна)
-// и пять лучей звезды: верхний горит, когда работают все четыре соседа, остальные четыре — по одному на каждого соседа.
+// Механика башни (решено, docs/workshops.md): башня держит один луч на одном из четырёх соседей, run.beam (место 0, 1, 3 или 4),
+// run.beamCd — заряд 0..1. Нажатие на другого соседа перенаводит луч, пока заряд полный. На башне пять лучей звезды:
+// верхний горит, когда работают все четыре соседа, остальные четыре — по одному на каждого соседа.
 // Превью: node drafts/dream-preview.js снимает цех в копии игры, где цех снов стоит вместо пепси.
 
 // ===== LOCS =====
@@ -29,7 +30,7 @@
 //    dreamcatcher: { loc: G, name: 'Ловец снов', short: 'ЛОВЕЦ', rate: 0.5, value: 8e8, max: 1, desc: 'Ловит сны в паутину.' },
 //    lullaby: { loc: G, name: 'Шарманка колыбельных', short: 'ШАРМАНКА', rate: 0.4, value: 1.2e9, max: 1, desc: 'Играет колыбельную, медленно, но дорого.' },
 //    nightmare: { loc: G, name: 'Кошмароварка', short: 'КОШМАРЫ', rate: 0.25, value: 2e9, max: 1, desc: 'Варит кошмары, очень медленно, но очень дорого.' },
-//    dreamtower: { loc: G, name: 'Башня снов', short: 'БАШНЯ', rate: 0, value: 0, max: 1, auto: ?, desc: 'Стартовая, на месте 2×2, без сотрудника. Механика не выбрана.' },
+//    dreamtower: { loc: G, name: 'Башня снов', short: 'БАШНЯ', rate: 0, value: 0, max: 1, auto: ?, desc: 'Стартовая, на месте 2×2, без сотрудника. Механика: луч (docs/workshops.md).' },
 
 // ===== ADJ: в начало adjacent() после if (i === j) return false; =====
     // the dream workshop: a chain 0–1–2–3–4 round the tower and the tower (5) touches 0, 1, 3 and 4
@@ -88,6 +89,19 @@
           if (on && (k + Math.floor(t * 14)) % 9 === 0) R(px, py, 2, 2, '#ffffff');
         }
         if (on) { const f = (t * 0.6 + i * 0.37) % 1; R(ax + (bx - ax) * f - 2, ay + (by - ay) * f - 2, 5, 5, 'rgba(110,240,240,.4)'); R(ax + (bx - ax) * f - 1, ay + (by - ay) * f - 1, 3, 3, '#ffffff'); }
+      }
+
+      // the tower's beam: a bright braid of light from the star to the machine it aims at (run.beam, a place index 0, 1, 3 or 4);
+      // while the tower recharges (run.beamCd < 1) the beam is thin and pale, the target glows once it is ready
+      const bm = state.run.beam;
+      if (bm != null && SLS[bm] && SLS[bm].machine) {
+        const [ax, ay] = rc(5), [bx, by] = rc(bm), len = Math.hypot(bx - ax, by - ay), n = Math.ceil(len / 2), rd = (state.run.beamCd ?? 1) >= 1;
+        for (let k = 0; k <= n; k++) {
+          const f = k / n, wv = Math.round(Math.sin(k * 0.5 - t * 8) * (rd ? 2 : 1)), px = ax + (bx - ax) * f + wv * (ay - by) / len, py = ay + (by - ay) * f + wv * (bx - ax) / len;
+          if (rd) { R(px - 3, py - 2, 7, 6, 'rgba(255,200,240,.35)'); R(px - 2, py - 1, 5, 4, '#ff9ac4'); R(px - 1, py, 3, 2, '#ffffff'); if ((k + Math.floor(t * 12)) % 5 === 0) R(px, py, 2, 2, '#ffffff'); }
+          else R(px, py, 2, 2, 'rgba(255,214,230,.5)');
+        }
+        if (rd) { const [tx, ty] = [colX(P[bm][0]) + SW / 2, rowY(P[bm][1]) + SH / 2], g = 40 + Math.round(Math.sin(t * 4) * 2); disc(tx, ty, g, 'rgba(255,200,240,.16)'); disc(tx, ty, g - 8, 'rgba(255,200,240,.14)'); }
       }
 
       // dream bubbles drift up across the quilt, each with a little picture inside: a heart, a fish, a star, a note
@@ -152,8 +166,11 @@
       R(bk0 + 6, sl1 - 20, 10, 8, K); R(bk0 + 7, sl1 - 19, 8, 6, '#ffffff'); R(bk0 + 7, sl1 - 17, 8, 3, '#7a4a2a'); R(bk0 + 16, sl1 - 18, 3, 4, K); R(bk0 + 17, sl1 - 17, 1, 2, '#ffffff');
       for (let k = 0; k < 3; k++) { const s2 = (t * 0.5 + k / 3) % 1; R(bk0 + 9 + Math.round(Math.sin(s2 * 6 + k) * 2), sl1 - 22 - Math.round(s2 * 14), 2, 2, `rgba(255,255,255,${(0.7 * (1 - s2)).toFixed(2)})`); }
 
+/* ===== MARK: в цикле по местам, сразу после угловых уголков плиты (перед if (!s.machine)) ===== */
+      if (i === state.run.beam && s.machine && (state.run.beamCd ?? 1) >= 1) { const g = Math.floor(t * 4) % 2; R(x, y, ww, 2, '#ff9ac4'); R(x, y + hh - 2, ww, 2, '#ff9ac4'); R(x, y, 2, hh, '#ff9ac4'); R(x + ww - 2, y, 2, hh, '#ff9ac4'); R(x + 2, y + 2, ww - 4, 1, g ? '#ffffff' : '#ffd6e6'); }
+
 /* ===== TOWER: функция рядом с extractor/etalon, рисует Башню снов на слоте 2×2; on = [верхний луч, правый верхний, правый нижний, левый нижний, левый верхний] ===== */
-  function tower(x, y, w, h, on, dream) {
+  function tower(x, y, w, h, on, cd) {
     const cx = x + Math.round(w / 2), cy = y + 50, ell = (ex, ey, rx, ry, col) => { for (let dy = -ry; dy <= ry; dy++) { const ww = Math.round(rx * Math.sqrt(1 - (dy / ry) ** 2)); R(ex - ww, ey + dy, ww * 2 + 1, 1, col); } };
     const tri = (a, b, c, col) => {
       for (let yy = Math.ceil(Math.min(a[1], b[1], c[1])); yy <= Math.floor(Math.max(a[1], b[1], c[1])); yy++) {
@@ -187,9 +204,11 @@
     for (let i = 0; i < 5; i++) ray(i, on[i]);
     for (let k = 0; k < 5; k++) { const a = V[2 * k + 1], b = V[(2 * k + 3) % 10]; tri([cx, cy], a, b, '#ffd54a'); }
     for (let i = 0; i < 5; i++) { const q = V[2 * i]; if (on[i] && Math.floor(t * 3 + i) % 3 === 0) { R(q[0] - 1, q[1] - 1, 3, 3, '#ffffff'); } }
-    // the shift's dream in the middle of the star: a glowing orb that breathes, its colour is the kind of dream
-    const DR = { sweet: ['#f59ac0', '#ffd6e6'], calm: ['#7fd0f0', '#d6f2ff'], night: ['#a06bd8', '#e0c2ff'] }[dream] || ['#f59ac0', '#ffd6e6'], ob = 6 + Math.round(Math.sin(t * 2.2));
+    // the beam's lens in the middle of the star: a glowing orb that breathes, pink when the beam is ready, grey while it recharges
+    const DR = cd >= 1 ? ['#f59ac0', '#ffd6e6'] : ['#9a86b8', '#cfc6e0'], ob = 6 + Math.round(Math.sin(t * 2.2));
     disc(cx, cy + 2, ob + 3, 'rgba(255,255,255,.25)'); disc(cx, cy + 2, ob + 1, K); disc(cx, cy + 2, ob, DR[0]); disc(cx - 1, cy + 1, Math.max(2, ob - 3), DR[1]); R(cx - 3, cy - 1, 2, 2, '#ffffff');
+    // recharge ring round the orb: fills clockwise while the beam recharges, flashes when ready
+    for (let k = 0; k < 24; k++) { const a = -Math.PI / 2 + k / 24 * Math.PI * 2, full = k / 24 < cd; R(cx + Math.round(Math.cos(a) * 11), cy + 2 + Math.round(Math.sin(a) * 11), 1, 1, full ? (cd >= 1 && Math.floor(t * 4) % 2 ? '#ffffff' : '#ff9ac4') : '#6a5a2a'); }
     // twinkles round the star
     for (let k = 0; k < 6; k++) { const a = k * 1.05 + 0.3, rr = 52 + (k % 2) * 5, tx = cx + Math.round(Math.cos(a) * rr), ty = cy + Math.round(Math.sin(a) * rr * 0.9), ph = Math.floor(t * 2 + k * 1.7) % 4; if (ph === 0 && tx > x + 4 && tx < x + w - 5) { R(tx - 1, ty, 3, 1, '#fff1a8'); R(tx, ty - 1, 1, 3, '#fff1a8'); } }
     // the pillow base: two pillows, tassels on the corners, a button; a Z drifts up from them
@@ -199,7 +218,7 @@
     R(x + 5, y + h - 8, w - 10, 3, 'rgba(10,5,40,.35)');
     for (let k = 0; k < 2; k++) { const s = (t * 0.3 + k / 2) % 1, zs = 3 + Math.round(s * 2), px = cx + 30 + Math.round(s * 10), py = y + h - 46 - Math.round(s * 20), a = (0.9 * (1 - s)).toFixed(2); R(px, py, zs, 1, `rgba(255,255,255,${a})`); R(px, py + zs - 1, zs, 1, `rgba(255,255,255,${a})`); for (let d = 1; d < zs - 1; d++) R(px + zs - 1 - d, py + d, 1, 1, `rgba(255,255,255,${a})`); }
   }
-/* в цикле по местам, перед веткой extractor: if (s.machine === 'dreamtower' && big) { const S2 = sl, ok = j => !!(S2[j].machine && S2[j].worker); tower(x, y, ww, hh, [ok(0) && ok(1) && ok(3) && ok(4), ok(4), ok(3), ok(1), ok(0)], state.run.dream || 'sweet'); } else */
+/* в цикле по местам, перед веткой extractor: if (s.machine === 'dreamtower' && big) { const S2 = sl, ok = j => !!(S2[j].machine && S2[j].worker); tower(x, y, ww, hh, [ok(0) && ok(1) && ok(3) && ok(4), ok(4), ok(3), ok(1), ok(0)], state.run.beamCd ?? 1); } else */
 
 /* ===== MACHINES: ветки machine(type, x, y), коробка около 32×30, вставлять перед } else if (type === 'dough') ===== */
     } else if (type === 'fluffer') {
