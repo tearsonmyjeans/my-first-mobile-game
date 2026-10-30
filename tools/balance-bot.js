@@ -17,7 +17,7 @@ const RUNS = +process.argv[2] || 8, UNL = process.argv[3] || '', BAL = JSON.pars
   await p.goto('file://' + require('path').resolve(__dirname, '../game/index.html') + '#bot');
   const res = [];
   for (let r = 0; r < RUNS; r++) {
-    res.push(await p.evaluate(([unl, bal, costs, rnd, semi, smart, shopMax, route, counter]) => {
+    res.push(await p.evaluate(([unl, bal, costs, cheap, rnd, semi, smart, shopMax, route, counter]) => {
       const P = window.PF;
       Object.assign(P.BAL, bal); if (costs) costs.forEach((c, l) => { P.LOCS[l].cost = c; });
       P.meta.unlocks = unl ? unl.split(',') : [];
@@ -57,18 +57,10 @@ const RUNS = +process.argv[2] || 8, UNL = process.argv[3] || '', BAL = JSON.pars
         return [undefined];
       }
       const any = a => a[Math.floor(Math.random() * a.length)];
-      function pickOffer() {
-        const offer = P.state.offers[0], orig = P.state;
-        if (rnd) {
-          const opts = offer.ids.flatMap(id => targets(id).map(tg => [id, tg]));
-          P.state.offers.shift();
-          if (opts.length) { const [id, tg] = any(opts); P.finish(id, tg, P.isFull(id, tg) ? any([...P.holder(id, tg).keys()]) : undefined); }
-          optimize(2); return;
-        }
+      // the best place (and drop) for one of the offered cards and the mean shift income it gives; the state is left as it was
+      function bestOf(ids) {
+        const orig = P.state;
         let best = -1, choice = null;
-        // a full locker or machine (BAL.cap cards) takes a new card only in place of an old one: every drop is tried
-        // semi: any card that fits somewhere, but put where it earns most, like a player who grabs a card without planning
-        const ids = semi ? [any(offer.ids.filter(id => targets(id).length))].filter(Boolean) : offer.ids;
         for (const id of ids) for (const tg of targets(id)) for (const d of P.isFull(id, tg) ? [...P.holder(id, tg).keys()] : [undefined]) {
           P.state = clone(orig); P.state.offers.shift();
           const v0 = P.avgIncome();
@@ -82,7 +74,34 @@ const RUNS = +process.argv[2] || 8, UNL = process.argv[3] || '', BAL = JSON.pars
           if (h && h.length < 3 && h.filter(c => c === id).length === 2 && (P.CARDS[id].type === 'mupg' || P.workerPlace(tg))) v *= 1.15;
           if (v > best) { best = v; choice = [id, tg, d]; }
         }
-        P.state = orig; P.state.offers.shift();
+        P.state = orig;
+        return [best, choice];
+      }
+      // a thinking player looks at every card of the showcase and buys the one that adds most, if any adds at all
+      function bestShopItem() {
+        const orig = P.state, base = P.avgIncome();
+        let best = base * 1.005, pick = null;
+        P.state.run.shop.forEach((it, i) => {
+          if (it.bought || P.state.money < P.cardPrice(it.id)) return;
+          P.state = clone(orig);
+          if (P.buyCard(i)) { const [v] = bestOf(P.state.offers[0].ids); if (v > best) { best = v; pick = i; } }
+          P.state = orig;
+        });
+        return pick;
+      }
+      function pickOffer() {
+        const offer = P.state.offers[0], orig = P.state;
+        if (rnd) {
+          const opts = offer.ids.flatMap(id => targets(id).map(tg => [id, tg]));
+          P.state.offers.shift();
+          if (opts.length) { const [id, tg] = any(opts); P.finish(id, tg, P.isFull(id, tg) ? any([...P.holder(id, tg).keys()]) : undefined); }
+          optimize(2); return;
+        }
+        // a full locker or machine (BAL.cap cards) takes a new card only in place of an old one: every drop is tried
+        // semi: any card that fits somewhere, but put where it earns most, like a player who grabs a card without planning
+        const ids = semi ? [any(offer.ids.filter(id => targets(id).length))].filter(Boolean) : offer.ids;
+        const [, choice] = bestOf(ids);
+        P.state.offers.shift();
         if (choice) P.finish(...choice);
         optimize(2);
       }
@@ -121,10 +140,16 @@ const RUNS = +process.argv[2] || 8, UNL = process.argv[3] || '', BAL = JSON.pars
         while (P.state.offers.length) pickOffer();
         unlockNext();
         // one card per showcase: buy the cheapest, then refresh while a refresh plus a common card still fits in the wallet
+        // SHOPPICK=cheap is the old bot: always the cheapest card of the showcase
         for (let k = 0; k < shopMax && !saving(); k++) {
-          const i = P.state.run.shop.map((it, i) => [i, rnd || semi ? Math.random() : P.cardPrice(it.id)]).sort((x, y) => x[1] - y[1]).map(x => x[0]).find(i => P.buyCard(i));
-          if (i == null) break;
-          pickOffer();
+          if (rnd || semi || cheap) {
+            const i = P.state.run.shop.map((it, i) => [i, rnd || semi ? Math.random() : P.cardPrice(it.id)]).sort((x, y) => x[1] - y[1]).map(x => x[0]).find(i => P.buyCard(i));
+            if (i == null) break;
+            pickOffer();
+          } else {
+            const i = bestShopItem();
+            if (i != null && P.buyCard(i)) pickOffer();
+          }
           if (P.state.money < P.shopRollCost() + P.cardPrice('e_helmet') || !P.rollNewShop()) break;
         }
         if (!saving()) buySkills();
@@ -153,7 +178,7 @@ const RUNS = +process.argv[2] || 8, UNL = process.argv[3] || '', BAL = JSON.pars
       const share = [5, 6, 7, 8, 9].map(k => st.locs[locOf(k)].unlocked ? Math.round(byLoc[locOf(k)] / all * 100) : null);
       return { won: !!st.run.won, oldShare: (log.incOld || 0) / (log.incAll || 1), debug: [st.locs[12].slots.map(z => z.machine + ':' + z.worker), log.kinds, log.done], share, orders: log.orders, ordersDone: log.ordersDone, eaten: (st.run.eaten || []).length, passed: st.run.q - 1, end: Math.round(st.run.t), opened: log.opened, quotaAt: log.quotaAt, cards: st.cards.length, level: st.level, earned: st.earned, rate: st.run.bestRate, rateAt: log.rateAt, crateShare: log.crate / st.earned, skills: st.run.skills, maxEq: Math.max(...Object.values(st.workers).map(w => w.equip.length)), maxUpg: Math.max(...st.locs.flatMap(L => L.slots.map(z => z.upg.length))),
         trios: [...Object.values(st.workers).map(w => w.equip), ...st.locs.flatMap(L => L.slots.map(z => z.upg))].filter(a => a.some(c => a.filter(x => x === c).length >= 3)).length };
-    }, [UNL, BAL, COSTS, process.env.STRAT === 'random', process.env.STRAT === 'semi', process.env.STRAT === 'smart', +process.env.SHOP || 30, (process.env.ROUTE || '').split(',').filter(Boolean).map(Number), process.env.COUNTER || 'cake']));
+    }, [UNL, BAL, COSTS, process.env.SHOPPICK === 'cheap', process.env.STRAT === 'random', process.env.STRAT === 'semi', process.env.STRAT === 'smart', +process.env.SHOP || 30, (process.env.ROUTE || '').split(',').filter(Boolean).map(Number), process.env.COUNTER || 'cake']));
     const x = res[res.length - 1];
     console.log(`run ${r + 1}: квот ${x.passed}, конец ${Math.floor(x.end / 60)}:${String(x.end % 60).padStart(2, '0')}, цеха ${x.opened.map(v => v == null ? '—' : Math.round(v / 6) / 10).join('/')} мин, карт ${x.cards}, ур ${x.level}, доход ${Math.round(x.rate)}/с, скиллов ${x.skills}, max карт на сотруднике/станке ${x.maxEq}/${x.maxUpg}, троек ${x.trios},${x.orders ? ` заказов ${x.ordersDone}/${x.orders},` : ''}${x.eaten ? ` съедено ${x.eaten},` : ''} доля цехов 6–10 ${x.share.map(v => v == null ? '—' : v + '%').join('/')}, посылки ${Math.round(x.crateShare * 100)}% денег, цеха 1–5 ${Math.round(x.oldShare * 100)}% дохода, квоты на ${x.quotaAt.map(v => Math.round(v / 6) / 10).join(' ')}`);
     if (x.won) console.log(`  ПОБЕДА на квоте ${x.passed}, ${Math.floor(x.end / 60)}:${String(x.end % 60).padStart(2, '0')}`);
