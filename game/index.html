@@ -371,6 +371,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   // the route: tab k shows workshop run.route[k]; a tab with alternatives (ALTS) stays null till the run opens one of them,
   // the other one stays shut till the run ends
   const ALTS = { 5: [5, GARDEN], 6: [6, ICE], 7: [7, BAKERY], 8: [8, DREAMS], 9: [9, ROOM] };
+  // tall, wide and big slots: the pepsi extractor three rows, the etalon and the bakery's counter two columns, the dream tower and the flesh desk 2×2
+  const TALL = { 8: 3 }, WIDE = { 9: 2, [BAKERY]: 2 }, BIG = { [DREAMS]: 5, [ROOM]: 0 };
   const ALT_TAB = { [GARDEN]: 5, [ICE]: 6, [BAKERY]: 7, [DREAMS]: 8, [ROOM]: 9 };
   const tabOf = l => ALT_TAB[l] ?? l, locNo = l => tabOf(l) + 1;
   const routeOf = k => (state.run.route || [])[k];
@@ -1054,7 +1056,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   const NEW_LOC_SLOTS = [4, 5, 6, 4, 5];
   const emptySlots = n => Array.from({ length: n }, () => ({ machine: null, worker: null, upg: [], acc: 0, kiss: 0 }));
   const fresh = () => ({
-    v: 22, money: 0, xp: 0, level: 1, planks: 0, bricks: 0, nails: 0, glass: 0, poufs: 0, pizza: 0, pigeons: 0, manga: 0, bottles: 0, calib: 0, plants: 0, ice: 0, sweets: 0, dreams: 0, songs: 0, earned: 0, cur: 0,
+    v: 23, money: 0, xp: 0, level: 1, planks: 0, bricks: 0, nails: 0, glass: 0, poufs: 0, pizza: 0, pigeons: 0, manga: 0, bottles: 0, calib: 0, plants: 0, ice: 0, sweets: 0, dreams: 0, songs: 0, earned: 0, cur: 0,
     locs: [
       { unlocked: true, slots: [{ machine: null, worker: null, upg: [], acc: 0, kiss: 0 }, { machine: 'saw', worker: 'crow', upg: [], acc: 0, kiss: 0 }, { machine: null, worker: null, upg: [], acc: 0, kiss: 0 }] },
       { unlocked: false, slots: emptySlots(4) },
@@ -1085,11 +1087,31 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     // stockQ: the shift of the last «Stocktaking», so it skips the next two checks; thermos: Mr. Butthole's coffee waits for him to be hired;
     // route: the workshop of every tab, null while the run has not picked one of its alternatives;
     // counter: the bakery's counter, 'cake' or 'hot', order: its shift order; beam: the slot the dream tower aims at, beamCd: its charge 0..1;
-    // eaten: the workers the living room ate this run, eatAt: when it ate the last one
-    run: { t: 0, q: 1, qT: 0, qEarned: 0, brk: true, shop: [], rule: null, sq: {}, sqK: null, nova: false, spark: null, bitten: [], rolled: false, rose: false, claw: null, warned: null, stolen: null, over: false, rep: 0, passed: [], hired: 0, skills: 0, bestRate: 0, opened: [0, null, null, null, null, null, null, null, null, null, null, null, null, null, null], route: [0, 1, 2, 3, 4, null, null, null, null, null], counter: null, order: null, beam: null, beamCd: 1, eaten: [], eatAt: null, ongoing: 0, mangaOn: false, qLast: 0, stockQ: 0, thermos: false }
+    // eaten: the workers the living room ate this run, eatAt: when it ate the last one; legacy: machines that worked in the shut workshops, their links stay on
+    run: { t: 0, q: 1, qT: 0, qEarned: 0, brk: true, shop: [], rule: null, sq: {}, sqK: null, nova: false, spark: null, bitten: [], rolled: false, rose: false, claw: null, warned: null, stolen: null, over: false, rep: 0, passed: [], hired: 0, skills: 0, bestRate: 0, opened: [0, null, null, null, null, null, null, null, null, null, null, null, null, null, null], route: [0, 1, 2, 3, 4, null, null, null, null, null], counter: null, order: null, beam: null, beamCd: 1, eaten: [], eatAt: null, legacy: [], ongoing: 0, mangaOn: false, qLast: 0, stockQ: 0, thermos: false }
   });
   const NEW_WORKERS = ['sunflower', 'flytrap', 'honeybear', 'arc', 'nurse', 'nemu', 'tuesday', 'zombie', 'digger', 'kaneki', 'raven'];
   const NEW_WORKERS_13 = ['fairy', 'pirate', 'beekeeper', 'kisa', 'toyalien', 'code10', 'code80', 'yeti', 'slime', 'moth', 'gastriter', 'palach', 'thief', 'raccoons', 'rebel'];
+  // the window of five open workshops: opening the workshop of tab k shuts the one of tab k − 5 for good (S is the whole save).
+  // Every working machine there becomes a random machine of the new workshop while its max and the free slots allow; its worker and
+  // one random card of it come along. The other cards stay in the deck, unplaced. The machines that were working keep their links on (run.legacy)
+  function closeLoc(S, from, to) {
+    const L = S.locs[from], dst = S.locs[to].slots, any = a => a[Math.floor(Math.random() * a.length)];
+    const legacy = S.run.legacy = S.run.legacy || [];
+    const count = m => S.locs.reduce((n, X) => n + X.slots.filter(z => z.machine === m).length, 0);
+    const kinds = [...new Set(Object.values(CARDS).filter(cd => cd.type === 'machine' && MACH[cd.machine].loc === to && !MACH[cd.machine].counter).map(cd => cd.machine))];
+    for (const z of L.slots) {
+      if (!z.machine || z.machine === 'belt') continue;
+      if (z.worker && !legacy.includes(z.machine)) legacy.push(z.machine);
+      if (!z.worker && !MACH[z.machine].auto) continue;
+      // the bakery's counter waits for its own machine
+      const free = dst.map((x, i) => i).filter(i => !dst[i].machine && !(to === BAKERY && i === WIDE[BAKERY])), ms = kinds.filter(m => count(m) < (MACH[m].max || Infinity));
+      if (!free.length || !ms.length) continue;
+      Object.assign(dst[any(free)], { machine: any(ms), worker: z.worker, upg: z.upg.length ? [any(z.upg)] : [], acc: 0, kiss: 0, grow: 0, grew: false });
+    }
+    L.slots = emptySlots(L.slots.length); L.unlocked = false; L.closed = true;
+    if (S.cur === from) S.cur = to;
+  }
   function migrate(s) {
     if (!s) return null;
     if (s.v === 1) { s.locs = [{ unlocked: true, slots: s.slots }, { unlocked: false, slots: emptySlots(3) }]; delete s.slots; s.cur = 0; s.bricks = 0; s.v = 2; }
@@ -1221,7 +1243,12 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       }
       s.v = 22;
     }
-    return s.v === 8 || s.v === 22 ? s : null;
+    if (s.v === 22) {
+      // build 23: five workshops stay open at most; an old factory shuts the extra old ones by the same rule as a new opening
+      if (s.run) { s.run.legacy = []; for (let k = 5; k < 10; k++) { const l = s.run.route[k]; if (l != null && s.locs[l].unlocked) closeLoc(s, k - 5, l); } }
+      s.v = 23;
+    }
+    return s.v === 8 || s.v === 23 ? s : null;
   }
   // meta lives across runs: reputation, its unlocks, achievements and records
   const META_KEY = 'pixel-factory-meta-v1';
@@ -1442,8 +1469,6 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   /* ================= rules ================= */
   // slots touch by a side: in one row a step apart, or a row apart and overlapping (the pizzeria's shifted pair);
   // the pepsi extractor is three rows tall and the etalon two columns wide, so each touches every slot of its workshop
-  // the dream tower and the flesh desk own big 2×2 slots
-  const TALL = { 8: 3 }, WIDE = { 9: 2, [BAKERY]: 2 }, BIG = { [DREAMS]: 5, [ROOM]: 0 };
   // the bakery's counter slot takes only the counter machine the run picked, the other two slots take the rest
   const slotOk = (l, i, m) => l !== BAKERY || ((i === WIDE[BAKERY]) === !!MACH[m].counter && (!MACH[m].counter || MACH[m].counter === state.run.counter));
   // the dream tower and the flesh desk take no machine cards
@@ -1544,12 +1569,14 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     // Post day: Postman, Courier and Subscription double the coins in crates; Subscription grows with every opened crate
     if (['u_postman', 'u_courier', 'u_sub'].every(id => state.cards.includes(id))) g.combos.push('post');
     g.income *= 1 + Math.min(BAL.subCap, state.run.subs || 0);
-    g.sawWorking = slotsOf(0).some(s => s.machine === 'saw' && s.worker);
-    g.kilnWorking = slotsOf(1).some(s => s.machine === 'kiln' && s.worker);
-    g.tumblerWorking = slotsOf(2).some(s => s.machine === 'tumbler' && s.worker);
+    // a link between workshops stays on after its workshop shut, if its machine was working then (run.legacy)
+    const works = (l, m) => slotsOf(l).some(s => s.machine === m && s.worker) || (state.run.legacy || []).includes(m);
+    g.sawWorking = works(0, 'saw');
+    g.kilnWorking = works(1, 'kiln');
+    g.tumblerWorking = works(2, 'tumbler');
     // poufs: both machines working make it cosy, a working dryer gives frames, a working stained glass table gives glass legs
-    g.dryerWorking = slotsOf(0).some(s => s.machine === 'dryer' && s.worker);
-    g.vitrageWorking = slotsOf(3).some(s => s.machine === 'vitrage' && s.worker);
+    g.dryerWorking = works(0, 'dryer');
+    g.vitrageWorking = works(3, 'vitrage');
     g.cozy = ['sew', 'stuff'].every(m => slotsOf(4).some(s => s.machine === m && s.worker && !onStrike(s.worker)));
     if (g.cozy) g.combos.push('cozy');
     // Mrs Ha is the best seamstress: at the sewing machine she makes every pouf of the workshop dearer
@@ -1621,7 +1648,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     g.same = pt >= 0 && pf >= 0 && adjacent(9, pt, pf);
     if (g.same) g.combos.push('same');
     // the garden: compost from the workbench of workshop 1, the beekeeper's bees in the roses, the pirate's island under a palm
-    g.compost = slotsOf(0).some(z => z.machine === 'bench' && z.worker);
+    g.compost = works(0, 'bench');
     g.bees = slotsOf(GARDEN).some(z => z.machine === 'rosebush' && z.worker === 'beekeeper');
     if (g.bees) g.combos.push('bees');
     g.island = slotsOf(GARDEN).some(z => z.machine === 'palm' && z.worker === 'pirate');
@@ -1993,7 +2020,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   }
   function eligible(id) {
     const cd = CARDS[id], cl = cardLoc(id);
-    if (cl >= 0 && !state.locs[cl].unlocked) return false;
+    // machines, machine cards and goods cards need their workshop open; workers and equipment only need it reached once
+    if (cl >= 0 && !state.locs[cl].unlocked && !(state.locs[cl].closed && ['worker', 'equip'].includes(cd.type))) return false;
     if (cd.type === 'machine') return canPlaceMachine(cd.machine);
     if (cd.afterQ && state.run.q < cd.afterQ) return false;
     if (cd.type === 'worker') return !state.workers[cd.worker].unlocked && !(state.run.eaten || []).includes(cd.worker);
@@ -2139,7 +2167,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   }
   function unlockLoc(l) {
     const L = state.locs[l], cost = LOCS[l].cost;
-    if (L.unlocked) return;
+    if (L.unlocked || L.closed) return;
     const k = tabOf(l);
     if (routeOf(k) != null && routeOf(k) !== l) { toast(`В этом забеге на месте цеха ${k + 1} уже ${LOCS[routeOf(k)].name.toLowerCase()}`); return; }
     if (state.money < cost) { toast(`Чтобы открыть цех, нужно ${fmt(cost)} монет`); return; }
@@ -2148,10 +2176,13 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (LOCS[l].start === 'random') L.slots[Math.floor(Math.random() * 3)].machine = PLANTS[Math.floor(Math.random() * 3)];
     else if (LOCS[l].start) L.slots[LOCS[l].startSlot ?? 1].machine = LOCS[l].start;
     if (l === DREAMS) Object.assign(state.run, { beam: 0, beamCd: 1 });
+    // five workshops stay open: the one five tabs back shuts, its working machines move here
+    const shut = k >= 5 ? state.run.route[k - 5] : null;
+    if (shut != null && !state.locs[shut].closed) closeLoc(state, shut, l);
     // the poufs workshop starts empty: its sewing machine is promised in the next card pick, a waiting one if there is one
     if (l === 4) { const o = state.offers.find(x => ['level', 'quota', 'crate'].includes(x.src)); if (o) addSew(o); else state.run.sewDue = true; }
     state.cur = l; selSlot = null; selWorker = null;
-    toast(LOCS[l].opened);
+    toast(shut != null ? `${LOCS[l].opened}. Цех «${LOCS[shut].name}» закрылся, его работавшие станки переехали сюда` : LOCS[l].opened);
     save(); renderSheet(); renderTabs();
   }
 
@@ -4830,24 +4861,31 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   tabs.forEach((b, k) => b.addEventListener('click', () => {
     if (swiped) { swiped = false; return; } // the click that ends a swipe only flips the page
     const t = tabPage * TPP + k, l = tabLoc(t);
+    if (state.locs[l].closed) return;
     // a fork not picked yet: a second tap shows the other workshop, it opens from the sheet's buttons
     if (ALTS[t] && routeOf(t) == null && state.cur === l) { const a = ALTS[t]; state.cur = a[(a.indexOf(l) + 1) % a.length]; selSlot = null; renderSheet(); renderTabs(); return; }
     if (!state.locs[l].unlocked && state.cur === l && !guest && !state.run.over) { unlockLoc(l); return; }
     if (mode && mode.kind === 'move') mode = null;
     state.cur = l; selSlot = null; renderSheet(); renderTabs();
   }));
-  const flipTabs = () => { tabPage = 1 - tabPage; renderTabs(); };
+  // with workshops 1–5 all shut the first page is empty: the tabs stay on the second one
+  const firstShut = () => [0, 1, 2, 3, 4].every(t => state.locs[t].closed);
+  const flipTabs = () => { if (!firstShut()) { tabPage = 1 - tabPage; renderTabs(); } };
   $tabPg.addEventListener('click', flipTabs);
   let swipeX = null;
   $tabNav.addEventListener('pointerdown', e => { swipeX = e.clientX; swiped = false; });
   $tabNav.addEventListener('pointerup', e => { if (swipeX != null && Math.abs(e.clientX - swipeX) > 40 && (e.clientX < swipeX) === (tabPage === 0)) { flipTabs(); swiped = true; } swipeX = null; });
   function renderTabs() {
     if (state.cur !== tabCur) { tabCur = state.cur; tabPage = Math.floor(tabOf(state.cur) / TPP); }
+    if (firstShut()) tabPage = 1;
+    $tabPg.style.visibility = firstShut() ? 'hidden' : '';
     const pg = tabPage ? '‹' : '›';
     if ($tabPg.dataset.p !== String(tabPage)) { $tabPg.dataset.p = tabPage; $tabPg.innerHTML = `${pg}<small>${tabPage + 1}/2</small>`; }
     tabs.forEach((b, k) => {
       const t = tabPage * TPP + k, l = tabLoc(t), L = state.locs[l], fork = ALTS[t] && routeOf(t) == null;
       b.setAttribute('aria-pressed', String(tabOf(state.cur) === t));
+      // a shut workshop's tab hides, the others keep their places
+      b.style.visibility = L.closed ? 'hidden' : '';
       b.classList.toggle('locked', !L.unlocked);
       b.classList.toggle('ready', !L.unlocked && state.money >= LOCS[l].cost);
       const nm = fork ? ALTS[t].map(a => LOCS[a].tab || LOCS[a].name).join('/') : LOCS[l].tab || LOCS[l].name, txt = L.unlocked ? `Цех ${t + 1}\n${nm}` : `Цех ${t + 1} · ${fmt(LOCS[l].cost)}\n${nm}`;
@@ -5016,9 +5054,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     let bytes = Uint8Array.from(atob(m[2]), ch => ch.charCodeAt(0));
     if (m[1] === '1') bytes = await pipe(bytes, new DecompressionStream('deflate-raw'));
     // a code from the previous build is brought up to date like a save
-    const d = JSON.parse(new TextDecoder().decode(bytes)), st = d.s && d.s.v >= 9 && d.s.v <= 21 ? migrate(d.s) : d.s;
+    const d = JSON.parse(new TextDecoder().decode(bytes)), st = d.s && d.s.v >= 9 && d.s.v <= 22 ? migrate(d.s) : d.s;
     // a friend's code is drawn with our code, so only known ids may pass
-    const ok = st && st.v === 22 && st.run && (!st.run.stolen || CARDS[st.run.stolen]) && Array.isArray(st.locs) && st.locs.length === LOCS.length && st.locs.every((L, l) => Array.isArray(L.slots) && L.slots.length === LAYOUTS[l].length && L.slots.every(z => (!z.machine || MACH[z.machine]) && (!z.worker || WORKERS[z.worker]) && Array.isArray(z.upg) && z.upg.every(u => CARDS[u])))
+    const ok = st && st.v === 23 && st.run && (!st.run.stolen || CARDS[st.run.stolen]) && Array.isArray(st.locs) && st.locs.length === LOCS.length && st.locs.every((L, l) => Array.isArray(L.slots) && L.slots.length === LAYOUTS[l].length && L.slots.every(z => (!z.machine || MACH[z.machine]) && (!z.worker || WORKERS[z.worker]) && Array.isArray(z.upg) && z.upg.every(u => CARDS[u])))
       && Array.isArray(st.cards) && st.cards.every(id => CARDS[id]) && Object.keys(WORKERS).every(id => st.workers[id] && st.workers[id].equip.every(e => CARDS[e]))
       && Array.isArray(st.lockers) && st.lockers.every(id => WORKERS[id]) && d.r && Array.isArray(d.a);
     if (!ok) throw new Error('bad state');
