@@ -40,7 +40,7 @@
         if (ea.length >= 3) { toast('Комната сыта: в ней уже трое'); return; }
         if (eatAsk !== selWorker) { eatAsk = selWorker; toast(`Нажми ещё раз: комната поглотит ${WORKERS[selWorker].name} до конца забега`); return; }
         const prev = workerPlace(selWorker); if (prev) slotsOf(prev.l)[prev.i].worker = null;
-        state.lockers = state.lockers.filter(id => id !== selWorker); ea.push(selWorker); state.run.eatAt = t;
+        state.lockers = state.lockers.filter(id => id !== selWorker); ea.push(selWorker); state.run.eatAt = t; // desk() plays the meal for 2,6 s
         toast(ea.length < 3 ? `${WORKERS[selWorker].name} растворяется в столе. Комната хочет ещё` : `${WORKERS[selWorker].name} растворяется в столе. Комната сыта`);
         eatAsk = null; selWorker = null; selSlot = i; save(); renderSheet(); return;
       }
@@ -151,7 +151,7 @@
       const mx = W - 40, my = rowY(0) + 60;
       shadow(mx - 30, my + 18, 62);
       ell(mx, my + 6, 30, 14, K); ell(mx, my + 6, 29, 13, '#8a2226'); ell(mx - 4, my + 2, 22, 8, '#a8363a'); ell(mx - 8, my - 1, 10, 3, '#b8433f');
-      const fresh = state.run.eatAt != null && t - state.run.eatAt < 1.2;
+      const fresh = state.run.eatAt != null && t - state.run.eatAt > 0.6 && t - state.run.eatAt < 2.6;
       for (const [ox, oy, r] of [[-16, 4, 4], [-4, -2, 5], [10, 2, 4], [20, 9, 3], [2, 11, 3], [-20, 12, 3]]) {
         const ex = mx + ox, ey = my + oy;
         if (fresh || Math.floor(t * 0.4) % 7 === 0 && (t * 0.4) % 1 < 0.15) { R(ex - r, ey, r * 2 + 1, 1, '#2a0608'); continue; }
@@ -168,18 +168,20 @@
         for (let yy = 0; yy < hgt; yy++) { const f = yy / hgt, px = tx0 + Math.round(Math.sin(t * 2.2 + k + f * 4) * 5 * f), wd = Math.max(1, Math.round(4 * (1 - f))); R(px - wd, ppy - yy, wd * 2 + 1, 1, '#2a0608'); R(px - wd + 1, ppy - yy, Math.max(1, wd * 2 - 1), 1, k % 2 ? '#9a2a2a' : '#b8433f'); if (yy % 4 === 1 && wd > 1) R(px - wd + 1, ppy - yy, 1, 1, '#f0a59a'); }
       }
 
-/* ===== DESK: функция рядом с extractor/etalon, рисует Стол из плоти на слоте 2×2; n — сколько сотрудников поглощено (0..3), eatAt — время последнего поглощения ===== */
-  function desk(x, y, w, h, n, eatAt) {
+/* ===== DESK: функция рядом с extractor/etalon, рисует Стол из плоти на слоте 2×2; n — сколько сотрудников поглощено (0..3), eatAt — время последнего поглощения, eatId — кого съели последним ===== */
+  function desk(x, y, w, h, n, eatAt, eatId) {
     const cx = x + Math.round(w / 2), ell = (ex, ey, rx, ry, col) => { for (let dy = -ry; dy <= ry; dy++) { const ww = Math.round(rx * Math.sqrt(1 - (dy / ry) ** 2)); R(ex - ww, ey + dy, ww * 2 + 1, 1, col); } };
-    const fresh = eatAt != null && t - eatAt < 1.5, br = Math.round(Math.sin(t * (1 + n * 0.6)) * 1);
+    // the meal takes EAT seconds: ef runs 0..1 while it lasts; the new pod and the wider eye appear only when the lump reaches the pod
+    const EAT = 2.6, ef = eatAt != null && t - eatAt >= 0 && t - eatAt < EAT ? (t - eatAt) / EAT : -1, eating = ef >= 0, shown = eating && ef < 0.8 ? n - 1 : n;
+    const fresh = eating && ef >= 0.8, br = Math.round(Math.sin(t * (1 + n * 0.6)) * 1);
     // the room inside the slot: a back wall of meat with lumps, a wet floor
     R(x + 1, y + 1, w - 2, h - 2, '#3a0a0e'); R(x + 1, y + 96, w - 2, h - 97, '#4e1014'); R(x + 1, y + 96, w - 2, 1, '#2a0608');
     for (let k = 0; k < 9; k++) { const lx = x + 8 + (k * 41) % (w - 16), ly = y + 40 + (k * 23) % 50, r = 3 + k % 3; disc(lx, ly, r, '#4a0e12'); R(lx - 1, ly - r + 1, 2, 1, '#6a171b'); }
     if (n) { const g = 0.12 + 0.08 * Math.sin(t * 2.5) + n * 0.05; disc(cx, y + 60, 46, `rgba(232,48,58,${g.toFixed(2)})`); }
-    if (fresh) R(x + 1, y + 1, w - 2, h - 2, `rgba(255,60,60,${(0.4 * (1 - (t - eatAt) / 1.5)).toFixed(2)})`);
+    if (eating && ef > 0.5 && ef < 0.8) R(x + 1, y + 1, w - 2, h - 2, `rgba(255,60,60,${(0.35 * Math.sin((ef - 0.5) / 0.3 * Math.PI)).toFixed(2)})`);
     // three pods on the wall, one for each of the eaten: an empty one is a shut slit, a full one swells with a sleeper inside
     for (let k = 0; k < 3; k++) {
-      const px = cx + (k - 1) * 40, py = y + 19, full = k < n, r = full ? 11 + Math.round(Math.sin(t * 1.8 + k * 1.3) * 1) : 8;
+      const px = cx + (k - 1) * 40, py = y + 19, full = k < shown, pop = fresh && k === n - 1 ? Math.round(3 * (1 - (ef - 0.8) / 0.2)) : 0, r = full ? 11 + pop + Math.round(Math.sin(t * 1.8 + k * 1.3) * 1) : 8;
       R(px, py + r, 2, 30 - r, '#5a1030'); R(px + 1, py + r, 1, 30 - r, '#7a2050');
       ell(px, py, r - 1, r + 1, K);
       if (full) {
@@ -203,7 +205,7 @@
       for (let k = -1; k <= 1; k++) for (let s = 0; s < 8; s++) R(lx + 2 + k * s, ty + 44 + Math.round(s * 0.4), 2, 1, '#7a1a1e');
     }
     // the drawer under the top is a mouth: it chews slowly, drools when hungry and smiles after a meal
-    const mx = tx + 22, my = ty + 13, mw = 44, open = n ? 1 + Math.floor(t * 3) % 2 : 2 + Math.round(Math.sin(t * 1.3) * 2);
+    const mx = tx + 22, my = ty + 13, mw = 44, open = eating && ef < 0.8 ? (ef < 0.55 ? 2 + Math.round(Math.min(1, ef / 0.3) * 3) : Math.floor(t * 10) % 2 ? 5 : 1) : n ? 1 + Math.floor(t * 3) % 2 : 2 + Math.round(Math.sin(t * 1.3) * 2);
     R(mx - 1, my - 1, mw + 2, 18, K); R(mx, my, mw, 16, '#7a1a1e'); R(mx, my, mw, 2, '#9a2a2a');
     R(mx + 4, my + 7 - open, mw - 8, open * 2 + 1, '#1a0204'); R(mx + 4, my + 6 - open, mw - 8, 1, '#d9726a'); R(mx + 4, my + 8 + open, mw - 8, 1, '#d9726a');
     for (let k = 0; k < 7; k++) { R(mx + 6 + k * 5, my + 7 - open, 3, 2, '#efe6d2'); R(mx + 6 + k * 5, my + 6 + open, 3, 2, '#efe6d2'); }
@@ -222,8 +224,8 @@
     for (let k = 0; k < 3; k++) R(sx + 3 + k * 2, sy + 12 + k * 9, 1, 8, '#5a1030');
     const scx = sx + 8, scy = sy + 6, scw = 40, sch = 30;
     R(scx - 1, scy - 1, scw + 2, sch + 2, K); R(scx, scy, scw, sch, '#1a0204');
-    const ec = [scx + scw / 2, scy + 13], op = [0.12, 0.45, 0.75, 1][Math.min(3, n)] * (fresh ? 1.15 : 1), eh = Math.max(1, Math.round(9 * Math.min(1, op))), ex = 15;
-    const look = n ? Math.round(Math.sin(t * 0.9) * 4) : 0, lookY = n ? Math.round(Math.sin(t * 0.6 + 1) * 1) : 0;
+    const ec = [scx + scw / 2, scy + 13], op = [0.12, 0.45, 0.75, 1][Math.min(3, shown)] * (fresh || (eating && ef < 0.3) ? 1.15 : 1), eh = Math.max(1, Math.round(9 * Math.min(1, op))), ex = 15;
+    const look = eating && ef < 0.6 ? Math.round(Math.sin(t * 9) * 2) : n ? Math.round(Math.sin(t * 0.9) * 4) : 0, lookY = n ? Math.round(Math.sin(t * 0.6 + 1) * 1) : 0;
     for (let dy = -eh; dy <= eh; dy++) {
       const ww = Math.round(ex * Math.sqrt(1 - (dy / (eh + 0.5)) ** 2));
       for (let dx = -ww; dx <= ww; dx++) {
@@ -254,18 +256,46 @@
     for (let k = 0; k < 10; k++) R(kx + 50 + ms + Math.round(Math.sin(k * 0.6) * 2) - (k > 6 ? k - 6 : 0), ky - 2 - k, 2, 1, '#c06a70');
     // what is left of the eaten lies on the floor of the slot: a sneaker, a cap, glasses
     const LEFT = [[x + 10, y + h - 14, 'shoe'], [x + w - 30, y + h - 14, 'cap'], [x + Math.round(w / 2) + 20, y + h - 9, 'glasses']];
-    for (let k = 0; k < n && k < 3; k++) {
+    for (let k = 0; k < shown && k < 3; k++) {
       const [lx, ly, kind] = LEFT[k];
       if (kind === 'shoe') { R(lx, ly, 16, 7, K); R(lx + 1, ly + 1, 9, 5, '#e05a3a'); R(lx + 10, ly + 3, 5, 3, '#e05a3a'); R(lx + 1, ly + 5, 14, 1, '#ffffff'); R(lx + 3, ly + 2, 1, 1, '#ffffff'); R(lx + 6, ly + 2, 1, 1, '#ffffff'); }
       else if (kind === 'cap') { R(lx + 3, ly, 12, 6, K); R(lx + 4, ly + 1, 10, 4, '#3a6ad0'); R(lx + 4, ly + 1, 10, 1, '#6a9af0'); R(lx, ly + 5, 18, 2, K); R(lx + 1, ly + 5, 16, 1, '#2a4aa0'); }
       else { R(lx, ly, 6, 4, K); R(lx + 1, ly + 1, 4, 2, '#9fd0f0'); R(lx + 8, ly, 6, 4, K); R(lx + 9, ly + 1, 4, 2, '#9fd0f0'); R(lx + 6, ly + 1, 2, 1, K); }
       R(lx - 2, ly + 7, 22, 1, 'rgba(176,16,24,.6)');
     }
-    // the moment it eats: tendrils lash out of the top and the screen flashes red
-    if (fresh) {
-      const f = (t - eatAt) / 1.5;
-      for (let k = 0; k < 6; k++) { const a = -Math.PI / 2 + (k - 2.5) * 0.45, L = Math.round(40 * Math.sin(f * Math.PI)); for (let s = 0; s < L; s++) R(cx + Math.round(Math.cos(a + Math.sin(s * 0.2 + t * 6) * 0.2) * s), ty - Math.round(Math.sin(-a) * s * 0.7), 2, 2, s % 3 ? '#b8433f' : '#f0a59a'); }
-      R(scx, scy, scw, sch, `rgba(255,40,40,${(0.5 * (1 - f)).toFixed(2)})`);
+    // the meal: the worker appears on the top and trembles, tendrils grow up round them and wrap them,
+    // they sink into the meat while it ripples and spits blood, the mouth gulps, a lump runs up the vein into an empty pod, the pod swells
+    if (eating) {
+      const sp = eatId && sprOf(eatId), sw = sp ? sp.width : 23, shh = sp ? sp.height : 30, hx = cx - Math.round(sw / 2), lift = Math.min(1, ef / 0.12);
+      const sink = ef < 0.25 ? 0 : Math.min(1, (ef - 0.25) / 0.3) ** 1.6, vis = Math.round(shh * (1 - sink)), shake = ef < 0.55 ? (Math.floor(t * 16) % 2 ? 1 : -1) * (ef < 0.25 ? 1 : 2) : 0;
+      if (ef < 0.55) {
+        // a pool of meat opens under the feet
+        const pr = 6 + Math.round(Math.min(1, ef / 0.25) * 8); R(cx - pr, ty - 1, pr * 2 + 1, 3, '#5a1014'); R(cx - pr + 2, ty, pr * 2 - 3, 1, '#1a0204');
+        if (sp && vis > 0) { gx.globalAlpha = lift; gx.drawImage(sp, 0, 0, sw, vis, hx + shake, ty - vis, sw, vis); gx.globalAlpha = 1; }
+        if (ef < 0.25) { const g = Math.floor(t * 6) % 2; R(cx - 1, ty - shh - 9, 3, 5, g ? '#ffffff' : '#ffd54a'); R(cx - 1, ty - shh - 3, 3, 2, g ? '#ffffff' : '#ffd54a'); }
+        // tendrils climb from the top and wind round the worker
+        const reach = Math.min(1, ef / 0.25);
+        for (let k = 0; k < 4; k++) {
+          const side = k % 2 ? 1 : -1, len = Math.round((shh - 4) * reach * (0.6 + 0.15 * k));
+          for (let s2 = 0; s2 < len; s2++) {
+            const yy = ty - 1 - s2; if (yy < ty - vis) break;
+            const px = cx + side * Math.round(Math.cos(s2 * 0.35 + k + t * 4) * (sw / 2 + 1 - s2 * 0.08));
+            R(px - 1, yy, 3, 1, K); R(px, yy, 1, 1, s2 % 4 ? '#b8433f' : '#f0a59a');
+          }
+        }
+        // ripples spread over the top and blood spits up while they sink
+        if (ef > 0.25) for (let k = 0; k < 2; k++) { const f = ((ef - 0.25) * 6 + k / 2) % 1, rr = 4 + Math.round(f * 22); R(cx - rr, ty + 1, rr * 2 + 1, 1, `rgba(240,165,154,${(0.8 * (1 - f)).toFixed(2)})`); }
+        if (ef > 0.3) for (let k = 0; k < 6; k++) { const f = ((ef - 0.3) * 4 + k * 0.17) % 1, dx = Math.round((k - 2.5) * 6 * f), dy = Math.round(-14 * f + 18 * f * f); R(cx + dx, ty - 2 + dy, 2, 2, k % 2 ? '#e8303a' : '#b01018'); }
+      } else if (ef < 0.8) {
+        // a lump runs up the vein from the top into the next empty pod
+        const f = (ef - 0.55) / 0.25, k = Math.min(2, n - 1), px = cx + (k - 1) * 40, x0 = cx, y0 = ty - 2, y1 = y + 19 + 12;
+        for (let s2 = 0; s2 <= 20; s2++) { const g = s2 / 20, vx = Math.round(x0 + (px - x0) * g), vy = Math.round(y0 + (y1 - y0) * g); R(vx, vy, 2, 2, '#5a1030'); }
+        const bx = Math.round(x0 + (px - x0) * f), by = Math.round(y0 + (y1 - y0) * f); disc(bx, by, 4, K); disc(bx, by, 3, '#c01a22'); R(bx - 1, by - 2, 2, 1, '#ff8a80');
+        R(cx - 7, ty - 1, 15, 2, '#5a1014');
+      }
+      if (ef > 0.5 && ef < 0.8) R(scx, scy, scw, sch, `rgba(255,40,40,${(0.45 * Math.sin((ef - 0.5) / 0.3 * Math.PI)).toFixed(2)})`);
+      // a little burp bubble after the meal
+      if (fresh) { const f = (ef - 0.8) / 0.2; disc(mx + mw - 6, my - 4 - Math.round(f * 12), 2 + Math.round(f * 2), `rgba(240,165,154,${(0.8 * (1 - f)).toFixed(2)})`); }
     }
   }
-/* в цикле по местам, перед веткой extractor: if (s.machine === 'fleshdesk' && big) desk(x, y, ww, hh, (state.run.eaten || []).length, state.run.eatAt); else */
+/* в цикле по местам, перед веткой extractor: if (s.machine === 'fleshdesk' && big) { const ea = state.run.eaten || []; desk(x, y, ww, hh, ea.length, state.run.eatAt, ea[ea.length - 1]); } else */
