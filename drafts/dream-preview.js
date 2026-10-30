@@ -15,6 +15,7 @@ rep('  function machine(type, x, y) {\n', block('TOWER') + '\n  function machine
 rep("    } else if (type === 'dough') {\n", block('MACHINES') + "\n    } else if (type === 'dough') {\n");
 rep("if (s.machine === 'extract' && hh !== SH) extractor(x, y, hh);", "if (s.machine === 'dreamtower' && big) { const ok = j => !!(sl[j].machine && sl[j].worker); tower(x, y, ww, hh, [ok(0) && ok(1) && ok(3) && ok(4), ok(4), ok(3), ok(1), ok(0)], state.run.beamCd ?? 1); }\n        else if (s.machine === 'extract' && hh !== SH) extractor(x, y, hh);");
 rep('      if (!s.machine) { const pc', `${block('MARK')}\n      if (!s.machine) { const pc`);
+rep('    if (l === ICE && state.run.storm) {\n', `${block('BEAM').replace(/l === G/g, 'l === 8').replace(/LAYOUTS\[G\]/g, 'LAYOUTS[8]').replace(/\bG\)/g,'8)')}\n    if (l === ICE && state.run.storm) {\n`);
 rep('  if (BOT) window.PF', '  window.PF'); rep('  else requestAnimationFrame(loop);', '  requestAnimationFrame(loop);');
 const file = path.join(tmp, 'dream-game.html'); fs.writeFileSync(file, src);
 (async () => {

@@ -91,19 +91,6 @@
         if (on) { const f = (t * 0.6 + i * 0.37) % 1; R(ax + (bx - ax) * f - 2, ay + (by - ay) * f - 2, 5, 5, 'rgba(110,240,240,.4)'); R(ax + (bx - ax) * f - 1, ay + (by - ay) * f - 1, 3, 3, '#ffffff'); }
       }
 
-      // the tower's beam: a bright braid of light from the star to the machine it aims at (run.beam, a place index 0, 1, 3 or 4);
-      // while the tower recharges (run.beamCd < 1) the beam is thin and pale, the target glows once it is ready
-      const bm = state.run.beam;
-      if (bm != null && SLS[bm] && SLS[bm].machine) {
-        const [ax, ay] = rc(5), [bx, by] = rc(bm), len = Math.hypot(bx - ax, by - ay), n = Math.ceil(len / 2), rd = (state.run.beamCd ?? 1) >= 1;
-        for (let k = 0; k <= n; k++) {
-          const f = k / n, wv = Math.round(Math.sin(k * 0.5 - t * 8) * (rd ? 2 : 1)), px = ax + (bx - ax) * f + wv * (ay - by) / len, py = ay + (by - ay) * f + wv * (bx - ax) / len;
-          if (rd) { R(px - 3, py - 2, 7, 6, 'rgba(255,200,240,.35)'); R(px - 2, py - 1, 5, 4, '#ff9ac4'); R(px - 1, py, 3, 2, '#ffffff'); if ((k + Math.floor(t * 12)) % 5 === 0) R(px, py, 2, 2, '#ffffff'); }
-          else R(px, py, 2, 2, 'rgba(255,214,230,.5)');
-        }
-        if (rd) { const [tx, ty] = [colX(P[bm][0]) + SW / 2, rowY(P[bm][1]) + SH / 2], g = 40 + Math.round(Math.sin(t * 4) * 2); disc(tx, ty, g, 'rgba(255,200,240,.16)'); disc(tx, ty, g - 8, 'rgba(255,200,240,.14)'); }
-      }
-
       // dream bubbles drift up across the quilt, each with a little picture inside: a heart, a fish, a star, a note
       for (let k = 0; k < 6; k++) {
         const p = (t * 0.045 + k * 0.17) % 1, bx = (k * 67 + 40) % (W - 20) + 8 + Math.round(Math.sin(t * 0.8 + k * 2) * 4), by = FL - 8 - Math.round(p * (FL - 50)), br = 5 + k % 2;
@@ -166,8 +153,33 @@
       R(bk0 + 6, sl1 - 20, 10, 8, K); R(bk0 + 7, sl1 - 19, 8, 6, '#ffffff'); R(bk0 + 7, sl1 - 17, 8, 3, '#7a4a2a'); R(bk0 + 16, sl1 - 18, 3, 4, K); R(bk0 + 17, sl1 - 17, 1, 2, '#ffffff');
       for (let k = 0; k < 3; k++) { const s2 = (t * 0.5 + k / 3) % 1; R(bk0 + 9 + Math.round(Math.sin(s2 * 6 + k) * 2), sl1 - 22 - Math.round(s2 * 14), 2, 2, `rgba(255,255,255,${(0.7 * (1 - s2)).toFixed(2)})`); }
 
+/* ===== BEAM: поверх всех мест, после цикла по местам (перед if (l === ICE && state.run.storm)): луч башни и эффект на цели ===== */
+    if (l === G && state.run.beam != null) {
+      // the tower's beam is drawn over the slots so it reads at once: a thick pink braid with a white core from the star's rim to the target,
+      // sparks run along it; the target machine gets sparkles orbiting it and a pink halo. While the tower recharges the beam is a thin pale line.
+      const P = LAYOUTS[G], bm = state.run.beam, T = sl[bm];
+      if (T && T.machine) {
+        const rect = i => [colX(P[i][0]), rowY(P[i][1]), SLOT_W(l, i), SLOT_H(l, i)], A = rect(5), B = rect(bm), ac = [A[0] + A[2] / 2, A[1] + 52], bc = [B[0] + B[2] / 2, B[1] + B[3] / 2];
+        const ready = (state.run.beamCd ?? 1) >= 1, dx = bc[0] - ac[0], dy = bc[1] - ac[1];
+        // the beam starts at the star's lens and ends where the line enters the target
+        const edge = (r, c, sg) => { const kx = Math.abs(dx) < 1e-6 ? 1e9 : (r[2] / 2) / Math.abs(dx), ky = Math.abs(dy) < 1e-6 ? 1e9 : (r[3] / 2) / Math.abs(dy), k = Math.min(kx, ky); return [c[0] + sg * dx * k, c[1] + sg * dy * k]; };
+        const p0 = [ac[0] + dx * 0.12, ac[1] + dy * 0.12], p1 = edge(B, bc, -1), len = Math.hypot(p1[0] - p0[0], p1[1] - p0[1]), n = Math.ceil(len);
+        for (let k = 0; k <= n; k++) {
+          const f = k / n, px = p0[0] + (p1[0] - p0[0]) * f, py = p0[1] + (p1[1] - p0[1]) * f, wv = Math.sin(k * 0.45 - t * 9) * (ready ? 0.8 : 0.4), qx = px - wv * dy / len, qy = py + wv * dx / len;
+          if (ready) { R(qx - 3, qy - 3, 7, 7, 'rgba(255,130,190,.3)'); R(qx - 2, qy - 2, 5, 5, '#ff7fb8'); R(qx - 1, qy - 1, 3, 3, '#ffd6e6'); if ((k + Math.floor(t * 20)) % 6 < 2) R(qx - 1, qy - 1, 2, 2, '#ffffff'); }
+          else R(qx - 1, qy - 1, 2, 2, 'rgba(255,214,230,.6)');
+        }
+        if (ready) {
+          const [tx, ty, tw, th] = B, g = 1 + Math.floor(t * 4) % 2;
+          for (let k = 0; k < 8; k++) { const a = t * 2.2 + k * Math.PI / 4, rr = 3 + (k % 2) * 3, sx = tx + tw / 2 + Math.cos(a) * (tw / 2 - 2), sy = ty + th / 2 + Math.sin(a) * (th / 2 - 2), c = k % 2 ? '#ffd6e6' : '#ffffff'; R(sx - 1, sy, 3, 1, c); R(sx, sy - 1, 1, 3, c); }
+          for (let k = 0; k < 4; k++) { const s2 = (t * 0.8 + k / 4) % 1; R(tx + 10 + k * 17 + Math.round(Math.sin(s2 * 5 + k) * 3), ty + th - 6 - Math.round(s2 * (th - 14)), 2, 2, `rgba(255,214,230,${(0.9 * (1 - s2)).toFixed(2)})`); }
+          R(tx + tw - 9 - g, ty + 3, 7, 1, '#ffd6e6'); R(tx + tw - 6 - g, ty, 1, 7, '#ffd6e6');
+        }
+      }
+    }
+
 /* ===== MARK: в цикле по местам, сразу после угловых уголков плиты (перед if (!s.machine)) ===== */
-      if (i === state.run.beam && s.machine && (state.run.beamCd ?? 1) >= 1) { const g = Math.floor(t * 4) % 2; R(x, y, ww, 2, '#ff9ac4'); R(x, y + hh - 2, ww, 2, '#ff9ac4'); R(x, y, 2, hh, '#ff9ac4'); R(x + ww - 2, y, 2, hh, '#ff9ac4'); R(x + 2, y + 2, ww - 4, 1, g ? '#ffffff' : '#ffd6e6'); }
+      if (i === state.run.beam && s.machine && (state.run.beamCd ?? 1) >= 1) { const g = Math.floor(t * 4) % 2; R(x - 2, y - 2, ww + 4, hh + 4, 'rgba(255,130,190,.35)'); R(x, y, ww, 2, '#ff9ac4'); R(x, y + hh - 2, ww, 2, '#ff9ac4'); R(x, y, 2, hh, '#ff9ac4'); R(x + ww - 2, y, 2, hh, '#ff9ac4'); R(x + 2, y + 2, ww - 4, hh - 4, 'rgba(255,150,200,.18)'); R(x + 2, y + 2, ww - 4, 1, g ? '#ffffff' : '#ffd6e6'); }
 
 /* ===== TOWER: функция рядом с extractor/etalon, рисует Башню снов на слоте 2×2; on = [верхний луч, правый верхний, правый нижний, левый нижний, левый верхний] ===== */
   function tower(x, y, w, h, on, cd) {
