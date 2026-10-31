@@ -3,6 +3,7 @@
 // RATES=1 also prints income at every minute. STRAT=random picks cards, targets and shop cards at random, like a player who does not think;
 // STRAT=semi picks a random card but puts it where it earns most, and buys random shop cards;
 // STRAT=smart is the usual bot that also collects pairs towards a Triple (3 same cards on one worker or machine).
+// The usual bot tries every card of the showcase at its best place and buys the one that adds most (SHOPPICK=cheap: the cheapest, the old bot).
 // SHOP=n caps showcase purchases per break (default 30, i.e. until the money runs out, like a player who keeps refreshing).
 // ROUTE=10,11,12,13,14 opens these alternative workshops instead of the main ones on their tabs (garden, glaciers, bakery, dreams, living room);
 // Every run also prints the share of workshops 1–5 in the income summed over the run (sampled every 10 s); shut workshops are never opened again.
