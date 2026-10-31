@@ -1542,7 +1542,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     { id: 'nocrate', name: 'Без посылок', desc: 'Победить, не открыв ни одной посылки', test: () => state.run.won && !rst('crate'), reward: ['u_sub', 'w_kaneki'] },
     { id: 'fewhands', name: 'Малая бригада', desc: 'Победить, наняв не больше 5 сотрудников', test: () => state.run.won && state.run.hired <= 5, reward: ['w_thoth', 'e_loner', 'u_union'] },
     { id: 'allchecks', name: 'Все проверки', desc: 'Победить, пройдя все 5 видов проверок за забег', test: () => state.run.won && CHECKS5.every(id => state.run.passed.includes(id)), prog: () => lim(CHECKS5.filter(id => state.run.passed.includes(id)).length, 5), reward: ['w_spaghetti', 'e_mirror', 'e_shadow'] },
-    { id: 'speedrun', name: 'Скоростной план', desc: 'Победить быстрее чем за 25 минут', test: () => state.run.won && state.run.t <= 1500, reward: ['w_alien', 'u_overtime', 'e_chainsaw'] },
+    { id: 'speedrun', name: 'Скоростной план', desc: 'Победить быстрее чем за 27 минут', test: () => state.run.won && state.run.t <= 1620, reward: ['w_alien', 'u_overtime', 'e_chainsaw'] },
     { id: 'wins3', name: 'Серия', desc: 'Победить 3 раза', test: () => meta.records.wins >= 3, prog: () => lim(meta.records.wins, 3), reward: ['w_silver', 'perk:tramp', 'e_horseshoe'] },
     { id: 'wins6', name: 'Заводской волк', desc: 'Победить 6 раз', test: () => meta.records.wins >= 6, prog: () => lim(meta.records.wins, 6), reward: ['w_arc', 'w_rebel', 's_gold', 'u_hyper'] },
     // directors: for now they only open, there is no play as one yet
