@@ -1275,11 +1275,14 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   // an older save lacks the new fields; whatever it already earned stays (its achievements pay their rewards again in syncRewards)
   for (const [k, v] of Object.entries(freshMeta())) if (meta[k] == null) meta[k] = v;
   meta.v = 2;
+  // the director of the Colonist achievement was first called «Колонист»: an opened one becomes Kerrigan
+  meta.dirs = [...new Set(meta.dirs.map(d => d === 'colonist' ? 'kerrigan' : d))]; if (meta.dir === 'colonist') meta.dir = 'kerrigan';
   let legacyRep = 0;
   function load() {
     if (BOT) return null;
     try {
       const s = migrate(JSON.parse(localStorage.getItem(KEY)));
+      if (s && s.run && s.run.dir === 'colonist') s.run.dir = 'kerrigan';
       // a save from the endless version is sold off: its level becomes starting reputation
       if (s && s.v === 8) { legacyRep = Math.min(40, s.level); meta.rep += legacyRep; saveMeta(); return null; }
       return s;
@@ -1308,9 +1311,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (!list.includes(id)) list.push(id);
     if (rw.startsWith('loc:')) for (const cid of CLOSED) if (CARDS[cid].type === 'machine' && MACH[CARDS[cid].machine].loc === +rw.slice(4) && !meta.open.includes(cid)) meta.open.push(cid);
   }
-  const DIRS = { barista: 'Бариста', shmadin: 'Шмадін', ceo: 'CEO of Nothing', colonist: 'Колонист' };
+  const DIRS = { barista: 'Бариста', shmadin: 'Шмадін', ceo: 'CEO of Nothing', kerrigan: 'Кериган' };
   const rewardName = rw => rw.startsWith('dir:') ? `директор ${DIRS[rw.slice(4)]}` : rw.startsWith('perk:') ? ({ dog: 'Старый друг: Пёс Бро с первой минуты', tramp: 'Бывалый: эпический сотрудник с первой минуты' })[rw.slice(5)] : rw.startsWith('loc:') ? `цех «${LOCS[+rw.slice(4)].name}»` : CARDS[rw].type === 'worker' ? WORKERS[CARDS[rw].worker].name : CARDS[rw].name;
-  const lockHint = key => { const a = ACH.find(x => (x.reward || []).includes(key)); return a ? `Челлендж «${a.name}»: ${a.desc}` : 'Откроется позже'; };
+  const lockHint = key => { const a = ACH.find(x => (x.reward || []).includes(key)); return a ? `Достижение «${a.name}»: ${a.desc}` : 'Откроется позже'; };
   function newRun() {
     const s = fresh();
     if (hasUnlock('cap')) s.money = 150;
@@ -1549,7 +1552,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     { id: 'win', name: 'Шмадін', desc: 'Выиграть забег', test: () => state.run.won, reward: ['dir:shmadin'] },
     { id: 'coffee', name: 'Кофемания', desc: '3 Крепких кофе у Мистера Жопосранчика и 3 у другого сотрудника', test: () => coffeeAt('mrp') >= 3 && Object.keys(state.workers).some(w => w !== 'mrp' && coffeeAt(w) >= 3), prog: () => [Math.min(coffeeAt('mrp'), 3) + Math.min(Math.max(0, ...Object.keys(state.workers).filter(w => w !== 'mrp').map(coffeeAt)), 3), 6], reward: ['dir:barista'] },
     { id: 'quit29', name: 'Принять поражение', desc: 'Сдаться на 29-й квоте', test: () => rst('quitQ') === 29, reward: ['dir:ceo'] },
-    { id: 'colonist', name: 'Колонист', desc: 'Открыть все цеха обоих маршрутов и все станки в них', test: () => COLONY().every(k => meta.open.includes(k)), prog: () => [COLONY().filter(k => meta.open.includes(k)).length, COLONY().length], reward: ['dir:colonist'] }
+    { id: 'colonist', name: 'Колонист', desc: 'Открыть все цеха обоих маршрутов и все станки в них', test: () => COLONY().every(k => meta.open.includes(k)), prog: () => [COLONY().filter(k => meta.open.includes(k)).length, COLONY().length], reward: ['dir:kerrigan'] }
   ];
   // everything an earned challenge opens is granted again at every start, so a save from before the rewards loses nothing
   function syncRewards() { for (const a of ACH) if (meta.ach.includes(a.id)) (a.reward || []).forEach(grant); }
@@ -2505,7 +2508,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
     if (!got.length) return;
     saveMeta();
     const rw = got.flatMap(a => a.reward || []);
-    toast(got.length > 1 ? `Челленджи: ${got.length}!${rw.length ? ` Открыто: ${rw.length}` : ''}` : `Челлендж «${got[0].name}»${rw.length ? `: открыто ${rw.map(rewardName).join(', ')}` : ''}`);
+    toast(got.length > 1 ? `Достижения: ${got.length}!${rw.length ? ` Открыто: ${rw.length}` : ''}` : `Достижение «${got[0].name}»${rw.length ? `: открыто ${rw.map(rewardName).join(', ')}` : ''}`);
   }
 
   /* ================= drawing ================= */
@@ -3371,6 +3374,23 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   const sprOf = id => id === 'mrp' && state.workers.mrp.equip.includes('e_coffee') ? SPR.mrpCoffee : id === 'silver' && skillOn('silver') ? SPR.silverWolf : id === 'kaneki' && skillOn('kaneki') ? SPR.kanekiGhoul
     : id === 'kast' && skillOn('kast') ? SPR['kast_' + (state.workers.kast.skKind || 'power')] : id === 'thief' && friends('thief').some(f => WORKERS[f].she) ? SPR.thiefPink : SPR[id];
   const border = (x, y, w, h, col) => { R(x - 2, y - 2, w + 4, 2, col); R(x - 2, y + h, w + 4, 2, col); R(x - 2, y, 2, h, col); R(x + w, y, 2, h, col); };
+  // grades of Pairs and Triples by the multiplier: bronze ×2, silver ×4, gold ×8, double gold ×16 and more; [main colour, light colour, level]
+  const GRADE = [['#c8793e', '#f0b47a', 1], ['#9fb8d4', '#e6f0fb', 2], ['#f2c14e', '#fff1b0', 3], ['#f2c14e', '#fff6d6', 4]];
+  const gradeOf = m => m >= 16 ? GRADE[3] : m >= 8 ? GRADE[2] : m >= 4 ? GRADE[1] : m >= 2 ? GRADE[0] : null;
+  // a machine's total multiplier from Pairs and Triples on it and in its worker's locker
+  const slotX = s => sameX(s.upg) * (s.worker ? sameX(state.workers[s.worker].equip) : 1);
+  const withA = (hex, a) => hex + Math.round(a * 255).toString(16).padStart(2, '0');
+  // a still frame round the whole slot over its yellow corners (thicker from silver up, at ×16 a second gold line takes the slot's own edge)
+  // and a calm oval of light under the machine that breathes slowly (about 5 s)
+  function halo(x, y, ww, hh, gr, i) {
+    const lv = gr[2], fr = (k, col) => { R(x + k, y + k, ww - 2 * k, 1, col); R(x + k, y + hh - 1 - k, ww - 2 * k, 1, col); R(x + k, y + k, 1, hh - 2 * k, col); R(x + ww - 1 - k, y + k, 1, hh - 2 * k, col); };
+    fr(2, gr[0]);
+    if (lv >= 2) fr(3, withA(gr[1], lv >= 3 ? 0.9 : 0.5));
+    if (lv >= 4) { fr(0, gr[0]); fr(1, withA(gr[1], 0.9)); }
+    const a = 0.22 + 0.04 * lv + 0.1 * Math.sin(t * 1.25 + i), cx = x + 52, cy = y + 49;
+    for (let dy = -4; dy <= 4; dy++) { const hw = Math.round(22 * Math.sqrt(1 - (dy / 4.6) ** 2)); R(cx - hw, cy + dy, hw * 2, 1, withA(gr[0], a)); }
+    for (let dy = -2; dy <= 2; dy++) { const hw = Math.round(13 * Math.sqrt(1 - (dy / 2.8) ** 2)); R(cx - hw, cy + dy, hw * 2, 1, withA(gr[1], a * 0.7)); }
+  }
 
   const VCOL = ['#e0533a', '#f2c14e', '#7ee081', '#4f8fd6', '#9b6bd6', '#ff8fc8', '#3fd0c9'];
   const VCOL_A = ['rgba(224,83,58,.13)', 'rgba(242,193,78,.13)', 'rgba(126,224,129,.12)', 'rgba(79,143,214,.14)', 'rgba(155,107,214,.14)', 'rgba(255,143,200,.13)'];
@@ -4663,6 +4683,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
 
       if (!s.machine) { const pc = LT.plates ? 'rgba(255,255,255,.45)' : '#b2a99c'; R(x + ww / 2 - 1, y + hh / 2 - 7, 2, 14, pc); R(x + ww / 2 - 7, y + hh / 2 - 1, 14, 2, pc); }
       else {
+        const gr = gradeOf(slotX(s));
+        if (gr && !big) halo(x, y, ww, hh, gr, i);
         if (MACH[s.machine].counter && ww !== SW) counter(x, y, ww, hh, s.machine);
         else if (s.machine === 'dreamtower' && big) { const ok = j => !!(sl[j].machine && sl[j].worker); tower(x, y, ww, hh, [ok(0) && ok(1) && ok(3) && ok(4), ok(4), ok(3), ok(1), ok(0)], state.run.beamCd ?? 1); }
         else if (s.machine === 'fleshdesk' && big) { const ea = state.run.eaten || []; desk(x, y, ww, hh, ea.length, state.run.eatAt, ea[ea.length - 1]); }
@@ -4670,14 +4692,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
         else if (s.machine === 'etalon' && ww !== SW) etalon(x, y, ww, hh, slotStats(l, i, gg).etN);
         else machine(s.machine, x + 36, y + 18);
         if ((s.worker || MACH[s.machine].auto || (allyAt && allyAt.l === l && allyAt.i === i) || noodleAt(l, i)) && s.machine !== 'belt' && !big) pile(x + 52, y + 63, 1 + Math.floor((t * 0.3 + i) % 3), LT.item);
-        // the same cards of a Pair or a Triple on the machine get a frame: white for a Pair, blinking cyan for a Triple
-        const same = trioOf(s.upg) || pairOf(s.upg), fc = trioOf(s.upg) ? (Math.floor(t * 4) % 2 ? '#6ff0ff' : '#ffffff') : '#ffffff';
-        s.upg.forEach((u, k) => { R(x + 4 + k * 5, y + 4, 4, 6, u === same ? fc : K); R(x + 5 + k * 5, y + 5, 2, 4, RAR_COL[CARDS[u].rar]); });
-        // a Triple on the machine: a cyan glow on the slot and cyan sparks circling the machine
-        if (trioOf(s.upg) && !big) {
-          border(x + 4, y + 4, ww - 8, hh - 8, `rgba(111,240,255,${(0.35 + 0.3 * Math.sin(t * 5 + i)).toFixed(2)})`);
-          for (let k = 0; k < 5; k++) { const a = t * 2.5 + k * Math.PI * 2 / 5; R(x + 52 + Math.round(Math.cos(a) * 20), y + 34 + Math.round(Math.sin(a) * 12), 2, 2, k % 2 ? '#6ff0ff' : '#e9fff8'); }
-        }
+        // card icons keep the plain outline: a Pair or a Triple shows only in the slot's grade frame
+        s.upg.forEach((u, k) => { R(x + 4 + k * 5, y + 4, 4, 6, K); R(x + 5 + k * 5, y + 5, 2, 4, RAR_COL[CARDS[u].rar]); });
       }
       if (dblAt && dblAt.l === l && dblAt.i === i && !s.worker) gx.drawImage(SPR.arcDouble, x + 6, y + 40 - Math.floor(t * 2 + i) % 2);
       else if (allyAt && allyAt.l === l && allyAt.i === i && !s.worker) gx.drawImage(SPR.rebelAlly, x + 6, y + 40 - Math.floor(t * 2 + i) % 2);
@@ -4696,17 +4712,11 @@ textarea{height:84px;resize:vertical;word-break:break-all}
           const f = skillBar(s.worker)[1];
           R(x + 5, y + hh - 5, 25, 3, K); R(x + 6, y + hh - 4, Math.round(23 * f), 1, on ? '#ffd54a' : '#6fa3b5');
         }
-        // a Triple in the worker's locker: the slot glows gold and gold sparks rise around the machine; a Pair: a faint gold frame.
-        // With a Pair or Triple on the machine as well the glow runs through the rainbow and the sparks double
-        const both = sameX(s.upg) > 1, hue = (t * 120 + i * 40) % 360;
-        if (pairOf(w.equip) && !both) border(x + 2, y + 2, ww - 4, hh - 4, 'rgba(255,213,74,.35)');
-        if (trioOf(w.equip) || (pairOf(w.equip) && both)) {
-          border(x + 2, y + 2, ww - 4, hh - 4, both ? `hsla(${hue},95%,65%,${(0.6 + 0.3 * Math.sin(t * 6 + i)).toFixed(2)})` : `rgba(255,213,74,${(0.5 + 0.35 * Math.sin(t * 4 + i)).toFixed(2)})`);
-          for (let k = 0; k < (both ? 12 : 6); k++) {
-            const ph = (t * 0.7 + k / 6) % 1, sx = x + 8 + (k * 23) % (ww - 16), sy = y + hh - 8 - Math.round(ph * (hh - 18)), c = both ? `hsl(${(hue + k * 30) % 360},95%,70%)` : k % 2 ? '#ffd54a' : '#fff1b0';
-            if (ph > 0.8 && Math.floor(t * 8 + k) % 2) continue;
-            R(sx, sy, 1, 1, c); if (ph < 0.6) { R(sx - 1, sy, 3, 1, c); R(sx, sy - 1, 1, 3, c); }
-          }
+        // a Pair or a Triple: now and then the worker strikes a few small sparks of the slot's grade (one for bronze, up to four at ×16)
+        const sx = slotX(s), wg = gradeOf(sx);
+        if (wg && !state.run.brk) {
+          const n = wg[2], per = [4, 3, 2.2, 1.8][n - 1], ph = ((t + i * 0.9) % per) / 0.8;
+          if (ph < 1) for (let k = 0; k < n; k++) R(x + 24 + k * 3 + Math.round(ph * (3 + k * 2)), wy + 14 - Math.round(ph * (8 + k * 3)), 1, 1, k % 2 ? wg[1] : wg[0]);
         }
       }
     });
@@ -4795,7 +4805,9 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       R(x + 2, y + 4, 22, 16, w && w.unlocked ? '#f3e9d2' : '#cfc6b6');
       if (w && w.unlocked) {
         gx.drawImage(SPR[id], PORTRAIT_X[id] || 0, PORTRAIT_Y[id], 20, 14, x + 3, y + 5, 20, 14); R(x + 12, y + 3, 2, 2, '#e0533a');
-        if (trioOf(w.equip) || pairOf(w.equip)) border(x + 3, y + 5, 20, 14, trioOf(w.equip) ? '#ffd54a' : 'rgba(255,213,74,.45)');
+        // a Pair or a Triple in the locker: a thin frame round the photo and a little medal of its grade, both still
+        const lg = gradeOf(sameX(w.equip));
+        if (lg) { R(x + 2, y + 4, 22, 1, lg[0]); R(x + 2, y + 19, 22, 1, lg[0]); R(x + 2, y + 4, 1, 16, lg[0]); R(x + 23, y + 4, 1, 16, lg[0]); R(x + 2, y + 21, 6, 6, K); R(x + 3, y + 22, 4, 4, lg[0]); R(x + 3, y + 22, 2, 1, lg[1]); R(x + 3, y + 22, 1, 2, lg[1]); }
         const wp = workerPlace(id);
         if (w.skill && (!skillOn(id) || Math.floor(t * 4) % 2)) { R(x + 18, y + 35, 3, 3, '#ffd54a'); R(x + 17, y + 38, 3, 3, '#ffd54a'); }
         if (wp) { R(x + 3, y + 34, 13, 7, K); R(x + 4, y + 35, 11, 5, LOCS[wp.l].item); }
@@ -4841,8 +4853,8 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       else if (!s.worker && !(st && st.income > 0)) T('НЕТ РАБОТНИКА', x + ww - 4, y + 11, 6, '#ffb3a6', 'right');
       else T('+' + fmt(st.income) + '/с', x + ww - 4, y + 11, 6, '#7ee081', 'right');
       // Pairs and Triples on the machine and in its worker's locker: their total multiplier under the card icons
-      const sx = sameX(s.upg) * (s.worker ? sameX(state.workers[s.worker].equip) : 1);
-      if (sx > 1) T('×' + fmt(sx), x + 4, y + 12, 6, sameX(s.upg) > 1 && s.worker && sameX(state.workers[s.worker].equip) > 1 ? `hsl(${(performance.now() / 8) % 360},95%,72%)` : sameX(s.upg) >= BAL.trio ? '#6ff0ff' : '#ffd54a');
+      const sx = slotX(s);
+      if (sx > 1) T('×' + fmt(sx), x + 4, y + 12, 6, gradeOf(sx)[1]);
     });
     if (l === 3 && state.locs[3].unlocked) { T('ГОРН', colX(1) + SW / 2, rowY(1) + SH - 6, 6, '#fff1b0', 'center'); T('+20% СКОР.', colX(1) + SW / 2, rowY(1) + 1, 5, '#ffd76a', 'center'); }
     if (crate) T(crate.kind === 'gold' ? 'ЗОЛОТАЯ' : crate.kind === 'card' ? 'С КАРТОЙ' : 'ПОСЫЛКА', crateX() + 7, FL - 26, 6, crate.kind === 'card' ? '#d9b8ff' : '#fff1b0', 'center');
@@ -5148,7 +5160,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   const mmss = sec => `${Math.floor(sec / 60)}:${String(Math.floor(sec % 60)).padStart(2, '0')}`;
   // two columns when comparing with a friend: theirs first, ours second
   function recordsHTML(r, achN, mine) {
-    const rows = [['Забегов', r.runs, v => v], ['Побед', r.wins, v => v], ['Лучшая квота', r.bestQuota, v => v], ['Заработано за забег', r.bestEarned, fmt], ['Доход в секунду', r.bestRate, v => fmt(v) + '/с'], ['Стекло открыто на', r.fastestGlass, v => v ? mmss(v) : '—'], ['Челленджи', achN, v => `${v} из ${ACH.length}`]];
+    const rows = [['Забегов', r.runs, v => v], ['Побед', r.wins, v => v], ['Лучшая квота', r.bestQuota, v => v], ['Заработано за забег', r.bestEarned, fmt], ['Доход в секунду', r.bestRate, v => fmt(v) + '/с'], ['Стекло открыто на', r.fastestGlass, v => v ? mmss(v) : '—'], ['Достижения', achN, v => `${v} из ${ACH.length}`]];
     const mv = mine ? [mine.runs, mine.wins, mine.bestQuota, mine.bestEarned, mine.bestRate, mine.fastestGlass, meta.ach.length] : [];
     return `<ul class="list">${rows.map(([name, v, f], k) => `<li><span>${name}</span><span class="val">${f(v || 0)}${mine ? ` <span class="muted">· у тебя ${f(mv[k] || 0)}</span>` : ''}</span></li>`).join('')}</ul>`;
   }
@@ -5169,7 +5181,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   function menuHTML() {
     const run = state.run;
     const quit = confirmQuit ? '<p>Сдаться и закончить забег? Репутацию за пройденные квоты ты получишь.</p><div class="row"><button class="btn danger" type="button" data-act="quit-yes">Да, сдаться</button><button class="btn" type="button" data-act="quit-no">Отмена</button></div>'
-      : `<div class="row"><button class="btn" type="button" data-act="back">Назад</button><button class="btn" type="button" data-act="ach">Челленджи ${meta.ach.length}/${ACH.length}</button><button class="btn" type="button" data-act="friends">Друзья</button>${guest || run.over ? '' : '<button class="btn danger" type="button" data-act="quit">Сдаться</button>'}</div>`;
+      : `<div class="row"><button class="btn" type="button" data-act="back">Назад</button><button class="btn" type="button" data-act="ach">Достижения ${meta.ach.length}/${ACH.length}</button><button class="btn" type="button" data-act="friends">Друзья</button>${guest || run.over ? '' : '<button class="btn danger" type="button" data-act="quit">Сдаться</button>'}</div>`;
     return `<h2>Меню</h2><p class="muted">Забег: квота ${run.q}, идёт ${mmss(run.t)}, заработано ${fmt(state.earned)}. Прогресс сохраняется в этом браузере. Пока игра закрыта, время забега стоит.</p>${quit}<h3>Рекорды</h3>${recordsHTML(meta.records, meta.ach.length)}${unlocksHTML()}`;
   }
   // the menu list of challenges: progress (2/3) and what each one opens
@@ -5178,7 +5190,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       const d = meta.ach.includes(a.id), [n, m] = d ? [1, 1] : a.prog ? a.prog() : [0, 1], rw = (a.reward || []).map(rewardName).join(', ');
       return `<li class="${d ? 'done' : ''}"><span><b>${a.name}</b><small>${a.desc}</small>${rw ? `<small>Награда: ${rw}</small>` : ''}</span><span class="val ${d ? 'on' : ''}">${d ? '✓' : `${fmt(n)}/${fmt(m)}`}</span></li>`;
     };
-    return `<h2>Челленджи</h2><p class="muted">Каждый открывает навсегда карты, цеха или директоров. Прогресс «за забег» считается по текущему забегу. Репутацию они не дают, она идёт только за забег.</p><ul class="list">${ACH.map(row).join('')}</ul><div class="row"><button class="btn" type="button" data-act="coll">Коллекция</button><button class="btn" type="button" data-act="menu">Назад</button></div>`;
+    return `<h2>Достижения</h2><p class="muted">Каждый открывает навсегда карты, цеха или директоров. Прогресс «за забег» считается по текущему забегу. Репутацию они не дают, она идёт только за забег.</p><ul class="list">${ACH.map(row).join('')}</ul><div class="row"><button class="btn" type="button" data-act="coll">Коллекция</button><button class="btn" type="button" data-act="menu">Назад</button></div>`;
   }
   // closed content as silhouettes with a hint; shown in the menu's collection and at the end of the deck
   function lockedHTML2() {
@@ -5187,7 +5199,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
       const loc = k.startsWith('loc:'), name = loc ? `Цех «${LOCS[+k.slice(4)].name}»` : '???', img = loc ? '' : `<img src="${ICONS[k]}" alt="" style="filter:brightness(0) opacity(.55)">`;
       return `<li><span><span class="chip" style="--rc:var(--muted)">${img}${name}</span><small>${lockHint(k)}</small></span></li>`;
     };
-    return `<p class="muted">Закрыто карт и цехов: ${LOCK_KEYS.filter(isLocked).length} из ${LOCK_KEYS.length}. Они не выпадают, пока не открыт челлендж.</p><ul class="list">${keys.map(one).join('') || '<li><span class="muted">Всё открыто</span></li>'}</ul>`;
+    return `<p class="muted">Закрыто карт и цехов: ${LOCK_KEYS.filter(isLocked).length} из ${LOCK_KEYS.length}. Они не выпадают, пока не получено достижение.</p><ul class="list">${keys.map(one).join('') || '<li><span class="muted">Всё открыто</span></li>'}</ul>`;
   }
   function collHTML() {
     const dirs = Object.keys(DIRS).map(id => `<li class="${meta.dirs.includes(id) ? 'done' : ''}"><span><b>Директор ${DIRS[id]}</b><small>${meta.dirs.includes(id) ? 'Открыт' : lockHint('dir:' + id)}</small></span></li>`).join('');
