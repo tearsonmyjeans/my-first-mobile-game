@@ -9,6 +9,7 @@
 // Every run also prints the share of workshops 1–5 in the income summed over the run (sampled every 10 s); shut workshops are never opened again.
 // A run is won when quota BAL.winQ (or a later one) is passed with workshop 10 open; the bot prints the quota and minute of every win
 // and, after all runs, a summary: mean quota passed, win share, mean minute each workshop opened (and how often), mean run length. JSONL=1 also prints every run as JSON.
+// OPEN sets the open content (see docs/cards.md): none (default, the pool of a new player), all, a share like 0.5 of the closed cards and workshops picked at random, or a list of ids ('w_tramp,loc:10'); workshops from ROUTE are opened too.
 // COUNTER=cake|hot is the bakery's counter (default cake), DEBUG=1 prints the bakery's slots and its orders given and done. The bot aims the dream tower's beam and feeds the living room when it pays.
 const { chromium } = require('playwright');
 const RUNS = +process.argv[2] || 8, UNL = process.argv[3] || '', BAL = JSON.parse(process.argv[4] || '{}'), COSTS = JSON.parse(process.argv[5] || 'null');
@@ -18,10 +19,17 @@ const RUNS = +process.argv[2] || 8, UNL = process.argv[3] || '', BAL = JSON.pars
   await p.goto('file://' + require('path').resolve(__dirname, '../game/index.html') + '#bot');
   const res = [];
   for (let r = 0; r < RUNS; r++) {
-    res.push(await p.evaluate(([unl, bal, costs, cheap, rnd, semi, smart, shopMax, route, counter]) => {
+    res.push(await p.evaluate(([unl, bal, costs, cheap, rnd, semi, smart, shopMax, route, counter, open]) => {
       const P = window.PF;
       Object.assign(P.BAL, bal); if (costs) costs.forEach((c, l) => { P.LOCS[l].cost = c; });
       P.meta.unlocks = unl ? unl.split(',') : [];
+      // the open content: none (the pool a new player starts with), all, a share 0..1 of the closed cards and workshops picked at random, or a list of ids
+      const keys = P.LOCK_KEYS.slice().sort(() => Math.random() - 0.5);
+      P.meta.open = [];
+      if (open === 'all') keys.forEach(k => P.grant(k));
+      else if (open && !isNaN(+open)) keys.slice(0, Math.round(keys.length * +open)).forEach(k => P.grant(k));
+      else if (open && open !== 'none') open.split(',').forEach(k => P.grant(k));
+      route.forEach(l => P.grant('loc:' + l));
       P.state = P.newRun();
       const clone = o => JSON.parse(JSON.stringify(o));
       const inc = () => P.totalIncome();
@@ -179,7 +187,7 @@ const RUNS = +process.argv[2] || 8, UNL = process.argv[3] || '', BAL = JSON.pars
       const share = [5, 6, 7, 8, 9].map(k => st.locs[locOf(k)].unlocked ? Math.round(byLoc[locOf(k)] / all * 100) : null);
       return { won: !!st.run.won, oldShare: (log.incOld || 0) / (log.incAll || 1), debug: [st.locs[12].slots.map(z => z.machine + ':' + z.worker), log.kinds, log.done], share, orders: log.orders, ordersDone: log.ordersDone, eaten: (st.run.eaten || []).length, passed: st.run.q - 1, end: Math.round(st.run.t), opened: log.opened, quotaAt: log.quotaAt, cards: st.cards.length, level: st.level, earned: st.earned, rate: st.run.bestRate, rateAt: log.rateAt, crateShare: log.crate / st.earned, skills: st.run.skills, maxEq: Math.max(...Object.values(st.workers).map(w => w.equip.length)), maxUpg: Math.max(...st.locs.flatMap(L => L.slots.map(z => z.upg.length))),
         trios: [...Object.values(st.workers).map(w => w.equip), ...st.locs.flatMap(L => L.slots.map(z => z.upg))].filter(a => a.some(c => a.filter(x => x === c).length >= 3)).length };
-    }, [UNL, BAL, COSTS, process.env.SHOPPICK === 'cheap', process.env.STRAT === 'random', process.env.STRAT === 'semi', process.env.STRAT === 'smart', +process.env.SHOP || 30, (process.env.ROUTE || '').split(',').filter(Boolean).map(Number), process.env.COUNTER || 'cake']));
+    }, [UNL, BAL, COSTS, process.env.SHOPPICK === 'cheap', process.env.STRAT === 'random', process.env.STRAT === 'semi', process.env.STRAT === 'smart', +process.env.SHOP || 30, (process.env.ROUTE || '').split(',').filter(Boolean).map(Number), process.env.COUNTER || 'cake', process.env.OPEN || 'none']));
     const x = res[res.length - 1];
     console.log(`run ${r + 1}: квот ${x.passed}, конец ${Math.floor(x.end / 60)}:${String(x.end % 60).padStart(2, '0')}, цеха ${x.opened.map(v => v == null ? '—' : Math.round(v / 6) / 10).join('/')} мин, карт ${x.cards}, ур ${x.level}, доход ${Math.round(x.rate)}/с, скиллов ${x.skills}, max карт на сотруднике/станке ${x.maxEq}/${x.maxUpg}, троек ${x.trios},${x.orders ? ` заказов ${x.ordersDone}/${x.orders},` : ''}${x.eaten ? ` съедено ${x.eaten},` : ''} доля цехов 6–10 ${x.share.map(v => v == null ? '—' : v + '%').join('/')}, посылки ${Math.round(x.crateShare * 100)}% денег, цеха 1–5 ${Math.round(x.oldShare * 100)}% дохода, квоты на ${x.quotaAt.map(v => Math.round(v / 6) / 10).join(' ')}`);
     if (x.won) console.log(`  ПОБЕДА на квоте ${x.passed}, ${Math.floor(x.end / 60)}:${String(x.end % 60).padStart(2, '0')}`);
