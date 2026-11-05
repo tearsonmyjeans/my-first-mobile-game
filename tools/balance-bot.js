@@ -68,7 +68,7 @@ const RUNS = +process.argv[2] || 8, UNL = process.argv[3] || '', BAL = JSON.pars
         if (cd.type === 'machine') return slotsAll(st).filter(({ l, i, s }) => !s.machine && (cl < 0 || cl === l) && P.slotOk(l, i, cd.machine) && !(cd.machine === 'belt' && st.locs[l].slots.some(z => z.machine === 'belt'))).map(({ l, i }) => ({ l, i }));
         if (cd.type === 'mupg') return slotsAll(st).filter(({ l, s }) => P.upgOk(s) && (cl < 0 || cl === l)).map(({ l, i }) => ({ l, i }));
         if (cd.type === 'equip') return Object.keys(st.workers).filter(w => st.workers[w].unlocked);
-        if (cd.type === 'skill') return Object.keys(st.workers).filter(w => st.workers[w].unlocked && (!st.workers[w].skill || (st.workers[w].skL || 1) < 3) && P.workerPlace(w));
+        if (cd.type === 'skill') return Object.keys(st.workers).filter(w => st.workers[w].unlocked && (!st.workers[w].skill || (st.workers[w].skL || 1) < 2) && P.workerPlace(w));
         return [undefined];
       }
       const any = a => a[Math.floor(Math.random() * a.length)];
@@ -153,7 +153,8 @@ const RUNS = +process.argv[2] || 8, UNL = process.argv[3] || '', BAL = JSON.pars
       // save up for the next workshop when it is less than a minute of income away
       const saving = () => { const n = nextLoc(); return n && (P.LOCS[n].cost - P.state.money) < inc() * 60; };
       function unlockNext() { const n = nextLoc(); if (n && P.state.money >= P.LOCS[n].cost) { P.unlockLoc(n); if (n === 12) P.state.run.counter = counter; log.opened[tabOfLoc(n)] = Math.round(P.state.run.t); optimize(3); } }
-      function buySkills() { const s2 = P.state; if (P.skillLocked()) return; for (const w in P.SKILLS) { const ws = s2.workers[w]; if (ws.unlocked && !ws.skill && P.workerPlace(w) && s2.money >= P.skillCost(w) * 2) { s2.money -= P.skillCost(w); ws.skill = true; ws.skT = 0; s2.run.skills++; } else if (ws.skill && (ws.skL || 1) < 3 && P.workerPlace(w) && s2.money >= P.skillUpCost(w) * 2) { s2.money -= P.skillUpCost(w); ws.skL = 2; } } }
+      // levels: the bot takes a skill to level 2 at most; buying level 3 for coins (4 skill prices) ate the money for workshops and halved its quota
+      function buySkills() { const s2 = P.state; if (P.skillLocked()) return; for (const w in P.SKILLS) { const ws = s2.workers[w]; if (ws.unlocked && !ws.skill && P.workerPlace(w) && s2.money >= P.skillCost(w) * 2) { s2.money -= P.skillCost(w); ws.skill = true; ws.skT = 0; s2.run.skills++; } else if (ws.skill && (ws.skL || 1) < 2 && P.workerPlace(w) && s2.money >= P.skillUpCost(w) * 2) { s2.money -= P.skillUpCost(w); ws.skL = 2; } } }
       // the break: time stands still, so the bot does all its shopping and thinking here
       function breakTurn() {
         while (P.state.offers.length) pickOffer();
