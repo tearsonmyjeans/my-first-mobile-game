@@ -1326,7 +1326,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   const DIR_INFO = {
     barista: { name: 'Бариста', perk: 'Крепкий кофе даёт +60% скорости вместо +30% и выпадает в выборе карт втрое чаще. Ворона и второй стартовый сотрудник приходят с кофе.', minus: 'сотрудники без кофе вялые, скорость ×0,85.' },
     shmadin: { name: 'Шмадін', perk: 'Бывший подопытный Эталона. Перед первой сменой — выбор карты мастерства, за каждую пройденную проверку — лишний выбор карты.', minus: 'проверка каждую 2-ю квоту, а не каждую 3-ю.' },
-    ceo: { name: 'CEO of Nothing', perk: 'Золотой парашют: один раз за забег проваленная квота не банкротит, забег идёт дальше, но деньги на руках сгорают. Забег начинается с +300 монетами.', minus: 'квоты ×1,15.' },
+    ceo: { name: 'CEO of Nothing', perk: 'Золотой парашют: один раз за забег проваленная квота не банкротит, забег идёт дальше, но деньги на руках сгорают. Забег начинается с +300 монетами.', minus: 'квоты ×1,25.' },
     kerrigan: { name: 'Кериган', perk: 'Фирменный легендарный станок «Улей»: с начала забега стоит в цеху досок. Доход за штуку в полтора раза больше, чем у лучшего станка его цеха, за каждую отработанную смену ещё +20% (до +100%), соседям +20% скорости. Переползает в любой цех, а при закрытии цеха сам переезжает в новый.', minus: 'витрина на 25% дороже.' }
   };
   const DIRS = Object.fromEntries(Object.entries(DIR_INFO).map(([k, v]) => [k, v.name]));
@@ -1367,7 +1367,7 @@ textarea{height:84px;resize:vertical;word-break:break-all}
   // xp/shop/quota grow geometrically, every levelEvery-th level gives a card, crates come every crate..2×crate seconds;
   // a crate holds a share of the quota: plain crateQ, gold crateGoldQ (chance crateGold), or a card pick (chance crateCard);
   // crates pay at most crateCap of the quota a shift, so they help but never carry it; from shift skillCoinQ skills are opened only by cards
-  const BAL = { storm: 20, stormEvery: 2, beam: 0.6, beamNear: 0.2, beamCd: 8, orderBatch: [100, 4], orderDouble: [15, 1], orderHall: 20, orderPay: [0.04, 0.06], tempo: 2, machW: 3, xp0: 15, xpK: 2, levelEvery: 3, shopQ: 0.3, shopRoll: 1, rarPrice: [0.6, 1, 1.6, 2.4], masteryEvery: 9, crate: 20, crateQ: [0.02, 0.06], crateGoldQ: [0.08, 0.12], crateGold: 0.1, crateCard: 0.05, quotaT: 45, quota0: 200, quota1: 60, quotaK: 1.5, quotaA: 1.06, quotaMax: 99, quotaE: 0.9, quotaEFrom: 6, winQ: 30, winRep: 30, skill2: 1.5, skillUp: 2, ceoQ: 1.15, kerriganShop: 1.25, comboW: 2.5, pair: 2, crateCap: 0.3, shopE: 0.2, skillCoinQ: 10, cap: 3, trio: 4, add: true, sq: 1.4, subCap: 0.6 };
+  const BAL = { storm: 20, stormEvery: 2, beam: 0.6, beamNear: 0.2, beamCd: 8, orderBatch: [100, 4], orderDouble: [15, 1], orderHall: 20, orderPay: [0.04, 0.06], tempo: 2, machW: 3, xp0: 15, xpK: 2, levelEvery: 3, shopQ: 0.3, shopRoll: 1, rarPrice: [0.6, 1, 1.6, 2.4], masteryEvery: 9, crate: 20, crateQ: [0.02, 0.06], crateGoldQ: [0.08, 0.12], crateGold: 0.1, crateCard: 0.05, quotaT: 45, quota0: 200, quota1: 60, quotaK: 1.5, quotaA: 1.06, quotaMax: 99, quotaE: 0.9, quotaEFrom: 6, winQ: 30, winRep: 30, skill2: 1.5, skillUp: 2, ceoQ: 1.25, kerriganShop: 1.25, comboW: 2.5, pair: 2, crateCap: 0.3, shopE: 0.2, skillCoinQ: 10, cap: 3, trio: 4, add: true, sq: 1.4, subCap: 0.6 };
   const need = l => Math.round(BAL.xp0 * Math.pow(BAL.xpK, l - 1));
   // the showcase is priced off the quota just passed or off the last shift's earnings (shopE of them), whichever is more,
   // so a runaway income cannot make cards free
