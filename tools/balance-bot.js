@@ -65,7 +65,7 @@ const RUNS = +process.argv[2] || 8, UNL = process.argv[3] || '', BAL = JSON.pars
         if (cd.type === 'machine') return slotsAll(st).filter(({ l, i, s }) => !s.machine && (cl < 0 || cl === l) && P.slotOk(l, i, cd.machine) && !(cd.machine === 'belt' && st.locs[l].slots.some(z => z.machine === 'belt'))).map(({ l, i }) => ({ l, i }));
         if (cd.type === 'mupg') return slotsAll(st).filter(({ l, s }) => P.upgOk(s) && (cl < 0 || cl === l)).map(({ l, i }) => ({ l, i }));
         if (cd.type === 'equip') return Object.keys(st.workers).filter(w => st.workers[w].unlocked);
-        if (cd.type === 'skill') return Object.keys(st.workers).filter(w => st.workers[w].unlocked && !st.workers[w].skill && P.workerPlace(w));
+        if (cd.type === 'skill') return Object.keys(st.workers).filter(w => st.workers[w].unlocked && (!st.workers[w].skill || (st.workers[w].skL || 1) < 2) && P.workerPlace(w));
         return [undefined];
       }
       const any = a => a[Math.floor(Math.random() * a.length)];
@@ -75,8 +75,10 @@ const RUNS = +process.argv[2] || 8, UNL = process.argv[3] || '', BAL = JSON.pars
         let best = -1, choice = null;
         for (const id of ids) for (const tg of targets(id)) for (const d of P.isFull(id, tg) ? [...P.holder(id, tg).keys()] : [undefined]) {
           P.state = clone(orig); P.state.offers.shift();
-          const v0 = P.avgIncome();
+          const v0 = P.avgIncome(), had = P.CARDS[id].type === 'skill' && P.state.workers[tg].skill, s1 = had && P.skillShare(tg);
           P.finish(id, tg, d); optimize(1);
+          // a Master class on an open skill lifts it to level 2: worth the extra share of the cycle it is on
+          if (had) { const w = P.state.workers[tg], s2 = P.skillShare(tg); w.skT = 0; const on = P.avgIncome(); w.skill = false; const off = P.avgIncome(); w.skill = true; const v = v0 + (on - off) * (s2 - s1); if (v > best) { best = v; choice = [id, tg, d]; } continue; }
           // cards are judged by the mean income of a shift, since some of them change during it;
           // next-workshop machines and new workers pay off later: small bonus so they are not always skipped;
           // a skill works only part of its cycle, so its gain is averaged
@@ -146,7 +148,7 @@ const RUNS = +process.argv[2] || 8, UNL = process.argv[3] || '', BAL = JSON.pars
       // save up for the next workshop when it is less than a minute of income away
       const saving = () => { const n = nextLoc(); return n && (P.LOCS[n].cost - P.state.money) < inc() * 60; };
       function unlockNext() { const n = nextLoc(); if (n && P.state.money >= P.LOCS[n].cost) { P.unlockLoc(n); if (n === 12) P.state.run.counter = counter; log.opened[tabOfLoc(n)] = Math.round(P.state.run.t); optimize(3); } }
-      function buySkills() { const s2 = P.state; if (P.skillLocked()) return; for (const w in P.SKILLS) { const ws = s2.workers[w]; if (ws.unlocked && !ws.skill && P.workerPlace(w) && s2.money >= P.skillCost(w) * 2) { s2.money -= P.skillCost(w); ws.skill = true; ws.skT = 0; s2.run.skills++; } } }
+      function buySkills() { const s2 = P.state; if (P.skillLocked()) return; for (const w in P.SKILLS) { const ws = s2.workers[w]; if (ws.unlocked && !ws.skill && P.workerPlace(w) && s2.money >= P.skillCost(w) * 2) { s2.money -= P.skillCost(w); ws.skill = true; ws.skT = 0; s2.run.skills++; } else if (ws.skill && (ws.skL || 1) < 2 && P.workerPlace(w) && s2.money >= P.skillUpCost(w) * 2) { s2.money -= P.skillUpCost(w); ws.skL = 2; } } }
       // the break: time stands still, so the bot does all its shopping and thinking here
       function breakTurn() {
         while (P.state.offers.length) pickOffer();
