@@ -140,6 +140,16 @@ textarea{height:84px;resize:vertical;word-break:break-all}
 span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
 .pbar{display:block;height:6px;margin-top:5px;background:#110d17;border-radius:3px;overflow:hidden}
 .pbar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),#ffd76a)}
+.route.mini{grid-template-columns:repeat(10,minmax(0,1fr));gap:3px}
+.route.mini .rn{animation:none}
+.route.mini .rn::before{display:none}
+.route.mini .rn i{width:100%;height:14px;border-radius:3px;box-shadow:none}
+.route.mini .rn i::after{inset:4px}
+.route.mini .rn.end i::after{font-size:9px;inset:auto}
+.route.mini .rn.end i,.route.mini .rn.win i{animation:none;outline-width:2px}
+.list li.hist{justify-content:flex-start;align-items:flex-start}
+.hist img{width:36px;height:36px;image-rendering:pixelated;border-radius:4px;flex:none}
+.hist>span{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
 .dgrid{display:grid;grid-template-columns:minmax(0,1fr);gap:8px}
 .dcard{display:flex;gap:10px;align-items:flex-start;background:var(--panel2);border:2px solid var(--line);border-radius:10px;padding:9px}
 .dcard.sel{border-color:var(--gold);box-shadow:0 0 0 2px #f2c14e33}
@@ -804,6 +814,12 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
     u_hyper: { name: 'Гипер гипергамия', type: 'global', tag: 'Сотрудники', rar: 3, eff: {}, desc: 'Сила каждой сотрудницы как у самого сильного сотрудника завода, и ещё ×1,2.' },
     u_triad: { name: 'Друн триад', type: 'global', tag: 'Сотрудники', rar: 2, eff: {}, desc: 'Трое в соседних шкафчиках подряд в одном ряду: у всех троих сила и скорость ×1,3.' },
     s_veins: { name: 'Капилляры', type: 'mupg', tag: 'Улучшения', rar: 2, eff: {}, desc: 'Любой станок: связан и с соседями по диагоналям.' },
+    s_vent: { name: 'Вентиляция', type: 'mupg', tag: 'Улучшения', rar: 1, eff: {}, desc: 'Станок связан со всем своим столбцом: с каждым станком над и под ним.' },
+    // check rewards: never in the pool or the deck, offered after a passed check
+    b_bonus: { name: 'Премия инспектора', type: 'boon', tag: 'Проверка', rar: 1, desc: 'Сразу +15% квоты следующей смены монетами.' },
+    b_bet: { name: 'Пари с инспектором', type: 'boon', tag: 'Проверка', rar: 2, desc: 'Квота следующей смены ×1,3. Выполнишь — два выбора карты.' },
+    b_rare: { name: 'Конфискат', type: 'boon', tag: 'Проверка', rar: 3, desc: 'Выбор из эпических и легендарных карт.' },
+    b_time: { name: 'Отгул', type: 'boon', tag: 'Проверка', rar: 1, desc: 'Следующая смена на 10 с длиннее.' },
     s_banner: { name: 'Знамя', type: 'mupg', tag: 'Улучшения', rar: 1, eff: {}, desc: 'Все сотрудники цеха этого станка: +20% силы.' },
     s_sponge: { name: 'Губки 44', type: 'mupg', tag: 'Улучшения', rar: 1, eff: { value: 1.44 }, desc: 'Любой станок: цена +44%, а каждая 44-я штука ×4,4.' },
     u_zorya: { name: 'Зоря из Зорвеля', type: 'global', tag: 'Улучшения', rar: 2, timed: true, eff: {}, desc: 'Первые 20 с смены цена всего ×2. Пришельцы (Пришелец и Трёхглазик): +30% силы всю смену.' },
@@ -828,7 +844,7 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
     e_salve: { name: 'Мазь от ожогов', type: 'equip', tag: 'Экипировка', rar: 0, loc: 1, eff: {}, desc: 'У печи, стекловарки и стеклодувки сила ×1,5.' },
     // mastery cards never drop as usual cards: every masteryEvery-th level offers 1 of 3 of them, each once per run
     // the only way to open a skill from shift skillCoinQ on: every quota pick then offers one
-    k_skill: { name: 'Мастер-класс', type: 'skill', tag: 'Сотрудники', rar: 1, desc: 'Открывает скилл сотруднику на выбор, а открытый прокачивает до 2-го уровня: действует в 1,5 раза дольше.' },
+    k_skill: { name: 'Мастер-класс', type: 'skill', tag: 'Сотрудники', rar: 1, desc: 'Открывает скилл сотруднику на выбор, а открытый прокачивает на уровень: 2-й действует в 1,5 раза дольше, 3-й ещё и перезаряжается быстрее.' },
     x_speed: { name: 'Мастер скорости', type: 'global', tag: 'Мастерство', rar: 3, mastery: true, eff: { speed: 1.5 }, desc: 'Все сотрудники: скорость ×1,5.' },
     x_power: { name: 'Мастер силы', type: 'global', tag: 'Мастерство', rar: 3, mastery: true, eff: { power: 1.5 }, desc: 'Все сотрудники: сила ×1,5.' },
     x_luck: { name: 'Мастер удачи', type: 'global', tag: 'Мастерство', rar: 3, mastery: true, eff: {}, desc: 'Все сотрудники: удача +20%.' },
@@ -836,7 +852,7 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
     x_wholesale: { name: 'Оптовик', type: 'global', tag: 'Мастерство', rar: 3, mastery: true, eff: {}, desc: 'С первой витрины перерыва и с первой обновлённой можно купить по 2 карты.' },
     x_logistics: { name: 'Мастер логистики', type: 'global', tag: 'Мастерство', rar: 3, mastery: true, eff: {}, desc: 'Золотые посылки приходят в 3 раза чаще.' }
   };
-  const TYPE_LABEL = { machine: 'Станок', worker: 'Сотрудник', global: 'Для всех', equip: 'Экипировка', mupg: 'На станок', skill: 'Скилл' };
+  const TYPE_LABEL = { machine: 'Станок', worker: 'Сотрудник', global: 'Для всех', equip: 'Экипировка', mupg: 'На станок', skill: 'Скилл', boon: 'Награда' };
   const RAR = ['обычная', 'редкая', 'эпическая', 'легендарная'];
   const RAR_COL = ['#8a93a0', '#4f8fd6', '#9b6bd6', '#e0a32e'];
   const TAGS = {
@@ -1043,6 +1059,7 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
     squanch: r => { r(9, 0, 4, 7, K); r(10, 1, 2, 5, '#57b04f'); r(10, 1, 1, 5, '#8fe07a'); r(2, 6, 12, 10, K); r(3, 7, 10, 8, '#d99a62'); r(3, 7, 10, 1, '#a89a5c'); r(4, 6, 2, 1, '#d99a62'); r(8, 6, 1, 1, '#d99a62'); r(5, 10, 1, 3, '#a89a5c'); r(10, 9, 1, 4, '#a89a5c'); r(7, 11, 2, 2, '#ff7a2a'); },
     hyper: (r) => { r(0, 0, 16, 16, '#f4efe6'); const ln = (x0, y0, x1, y1) => { const n = Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0)); for (let i = 0; i <= n; i++) r(Math.round(x0 + (x1 - x0) * i / n), Math.round(y0 + (y1 - y0) * i / n), 1, 1, '#8fd3f0'); }; for (const w of [1, 5, 9, 13]) { ln(5, 2, 10, w + 1); ln(5, 6, 10, w + 1); } for (const y of [1, 5, 9, 13]) { r(2, y, 1, 1, K); r(1, y + 1, 3, 1, K); r(1, y + 2, 1, 1, K); r(3, y + 2, 1, 1, K); r(13, y, 1, 1, '#4f9fd6'); r(12, y + 1, 3, 1, '#4f9fd6'); r(12, y + 2, 3, 1, '#4f9fd6'); } r(4, 1, 1, 3, '#4f9fd6'); r(4, 5, 1, 3, '#4f9fd6'); },
     triad: (r, d, x) => { for (let y = 1; y < 16; y++) { const h = Math.round((y - 1) * 7.5 / 14); r(8 - h - (y > 1 ? 1 : 0), y, h * 2 + (y > 1 ? 2 : 1), 1, K); } for (let y = 5; y < 14; y++) { const h = Math.round((y - 5) * 4.5 / 8); r(8 - h - (y > 5 ? 1 : 0), y, h * 2 + (y > 5 ? 2 : 1), 1, '#f4efe6'); } r(0, 15, 16, 1, K); r(7, 2, 2, 2, '#d64545'); r(2, 13, 2, 2, '#5b8fd6'); r(12, 13, 2, 2, '#57b04f'); },
+    vent: r => { r(1, 1, 14, 14, K); r(2, 2, 12, 12, '#9aa3ad'); for (let k = 0; k < 4; k++) r(3, 3 + k * 3, 10, 2, '#4b4f5a'); r(7, 0, 2, 16, '#c9d0d6'); r(7, 1, 1, 14, '#ffffff'); },
     veins: r => { r(1, 1, 14, 14, K); r(2, 2, 12, 12, '#f2c7a5'); r(7, 2, 2, 12, '#d9535a'); r(4, 4, 3, 1, '#d9535a'); r(3, 5, 1, 2, '#b8423b'); r(9, 6, 3, 1, '#d9535a'); r(12, 7, 1, 2, '#b8423b'); r(4, 10, 3, 1, '#d9535a'); r(3, 11, 1, 2, '#b8423b'); r(9, 11, 3, 1, '#d9535a'); r(12, 10, 1, 1, '#b8423b'); r(7, 2, 1, 12, '#e8968a'); },
     banner: r => { r(1, 0, 3, 16, K); r(2, 1, 1, 15, '#8a5a32'); r(1, 0, 3, 1, '#f2c94c'); r(4, 1, 11, 10, K); r(4, 2, 10, 8, '#d64545'); r(11, 8, 4, 3, '#00000000'); r(4, 9, 10, 1, '#952b31'); r(7, 4, 4, 3, '#f2c94c'); r(8, 3, 2, 1, '#f2c94c'); r(8, 5, 2, 1, '#d9971f'); },
     sponge: r => { r(13, 0, 2, 2, '#d8f4f2'); r(0, 1, 1, 1, '#d8f4f2'); r(1, 3, 14, 11, K); r(2, 4, 12, 9, '#f2c94c'); r(2, 4, 12, 2, '#57b04f'); r(2, 4, 12, 1, '#8fe07a'); r(3, 12, 1, 1, '#d4bf5e'); r(12, 7, 1, 1, '#d4bf5e'); r(12, 11, 1, 1, '#d4bf5e'); r(5, 7, 2, 1, '#d9535a'); r(9, 7, 2, 1, '#d9535a'); r(4, 8, 8, 1, '#d9535a'); r(4, 9, 8, 1, '#952b31'); r(5, 10, 6, 1, '#d9535a'); r(6, 11, 4, 1, '#d9535a'); r(6, 10, 1, 1, '#f4a9c4'); },
@@ -1112,7 +1129,7 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
     s_hand: 'hand', u_snails: 'snails', w_thoth: 'thoth', w_rat: 'rat', w_lin: 'lin', w_horse: 'horse', w_rabbit: 'rabbit', k_skill: 'masterclass',
     w_sunflower: 'sunflower', w_flytrap: 'flytrap', w_honeybear: 'honeybear', w_arc: 'arc', w_nurse: 'nurse', w_nemu: 'nemu', w_tuesday: 'tuesday', w_zombie: 'zombie', w_digger: 'digger', w_kaneki: 'kaneki', w_raven: 'raven',
     w_fairy: 'fairy', w_pirate: 'pirate', w_beekeeper: 'beekeeper', w_kisa: 'kisa', w_toyalien: 'toyalien', w_code10: 'code10', w_code80: 'code80', w_yeti: 'yeti', w_slime: 'slime', w_moth: 'moth', w_gastriter: 'gastriter', w_palach: 'palach', w_thief: 'thief', w_raccoons: 'raccoons', w_rebel: 'rebel', w_squanch: 'squanch', w_spaghetti: 'spaghetti',
-    u_scotch: 'scotch', e_thirst: 'thirst', e_soda: 'soda', s_plumbus: 'plumbus', u_squanch: 'squanch', u_hyper: 'hyper', u_triad: 'triad', s_veins: 'veins', s_banner: 'banner', s_sponge: 'sponge',
+    u_scotch: 'scotch', e_thirst: 'thirst', e_soda: 'soda', s_plumbus: 'plumbus', u_squanch: 'squanch', u_hyper: 'hyper', u_triad: 'triad', s_veins: 'veins', s_vent: 'vent', b_bonus: 'price', b_bet: 'credit', b_rare: 'mWholesale', b_time: 'radio', s_banner: 'banner', s_sponge: 'sponge',
     u_zorya: 'zorya', s_ketchup: 'ketchup', e_mirror: 'mirror', s_spice: 'spice', s_sauce: 'sauce', e_crackers: 'crackers', s_glue: 'glue', u_fattoad: 'fattoad', u_novapost: 'novapost', e_shadow: 'shadow',
     u_pizza4: 'pizza4', e_pillow: 'pillow', e_honeycake: 'honeycake', e_jelly: 'jelly', m_pump: 'brickpump', e_flipflop: 'flipflop', u_waffle: 'waffle', s_queen: 'clayqueen', e_salve: 'burnsalve',
     m_dough: 'dough', m_topping: 'topping', m_pizzaoven: 'pizzaoven', m_feeder: 'feeder', m_course: 'course', m_loft: 'loft', m_icesaw: 'icesaw', m_icehole: 'icehole', m_igloo: 'igloo', m_sketch: 'sketch', m_ink: 'ink', m_printer: 'printer', m_vat: 'vat', m_fizz: 'fizz', m_hatch: 'hatch', m_toilet: 'toilet', m_airfryer: 'airfryer', m_shorts: 'shorts', m_drinks: 'drinks', m_apple: 'apple', m_palm: 'palm', m_rosebush: 'rosebush',
@@ -1129,7 +1146,7 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
   const NEW_LOC_SLOTS = [4, 5, 6, 4, 5];
   const emptySlots = n => Array.from({ length: n }, () => ({ machine: null, worker: null, upg: [], acc: 0, kiss: 0 }));
   const fresh = () => ({
-    v: 27, money: 0, xp: 0, level: 1, planks: 0, bricks: 0, nails: 0, glass: 0, poufs: 0, pizza: 0, pigeons: 0, manga: 0, bottles: 0, calib: 0, plants: 0, ice: 0, sweets: 0, dreams: 0, songs: 0, earned: 0, cur: 0,
+    v: 28, money: 0, xp: 0, level: 1, planks: 0, bricks: 0, nails: 0, glass: 0, poufs: 0, pizza: 0, pigeons: 0, manga: 0, bottles: 0, calib: 0, plants: 0, ice: 0, sweets: 0, dreams: 0, songs: 0, earned: 0, cur: 0,
     locs: [
       { unlocked: true, slots: [{ machine: null, worker: null, upg: [], acc: 0, kiss: 0 }, { machine: 'saw', worker: 'crow', upg: [], acc: 0, kiss: 0 }, { machine: null, worker: null, upg: [], acc: 0, kiss: 0 }] },
       { unlocked: false, slots: emptySlots(4) },
@@ -1344,12 +1361,16 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
       if (s.run) s.run.chute = false;
       s.v = 27;
     }
-    return s.v === 8 || s.v === 27 ? s : null;
+    if (s.v === 27) {
+      // build 28: tiers (run.tier), the daily run and its random stream (run.daily, run.rs), check rewards (run.bet, run.extraT), skill level 3; nothing to fill in
+      s.v = 28;
+    }
+    return s.v === 8 || s.v === 28 ? s : null;
   }
   // meta lives across runs: reputation, its unlocks, achievements and records
   const META_KEY = 'pixel-factory-meta-v1';
   // v 2: open = ids of the content opened for good (card ids and 'loc:N'), dirs = opened directors, dir = the picked one, stats = counters over all runs
-  const freshMeta = () => ({ v: 2, daily: {}, rep: 0, unlocks: [], ach: [], open: [], dirs: [], dir: null, stats: {}, name: '', records: { runs: 0, wins: 0, bestQuota: 0, bestEarned: 0, bestRate: 0, fastestGlass: 0 } });
+  const freshMeta = () => ({ v: 2, daily: {}, history: [], tier: 0, tierPick: 0, rep: 0, unlocks: [], ach: [], open: [], dirs: [], dir: null, stats: {}, name: '', records: { runs: 0, wins: 0, bestQuota: 0, bestEarned: 0, bestRate: 0, fastestGlass: 0 } });
   const BOT = location.hash === '#bot'; // balance bot drives the game itself and never touches saves
   let meta = freshMeta();
   if (!BOT) try { Object.assign(meta, JSON.parse(localStorage.getItem(META_KEY))); } catch (e) { }
@@ -1372,7 +1393,15 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
   let guest = null, home = null; // while visiting a friend, state is their frozen factory and home keeps ours
   function save() { if (BOT || guest) return; try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { } }
   function saveMeta() { if (BOT) return; try { localStorage.setItem(META_KEY, JSON.stringify(meta)); } catch (e) { } }
-  const hasUnlock = id => meta.unlocks.includes(id);
+  // the run being built (newRun runs before state exists) or the current one
+  let rngRun = null;
+  const curRun = () => { if (rngRun) return rngRun; try { return state.run; } catch (e) { return null; } };
+  const curDaily = () => { const r = curRun(); return !!(r && r.daily); };
+  // the daily run draws its starter, director, checks and card offers from one seeded stream (run.rs), the same for every friend that day
+  const mulberry = a => { a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return [((t ^ t >>> 14) >>> 0) / 4294967296, a]; };
+  function srand() { const r = curRun(); if (!r || !r.daily) return Math.random(); const [v, a] = mulberry(r.rs); r.rs = a; return v; }
+  const seedOf = str => [...str].reduce((h, ch) => Math.imul(h ^ ch.charCodeAt(0), 16777619) >>> 0, 2166136261);
+  const hasUnlock = id => !curDaily() && meta.unlocks.includes(id);
   // content closed at the start of a run and opened for good by challenges (meta.open). A closed card never drops, never sits in the showcase
   // and is not taken by the Veteran; it shows as a silhouette with a hint. Opening a workshop ('loc:N') opens its machines too.
   const CLOSED = [
@@ -1384,7 +1413,7 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
   ];
   const CLOSED_LOCS = [10, 11, 12, 13]; // garden, glaciers, bakery, dream workshop; the living room has no cards of its own and stays open
   const LOCK_KEYS = [...CLOSED_LOCS.map(l => 'loc:' + l), ...CLOSED];
-  const isLocked = key => LOCK_KEYS.includes(key) && !meta.open.includes(key);
+  const isLocked = key => !curDaily() && LOCK_KEYS.includes(key) && !meta.open.includes(key);
   const cardOpen = id => !isLocked(id), locOpen = l => !isLocked('loc:' + l);
   // the balance bot sets the open share through meta.open; a reward is a card id, 'loc:N', 'perk:id' (a starting perk), or 'dir:id' (a director)
   function grant(rw) {
@@ -1395,8 +1424,9 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
   // directors: one a run (run.dir), each with a perk, a starting set and a minus
   const DIR_INFO = {
     barista: { name: 'Бариста', short: 'Кофе сильнее и чаще, без кофе вяло', perk: 'Крепкий кофе даёт +60% скорости вместо +30% и выпадает в выборе карт втрое чаще. Ворона и второй стартовый сотрудник приходят с кофе.', minus: 'сотрудники без кофе вялые, скорость ×0,85.' },
-    shmadin: { name: 'Шмадін', short: 'Мастерство на старте, карта за проверку, проверки чаще', perk: 'Бывший подопытный Эталона. Перед первой сменой — выбор карты мастерства, за каждую пройденную проверку — лишний выбор карты.', minus: 'проверка каждую 2-ю квоту, а не каждую 3-ю.' },
+    shmadin: { name: 'Шмадін', short: 'Мастерство на старте, награды из трёх, проверки чаще', perk: 'Бывший подопытный Эталона. Перед первой сменой — выбор карты мастерства, награда за проверку выбирается из трёх, а не из двух.', minus: 'проверка каждую 2-ю квоту, а не каждую 3-ю.' },
     ceo: { name: 'CEO of Nothing', short: 'Один провал прощается, квоты выше', perk: 'Золотой парашют: один раз за забег проваленная квота не банкротит, забег идёт дальше, но деньги на руках сгорают. Забег начинается с +300 монетами.', minus: 'квоты ×1,25.' },
+    perfect: { name: 'Перфекционистка', short: 'Только редкие карты и выше, за уровни ничего', perk: 'В каждом выборе карт и на витрине только редкие, эпические и легендарные карты.', minus: 'за уровни карты не приходят, и карт мастерства нет.' },
     kerrigan: { name: 'Кериган', short: 'Свой растущий станок Улей, витрина дороже', perk: 'Фирменный легендарный станок «Улей»: с начала забега стоит в цеху досок. Доход за штуку в полтора раза больше, чем у лучшего станка его цеха, за каждую отработанную смену ещё +20% (до +100%), соседям +20% скорости. Переползает в любой цех, а при закрытии цеха сам переезжает в новый.', minus: 'витрина на 25% дороже.' }
   };
   const DIRS = Object.fromEntries(Object.entries(DIR_INFO).map(([k, v]) => [k, v.name]));
@@ -1437,6 +1467,14 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
       r(3, 22, 26, 10, K); r(4, 23, 24, 9, '#3b3048'); r(12, 22, 8, 7, '#f4efe6'); r(10, 22, 3, 8, '#262033'); r(19, 22, 3, 8, '#262033');
       r(15, 23, 2, 9, '#f2c14e'); r(14, 23, 4, 2, '#d9971f'); r(23, 25, 3, 2, '#f2c14e'); r(24, 24, 1, 1, '#fff1b0');
     }),
+    // the Perfectionist: a neat black bob, glasses, red lipstick, a blazer and a clipboard with a tick
+    perfect: pix(32, 32, r => {
+      r(0, 0, 32, 32, '#e9eef2'); for (let k = 0; k < 32; k += 4) r(0, k, 32, 1, '#dfe5ea');
+      r(6, 3, 20, 20, K); r(7, 4, 18, 18, '#2a2433'); r(9, 8, 14, 13, '#f2c7a5'); r(9, 8, 14, 2, '#2a2433'); r(10, 5, 6, 1, '#4a4352');
+      r(9, 11, 6, 4, K); r(10, 12, 4, 2, '#cfe8f2'); r(17, 11, 6, 4, K); r(18, 12, 4, 2, '#cfe8f2'); r(15, 12, 2, 1, K); r(11, 13, 2, 1, K); r(19, 13, 2, 1, K);
+      r(14, 17, 4, 1, '#c0392b'); r(4, 22, 24, 10, K); r(5, 23, 22, 9, '#4f5a8a'); r(13, 22, 6, 4, '#f4efe6');
+      r(18, 20, 12, 12, K); r(19, 22, 10, 10, '#e9dcc0'); r(22, 20, 4, 3, '#9aa3ad'); r(21, 26, 2, 1, '#3f9a4f'); r(23, 27, 1, 1, '#3f9a4f'); r(24, 25, 1, 2, '#3f9a4f'); r(25, 24, 2, 1, '#3f9a4f'); r(21, 29, 6, 1, '#9aa3ad');
+    }),
     // Kerrigan: violet skin under a carapace crest, spines behind the head, yellow glowing eyes, armour over a puddle of creep
     kerrigan: pix(32, 32, r => {
       r(0, 0, 32, 32, '#2a1636'); r(0, 26, 32, 6, '#4a1f5c'); for (const [a, b] of [[3, 27], [12, 29], [25, 28]]) r(a, b, 4, 1, '#6e3585');
@@ -1453,27 +1491,42 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
     shut: pix(16, 16, r => { r(2, 1, 12, 15, K); r(3, 2, 10, 14, '#7a5232'); r(3, 2, 10, 1, '#9a6a3a'); r(1, 5, 14, 3, K); r(2, 6, 12, 1, '#b5824a'); r(1, 10, 14, 3, K); r(2, 11, 12, 1, '#b5824a'); r(4, 6, 1, 1, '#d9d0c0'); r(11, 11, 1, 1, '#d9d0c0'); })
   };
   const dirIs = id => state.run.dir === id;
+  const TIERS = [
+    { name: 'Обычный', minus: 'без минусов' },
+    { name: 'Разряд 1', minus: 'квоты ×1,1' },
+    { name: 'Разряд 2', minus: 'витрина ×1,2' },
+    { name: 'Разряд 3', minus: 'квота проверок ещё ×1,25' },
+    { name: 'Разряд 4', minus: 'посылки вдвое реже' },
+    { name: 'Разряд 5', minus: 'в выборе карт на одну меньше' }
+  ];
+  const tierOn = n => ((curRun() || {}).tier || 0) >= n;
   const rewardName = rw => rw.startsWith('dir:') ? `директор ${DIRS[rw.slice(4)]}` : rw.startsWith('perk:') ? ({ dog: 'Старый друг: Пёс Бро с первой минуты', tramp: 'Бывалый: эпический сотрудник с первой минуты' })[rw.slice(5)] : rw.startsWith('loc:') ? `цех «${LOCS[+rw.slice(4)].name}»` : CARDS[rw].type === 'worker' ? WORKERS[CARDS[rw].worker].name : CARDS[rw].name;
   const lockHint = key => { const a = ACH.find(x => (x.reward || []).includes(key)); return a ? `Достижение «${a.name}»: ${a.desc}` : 'Откроется позже'; };
-  function newRun() {
+  // daily: the run of the day (a date key); otherwise the picked director and tier
+  function newRun(daily) {
     const s = fresh();
+    if (daily) { s.run.daily = daily; s.run.rs = seedOf(daily); }
+    rngRun = s.run;
+    if (!daily) s.run.tier = Math.min(meta.tierPick || 0, meta.tier || 0);
     if (hasUnlock('cap')) s.money = 150;
     // Crow always starts; the second starter is random: Mr. Butthole or a rare worker open from the start.
     // Veteran adds any random epic worker; the starters move to the lockers next to Crow
     const hire = (w, at, card) => { s.workers[w].unlocked = true; if (card) s.cards.push('w_' + w); const j = s.lockers.indexOf(w); [s.lockers[at], s.lockers[j]] = [w, s.lockers[at]]; };
-    const pickW = ok => { const p = Object.keys(CARDS).filter(id => CARDS[id].type === 'worker' && !s.workers[CARDS[id].worker].unlocked && cardOpen(id) && ok(CARDS[id])); return p.length ? CARDS[p[Math.floor(Math.random() * p.length)]].worker : null; };
+    const pickW = ok => { const p = Object.keys(CARDS).filter(id => CARDS[id].type === 'worker' && !s.workers[CARDS[id].worker].unlocked && cardOpen(id) && ok(CARDS[id])); return p.length ? CARDS[p[Math.floor(srand() * p.length)]].worker : null; };
     if (hasUnlock('dog')) hire('dog', 3, true);
     hire(pickW(cd => cd.worker === 'mrp' || (cd.rar === 1 && cd.loc == null && !cd.afterQ)), 1, false);
     const vet = hasUnlock('tramp') && pickW(cd => cd.rar === 2);
     if (vet) hire(vet, 2, true);
-    if (meta.dir && meta.dirs.includes(meta.dir)) s.run.dir = meta.dir;
+    if (daily) s.run.dir = Object.keys(DIR_INFO)[seedOf(daily + 'dir') % Object.keys(DIR_INFO).length];
+    else if (meta.dir && meta.dirs.includes(meta.dir)) s.run.dir = meta.dir;
     // the director's starting set
     const d = s.run.dir;
     if (d === 'barista') ['crow', s.lockers[1]].forEach(w => { if (s.workers[w] && s.workers[w].unlocked) { s.workers[w].equip.push('e_coffee'); s.cards.push('e_coffee'); } });
-    if (d === 'shmadin') { const ids = Object.keys(CARDS).filter(id => CARDS[id].mastery && cardOpen(id)).sort(() => Math.random() - 0.5).slice(0, 3); if (ids.length) s.offers.push({ src: 'mastery', ids }); }
+    if (d === 'shmadin') { const ids = Object.keys(CARDS).filter(id => CARDS[id].mastery && cardOpen(id)).map(id => [id, srand()]).sort((a, b) => a[1] - b[1]).map(x => x[0]).slice(0, 3); if (ids.length) s.offers.push({ src: 'mastery', ids }); }
     if (d === 'ceo') s.money += 300;
     if (d === 'kerrigan') Object.assign(s.locs[0].slots[2], { machine: 'hive', grow: 0, grew: false });
     if (hasUnlock('coffee')) { if (s.workers.mrp.unlocked) { s.workers.mrp.equip.push('e_coffee'); s.cards.push('e_coffee'); } else s.run.thermos = true; }
+    rngRun = null;
     return s;
   }
   let state = load() || newRun();
@@ -1489,12 +1542,12 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
   // xp/shop/quota grow geometrically, every levelEvery-th level gives a card, crates come every crate..2×crate seconds;
   // a crate holds a share of the quota: plain crateQ, gold crateGoldQ (chance crateGold), or a card pick (chance crateCard);
   // crates pay at most crateCap of the quota a shift, so they help but never carry it; from shift skillCoinQ skills are opened only by cards
-  const BAL = { storm: 20, stormEvery: 2, beam: 0.6, beamNear: 0.2, beamCd: 8, orderBatch: [100, 4], orderDouble: [15, 1], orderHall: 20, orderPay: [0.04, 0.06], tempo: 2, machW: 3, xp0: 15, xpK: 2, levelEvery: 3, shopQ: 0.3, shopRoll: 1, rarPrice: [0.6, 1, 1.6, 2.4], masteryEvery: 9, crate: 20, crateQ: [0.02, 0.06], crateGoldQ: [0.08, 0.12], crateGold: 0.1, crateCard: 0.05, quotaT: 45, quota0: 200, quota1: 60, quotaK: 1.5, quotaA: 1.055, quotaMax: 99, quotaE: 0.9, quotaEFrom: 6, winQ: 32, winRep: 30, moveMax: 2, skill2: 1.5, skillUp: 2, ceoQ: 1.25, kerriganShop: 1.25, comboW: 2.5, pair: 2, crateCap: 0.3, shopE: 0.2, skillCoinQ: 10, cap: 3, trio: 4, add: true, sq: 1.4, subCap: 0.6 };
+  const BAL = { storm: 20, stormEvery: 2, beam: 0.6, beamNear: 0.2, beamCd: 8, orderBatch: [100, 4], orderDouble: [15, 1], orderHall: 20, orderPay: [0.04, 0.06], tempo: 2, machW: 3, xp0: 15, xpK: 2, levelEvery: 3, shopQ: 0.3, shopRoll: 1, rarPrice: [0.6, 1, 1.6, 2.4], masteryEvery: 9, crate: 20, crateQ: [0.02, 0.06], crateGoldQ: [0.08, 0.12], crateGold: 0.1, crateCard: 0.05, quotaT: 45, quota0: 200, quota1: 60, quotaK: 1.5, quotaA: 1.055, quotaMax: 99, quotaE: 0.9, quotaEFrom: 6, winQ: 32, winRep: 30, moveMax: 2, skill2: 1.5, skill3: 0.75, skillUp: 2, ceoQ: 1.25, kerriganShop: 1.25, comboW: 2.5, pair: 2, crateCap: 0.3, shopE: 0.2, skillCoinQ: 10, cap: 3, trio: 4, add: true, sq: 1.4, subCap: 0.6 };
   const need = l => Math.round(BAL.xp0 * Math.pow(BAL.xpK, l - 1));
   // the showcase is priced off the quota just passed or off the last shift's earnings (shopE of them), whichever is more,
   // so a runaway income cannot make cards free
   const shopBase = () => Math.max(quotaTarget(Math.max(1, state.run.q - 1)) * BAL.shopQ, (state.run.qLast || 0) * BAL.shopE);
-  const cardPrice = id => Math.round(shopBase() * BAL.rarPrice[CARDS[id].rar] * (dirIs('kerrigan') ? BAL.kerriganShop : 1));
+  const cardPrice = id => Math.round(shopBase() * BAL.rarPrice[CARDS[id].rar] * (dirIs('kerrigan') ? BAL.kerriganShop : 1) * (tierOn(2) ? 1.2 : 1));
   const rerollCost = () => Math.round(shopBase() / (hasUnlock('reroll') ? 4 : 2));
   // a skill costs the last quota × the worker's rarity × 1,5 for every skill already opened this run; Crow's skill is open from the start
   const SKILL_RAR = [0.8, 0.8, 1.2, 2];
@@ -1578,9 +1631,9 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
   // like the showcase prices. Earlier it would kill at random: a check, a skill that fired last shift or lucky crates drop one shift below the last
   // in a break it shows what the next shift will get; a workshop opened during a shift does not change that shift's quota (run.qInc is set at its start)
   const incomeQuota = () => { const l = state.run.route[BAL.quotaEFrom - 1]; return state.run.brk ? l != null && state.locs[l].unlocked : state.run.qInc; };
-  const curQuota = () => (state.run.q === 1 ? BAL.quota1 : Math.max(quotaTarget(state.run.q), incomeQuota() ? (state.run.qLast || 0) * BAL.quotaE : 0)) * Math.pow(1.5, (state.run.credit || {})[state.run.q] || 0) * (dirIs('ceo') ? BAL.ceoQ : 1);
+  const curQuota = () => (state.run.q === 1 ? BAL.quota1 : Math.max(quotaTarget(state.run.q), incomeQuota() ? (state.run.qLast || 0) * BAL.quotaE : 0)) * Math.pow(1.5, (state.run.credit || {})[state.run.q] || 0) * (dirIs('ceo') ? BAL.ceoQ : 1) * (tierOn(1) ? 1.1 : 1) * (tierOn(3) && state.run.rule ? 1.25 : 1) * (state.run.bet === state.run.q ? 1.3 : 1);
   // the first shift is half as long
-  const quotaTime = () => Math.round((BAL.quotaT + (hasUnlock('time') ? 8 : 0)) / (state.run.q === 1 ? 2 : 1));
+  const quotaTime = () => Math.round((BAL.quotaT + (hasUnlock('time') ? 8 : 0) + (state.run.extraT === state.run.q ? 10 : 0)) / (state.run.q === 1 ? 2 : 1));
   // seconds into the shift, null in a break: the cards that change during a shift read it
   const shiftT = () => state.run.brk || state.run.over ? null : state.run.qT;
   const newCrate = () => BAL.crate * (1 + Math.random());
@@ -1588,7 +1641,7 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
   // every copy of Posquonchim rolls twice while Squanch is on the factory
   const sqRolls = () => state.workers.squanch.unlocked ? 2 : 1;
   // how fast the crate timer runs: Postman doubles it, a working Rabbit detective (or a Shadow copying him) adds 25%, every working machine of the pigeon roof 15%
-  const crateFreq = g => Math.pow(2, cardN('u_postman') - cardN('u_snailpost')) * (workerPlace('rabbit') || Object.values(g.shadow).includes('rabbit') ? 1.25 : 1) * (1 + 0.15 * g.pigeonPost);
+  const crateFreq = g => (tierOn(4) ? 0.5 : 1) * Math.pow(2, cardN('u_postman') - cardN('u_snailpost')) * (workerPlace('rabbit') || Object.values(g.shadow).includes('rabbit') ? 1.25 : 1) * (1 + 0.15 * g.pigeonPost);
   // a working Pirate makes crates ×1,5 richer and lifts their limit ×1,5
   const pirateK = () => workerPlace('pirate') ? 1.5 : 1;
   const crateFull = () => (state.run.qCrate || 0) >= curQuota() * BAL.crateCap * pirateK();
@@ -1654,6 +1707,7 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
   const COLONY = () => LOCK_KEYS.filter(k => k.startsWith('loc:') || (CARDS[k].type === 'machine' && MACH[CARDS[k].machine].loc >= 5));
   const tab8 = () => state.run.route.slice(7).some(l => l != null), tab10 = () => state.run.route[9] != null;
   const lim = (v, m) => [Math.min(v, m), m];
+  const BOARD = ['barista', 'shmadin', 'ceo', 'kerrigan'];
   // a challenge: test(end, g) decides, prog() gives [now, goal] for the menu, reward lists what it opens for good
   // (card ids, 'loc:N', 'perk:id', 'dir:id'). The small ones from the first version give nothing
   const ACH = [
@@ -1704,7 +1758,8 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
     { id: 'quit29', name: 'Принять поражение', desc: 'Сдаться на 29-й квоте', test: () => rst('quitQ') === 29, reward: ['dir:ceo'] },
     // a win under each director, then under all four
     ...Object.keys(DIR_INFO).map(d => ({ id: 'dirwin_' + d, name: `Победа: ${DIR_INFO[d].name}`, desc: `Победить с директором ${DIR_INFO[d].name}`, test: () => state.run.won && state.run.dir === d })),
-    { id: 'board', name: 'Совет директоров', desc: 'Победить с каждым из четырёх директоров', test: () => Object.keys(DIR_INFO).every(d => meta.ach.includes('dirwin_' + d)), prog: () => [Object.keys(DIR_INFO).filter(d => meta.ach.includes('dirwin_' + d)).length, 4] },
+    { id: 'board', name: 'Совет директоров', desc: 'Победить с Баристой, Шмадіном, CEO of Nothing и Кериган', test: () => BOARD.every(d => meta.ach.includes('dirwin_' + d)), prog: () => [BOARD.filter(d => meta.ach.includes('dirwin_' + d)).length, 4], reward: ['dir:perfect'] },
+    { id: 'tier5', name: 'Пятый разряд', desc: 'Победить на 5-м разряде', test: () => state.run.won && (state.run.tier || 0) >= 5 },
     { id: 'colonist', name: 'Колонист', desc: 'Открыть все цеха обоих маршрутов и все станки в них', test: () => COLONY().every(k => meta.open.includes(k)), prog: () => [COLONY().filter(k => meta.open.includes(k)).length, COLONY().length], reward: ['dir:kerrigan'] }
   ];
   // everything an earned challenge opens is granted again at every start, so a save from before the rewards loses nothing
@@ -1768,6 +1823,8 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
       if (j === i) return;
       if (dx === 1 && dy === 1 && (z.upg.includes('s_veins') || sl[i].upg.includes('s_veins'))) set.add(j);
       if (sl[i].upg.includes('s_queen') && (!dx || !dy || dx === dy)) set.add(j);
+      // Ventilation links a machine with its whole column both ways
+      if (!dx && (z.upg.includes('s_vent') || sl[i].upg.includes('s_vent'))) set.add(j);
     });
     // Mirror armour keeps the belts of its machine running through a blackout
     if (!rule('blackout') || hasEq(w, 'e_mirror')) sl.forEach((s, j) => { if (j !== i && P[j][1] === P[i][1] && (s.machine === 'belt' || sl[i].machine === 'belt')) set.add(j); });
@@ -1776,12 +1833,14 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
   // a worker at the hot dog grill keeps the skill on 50% longer
   // a skill of level 2 (bought in a break or taught by a second Master class) lasts BAL.skill2 times as long
   const skLv = id => state.workers[id].skL || 1;
-  const teachable = id => !!id && state.workers[id].unlocked && (!state.workers[id].skill || skLv(id) < 2);
+  const teachable = id => !!id && state.workers[id].unlocked && (!state.workers[id].skill || skLv(id) < 3);
+  // level 3 also recharges faster
+  const skCdRaw = id => SKILLS[id].cd * (skLv(id) >= 3 ? BAL.skill3 : 1);
   const skDur = id => SKILLS[id].dur * (state.cards.includes('x_skill') ? 1.5 : 1) * (onGrill(id) ? 1.5 : 1) * (skLv(id) > 1 ? BAL.skill2 : 1);
   const onGrill = id => { const p = workerPlace(id); return !!p && slotsOf(p.l)[p.i].machine === 'hotgrill'; };
   // a skill whose cooldown is longer than the shift starts its cycle anew at every shift's start, so it fires at least once a shift
-  const longSk = id => !SKILLS[id].shift && SKILLS[id].cd > quotaTime();
-  const skCd = id => longSk(id) ? quotaTime() : SKILLS[id].cd;
+  const longSk = id => !SKILLS[id].shift && skCdRaw(id) > quotaTime();
+  const skCd = id => longSk(id) ? quotaTime() : skCdRaw(id);
   const skillOn = id => {
     const w = state.workers[id];
     if (!w.skill || !workerPlace(id)) return false;
@@ -2305,7 +2364,7 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
   }
   function eligible(id) {
     const cd = CARDS[id], cl = cardLoc(id);
-    if (!cardOpen(id)) return false;
+    if (!cardOpen(id) || cd.type === 'boon') return false;
     // machines, machine cards and goods cards need their workshop open; workers and equipment only need it reached once
     if (cl >= 0 && !state.locs[cl].unlocked && !(state.locs[cl].closed && ['worker', 'equip'].includes(cd.type))) return false;
     if (cd.type === 'machine') return canPlaceMachine(cd.machine);
@@ -2329,22 +2388,24 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
   const brkKey = () => state.run.brk ? state.run.q : state.run.q + 1;
   // Credit shows up at most once per break, in one offer or showcase
   const markCredit = ids => { if (ids.includes('u_credit')) state.run.creditB = brkKey(); return ids; };
-  function rollOffer(combo = true) {
-    const help = combo ? comboHelp() : null, pool = Object.keys(CARDS).filter(id => !CARDS[id].mastery && eligible(id) && !(id === 'u_credit' && state.run.creditB === brkKey())), pick = [];
-    const n = hasUnlock('pick4') ? 4 : 3;
+  // minRar: the lowest rarity offered (the Perfectionist and the Confiscation take rare and up)
+  function rollOffer(combo = true, minRar = dirIs('perfect') ? 1 : 0) {
+    const help = combo ? comboHelp() : null, all = Object.keys(CARDS).filter(id => !CARDS[id].mastery && eligible(id) && !(id === 'u_credit' && state.run.creditB === brkKey())), pick = [];
+    const high = all.filter(id => CARDS[id].rar >= minRar), pool = high.length >= 2 ? high : all;
+    const n = Math.max(2, (hasUnlock('pick4') ? 4 : 3) - (tierOn(5) ? 1 : 0));
     while (pick.length < n && pick.length < pool.length) {
       const cand = pool.filter(id => !pick.includes(id));
-      let r = Math.random() * cand.reduce((a, id) => a + cardWeight(id, help), 0), chosen = cand[cand.length - 1];
+      let r = srand() * cand.reduce((a, id) => a + cardWeight(id, help), 0), chosen = cand[cand.length - 1];
       for (const id of cand) { r -= cardWeight(id, help); if (r <= 0) { chosen = id; break; } }
       pick.push(chosen);
     }
     return pick;
   }
-  const rollMastery = () => Object.keys(CARDS).filter(id => CARDS[id].mastery && cardOpen(id) && !state.cards.includes(id)).sort(() => Math.random() - 0.5).slice(0, 3);
+  const rollMastery = () => Object.keys(CARDS).filter(id => CARDS[id].mastery && cardOpen(id) && !state.cards.includes(id)).map(id => [id, srand()]).sort((a, b) => a[1] - b[1]).map(x => x[0]).slice(0, 3);
   const addSew = o => { if (!o.ids.includes('m_sew') && eligible('m_sew')) o.ids[o.ids.length - 1] = 'm_sew'; };
   function queueOffer(src) {
     if (src === 'mastery' && !rollMastery().length) src = 'level';
-    if (!state.firstOffer) { state.firstOffer = true; state.offers.push({ src, ids: ['m_bench', 'e_coffee', 'u_power'] }); }
+    if (!state.firstOffer && !dirIs('perfect')) { state.firstOffer = true; state.offers.push({ src, ids: ['m_bench', 'e_coffee', 'u_power'] }); }
     else state.offers.push({ src, ids: src === 'mastery' ? rollMastery() : markCredit(rollOffer()) });
     const last = state.offers[state.offers.length - 1];
     if (src === 'quota' && skillLocked() && eligible('k_skill') && !last.ids.includes('k_skill')) last.ids[0] = 'k_skill';
@@ -2369,6 +2430,7 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
   const holder = (id, target) => CARDS[id].type === 'equip' ? state.workers[target].equip : CARDS[id].type === 'mupg' ? slotsOf(target.l)[target.i].upg : null;
   const isFull = (id, target) => { const h = holder(id, target); return !!h && h.length >= BAL.cap; };
   function finish(id, target, drop) {
+    if (CARDS[id].type === 'boon') { applyBoon(id); mode = null; save(); renderSheet(); return; }
     const cd = CARDS[id], before = globals().combos, h = holder(id, target);
     if (h && h.length >= BAL.cap) {
       if (drop == null) { mode = { kind: 'replace', card: id, offer: mode && mode.offer, target }; renderSheet(); return; }
@@ -2530,10 +2592,10 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
   /* ================= simulation ================= */
   let achTimer = 0;
   const openSkill = id => { const w = state.workers[id]; w.skill = true; w.skT = 0; state.run.skills++; ev('skill'); rollSkin(id); };
-  const upSkill = id => { state.workers[id].skL = 2; ev('skillup'); };
+  const upSkill = id => { state.workers[id].skL = skLv(id) + 1; ev('skillup'); };
   // teach: open a closed skill or lift an open one to level 2
-  const teach = id => { if (state.workers[id].skill) { upSkill(id); toast(`${WORKERS[id].name}: скилл «${SKILLS[id].name}» прокачан до 2-го уровня!`); } else { openSkill(id); toast(`${WORKERS[id].name}: скилл «${SKILLS[id].name}» открыт!`); } };
-  const skillUpCost = id => Math.round(skillCost(id) * BAL.skillUp);
+  const teach = id => { if (state.workers[id].skill) { upSkill(id); toast(`${WORKERS[id].name}: скилл «${SKILLS[id].name}» прокачан до ${skLv(id)}-го уровня!`); } else { openSkill(id); toast(`${WORKERS[id].name}: скилл «${SKILLS[id].name}» открыт!`); } };
+  const skillUpCost = id => Math.round(skillCost(id) * BAL.skillUp * (skLv(id) >= 2 ? 2 : 1));
   const skillShare = id => Math.min(1, skDur(id) / (SKILLS[id].shift ? quotaTime() : skCd(id)));
   const rollSkin = id => {
     if (SKILLS[id].kind === 'random') state.workers[id].skKind = Object.keys(SKIN_KINDS)[Math.floor(Math.random() * 3)];
@@ -2558,8 +2620,8 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
       // Nemu's regeneration: the skills of her neighbours cool down twice as fast
       const regen = pNemu && id !== 'nemu' && pNemu.l === wp.l && adjacent(wp.l, wp.i, pNemu.i) && w.skT >= skDur(id);
       w.skT = (w.skT || 0) + dt * (regen ? SKILLS.nemu.mult : 1);
-      if (w.skT >= SKILLS[id].cd) {
-        w.skT -= SKILLS[id].cd; rollSkin(id);
+      if (w.skT >= skCdRaw(id)) {
+        w.skT -= skCdRaw(id); rollSkin(id);
         if (wp.l === state.cur) floats.push({ l: wp.l, slot: wp.i, txt: SKILLS[id].name.toUpperCase() + '!', life: 1.4, skill: true });
         if (id === 'digger' && !rule('audit')) digCrate();
       }
@@ -2628,7 +2690,7 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
     if (run.beamCd != null && run.beamCd < 1) run.beamCd = Math.min(1, run.beamCd + dt / BAL.beamCd);
     while (state.xp >= need(state.level)) {
       state.xp -= need(state.level); state.level++;
-      if (state.level % BAL.levelEvery === 0) { toast(`Уровень ${state.level}! Карта ждёт тебя в перерыве`); queueOffer(state.level % BAL.masteryEvery === 0 ? 'mastery' : 'level'); } else toast(`Уровень ${state.level}! Карта через ${BAL.levelEvery - state.level % BAL.levelEvery}`);
+      if (state.level % BAL.levelEvery === 0) { toast(`Уровень ${state.level}! Карта ждёт тебя в перерыве`); if (!dirIs('perfect')) queueOffer(state.level % BAL.masteryEvery === 0 ? 'mastery' : 'level'); } else toast(`Уровень ${state.level}! Карта через ${BAL.levelEvery - state.level % BAL.levelEvery}`);
     }
     // Nova poshta: if no card crate came by the 30th second of the shift, one comes now
     if (!crate && cardN('u_novapost') && !state.run.nova && !rule('audit') && state.run.qT >= 30) { crate = rollCrate('card'); toast('Нова пошта привезла посылку с картой! Нажми на неё'); }
@@ -2677,11 +2739,11 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
   const crateText = (r, who = 'В посылке') => r.card ? `${who}: внутри карта, выбор в перерыве!` : `${who}: ${fmt(r.gain)} монет${r.gold ? ', золотая!' : '!'}${r.full ? ' Посылок с монетами до конца смены больше не будет' : ''}`;
   // the next shift becomes a check: a random evil rule that fits the factory
   function rollRule() {
-    const run = state.run, ids = Object.keys(RULES).filter(id => RULES[id].ok()), id = ids[Math.floor(Math.random() * ids.length)];
+    const run = state.run, ids = Object.keys(RULES).filter(id => RULES[id].ok()), id = ids[Math.floor(srand() * ids.length)];
     run.rule = { id };
     if (id === 'stock') run.stockQ = run.q;
     if (id === 'strike') {
-      const placed = strikers(), w = placed[Math.floor(Math.random() * placed.length)], p = workerPlace(w);
+      const placed = strikers(), w = placed[Math.floor(srand() * placed.length)], p = workerPlace(w);
       run.rule.w = w; slotsOf(p.l)[p.i].worker = null;
       if (selWorker === w) selWorker = null;
     }
@@ -2696,9 +2758,17 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
     state.money += gain; state.earned += gain;
     toast(`Заказ кондитерской выполнен: +${fmt(gain)} монет`);
   }
+  const BOONS = ['b_bonus', 'b_bet', 'b_rare', 'b_time'];
+  function applyBoon(id) {
+    const run = state.run;
+    if (id === 'b_bonus') { const g = curQuota() * 0.15; state.money += g; toast(`Премия инспектора: +${fmt(g)} монет`); }
+    if (id === 'b_bet') { run.bet = run.q; toast('Пари: квота этой смены ×1,3, выполнишь — два выбора карты'); }
+    if (id === 'b_rare') state.offers.push({ src: 'check', ids: rollOffer(false, 2) });
+    if (id === 'b_time') { run.extraT = run.q; toast('Отгул: смена на 10 с длиннее'); }
+  }
   // chute: the CEO's golden parachute carries a missed quota into the break; it counts as no pass (no reputation, no check passed)
   function passQuota(chute) {
-    const run = state.run, wasRule = run.rule;
+    const run = state.run, wasRule = run.rule, bet = !chute && run.bet === run.q;
     if (wasRule && !chute) run.passed.push(wasRule.id);
     if (!chute) run.rep += wasRule ? 2 : 1;
     // the win: quota BAL.winQ or a later one passed with workshop 10 open (either of its fork) ends the run
@@ -2714,16 +2784,20 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
     run.qLast = run.qEarned; run.q++; run.qT = 0; run.qEarned = 0; run.qCrate = 0; run.rule = null; run.sq = {}; run.nova = false; run.bitten = []; run.spark = null; run.rolled = false; run.claw = null; run.warned = null; run.stolen = null; run.storm = false; run.stormAt = null;
     run.brk = true; run.shopClosed = !!(wasRule && wasRule.id === 'stock'); run.shop = run.shopClosed ? [] : rollShop(); run.shopLocked = false; run.shopRolls = 0;
     if (run.q % checkEvery() === 0) rollRule();
-    if (wasRule && !chute && dirIs('shmadin')) { queueOffer('level'); toast('Шмадін: проверка пройдена, лишняя карта ждёт в перерыве'); }
+    if (wasRule && !chute) state.offers.push({ src: 'check', ids: BOONS.map(id => [id, srand()]).sort((a, b) => a[1] - b[1]).map(x => x[0]).slice(0, dirIs('shmadin') ? 3 : 2) });
     if (!piggy) toast(wasRule ? 'Проверка пройдена! Перерыв' : 'Квота выполнена! Перерыв');
     queueOffer('quota');
+    if (bet) { queueOffer('level'); queueOffer('level'); toast('Пари выиграно: два выбора карты'); }
     checkAch(false);
   }
   const bankrupt = () => endRun(false);
   function endRun(won) {
     const run = state.run, rec = meta.records;
     run.over = true; run.won = won;
-    if (won) { run.rep += BAL.winRep; rec.wins = (rec.wins || 0) + 1; }
+    if (won) { run.rep += BAL.winRep + 5 * (run.tier || 0); rec.wins = (rec.wins || 0) + 1; if (!run.daily) meta.tier = Math.max(meta.tier || 0, Math.min(TIERS.length - 1, (run.tier || 0) + 1)); }
+    // the daily run's best quota of the day, carried in the friend code with the records
+    if (run.daily && (!rec.daily || rec.daily.d !== run.daily || passedQ() > rec.daily.q)) rec.daily = { d: run.daily, q: passedQ(), won };
+    meta.history = [{ at: Date.now(), ...histOf(), q: passedQ(), dir: run.dir || '', tier: run.tier || 0, daily: run.daily || '', t: Math.round(run.t) }, ...(meta.history || [])].slice(0, 10);
     meta.rep += run.rep;
     rec.runs++;
     rec.bestQuota = Math.max(rec.bestQuota, passedQ());
@@ -5326,12 +5400,13 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
     }
     return `<button type="button" class="card r${cd.rar}" data-act="${act}" data-id="${id}"${extra} ${off ? 'disabled' : ''}><span class="band">${esc(cd.name)}</span><span class="top"><img class="ic" src="${ICONS[id]}" alt=""><span class="ct">${kind}${where}</span></span><span class="cd">${esc(cd.desc)}</span>${cd.minus ? `<span class="cd minus">${esc(cd.minus)}</span>` : ''}${gain > 0 ? `<span class="gain">+${fmt(gain)}/с</span>` : ''}<span class="rar">${RAR[cd.rar]}</span>${price != null ? `<span class="price">${price}</span>` : ''}</button>`;
   }
-  const SRC = { shut: 'Распродажа цеха', order: 'Заказ кондитерской', level: 'Новый уровень', mastery: 'Мастерство', crate: 'Посылка', shop: 'Магазин', quota: 'Квота' };
+  const SRC = { check: 'Награда за проверку', shut: 'Распродажа цеха', order: 'Заказ кондитерской', level: 'Новый уровень', mastery: 'Мастерство', crate: 'Посылка', shop: 'Магазин', quota: 'Квота' };
   function renderSheet() {
     let h = '';
     if (view === 'shut' && pendingOpen) h = shutHTML();
     else if (view === 'move' && pendingOpen) h = moveHTML();
     else if (view === 'dirs') h = dirsHTML();
+    else if (view === 'history') h = historyHTML();
     else if (view === 'deck') h = deckHTML();
     else if (view === 'menu') h = menuHTML();
     else if (view === 'ach') h = achHTML();
@@ -5429,7 +5504,8 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
   }
   function skillHTML(id) {
     const sk = SKILLS[id], has = state.workers[id].skill;
-    const up = !has ? '' : skLv(id) > 1 ? `<p class="on">2-й уровень: действует в ${fmt(BAL.skill2)} раза дольше.</p>` : skillLocked() ? '<p class="muted">2-й уровень (действует в 1,5 раза дольше) даёт ещё один «Мастер-класс».</p>' : `<div class="row"><button class="btn" type="button" data-act="skillup" ${state.money < skillUpCost(id) ? 'disabled' : ''}>2-й уровень за ${fmt(skillUpCost(id))}</button></div><p class="muted">2-й уровень: скилл действует в 1,5 раза дольше.</p>`;
+    const lv = skLv(id), LV = ['', '', 'действует в 1,5 раза дольше', 'ещё и перезаряжается в 1,33 раза быстрее'];
+    const up = !has ? '' : `${lv > 1 ? `<p class="on">Уровень ${lv}: ${LV[2]}${lv > 2 ? `, ${LV[3]}` : ''}.</p>` : ''}${lv >= 3 ? '' : skillLocked() ? `<p class="muted">${lv + 1}-й уровень (${LV[lv + 1]}) даёт ещё один «Мастер-класс».</p>` : `<div class="row"><button class="btn" type="button" data-act="skillup" ${state.money < skillUpCost(id) ? 'disabled' : ''}>${lv + 1}-й уровень за ${fmt(skillUpCost(id))}</button></div><p class="muted">${lv + 1}-й уровень: скилл ${LV[lv + 1]}.</p>`}`;
     return `<h3>Скилл · ${has ? `открыт, уровень ${skLv(id)}` : 'не открыт'}</h3><p class="${has ? '' : 'muted'}"><b>${sk.name}</b>: ${esc(sk.desc)}</p>${has ? '<p class="on" id="live-skill"></p>' + up : skillLocked() ? `<p class="muted">С ${BAL.skillCoinQ}-й квоты скиллы за монеты не продаются: открой его картой «Мастер-класс». Она есть в каждом выборе за квоту.</p>` : `<div class="row"><button class="btn primary" type="button" data-act="skill" ${state.money < skillCost(id) ? 'disabled' : ''}>Открыть за ${fmt(skillCost(id))}</button></div>`}`;
   }
   function workerHTML(id) {
@@ -5450,8 +5526,8 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
   const mmss = sec => `${Math.floor(sec / 60)}:${String(Math.floor(sec % 60)).padStart(2, '0')}`;
   // two columns when comparing with a friend: theirs first, ours second
   function recordsHTML(r, achN, mine) {
-    const rows = [['Забегов', r.runs, v => v], ['Побед', r.wins, v => v], ['Лучшая квота', r.bestQuota, v => v], ['Заработано за забег', r.bestEarned, fmt], ['Доход в секунду', r.bestRate, v => fmt(v) + '/с'], ['Стекло открыто на', r.fastestGlass, v => v ? mmss(v) : '—'], ['Достижения', achN, v => `${v} из ${ACH.length}`]];
-    const mv = mine ? [mine.runs, mine.wins, mine.bestQuota, mine.bestEarned, mine.bestRate, mine.fastestGlass, meta.ach.length] : [];
+    const rows = [['Забегов', r.runs, v => v], ['Побед', r.wins, v => v], ['Лучшая квота', r.bestQuota, v => v], ['Заработано за забег', r.bestEarned, fmt], ['Доход в секунду', r.bestRate, v => fmt(v) + '/с'], ['Стекло открыто на', r.fastestGlass, v => v ? mmss(v) : '—'], ['Ежедневный сегодня', r.daily && r.daily.d === dayKey(new Date()) ? r.daily.q : 0, v => v ? `квота ${v}` : '—'], ['Достижения', achN, v => `${v} из ${ACH.length}`]];
+    const mv = mine ? [mine.runs, mine.wins, mine.bestQuota, mine.bestEarned, mine.bestRate, mine.fastestGlass, mine.daily && mine.daily.d === dayKey(new Date()) ? mine.daily.q : 0, meta.ach.length] : [];
     return `<ul class="list">${rows.map(([name, v, f], k) => `<li><span>${name}</span><span class="val">${f(v || 0)}${mine ? ` <span class="muted">· у тебя ${f(mv[k] || 0)}</span>` : ''}</span></li>`).join('')}</ul>`;
   }
   function unlocksHTML() {
@@ -5462,7 +5538,7 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
   const pickedDir = () => meta.dir && DIR_INFO[meta.dir] && meta.dirs.includes(meta.dir) ? meta.dir : '';
   function dirHTML() {
     const id = pickedDir();
-    return `<h3>Директор следующего забега</h3><div class="dpick"><img src="${PORTRAIT[id || 'none']}" alt=""><span><b>${id ? DIR_INFO[id].name : 'Без директора'}</b><small>${id ? DIR_INFO[id].short : meta.dirs.length ? 'Обычный забег' : 'Директора открываются достижениями'}</small></span><button class="btn" type="button" data-act="dirs">Директора</button></div>`;
+    return `<h3>Директор следующего забега</h3><div class="dpick"><img src="${PORTRAIT[id || 'none']}" alt=""><span><b>${id ? DIR_INFO[id].name : 'Без директора'}${Math.min(meta.tierPick || 0, meta.tier || 0) ? ` · Разряд ${Math.min(meta.tierPick || 0, meta.tier || 0)}` : ''}</b><small>${id ? DIR_INFO[id].short : meta.dirs.length ? 'Обычный забег' : 'Директора открываются достижениями'}</small></span><button class="btn" type="button" data-act="dirs">Директора</button></div>`;
   }
   function dirsHTML() {
     const card = id => {
@@ -5471,19 +5547,25 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
       return `<div class="dcard${sel ? ' sel' : ''}${open ? '' : ' locked'}"><img src="${PORTRAIT[id || 'none']}" alt=""><div><b>${open ? (id ? info.name : 'Без директора') : '???'}${won ? ' <span class="star" title="Победа есть">★</span>' : ''}</b>${body}${open ? `<button class="btn${sel ? ' primary' : ''}" type="button" data-act="dir" data-id="${id}">${sel ? 'Выбран' : 'Выбрать'}</button>` : ''}</div></div>`;
     };
     const wins = Object.keys(DIR_INFO).filter(d => meta.ach.includes('dirwin_' + d)).length;
-    return `<h2>Директора</h2><p class="muted">Директор ведёт следующий забег: свой плюс, стартовый набор и минус. Побед с директорами: ${wins} из 4, со всеми четырьмя — «Совет директоров».</p><div class="dgrid">${['', ...Object.keys(DIR_INFO)].map(card).join('')}</div><div class="row"><button class="btn" type="button" data-act="${state.run.over ? 'back' : 'menu'}">Назад</button></div>`;
+    const tiers = meta.tier ? `<h3>Разряд следующего забега</h3><p class="muted">Каждая победа открывает следующий разряд, минусы складываются: ${TIERS.slice(1).map((x, k) => `${k + 1} — ${x.minus}`).join('; ')}. За победу на разряде N ещё +5 × N Репутации.</p><div class="row">${TIERS.slice(0, meta.tier + 1).map((x, k) => `<button class="btn${(meta.tierPick || 0) === k ? ' primary' : ''}" type="button" data-act="tier" data-k="${k}">${k ? `Разряд ${k}` : 'Обычный'}</button>`).join('')}</div>` : '<p class="muted">Первая победа откроет разряды сложности.</p>';
+    return `<h2>Директора</h2><p class="muted">Директор ведёт следующий забег: свой плюс, стартовый набор и минус. Побед с директорами: ${wins} из ${Object.keys(DIR_INFO).length}, с первыми четырьмя — «Совет директоров».</p><div class="dgrid">${['', ...Object.keys(DIR_INFO)].map(card).join('')}</div>${tiers}<div class="row"><button class="btn" type="button" data-act="${state.run.over ? 'back' : 'menu'}">Назад</button></div>`;
   }
   // the director of this run, in the menu
   const runDirHTML = () => { const d = state.run.dir; return d && DIR_INFO[d] ? `<h3>Директор забега: ${DIR_INFO[d].name}</h3><div class="dpick"><img src="${PORTRAIT[d]}" alt=""><span>${dirText(d)}</span></div>${d === 'ceo' ? `<p class="${state.run.chute ? 'muted' : 'on'}">Золотой парашют ${state.run.chute ? 'уже раскрыт' : 'ещё цел'}</p>` : ''}` : ''; };
-  function routeHTML() {
-    const run = state.run, last = run.route.reduce((a, l, k) => l != null ? k : a, 0);
+  const histOf = () => { const run = state.run, rt = run.route.slice(0, 10); return { won: !!run.won, route: rt, opened: rt.map(l => l != null ? Math.round(run.opened[l] || 0) : null), closed: rt.map(l => l != null && !!state.locs[l].closed) }; };
+  function routeHTML(h, mini) {
+    const last = h.route.reduce((a, l, k) => l != null ? k : a, 0);
     const node = k => {
-      const l = run.route[k], alt = ALTS[k];
-      if (l == null) return `<div class="rn none" style="--d:${k}"><i></i><b>${k + 1}</b><small>${(alt ? alt : [k]).map(a => LOCS[a].tab || LOCS[a].name).join(' / ')}</small></div>`;
-      const L = state.locs[l], end = k === last;
-      return `<div class="rn${L.closed ? ' closed' : ''}${end ? (run.won ? ' win' : ' end') : ''}" style="--d:${k};--wc:${LOCS[l].wall};--ic:${LOCS[l].item}"><i></i><b>${k + 1}</b><small>${LOCS[l].tab || LOCS[l].name}</small><em>${mmss(run.opened[l] || 0)}</em></div>`;
+      const l = h.route[k], alt = ALTS[k];
+      if (l == null) return `<div class="rn none" style="--d:${k}"><i></i>${mini ? '' : `<b>${k + 1}</b><small>${(alt ? alt : [k]).map(x => LOCS[x].tab || LOCS[x].name).join(' / ')}</small>`}</div>`;
+      return `<div class="rn${h.closed[k] ? ' closed' : ''}${k === last ? (h.won ? ' win' : ' end') : ''}" style="--d:${k};--wc:${LOCS[l].wall};--ic:${LOCS[l].item}"><i></i>${mini ? '' : `<b>${k + 1}</b><small>${LOCS[l].tab || LOCS[l].name}</small><em>${mmss(h.opened[k] || 0)}</em>`}</div>`;
     };
-    return `<div class="route">${Array.from({ length: 10 }, (_, k) => node(k)).join('')}</div>`;
+    return `<div class="route${mini ? ' mini' : ''}">${Array.from({ length: 10 }, (_, k) => node(k)).join('')}</div>`;
+  }
+  function historyHTML() {
+    const hs = meta.history || [];
+    const row = h => `<li class="hist"><img src="${PORTRAIT[h.dir && PORTRAIT[h.dir] ? h.dir : 'none']}" alt=""><span><b>${h.won ? 'Победа' : 'Банкротство'} · квота ${h.q}${h.tier ? ` · ${TIERS[h.tier].name}` : ''}${h.daily ? ' · ежедневный' : ''}</b><small>${new Date(h.at).toLocaleDateString('ru-RU')} · ${mmss(h.t)}${h.dir && DIR_INFO[h.dir] ? ` · ${DIR_INFO[h.dir].name}` : ''}</small>${routeHTML(h, true)}</span></li>`;
+    return `<h2>История забегов</h2><p class="muted">Последние 10 забегов: маршрут по цехам и где он закончился.</p><ul class="list">${hs.map(row).join('') || '<li><span class="muted">Пока ни одного законченного забега</span></li>'}</ul><div class="row"><button class="btn" type="button" data-act="${state.run.over ? 'back' : 'menu'}">Назад</button></div>`;
   }
   function qtrackHTML() {
     const run = state.run, n = passedQ(), ce = checkEvery(), cells = [];
@@ -5491,22 +5573,23 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
     if (!run.won) cells.push(`<i class="dead" style="--d:${n + 1}"></i>`);
     return `<div class="qtrack" aria-label="Квоты забега">${cells.join('')}</div>`;
   }
+  const dailyRec = () => { const d = meta.records.daily; return d && d.d === dayKey(new Date()) ? d : null; };
   function endHTML() {
     const run = state.run, d = run.dir && DIR_INFO[run.dir] ? run.dir : '', crew = Object.values(state.workers).filter(w => w.unlocked).length;
     const stat = (k, v) => `<div class="stat"><small>${k}</small><b>${v}</b></div>`;
     const na = (run.newAch || []).map(id => ACH.find(a => a.id === id)).filter(Boolean);
     const achs = na.length ? `<h3>Новые достижения: ${na.length}</h3><ul class="list newach">${na.map((a, k) => `<li style="--d:${k}"><span><b>${a.name}</b><small>${(a.reward || []).length ? 'Открыто: ' + a.reward.map(rewardName).join(', ') : a.desc}</small></span><span class="val on">★</span></li>`).join('')}</ul>` : '';
-    return `<div class="endhead${run.won ? ' win' : ''}"><img src="${PORTRAIT[d || 'none']}" alt=""><div><h2 class="endtitle">${run.won ? 'Победа!' : 'Банкротство'}</h2><p class="muted">${d ? `Директор ${DIR_INFO[d].name} · ` : ''}${run.won ? `план выполнен на ${passedQ()}-й квоте` : `не выполнена квота ${run.q}`} · ${mmss(run.t)}</p></div></div>
-      <h3>Маршрут</h3>${routeHTML()}<h3>Квоты: ${passedQ()}${run.won ? '' : ` · гибель на ${run.q}-й`}</h3>${qtrackHTML()}
+    return `<div class="endhead${run.won ? ' win' : ''}"><img src="${PORTRAIT[d || 'none']}" alt=""><div><h2 class="endtitle">${run.won ? 'Победа!' : 'Банкротство'}</h2><p class="muted">${run.daily ? 'Ежедневный забег · ' : ''}${run.tier ? `${TIERS[run.tier].name} · ` : ''}${d ? `Директор ${DIR_INFO[d].name} · ` : ''}${run.won ? `план выполнен на ${passedQ()}-й квоте` : `не выполнена квота ${run.q}`} · ${mmss(run.t)}</p></div></div>
+      <h3>Маршрут</h3>${routeHTML(histOf())}<h3>Квоты: ${passedQ()}${run.won ? '' : ` · гибель на ${run.q}-й`}</h3>${qtrackHTML()}
       <div class="stats">${stat('Заработано', fmt(state.earned))}${stat('Лучший доход', fmt(run.bestRate) + '/с')}${stat('Проверок', run.passed.length)}${stat('Карт', state.cards.length)}${stat('Сотрудников', crew)}${stat('Скиллов', run.skills || 0)}</div>
       ${achs}<p class="on">Репутация за забег: +${run.rep}${run.won ? ` (за победу +${BAL.winRep})` : ''}</p>
-      <div class="row"><button class="btn primary" type="button" data-act="newrun">Новый забег</button><button class="btn" type="button" data-act="dirs">Директора</button></div>${dirHTML()}${unlocksHTML()}`;
+      <div class="row"><button class="btn primary" type="button" data-act="newrun">Новый забег</button><button class="btn" type="button" data-act="newrun" data-daily="1">Ежедневный забег${dailyRec() ? `: лучшая ${dailyRec().q}` : ''}</button><button class="btn" type="button" data-act="dirs">Директора</button></div><p class="muted">Ежедневный забег один на день у всех друзей: всё открыто, директор дня, одинаковые старт, проверки и выборы карт, без улучшений Репутации. Лучшая квота дня идёт в рекорды и в код для друзей.</p>${dirHTML()}${unlocksHTML()}`;
   }
 
   function menuHTML() {
     const run = state.run;
     const quit = confirmQuit ? '<p>Сдаться и закончить забег? Репутацию за пройденные квоты ты получишь.</p><div class="row"><button class="btn danger" type="button" data-act="quit-yes">Да, сдаться</button><button class="btn" type="button" data-act="quit-no">Отмена</button></div>'
-      : `<div class="row"><button class="btn" type="button" data-act="back">Назад</button><button class="btn" type="button" data-act="ach">Достижения ${meta.ach.length}/${ACH.length}</button><button class="btn" type="button" data-act="friends">Друзья</button>${guest || run.over ? '' : '<button class="btn danger" type="button" data-act="quit">Сдаться</button>'}</div>`;
+      : `<div class="row"><button class="btn" type="button" data-act="back">Назад</button><button class="btn" type="button" data-act="ach">Достижения ${meta.ach.length}/${ACH.length}</button><button class="btn" type="button" data-act="history">История</button><button class="btn" type="button" data-act="friends">Друзья</button>${guest || run.over ? '' : '<button class="btn danger" type="button" data-act="quit">Сдаться</button>'}</div>`;
     return `<h2>Меню</h2><p class="muted">Забег: квота ${run.q}, идёт ${mmss(run.t)}, заработано ${fmt(state.earned)}. Прогресс сохраняется в этом браузере. Пока игра закрыта, время забега стоит.</p>${quit}${runDirHTML()}<h3>Рекорды</h3>${recordsHTML(meta.records, meta.ach.length)}${dailyHTML()}${unlocksHTML()}${dirHTML()}`;
   }
   // the menu list of challenges: progress (2/3) and what each one opens
@@ -5621,9 +5704,9 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
     else if (act === 'unassign') { slotsOf(state.cur)[selSlot].worker = null; save(); renderSheet(); }
     else if (act === 'skillup') {
       const w = state.workers[selWorker], cost = skillUpCost(selWorker);
-      if (!w.skill || skLv(selWorker) > 1 || skillLocked() || state.money < cost) return;
+      if (!w.skill || skLv(selWorker) >= 3 || skillLocked() || state.money < cost) return;
       state.money -= cost; upSkill(selWorker);
-      toast(`Скилл «${SKILLS[selWorker].name}» прокачан до 2-го уровня!`); save(); renderSheet();
+      toast(`Скилл «${SKILLS[selWorker].name}» прокачан до ${skLv(selWorker)}-го уровня!`); save(); renderSheet();
     }
     else if (act === 'skill') {
       const sk = SKILLS[selWorker], w = state.workers[selWorker];
@@ -5641,12 +5724,13 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
     else if (act === 'unlock') unlockLoc(b.dataset.l != null ? +b.dataset.l : state.cur);
     else if (act === 'deck') { view = view === 'deck' ? 'main' : 'deck'; renderSheet(); }
     else if (act === 'menu') { view = view === 'menu' ? 'main' : 'menu'; confirmQuit = false; renderSheet(); }
-    else if (act === 'ach' || act === 'friends' || act === 'coll' || act === 'dirs') { view = act; renderSheet(); }
+    else if (act === 'ach' || act === 'friends' || act === 'coll' || act === 'dirs' || act === 'history') { view = act; renderSheet(); }
     else if (act === 'back') { view = 'main'; renderSheet(); }
     else if (act === 'quit') { confirmQuit = true; renderSheet(); }
     else if (act === 'quit-no') { confirmQuit = false; renderSheet(); }
     else if (act === 'quit-yes') { confirmQuit = false; ev('quit', { q: state.run.q }); bankrupt(); }
-    else if (act === 'newrun') { state = newRun(); mode = null; selSlot = null; selWorker = null; view = 'main'; crate = null; floats = []; save(); renderSheet(); renderTabs(); toast('Новый забег! Подготовься и начинай смену'); }
+    else if (act === 'tier') { meta.tierPick = +b.dataset.k; saveMeta(); renderSheet(); }
+    else if (act === 'newrun') { state = newRun(b.dataset.daily ? dayKey(new Date()) : undefined); mode = null; selSlot = null; selWorker = null; view = 'main'; crate = null; floats = []; save(); renderSheet(); renderTabs(); toast('Новый забег! Подготовься и начинай смену'); }
     else if (act === 'buy') {
       const u = UNLOCKS.find(x => x.id === b.dataset.id);
       if (!u || hasUnlock(u.id) || meta.rep < u.cost) return;
