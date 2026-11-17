@@ -10,6 +10,8 @@
 // A run is won when quota BAL.winQ (or a later one) is passed with workshop 10 open; the bot prints the quota and minute of every win
 // and, after all runs, a summary: mean quota passed, win share, mean minute each workshop opened (and how often), mean run length. JSONL=1 also prints every run as JSON.
 // DIR=barista|shmadin|ceo|kerrigan|perfect plays every run under that director, TIER=0..5 at that tier.
+// SAVE=s: the bot stops shopping to save for the next workshop once it is less than s seconds of income away (default 60).
+// TRACE=1 prints the quota, the shift's earnings and the income every 15 s of the last 3 shifts.
 // OPTEVERY=n re-places the workers every n checks during a shift (a check is 1 s of play; default 10, larger is faster and a bit weaker).
 // OPEN sets the open content (see docs/cards.md): none (default, the pool of a new player), all, a share like 0.5 of the closed cards and workshops picked at random, or a list of ids ('w_tramp,loc:10'); workshops from ROUTE are opened too.
 // COUNTER=cake|hot is the bakery's counter (default cake), DEBUG=1 prints the bakery's slots and its orders given and done. The bot aims the dream tower's beam and feeds the living room when it pays.
@@ -21,7 +23,7 @@ const RUNS = +process.argv[2] || 8, UNL = process.argv[3] || '', BAL = JSON.pars
   await p.goto('file://' + require('path').resolve(__dirname, '../game/index.html') + '#bot');
   const res = [];
   for (let r = 0; r < RUNS; r++) {
-    res.push(await p.evaluate(([unl, bal, costs, cheap, rnd, semi, smart, shopMax, route, counter, open, dir, tier, optEvery]) => {
+    res.push(await p.evaluate(([unl, bal, costs, cheap, rnd, semi, smart, trace, saveS, shopMax, route, counter, open, dir, tier, optEvery]) => {
       const P = window.PF;
       Object.assign(P.BAL, bal); if (costs) costs.forEach((c, l) => { P.LOCS[l].cost = c; });
       P.meta.unlocks = unl ? unl.split(',') : [];
@@ -151,7 +153,7 @@ const RUNS = +process.argv[2] || 8, UNL = process.argv[3] || '', BAL = JSON.pars
         }
       }
       // save up for the next workshop when it is less than a minute of income away
-      const saving = () => { const n = nextLoc(); return n && (P.LOCS[n].cost - P.state.money) < inc() * 60; };
+      const saving = () => { const n = nextLoc(); return n && (P.LOCS[n].cost - P.state.money) < inc() * saveS; };
       function unlockNext() { const n = nextLoc(); if (n && P.state.money >= P.LOCS[n].cost) { P.unlockLoc(n); if (!P.state.locs[n].unlocked) return; /* refused: the licence (BAL.gate) is not given yet */ if (n === 12) P.state.run.counter = counter; log.opened[tabOfLoc(n)] = Math.round(P.state.run.t); optimize(3); } }
       // levels: the bot takes a skill to level 2 at most; buying level 3 for coins (4 skill prices) ate the money for workshops and halved its quota
       function buySkills() { const s2 = P.state; if (P.skillLocked()) return; for (const w in P.SKILLS) { const ws = s2.workers[w]; if (ws.unlocked && !ws.skill && P.workerPlace(w) && s2.money >= P.skillCost(w) * 2) { s2.money -= P.skillCost(w); ws.skill = true; ws.skT = 0; s2.run.skills++; } else if (ws.skill && (ws.skL || 1) < 2 && P.workerPlace(w) && s2.money >= P.skillUpCost(w) * 2) { s2.money -= P.skillUpCost(w); ws.skL = 2; } } }
@@ -179,6 +181,8 @@ const RUNS = +process.argv[2] || 8, UNL = process.argv[3] || '', BAL = JSON.pars
       }
       for (let step = 0; step < 4 * 3600 && !P.state.run.over; step++) {
         if (P.state.run.brk) { breakTurn(); continue; }
+        // TRACE=1: the quota, what the shift earned so far and the income, every 15 s
+        if (trace && step % 60 === 0) (log.trace = log.trace || []).push([P.state.run.q, Math.round(P.curQuota()), Math.round(P.state.run.qEarned || 0), Math.round(inc())]);
         P.tick(0.25);
         const st = P.state;
         if (step % 4) continue;
@@ -196,13 +200,14 @@ const RUNS = +process.argv[2] || 8, UNL = process.argv[3] || '', BAL = JSON.pars
       // the share of the income each of the workshops 6–10 (by tab) brings at the end of the run
       const g = P.globals(), byLoc = st.locs.map((L, l) => L.unlocked ? L.slots.reduce((a, z, i) => { const x = P.slotStats(l, i, g); return a + (x ? x.income : 0); }, 0) : 0), all = byLoc.reduce((a, b) => a + b, 0) || 1;
       const share = [5, 6, 7, 8, 9].map(k => st.locs[locOf(k)].unlocked ? Math.round(byLoc[locOf(k)] / all * 100) : null);
-      return { won: !!st.run.won, oldShare: (log.incOld || 0) / (log.incAll || 1), debug: [st.locs[12].slots.map(z => z.machine + ':' + z.worker), log.kinds, log.done], share, orders: log.orders, ordersDone: log.ordersDone, eaten: (st.run.eaten || []).length, passed: st.run.q - 1, end: Math.round(st.run.t), opened: log.opened, quotaAt: log.quotaAt, cards: st.cards.length, level: st.level, earned: st.earned, rate: st.run.bestRate, rateAt: log.rateAt, crateShare: log.crate / st.earned, skills: st.run.skills, maxEq: Math.max(...Object.values(st.workers).map(w => w.equip.length)), maxUpg: Math.max(...st.locs.flatMap(L => L.slots.map(z => z.upg.length))),
+      return { won: !!st.run.won, trace: log.trace || [], oldShare: (log.incOld || 0) / (log.incAll || 1), debug: [st.locs[12].slots.map(z => z.machine + ':' + z.worker), log.kinds, log.done], share, orders: log.orders, ordersDone: log.ordersDone, eaten: (st.run.eaten || []).length, passed: st.run.q - 1, end: Math.round(st.run.t), opened: log.opened, quotaAt: log.quotaAt, cards: st.cards.length, level: st.level, earned: st.earned, rate: st.run.bestRate, rateAt: log.rateAt, crateShare: log.crate / st.earned, skills: st.run.skills, maxEq: Math.max(...Object.values(st.workers).map(w => w.equip.length)), maxUpg: Math.max(...st.locs.flatMap(L => L.slots.map(z => z.upg.length))),
         trios: [...Object.values(st.workers).map(w => w.equip), ...st.locs.flatMap(L => L.slots.map(z => z.upg))].filter(a => a.some(c => a.filter(x => x === c).length >= 3)).length };
-    }, [UNL, BAL, COSTS, process.env.SHOPPICK === 'cheap', process.env.STRAT === 'random', process.env.STRAT === 'semi', process.env.STRAT === 'smart', +process.env.SHOP || 30, (process.env.ROUTE || '').split(',').filter(Boolean).map(Number), process.env.COUNTER || 'cake', process.env.OPEN || 'none', process.env.DIR || '', +process.env.TIER || 0, +process.env.OPTEVERY || 10]));
+    }, [UNL, BAL, COSTS, process.env.SHOPPICK === 'cheap', process.env.STRAT === 'random', process.env.STRAT === 'semi', process.env.STRAT === 'smart', !!process.env.TRACE, +process.env.SAVE || 60, +process.env.SHOP || 30, (process.env.ROUTE || '').split(',').filter(Boolean).map(Number), process.env.COUNTER || 'cake', process.env.OPEN || 'none', process.env.DIR || '', +process.env.TIER || 0, +process.env.OPTEVERY || 10]));
     const x = res[res.length - 1];
     console.log(`run ${r + 1}: квот ${x.passed}, конец ${Math.floor(x.end / 60)}:${String(x.end % 60).padStart(2, '0')}, цеха ${x.opened.map(v => v == null ? '—' : Math.round(v / 6) / 10).join('/')} мин, карт ${x.cards}, ур ${x.level}, доход ${Math.round(x.rate)}/с, скиллов ${x.skills}, max карт на сотруднике/станке ${x.maxEq}/${x.maxUpg}, троек ${x.trios},${x.orders ? ` заказов ${x.ordersDone}/${x.orders},` : ''}${x.eaten ? ` съедено ${x.eaten},` : ''} доля цехов 6–10 ${x.share.map(v => v == null ? '—' : v + '%').join('/')}, посылки ${Math.round(x.crateShare * 100)}% денег, цеха 1–5 ${Math.round(x.oldShare * 100)}% дохода, квоты на ${x.quotaAt.map(v => Math.round(v / 6) / 10).join(' ')}`);
     if (x.won) console.log(`  ПОБЕДА на квоте ${x.passed}, ${Math.floor(x.end / 60)}:${String(x.end % 60).padStart(2, '0')}`);
     if (process.env.JSONL) console.log('JSON ' + JSON.stringify({ won: x.won, passed: x.passed, end: x.end, opened: x.opened, oldShare: x.oldShare }));
+    if (process.env.TRACE) console.log('  квота/набрано/доход:', x.trace.slice(-12).map(t => t.join('/')).join('  '));
     if (process.env.DEBUG) console.log('  ', JSON.stringify(x.debug));
     if (process.env.RATES) console.log('  доход по минутам:', x.rateAt.join(' '));
   }
