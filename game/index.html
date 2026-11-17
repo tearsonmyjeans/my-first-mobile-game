@@ -1542,7 +1542,7 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
   // xp/shop/quota grow geometrically, every levelEvery-th level gives a card, crates come every crate..2×crate seconds;
   // a crate holds a share of the quota: plain crateQ, gold crateGoldQ (chance crateGold), or a card pick (chance crateCard);
   // crates pay at most crateCap of the quota a shift, so they help but never carry it; from shift skillCoinQ skills are opened only by cards
-  const BAL = { storm: 20, stormEvery: 2, beam: 0.6, beamNear: 0.2, beamCd: 8, orderBatch: [100, 4], orderDouble: [15, 1], orderHall: 20, orderPay: [0.04, 0.06], tempo: 2, machW: 3, xp0: 15, xpK: 2, levelEvery: 3, shopQ: 0.3, shopRoll: 1, rarPrice: [0.6, 1, 1.6, 2.4], masteryEvery: 9, crate: 20, crateQ: [0.02, 0.06], crateGoldQ: [0.08, 0.12], crateGold: 0.1, crateCard: 0.05, quotaT: 45, quota0: 200, quota1: 60, quotaK: 1.5, quotaA: 1.055, quotaMax: 99, quotaE: 0.9, quotaEFrom: 6, winQ: 32, gate: 3, winRep: 30, moveMax: 2, skill2: 1.5, skill3: 0.75, skillUp: 2, ceoQ: 1.25, kerriganShop: 1.25, comboW: 2.5, pair: 2, crateCap: 0.3, shopE: 0.2, skillCoinQ: 10, cap: 3, trio: 4, add: true, sq: 1.4, subCap: 0.6 };
+  const BAL = { storm: 20, stormEvery: 2, beam: 0.6, beamNear: 0.2, beamCd: 8, orderBatch: [100, 4], orderDouble: [15, 1], orderHall: 20, orderPay: [0.04, 0.06], tempo: 2, machW: 3, xp0: 15, xpK: 2, levelEvery: 3, shopQ: 0.3, shopRoll: 1, rarPrice: [0.6, 1, 1.6, 2.4], masteryEvery: 9, crate: 20, crateQ: [0.02, 0.06], crateGoldQ: [0.08, 0.12], crateGold: 0.1, crateCard: 0.05, quotaT: 45, quota0: 200, quota1: 60, quotaK: 1.5, quotaA: 1.055, quotaMax: 99, quotaE: 0.9, quotaEFrom: 6, winQ: 32, gate: 3, oldK: 4, winRep: 30, moveMax: 2, skill2: 1.5, skill3: 0.75, skillUp: 2, ceoQ: 1.25, kerriganShop: 1.25, comboW: 2.5, pair: 2, crateCap: 0.3, shopE: 0.2, skillCoinQ: 10, cap: 3, trio: 4, add: true, sq: 1.4, subCap: 0.6 };
   const need = l => Math.round(BAL.xp0 * Math.pow(BAL.xpK, l - 1));
   // the showcase is priced off the quota just passed or off the last shift's earnings (shopE of them), whichever is more,
   // so a runaway income cannot make cards free
@@ -1700,6 +1700,16 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
     saveMeta();
   }
   const passedQ = () => state.run.q - 1;
+  // modernisation: machines of the earlier workshops rise in price with the factory, so that the newest open workshop is only
+  // BAL.oldK times dearer than the one before it (not 10–30 times) and an old workshop with its links is worth keeping staffed.
+  // LOC_REF is the usual income of a machine of a workshop (median of rate × value); 0 turns it off
+  const LOC_REF = LOCS.map((_, l) => { const v = Object.values(MACH).filter(m => m.loc === l && m.rate * m.value > 0).map(m => m.rate * m.value).sort((a, b) => a - b); return v.length ? v[v.length >> 1] : 0; });
+  function oldX(machine, front) {
+    const loc = MACH[machine].loc;
+    if (!BAL.oldK || loc < 0 || front == null || !LOC_REF[loc]) return 1;
+    const d = tabOf(front) - tabOf(loc);
+    return d > 0 ? Math.max(1, LOC_REF[front] / LOC_REF[loc] / Math.pow(BAL.oldK, d)) : 1;
+  }
   // the licence: the workshop on place k (from 0) opens only after quota k × BAL.gate − 1 is passed (2, 5, 8, … 26), so workshops cannot open in an avalanche; 0 turns it off
   const gateQ = l => BAL.gate ? Math.max(0, tabOf(l) * BAL.gate - 1) : 0, gateOk = l => passedQ() >= gateQ(l);
   const rst = k => (state.run.stats || {})[k] || 0, mst = k => meta.stats[k] || 0;
@@ -1863,6 +1873,8 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
     // tag sets add up, card effects are multipliers (powerX and so on) so every card stays as strong as its number
     const g = { power: pr('Сотрудники') * 0.05, speed: pr('Экипировка') * 0.05, price: pr('Станки') * 0.05, powerX: 1, speedX: 1, priceX: 1, locX: LOCS.map(() => 1), income: 1 + pr('Улучшения') * 0.03, tc, combos: [] };
     const LOC_KEY = { brickPrice: 1, nailPrice: 2, glassPrice: 3, poufPrice: 4 };
+    // the newest open workshop: the machines of the earlier ones rise in price towards it (oldX)
+    g.front = state.locs.reduce((f, L, l) => L.unlocked && (f == null || tabOf(l) > tabOf(f)) ? l : f, null);
     // plain bonuses of the same kind add up (two Gyms: +60%), minuses and mastery cards multiply
     const add = {};
     state.cards.forEach(id => { const cd = CARDS[id]; if (cd.type === 'global') for (const k in cd.eff) {
@@ -2317,6 +2329,8 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
     }
     let rate = M.rate * BAL.tempo * speed * speedM * skM.speed * (1 + rb) * rX * sqF.speed;
     let value = baseV * power * skM.value * (1 + vb) * vX * (1 + g.price) * g.priceX * g.locX[l] * sqF.price;
+    const modX = oldX(s.machine, g.front);
+    if (modX > 1) { value *= modX; notes.push(`Модернизация: завод вырос, цена ×${fmt(modX)}`); }
     // Toothy snails slow their machine down, but not in a workshop where the Helping hand feeds them or the Flytrap eats them, and not Mirror armour
     const hands = slotsOf(l).reduce((n, z) => n + z.upg.filter(u => u === 's_hand').length, 0), flytrap = slotsOf(l).some(z => z.worker === 'flytrap');
     const snails = ups.filter(u => u === 'u_snails').length;
