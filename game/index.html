@@ -1542,7 +1542,7 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
   // xp/shop/quota grow geometrically, every levelEvery-th level gives a card, crates come every crate..2×crate seconds;
   // a crate holds a share of the quota: plain crateQ, gold crateGoldQ (chance crateGold), or a card pick (chance crateCard);
   // crates pay at most crateCap of the quota a shift, so they help but never carry it; from shift skillCoinQ skills are opened only by cards
-  const BAL = { storm: 20, stormEvery: 2, beam: 0.6, beamNear: 0.2, beamCd: 8, orderBatch: [100, 4], orderDouble: [15, 1], orderHall: 20, orderPay: [0.04, 0.06], tempo: 2, machW: 3, xp0: 15, xpK: 2, levelEvery: 3, shopQ: 0.3, shopRoll: 1, rarPrice: [0.6, 1, 1.6, 2.4], masteryEvery: 9, crate: 20, crateQ: [0.02, 0.06], crateGoldQ: [0.08, 0.12], crateGold: 0.1, crateCard: 0.05, quotaT: 45, quota0: 200, quota1: 60, quotaK: 1.5, quotaA: 1.055, quotaMax: 99, quotaE: 0.9, quotaEFrom: 6, winQ: 32, winRep: 30, moveMax: 2, skill2: 1.5, skill3: 0.75, skillUp: 2, ceoQ: 1.25, kerriganShop: 1.25, comboW: 2.5, pair: 2, crateCap: 0.3, shopE: 0.2, skillCoinQ: 10, cap: 3, trio: 4, add: true, sq: 1.4, subCap: 0.6 };
+  const BAL = { storm: 20, stormEvery: 2, beam: 0.6, beamNear: 0.2, beamCd: 8, orderBatch: [100, 4], orderDouble: [15, 1], orderHall: 20, orderPay: [0.04, 0.06], tempo: 2, machW: 3, xp0: 15, xpK: 2, levelEvery: 3, shopQ: 0.3, shopRoll: 1, rarPrice: [0.6, 1, 1.6, 2.4], masteryEvery: 9, crate: 20, crateQ: [0.02, 0.06], crateGoldQ: [0.08, 0.12], crateGold: 0.1, crateCard: 0.05, quotaT: 45, quota0: 200, quota1: 60, quotaK: 1.5, quotaA: 1.055, quotaMax: 99, quotaE: 0.9, quotaEFrom: 6, winQ: 32, gate: 3, winRep: 30, moveMax: 2, skill2: 1.5, skill3: 0.75, skillUp: 2, ceoQ: 1.25, kerriganShop: 1.25, comboW: 2.5, pair: 2, crateCap: 0.3, shopE: 0.2, skillCoinQ: 10, cap: 3, trio: 4, add: true, sq: 1.4, subCap: 0.6 };
   const need = l => Math.round(BAL.xp0 * Math.pow(BAL.xpK, l - 1));
   // the showcase is priced off the quota just passed or off the last shift's earnings (shopE of them), whichever is more,
   // so a runaway income cannot make cards free
@@ -1700,6 +1700,8 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
     saveMeta();
   }
   const passedQ = () => state.run.q - 1;
+  // the licence: the workshop on place k (from 0) opens only after quota k × BAL.gate − 1 is passed (2, 5, 8, … 26), so workshops cannot open in an avalanche; 0 turns it off
+  const gateQ = l => BAL.gate ? Math.max(0, tabOf(l) * BAL.gate - 1) : 0, gateOk = l => passedQ() >= gateQ(l);
   const rst = k => (state.run.stats || {})[k] || 0, mst = k => meta.stats[k] || 0;
   const CHECKS5 = ['sanepid', 'strike', 'blackout', 'audit', 'stock'];
   const coffeeAt = w => state.workers[w].equip.filter(e => e === 'e_coffee').length;
@@ -2566,6 +2568,7 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
     const k = tabOf(l);
     if (routeOf(k) != null && routeOf(k) !== l) { toast(`В этом забеге на месте цеха ${k + 1} уже ${LOCS[routeOf(k)].name.toLowerCase()}`); return; }
     if (state.money < cost) { toast(`Чтобы открыть цех, нужно ${fmt(cost)} монет`); return; }
+    if (!gateOk(l)) { toast(`Лицензию на этот цех дадут после ${gateQ(l)}-й квоты`); return; }
     // a sixth open workshop: first the player picks which early one shuts and what moves (the bot takes the poorest one and its best machines)
     if (needShut(l) && shut == null) {
       const c = openEarly();
@@ -5215,7 +5218,7 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
     } else if (!state.locs[l].unlocked) {
       c.fillStyle = 'rgba(20,14,30,.72)'; c.fillRect(0, 31, W, FL - 31);
       T('ЦЕХ ЕЩЁ НЕ ОТКРЫТ', W / 2, (31 + FL) / 2 - 16, 10, '#ffffff', 'center');
-      T(`Открыть за ${fmt(LOCS[l].cost)} монет`, W / 2, (31 + FL) / 2, 7, '#f2c14e', 'center');
+      T(gateOk(l) ? `Открыть за ${fmt(LOCS[l].cost)} монет` : `Лицензия после ${gateQ(l)}-й квоты · ${fmt(LOCS[l].cost)} монет`, W / 2, (31 + FL) / 2, 7, '#f2c14e', 'center');
     }
   }
   function fit() {
@@ -5374,7 +5377,7 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
       // a shut workshop's tab hides, the others keep their places
       b.classList.toggle('shut', !!L.closed);
       b.classList.toggle('locked', !L.unlocked && !L.closed);
-      b.classList.toggle('ready', !L.unlocked && state.money >= LOCS[l].cost);
+      b.classList.toggle('ready', !L.unlocked && state.money >= LOCS[l].cost && gateOk(l));
       const nm = fork ? ALTS[t].map(a => LOCS[a].tab || LOCS[a].name).join('/') : LOCS[l].tab || LOCS[l].name, txt = L.closed ? `Цех ${t + 1} · ЗАКРЫТ\n${nm}` : L.unlocked ? `Цех ${t + 1}\n${nm}` : `Цех ${t + 1} · ${fmt(LOCS[l].cost)}\n${nm}`;
       if (b.textContent !== txt) b.textContent = txt;
     });
@@ -5475,7 +5478,7 @@ span.cup{border:2px dashed var(--line);border-radius:6px;box-sizing:border-box}
   function lockedHTML(l) {
     const k = tabOf(l), fork = ALTS[k] && routeOf(k) == null, ids = fork ? ALTS[k] : [l];
     const shut = routeOf(k) != null && routeOf(k) !== l;
-    const btn = x => locOpen(x) ? `<button class="btn${x === l ? ' primary' : ''}" type="button" data-act="unlock" data-l="${x}" ${state.money < LOCS[x].cost ? 'disabled' : ''}>Открыть ${fork ? `«${LOCS[x].name}» ` : ''}за ${fmt(LOCS[x].cost)}</button>` : `<button class="btn" type="button" disabled>🔒 «${LOCS[x].name}» закрыт</button>`;
+    const btn = x => locOpen(x) ? `<button class="btn${x === l ? ' primary' : ''}" type="button" data-act="unlock" data-l="${x}" ${state.money < LOCS[x].cost || !gateOk(x) ? 'disabled' : ''}>${gateOk(x) ? 'Открыть' : `После ${gateQ(x)}-й квоты:`} ${fork ? `«${LOCS[x].name}» ` : ''}за ${fmt(LOCS[x].cost)}</button>` : `<button class="btn" type="button" disabled>🔒 «${LOCS[x].name}» закрыт</button>`;
     const lockNote = ids.filter(x => !locOpen(x)).map(x => `<p class="muted">«${LOCS[x].name}»: ${lockHint('loc:' + x)}</p>`).join('');
     const pick = fork ? `<p><b>Развилка:</b> на месте цеха ${k + 1} можно открыть ${ids.map(x => `«${LOCS[x].name}»`).join(' или ')}. Второй цех закроется до конца забега. Нажми на вкладку ещё раз, чтобы посмотреть другой цех.</p>` : '';
     return `<h2>Цех ${k + 1} · ${LOCS[l].name}</h2>${pick}<p class="muted">${LOCS[l].desc}</p><p class="muted">Сотрудники общие на весь завод: каждый может работать только в одном цеху.</p>${shut ? `<p class="muted">В этом забеге выбран другой цех.</p>` : `<div class="row">${ids.map(btn).join('')}</div>${lockNote}`}`;
