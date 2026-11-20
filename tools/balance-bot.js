@@ -11,6 +11,7 @@
 // and, after all runs, a summary: mean quota passed, win share, mean minute each workshop opened (and how often), mean run length. JSONL=1 also prints every run as JSON.
 // DIR=barista|shmadin|ceo|kerrigan|perfect plays every run under that director, TIER=0..5 at that tier.
 // FUTURE=w (0..1) weighs every card also by the income it would give after the next workshop opens (default 0.3; FUTURE=0 is the old greedy bot, 2,5 times faster).
+// BUILD=0 turns off building heroes: Triples planned on one worker, equipment over machine cards, V1 and V2 put side by side for their duo.
 // SAVE=s: the bot stops shopping to save for the next workshop once it is less than s seconds of income away (default 60).
 // TRACE=1 prints the quota, the shift's earnings and the income every 15 s of the last 3 shifts.
 // OPTEVERY=n re-places the workers every n checks during a shift (a check is 1 s of play; default 10, larger is faster and a bit weaker).
@@ -24,7 +25,7 @@ const RUNS = +process.argv[2] || 8, UNL = process.argv[3] || '', BAL = JSON.pars
   await p.goto('file://' + require('path').resolve(__dirname, '../game/index.html') + '#bot');
   const res = [];
   for (let r = 0; r < RUNS; r++) {
-    res.push(await p.evaluate(([unl, bal, costs, cheap, rnd, semi, smart, trace, futureW, saveS, shopMax, route, counter, open, dir, tier, optEvery]) => {
+    res.push(await p.evaluate(([unl, bal, costs, cheap, rnd, semi, smart, trace, futureW, build, saveS, shopMax, route, counter, open, dir, tier, optEvery]) => {
       const P = window.PF;
       Object.assign(P.BAL, bal); if (costs) costs.forEach((c, l) => { P.LOCS[l].cost = c; });
       P.meta.unlocks = unl ? unl.split(',') : [];
@@ -62,9 +63,24 @@ const RUNS = +process.argv[2] || 8, UNL = process.argv[3] || '', BAL = JSON.pars
             if (v > best * 1.001) { best = v; mv = [w, l, i]; }
             st.locs = JSON.parse(snap);
           }
-          if (!mv) return;
+          if (!mv) { duoMove(); return; }
           moveW(...mv);
         }
+        duoMove();
+      }
+      // the maids' duo (V1 next to V2: their workshop ×2) needs two moves at once, which one-worker moves never find:
+      // try both of them on every pair of neighbouring machines and keep the best
+      function duoMove() {
+        const st = P.state;
+        if (!build || !st.workers.v1 || !st.workers.v2 || !st.workers.v1.unlocked || !st.workers.v2.unlocked || P.onStrike('v1') || P.onStrike('v2')) return;
+        let best = inc(), mv = null;
+        st.locs.forEach((L, l) => { if (!L.unlocked) return; L.slots.forEach((a, i) => L.slots.forEach((b, j) => {
+          if (i === j || !a.machine || !b.machine || a.machine === 'belt' || b.machine === 'belt' || !P.adjacent(l, i, j)) return;
+          const snap = JSON.stringify(st.locs); moveW('v1', l, i); moveW('v2', l, j);
+          const v = inc(); if (v > best * 1.001) { best = v; mv = [l, i, j]; }
+          st.locs = JSON.parse(snap);
+        })); });
+        if (mv) { moveW('v1', mv[0], mv[1]); moveW('v2', mv[0], mv[2]); }
       }
       function targets(id) {
         const cd = P.CARDS[id], st = P.state, cl = cd.type === 'machine' ? P.MACH[cd.machine].loc : (cd.loc ?? -1);
@@ -101,6 +117,14 @@ const RUNS = +process.argv[2] || 8, UNL = process.argv[3] || '', BAL = JSON.pars
           // smart: a second copy on one worker or machine is half of a Triple, worth a little now
           const h = smart && P.holder(id, tg);
           if (h && h.length < 3 && h.filter(c => c === id).length === 2 && (P.CARDS[id].type === 'mupg' || P.workerPlace(tg))) v *= 1.15;
+          // BUILD: a player who builds a hero. Equipment moves with its worker to every new workshop, machine cards stay behind,
+          // so equipment counts a bit more; a Pair with a free place is two thirds of a Triple (×4 instead of ×2), a first copy
+          // on a worker with room for two more is the start of one; equipment on the strongest earner is worth more
+          if (build) {
+            const tp = P.CARDS[id].type, hh = P.holder(id, tg), n = hh ? hh.filter(c => c === id).length : 0, room = hh ? P.BAL.cap - hh.length : 0;
+            if (tp === 'equip') { v *= 1.1; if (n === 2 && room >= 1) v *= 1.35; else if (n === 1 && room >= 2) v *= 1.05; }
+            if (tp === 'mupg' && n === 2 && room >= 1) v *= 1.2;
+          }
           if (baseF && P.CARDS[id].type !== 'skill') { const f = future(); if (f) v = base0 * ((1 - futureW) * v / base0 + futureW * f / baseF); }
           if (v > best) { best = v; choice = [id, tg, d]; }
         }
@@ -213,7 +237,7 @@ const RUNS = +process.argv[2] || 8, UNL = process.argv[3] || '', BAL = JSON.pars
       const share = [5, 6, 7, 8, 9].map(k => st.locs[locOf(k)].unlocked ? Math.round(byLoc[locOf(k)] / all * 100) : null);
       return { won: !!st.run.won, trace: log.trace || [], oldShare: (log.incOld || 0) / (log.incAll || 1), debug: [st.locs[12].slots.map(z => z.machine + ':' + z.worker), log.kinds, log.done], share, orders: log.orders, ordersDone: log.ordersDone, eaten: (st.run.eaten || []).length, passed: st.run.q - 1, end: Math.round(st.run.t), opened: log.opened, quotaAt: log.quotaAt, cards: st.cards.length, level: st.level, earned: st.earned, rate: st.run.bestRate, rateAt: log.rateAt, crateShare: log.crate / st.earned, skills: st.run.skills, maxEq: Math.max(...Object.values(st.workers).map(w => w.equip.length)), maxUpg: Math.max(...st.locs.flatMap(L => L.slots.map(z => z.upg.length))),
         trios: [...Object.values(st.workers).map(w => w.equip), ...st.locs.flatMap(L => L.slots.map(z => z.upg))].filter(a => a.some(c => a.filter(x => x === c).length >= 3)).length };
-    }, [UNL, BAL, COSTS, process.env.SHOPPICK === 'cheap', process.env.STRAT === 'random', process.env.STRAT === 'semi', process.env.STRAT === 'smart', !!process.env.TRACE, (process.env.FUTURE != null ? +process.env.FUTURE : 0.3), +process.env.SAVE || 60, +process.env.SHOP || 30, (process.env.ROUTE || '').split(',').filter(Boolean).map(Number), process.env.COUNTER || 'cake', process.env.OPEN || 'none', process.env.DIR || '', +process.env.TIER || 0, +process.env.OPTEVERY || 10]));
+    }, [UNL, BAL, COSTS, process.env.SHOPPICK === 'cheap', process.env.STRAT === 'random', process.env.STRAT === 'semi', process.env.STRAT === 'smart', !!process.env.TRACE, (process.env.FUTURE != null ? +process.env.FUTURE : 0.3), process.env.BUILD !== '0', +process.env.SAVE || 60, +process.env.SHOP || 30, (process.env.ROUTE || '').split(',').filter(Boolean).map(Number), process.env.COUNTER || 'cake', process.env.OPEN || 'none', process.env.DIR || '', +process.env.TIER || 0, +process.env.OPTEVERY || 10]));
     const x = res[res.length - 1];
     console.log(`run ${r + 1}: квот ${x.passed}, конец ${Math.floor(x.end / 60)}:${String(x.end % 60).padStart(2, '0')}, цеха ${x.opened.map(v => v == null ? '—' : Math.round(v / 6) / 10).join('/')} мин, карт ${x.cards}, ур ${x.level}, доход ${Math.round(x.rate)}/с, скиллов ${x.skills}, max карт на сотруднике/станке ${x.maxEq}/${x.maxUpg}, троек ${x.trios},${x.orders ? ` заказов ${x.ordersDone}/${x.orders},` : ''}${x.eaten ? ` съедено ${x.eaten},` : ''} доля цехов 6–10 ${x.share.map(v => v == null ? '—' : v + '%').join('/')}, посылки ${Math.round(x.crateShare * 100)}% денег, цеха 1–5 ${Math.round(x.oldShare * 100)}% дохода, квоты на ${x.quotaAt.map(v => Math.round(v / 6) / 10).join(' ')}`);
     if (x.won) console.log(`  ПОБЕДА на квоте ${x.passed}, ${Math.floor(x.end / 60)}:${String(x.end % 60).padStart(2, '0')}`);
